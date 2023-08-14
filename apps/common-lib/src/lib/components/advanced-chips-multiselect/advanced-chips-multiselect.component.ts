@@ -42,15 +42,15 @@ export class AdvancedChipsMultiselectComponent {
   @Input() placeholder = 'placeholder';
   @Input() options: SelectData[] | null = [];
 
-  @Output() onInputChange: EventEmitter<string> = new EventEmitter<string>();
-  @Output() onSelectedChange: EventEmitter<SelectData[]> = new EventEmitter<SelectData[]>();
+  @Output() inputChange: EventEmitter<string> = new EventEmitter<string>();
+  @Output() selectedChange: EventEmitter<SelectData[]> = new EventEmitter<SelectData[]>();
 
   _selectData: SelectData[] = [];
   _inputControl = new FormControl();
 
   constructor() {
     this._inputControl.valueChanges.subscribe((value) => {
-      this.onInputChange.emit(value);
+      this.inputChange.emit(value);
     });
   }
 
@@ -70,7 +70,7 @@ export class AdvancedChipsMultiselectComponent {
 
     if (v) {
       this._selectData.push(value);
-      this.onSelectedChange.emit(this._selectData);
+      this.selectedChange.emit(this._selectData);
     }
   }
 
@@ -79,7 +79,7 @@ export class AdvancedChipsMultiselectComponent {
 
     if (index >= 0) {
       this._selectData.splice(index, 1);
-      this.onSelectedChange.emit(this._selectData);
+      this.selectedChange.emit(this._selectData);
     }
   }
 

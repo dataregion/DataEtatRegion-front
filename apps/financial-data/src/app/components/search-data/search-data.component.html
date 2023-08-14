@@ -62,24 +62,18 @@
 
       <div class="break"></div>
 
-      <mat-form-field class="field-25-width" appearance="fill" matTooltipPosition="above"
+      <lib-advanced-chips-multiselect
+        class="field-25-width beneficiaire-field"
+        appearance="fill"
+        [label]="'Bénéficiaire'"
+        placeholder=""
+        matTooltipPosition="above"
         matTooltip="Saisir un nom (sans accent) ou un SIRET (Exemple: Decathlon, Rennes... ou 40447186400433,...)"
-        aria-label="Champ de selection pour bénéficiaire.">
-        <mat-label>Bénéficiaire</mat-label>
-        <input type="text" matInput formControlName="beneficiaire" [matAutocomplete]="beneficiaire">
-        <button *ngIf="searchForm.controls['beneficiaire'].value !== null" matSuffix mat-icon-button
-          (click)="searchForm.controls['beneficiaire'].setValue(null)">
-          <mat-icon>close</mat-icon>
-        </button>
-        <mat-autocomplete #beneficiaire="matAutocomplete" [displayWith]="displayBeneficiaire"
-          (optionSelected)="onSelectBeneficiaire($event.option.value)">
-          <mat-option *ngFor="let beneficiaire of filteredBeneficiaire | async" [value]="beneficiaire">
-            {{displayBeneficiaire(beneficiaire)}}
-          </mat-option>
-        </mat-autocomplete>
-
-        <mat-error *ngIf="errorsBenefOrBop">{{errorsBenefOrBop}}</mat-error>
-      </mat-form-field>
+        [options]="beneficiaireFieldOptions | async"
+        (inputChange)="onBeneficiaireInputChange($event)"
+        (selectedChange)="onBeneficiairesChange($event)"
+        >
+      </lib-advanced-chips-multiselect>
 
       <div class="spacer"></div>
 
