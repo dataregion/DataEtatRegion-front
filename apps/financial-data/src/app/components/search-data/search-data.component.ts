@@ -21,13 +21,13 @@ import {
   BehaviorSubject,
   debounceTime,
   Subscription,
+  forkJoin,
 } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { BopModel } from '@models/refs/bop.models';
 import { FinancialData, FinancialDataResolverModel } from '@models/financial/financial-data-resolvers.models';
 import { FinancialDataModel } from '@models/financial/financial-data.models';
 import { DatePipe } from '@angular/common';
-import { RefSiret } from '@models/refs/RefSiret';
 import {
   JSONObject,
   Preference,
@@ -40,35 +40,48 @@ import {
   TypeLocalisation,
 } from 'apps/common-lib/src/public-api';
 import { Bop } from '@models/search/bop.model';
-import { Beneficiaire } from '@models/search/beneficiaire.model';
 import { BudgetService } from '@services/budget.service';
 import { NGXLogger } from 'ngx-logger';
 import { PreFilters } from '@models/search/prefilters.model';
 import { MarqueBlancheParsedParamsResolverModel } from '../../resolvers/marqueblanche-parsed-params.resolver';
 import { AdditionalSearchParameters, empty_additional_searchparams } from './additional-searchparams';
 import { BeneficiaireFieldData } from './beneficiaire-field-data.model';
-import { SelectData } from 'apps/common-lib/src/lib/components/advanced-chips-multiselect/advanced-chips-multiselect.component';
 import { SearchForm } from './search-form.interface';
+import { AutocompleteBeneficiaireService } from './autocomplete-beneficiaire.service';
+import { SelectedData } from 'apps/common-lib/src/lib/components/advanced-chips-multiselect/advanced-chips-multiselect.component';
+import { Beneficiaire } from '@models/search/beneficiaire.model';
 
 
 @Component({
   selector: 'financial-search-data',
   templateUrl: './search-data.component.html',
   styleUrls: ['./search-data.component.scss'],
+  providers: [
+    AutocompleteBeneficiaireService,
+  ]
 })
 export class SearchDataComponent implements OnInit {
   public readonly TypeLocalisation = TypeLocalisation;
+
   public searchForm!: FormGroup<SearchForm>;
+
+  get selectedBeneficiaires() : BeneficiaireFieldData[] {
+    return this.searchForm.get('beneficiaires')?.value as BeneficiaireFieldData[];
+  }
+  set selectedBeneficiaires(data: SelectedData[]) {
+    this.searchForm.get('beneficiaires')?.setValue(data as BeneficiaireFieldData[]);
+  }
 
   public additional_searchparams: AdditionalSearchParameters = empty_additional_searchparams;
 
   public bop: BopModel[] = [];
   public themes: string[] = [];
 
-  public filteredBeneficiaire: Observable<BeneficiaireFieldData[]> | null | undefined = null;
-  public get beneficiaireFieldOptions(): Observable<BeneficiaireFieldData[]> {
-    return this.filteredBeneficiaire || of([]);
+  public filteredBeneficiaire$: Observable<BeneficiaireFieldData[]> | null = null;
+  public get beneficiaireFieldOptions$(): Observable<BeneficiaireFieldData[]> {
+    return this.filteredBeneficiaire$ || of([]);
   }
+
   public beneficiaireInputChange$ = new BehaviorSubject<string>('');
   public onBeneficiaireInputChange(v: string) {
     this.beneficiaireInputChange$.next(v);
@@ -122,6 +135,7 @@ export class SearchDataComponent implements OnInit {
     private alertService: AlertService,
     private budgetService: BudgetService,
     private logger: NGXLogger,
+    private autocompleteBeneficiaires: AutocompleteBeneficiaireService,
   ) {
     // formulaire
     this.searchForm = new FormGroup<SearchForm>({
@@ -197,23 +211,6 @@ export class SearchDataComponent implements OnInit {
     });
   }
 
-  public onBeneficiairesChange(benef: SelectData[]): void {
-    this.searchForm.controls['beneficiaires'].setValue(benef as unknown as RefSiret[]); // XXX: on récupère bel et bien des ref sirets ici
-  }
-
-  public displayBeneficiaire(element: RefSiret): string {
-    let code = element?.siret;
-    let nom = element?.denomination;
-
-    if (code && nom) {
-      return `${nom} (${code})`;
-    } else if (code) {
-      return code;
-    } else {
-      return nom;
-    }
-  }
-
   /**
    * Retourne le FormControl de location
    */
@@ -243,7 +240,7 @@ export class SearchDataComponent implements OnInit {
 
     let search_parameters: SearchParameters = {
       ...SearchParameters_empty,
-      beneficiaires: formValue.beneficiaires || null,
+      beneficiaires: this.selectedBeneficiaires || null,
       bops: formValue.bops || null,
       themes: formValue.theme || null,
       years: formValue.year || null,
@@ -347,23 +344,6 @@ export class SearchDataComponent implements OnInit {
     return filename + '.csv';
   }
 
-  private _computeBeneficiaireAutocomplete(input: string): Observable<BeneficiaireFieldData[]> {
-    if (!input || input.length <= 3)
-      return of([]);
-
-    return this.budgetService.filterRefSiret(input)
-      .pipe(
-        map((response: RefSiret[]) => {
-          return response.map((ref) => {
-              return {
-                ...ref,
-                item: this.displayBeneficiaire(ref),
-              }
-          });
-        })
-      );
-  }
-
   /**
    * filtrage des données des formulaires pour les autocomplete
    */
@@ -375,13 +355,17 @@ export class SearchDataComponent implements OnInit {
     });
 
     // filtre beneficiaire
-    this.filteredBeneficiaire =
+    this.filteredBeneficiaire$ =
       this.beneficiaireInputChange$
         .pipe(
           startWith(''),
           debounceTime(300),
           switchMap((value) => {
-            return this._computeBeneficiaireAutocomplete(value);
+
+            if (!value || value.length <= 3)
+              return of([])
+
+            return this.autocompleteBeneficiaires.autocomplete(value)
           })
         );
   }
@@ -462,7 +446,18 @@ export class SearchDataComponent implements OnInit {
       this.searchForm.controls['theme'].setValue(themeSelected);
     }
 
-    this.searchForm.controls['beneficiaires'].setValue(preFilter.marqueblanche_beneficiaires ?? null);
+    if (preFilter.marqueblanche_beneficiaires) {
+      this.selectedBeneficiaires = preFilter.marqueblanche_beneficiaires as BeneficiaireFieldData[];
+      forkJoin(
+        preFilter.marqueblanche_beneficiaires.map(ref => 
+          this.autocompleteBeneficiaires.autocomplete(ref.siret)
+            .pipe(
+              map(data => data[0])
+            )
+        )
+      )
+      .subscribe(joined => { this.selectedBeneficiaires = joined; })
+    }
 
     // Application du bops
     // Il faut rechercher dans les filtres "this.filteredBop"
