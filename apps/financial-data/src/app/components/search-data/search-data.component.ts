@@ -446,10 +446,16 @@ export class SearchDataComponent implements OnInit {
       this.searchForm.controls['theme'].setValue(themeSelected);
     }
 
-    if (preFilter.marqueblanche_beneficiaires) {
-      this.selectedBeneficiaires = preFilter.marqueblanche_beneficiaires as BeneficiaireFieldData[];
+
+    if (preFilter.beneficiaires || preFilter.beneficiaire) {
+
+      if (preFilter.beneficiaires)
+        this.selectedBeneficiaires = preFilter.beneficiaires as BeneficiaireFieldData[];
+      else if (preFilter.beneficiaire)
+        this.selectedBeneficiaires = [preFilter.beneficiaire as BeneficiaireFieldData];
+
       forkJoin(
-        preFilter.marqueblanche_beneficiaires.map(ref => 
+        this.selectedBeneficiaires.map(ref => 
           this.autocompleteBeneficiaires.autocomplete(ref.siret)
             .pipe(
               map(data => data[0])
