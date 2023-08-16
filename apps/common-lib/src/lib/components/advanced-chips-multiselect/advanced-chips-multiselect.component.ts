@@ -12,6 +12,8 @@ export interface SelectedData {
   item: any
 }
 
+const TEN = 10;
+
 /**
  * Multiselect avec autocompletion et chips
  */
@@ -48,6 +50,18 @@ export class AdvancedChipsMultiselectComponent {
   @Output() inputChange: EventEmitter<string> = new EventEmitter<string>();
 
   _inputControl = new FormControl();
+
+  get first_10_selectedData() {
+    return this.selectedData?.slice(0, TEN) ?? [];
+  }
+  get invisible_count() {
+    const length = this.selectedData?.length ?? 0
+    const count = length - TEN;
+    if (count > 0)
+      return count
+    else
+      return 0
+  }
 
   constructor() {
     this._inputControl.valueChanges.subscribe((value) => {
