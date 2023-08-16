@@ -8,7 +8,7 @@ import { MatAutocomplete, MatAutocompleteModule, MatAutocompleteSelectedEvent } 
 import { MatIconModule } from '@angular/material/icon';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 
-export interface SelectData {
+export interface SelectedData {
   item: any
 }
 
@@ -40,12 +40,13 @@ export class AdvancedChipsMultiselectComponent {
   @Input() addOnBlur: boolean = true;
   @Input() label = 'Default label';
   @Input() placeholder = 'placeholder';
-  @Input() options: SelectData[] | null = [];
+  @Input() options: SelectedData[] | null = [];
+
+  @Input() selectedData: SelectedData[] = [];
+  @Output() selectedDataChange: EventEmitter<SelectedData[]> = new EventEmitter<SelectedData[]>();
 
   @Output() inputChange: EventEmitter<string> = new EventEmitter<string>();
-  @Output() selectedChange: EventEmitter<SelectData[]> = new EventEmitter<SelectData[]>();
 
-  _selectData: SelectData[] = [];
   _inputControl = new FormControl();
 
   constructor() {
@@ -65,21 +66,21 @@ export class AdvancedChipsMultiselectComponent {
     // $event.chipInput!.clear();
   }
 
-  add(value: SelectData) {
+  add(value: SelectedData) {
     const v = (value?.item || '').trim();
 
     if (v) {
-      this._selectData.push(value);
-      this.selectedChange.emit(this._selectData);
+      this.selectedData.push(value);
+      this.selectedDataChange.emit(this.selectedData);
     }
   }
 
   remove(selection: any) {
-    const index = this._selectData.indexOf(selection);
+    const index = this.selectedData.indexOf(selection);
 
     if (index >= 0) {
-      this._selectData.splice(index, 1);
-      this.selectedChange.emit(this._selectData);
+      this.selectedData.splice(index, 1);
+      this.selectedDataChange.emit(this.selectedData);
     }
   }
 

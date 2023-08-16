@@ -4,7 +4,7 @@
 
   <mat-chip-grid #chipGrid [ariaLabel]="'Valeurs selectionnées pour ' + label">
 
-    <mat-chip-row *ngFor="let s of _selectData"
+    <mat-chip-row *ngFor="let s of selectedData"
       (removed)="remove(s)"
       [editable]="false"
       [aria-description]="s.item"
