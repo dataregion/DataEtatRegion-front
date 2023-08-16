@@ -48,6 +48,7 @@ import { MarqueBlancheParsedParamsResolverModel } from '../../resolvers/marquebl
 import { AdditionalSearchParameters, empty_additional_searchparams } from './additional-searchparams';
 import { BeneficiaireFieldData } from './beneficiaire-field-data.model';
 import { SelectData } from 'apps/common-lib/src/lib/components/advanced-chips-multiselect/advanced-chips-multiselect.component';
+import { SearchForm } from './search-form.interface';
 
 
 @Component({
@@ -57,7 +58,7 @@ import { SelectData } from 'apps/common-lib/src/lib/components/advanced-chips-mu
 })
 export class SearchDataComponent implements OnInit {
   public readonly TypeLocalisation = TypeLocalisation;
-  public searchForm!: FormGroup;
+  public searchForm!: FormGroup<SearchForm>;
 
   public additional_searchparams: AdditionalSearchParameters = empty_additional_searchparams;
 
@@ -123,7 +124,7 @@ export class SearchDataComponent implements OnInit {
     private logger: NGXLogger,
   ) {
     // formulaire
-    this.searchForm = new FormGroup({
+    this.searchForm = new FormGroup<SearchForm>({
       year: new FormControl<number[]>([], {
         validators: [
           Validators.min(2000),
@@ -133,8 +134,8 @@ export class SearchDataComponent implements OnInit {
 
       filterBop: new FormControl<string>(''), // controls pour le filtre des bops
 
-      bops: new FormControl<Bop | null>(null),
-      theme: new FormControl<string | null>(null),
+      bops: new FormControl<Bop[] | null>(null),
+      theme: new FormControl<string[] | null>(null),
       beneficiaires: new FormControl<Beneficiaire[] | null>(null),
       location: new FormControl({ value: null, disabled: false }, []),
     });
@@ -197,7 +198,7 @@ export class SearchDataComponent implements OnInit {
   }
 
   public onBeneficiairesChange(benef: SelectData[]): void {
-    this.searchForm.controls['beneficiaires'].setValue(benef);
+    this.searchForm.controls['beneficiaires'].setValue(benef as unknown as RefSiret[]); // XXX: on récupère bel et bien des ref sirets ici
   }
 
   public displayBeneficiaire(element: RefSiret): string {
@@ -242,10 +243,10 @@ export class SearchDataComponent implements OnInit {
 
     let search_parameters: SearchParameters = {
       ...SearchParameters_empty,
-      beneficiaires: formValue.beneficiaires,
-      bops: formValue.bops,
-      themes: formValue.theme,
-      years: formValue.year,
+      beneficiaires: formValue.beneficiaires || null,
+      bops: formValue.bops || null,
+      themes: formValue.theme || null,
+      years: formValue.year || null,
       locations:  formValue.location,
 
       domaines_fonctionnels: this.additional_searchparams?.domaines_fonctionnels || null,
@@ -263,14 +264,14 @@ export class SearchDataComponent implements OnInit {
       .subscribe({
         next: (response: FinancialDataModel[] | Error) => {
           this.searchFinish = true;
-          this.currentFilter.next(this._buildPreference(formValue));
+          this.currentFilter.next(this._buildPreference(formValue as JSONObject));
           this._searchResult = response as FinancialDataModel[];
           this.searchResultsEventEmitter.next(this._searchResult);
         },
         error: (err: Error) => {
           this.searchFinish = true;
           this._searchResult = [];
-          this.currentFilter.next(this._buildPreference(formValue));
+          this.currentFilter.next(this._buildPreference(formValue as JSONObject));
           this.searchResultsEventEmitter.next(this._searchResult);
           this.alertService.openAlertError(err.message, 8);
         },
@@ -333,8 +334,8 @@ export class SearchDataComponent implements OnInit {
         .join('-');
     }
 
-    if (formValue.bops !== null) {
-      const bops = formValue.bops as BopModel[];
+    if (formValue.bops != null) {
+      const bops = formValue.bops;
       filename +=
         '_bops-' +
         bops
@@ -368,8 +369,9 @@ export class SearchDataComponent implements OnInit {
    */
   private _setupFilters(): void {
 
-    this.searchForm.controls['filterBop'].valueChanges.subscribe((value: string) => {
-      this.filteredBop = this._filterBop(value ? value : '');
+    this.searchForm.controls['filterBop'].valueChanges.subscribe((value: string | null) => {
+      const v = (value) ? value: '';
+      this.filteredBop = this._filterBop(v);
     });
 
     // filtre beneficiaire
@@ -386,7 +388,7 @@ export class SearchDataComponent implements OnInit {
 
   private _filterBop(value: string): BopModel[] {
     const filterValue = value ? value.toLowerCase() : '';
-    const themes = this.searchForm.controls['theme'].value as string[];
+    const themes = this.searchForm.controls['theme'].value;
 
     let filterGeo = this.bop.filter((option) => {
       if (themes) {
@@ -402,7 +404,7 @@ export class SearchDataComponent implements OnInit {
       );
     });
 
-    const controlBop = this.searchForm.controls['bops'].value as BopModel[];
+    const controlBop = this.searchForm.controls['bops'].value;
 
     if (controlBop) {
       // si des BOPs sont déjà sélectionné
@@ -472,7 +474,7 @@ export class SearchDataComponent implements OnInit {
             (bopFilter) => bop.code === bopFilter.code
           ) !== -1
       );
-      this.searchForm.controls['bops'].setValue(bopSelect);
+      this.searchForm.controls['bops'].setValue(bopSelect || null);
     }
 
     /* Paramètres additionnels qui n'apparaissent pas dans le formulaire de recherche */
