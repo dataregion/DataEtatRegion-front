@@ -66,21 +66,30 @@ export class AdvancedChipsMultiselectComponent {
     // $event.chipInput!.clear();
   }
 
+  private get _sanitizedSelectedData() {
+    if (!this.selectedData) {
+      this.selectedData = [];
+      this.selectedDataChange.emit(this.selectedData);
+    }
+
+    return this.selectedData;
+  }
+
   add(value: SelectedData) {
     const v = (value?.item || '').trim();
 
     if (v) {
-      this.selectedData.push(value);
-      this.selectedDataChange.emit(this.selectedData);
+      this._sanitizedSelectedData.push(value);
+      this.selectedDataChange.emit(this._sanitizedSelectedData);
     }
   }
 
   remove(selection: any) {
-    const index = this.selectedData.indexOf(selection);
+    const index = this._sanitizedSelectedData.indexOf(selection);
 
     if (index >= 0) {
-      this.selectedData.splice(index, 1);
-      this.selectedDataChange.emit(this.selectedData);
+      this._sanitizedSelectedData.splice(index, 1);
+      this.selectedDataChange.emit(this._sanitizedSelectedData);
     }
   }
 
