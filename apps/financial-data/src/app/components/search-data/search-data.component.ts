@@ -365,7 +365,7 @@ export class SearchDataComponent implements OnInit {
             if (!value || value.length <= 3)
               return of([])
 
-            return this.autocompleteBeneficiaires.autocomplete(value)
+            return this.autocompleteBeneficiaires.autocomplete$(value)
           })
         );
   }
@@ -455,12 +455,9 @@ export class SearchDataComponent implements OnInit {
         this.selectedBeneficiaires = [preFilter.beneficiaire as BeneficiaireFieldData];
 
       forkJoin(
-        this.selectedBeneficiaires.map(ref => 
-          this.autocompleteBeneficiaires.autocomplete(ref.siret)
-            .pipe(
-              map(data => data[0])
-            )
-        )
+        this.selectedBeneficiaires
+          .map(ref => ref.siret)
+          .map(siret => this.autocompleteBeneficiaires.autocomplete_single$(siret))
       )
       .subscribe(joined => { this.selectedBeneficiaires = joined; })
     }
