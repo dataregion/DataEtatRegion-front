@@ -33,6 +33,10 @@ import { OutputEvents } from './output-events';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GroupingTableComponent implements OnChanges, AfterViewInit {
+
+  /** Indique si les groupes racines sont repliés / dépliés */
+  @Input() foldRootGroups: boolean = false;
+
   @Input() tableData!: TableData;
   @Input() columnsMetaData!: ColumnsMetaData;
   @Input() groupingColumns: GroupingColumn[] = [];
@@ -62,7 +66,8 @@ export class GroupingTableComponent implements OnChanges, AfterViewInit {
     if (
       'tableData' in changes ||
       'columnsMetaData' in changes ||
-      'groupingColumns' in changes
+      'groupingColumns' in changes ||
+      'foldRootGroups' in changes
     ) {
       // Si les paramètres en entrée changent, on les propage.
       // (on passe également ici au chargement du composant).
@@ -73,6 +78,16 @@ export class GroupingTableComponent implements OnChanges, AfterViewInit {
       );
 
       this.rootGroup = this.context.rootGroup;
+
+      // Replie / Deplie les groupes racines
+      const fold = this.foldRootGroups
+      for (const group of this.rootGroup?.groups ?? []) {
+        if (fold)
+          this.context.fold(group)
+        else
+          this.context.unfold(group)
+      }
+
       if (this.columnCssStyle) {
         this.columnCssStyle.nativeElement.innerHTML =
           this.context.columnCssStyle;
