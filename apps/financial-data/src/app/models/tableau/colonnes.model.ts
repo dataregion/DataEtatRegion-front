@@ -27,6 +27,14 @@ export const colonnes: ColumnMetaDataDef[] = [
         },
     },
     {
+        name: 'annee',
+        label: 'Année d\'engagement',
+        columnStyle: {
+            'min-width': '22ex',
+            'flex-grow': '0',
+        },
+    },
+    {
         name: 'montant_cp',
         label: 'Montant payé',
         renderFn: (row, col) =>
@@ -35,10 +43,23 @@ export const colonnes: ColumnMetaDataDef[] = [
         aggregateRenderFn: (aggregateValue) =>
             aggregateValue ? moneyFormat.format(aggregateValue) : aggregateValue,
         columnStyle: {
-            'text-align': 'right',
             'min-width': '16ex',
             'flex-grow': '0',
         },
+    },
+    {
+        name: 'domaine',
+        label: 'Domaine fonctionnel',
+        renderFn: (row, _col) => row['domaine_fonctionnel'] ? _print_code_label(row['domaine_fonctionnel']['code'], row['domaine_fonctionnel']['label']) : '',
+    },
+    {
+        name: 'label_commune',
+        label: 'Commune du SIRET',
+        renderFn: (row, _col) => row['commune']['label'],
+    },
+    {
+        name: 'n_ej',
+        label: 'N° EJ',
     },
     {
         name: 'theme',
@@ -51,19 +72,9 @@ export const colonnes: ColumnMetaDataDef[] = [
         renderFn: (row, _col) => _print_code_label(row['programme']['code'], row['programme']['label']),
     },
     {
-        name: 'domaine',
-        label: 'Domaine fonctionnel',
-        renderFn: (row, _col) => row['domaine_fonctionnel'] ? _print_code_label(row['domaine_fonctionnel']['code'], row['domaine_fonctionnel']['label']) : '',
-    },
-    {
         name: 'ref_programmation',
         label: 'Ref Programmation',
         renderFn: (row, _col) => _print_code_label(row['referentiel_programmation']['code'], row['referentiel_programmation']['label']),
-    },
-    {
-        name: 'label_commune',
-        label: 'Commune',
-        renderFn: (row, _col) => row['commune']['label'],
     },
     {
         name: 'siret',
@@ -85,14 +96,6 @@ export const colonnes: ColumnMetaDataDef[] = [
         label: 'Date dernier paiement',
         renderFn: (row, col) =>
             row[col.name] ? new Date(row[col.name]).toLocaleString([], { year: 'numeric', month: 'numeric', day: 'numeric' }) : '',
-    },
-    {
-        name: 'annee',
-        label: 'Année d\'engagement',
-        columnStyle: {
-            'min-width': '18ex',
-            'flex-grow': '0',
-        },
     },
 ]
 
