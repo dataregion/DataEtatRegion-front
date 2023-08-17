@@ -1,6 +1,6 @@
 <ng-container [ngSwitch]="groupLevel > 0">
   <ng-container *ngSwitchCase="true">
-    <lib-table-group *ngFor="let g of group.groups" [group]="g" [groupLevel]="groupLevel - 1"></lib-table-group>
+    <lib-table-group *ngFor="let g of group.groups_desc" [group]="g" [groupLevel]="groupLevel - 1"></lib-table-group>
   </ng-container>
 
   <ng-container *ngSwitchDefault>
