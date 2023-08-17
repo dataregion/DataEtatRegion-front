@@ -21,7 +21,6 @@ export const colonnes: ColumnMetaDataDef[] = [
         aggregateRenderFn: (aggregateValue) =>
             aggregateValue ? moneyFormat.format(aggregateValue) : aggregateValue,
         columnStyle: {
-            'text-align': 'right',
             'min-width': '16ex',
             'flex-grow': '0',
         },
