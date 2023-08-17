@@ -12,8 +12,6 @@ export interface SelectedData {
   item: any
 }
 
-const TEN = 10;
-
 /**
  * Multiselect avec autocompletion et chips
  */
@@ -38,6 +36,7 @@ export class AdvancedChipsMultiselectComponent {
   @ViewChild('selectionInput', { static: false }) input!: ElementRef<HTMLInputElement>;
   @ViewChild('auto', { static: false }) matAutoComplete!: MatAutocomplete;
 
+  @Input() numberOfVisibleChips = 10;
   @Input() separatorKeysCodes = [ENTER, COMMA] as const;
   @Input() addOnBlur: boolean = true;
   @Input() label = 'Default label';
@@ -51,12 +50,12 @@ export class AdvancedChipsMultiselectComponent {
 
   _inputControl = new FormControl();
 
-  get first_10_selectedData() {
-    return this.selectedData?.slice(0, TEN) ?? [];
+  get visible_selectedData() {
+    return this.selectedData?.slice(0, this.numberOfVisibleChips) ?? [];
   }
   get invisible_count() {
     const length = this.selectedData?.length ?? 0
-    const count = length - TEN;
+    const count = length - this.numberOfVisibleChips;
     if (count > 0)
       return count
     else

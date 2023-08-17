@@ -144,3 +144,5 @@ html, body {
     background-color: rgba(152, 128, 255, 0.2);
   }
 }
+
+@import "apps/common-lib/fix-angular-material-chips-overflow.scss";
