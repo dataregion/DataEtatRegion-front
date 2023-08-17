@@ -52,9 +52,7 @@ export class HomeComponent implements OnInit {
   lastImportDate: string | null = null;
 
   groupingColumns: GroupingColumn[] = [
-    { columnName: 'nom_programme' },
-    { columnName: 'type_etablissement' },
-    { columnName: 'label_commune' },
+    { columnName: 'annee' }
   ];
 
   get grid_fullscreen() {
