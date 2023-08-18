@@ -3,7 +3,6 @@ import { moduleMetadata, type Meta, type StoryObj, applicationConfig } from "@st
 import { provideAnimations } from "@angular/platform-browser/animations";
 import { MaterialModule } from "../../public-api";
 import { AdvancedChipsMultiselectComponent } from "../../lib/components/advanced-chips-multiselect/advanced-chips-multiselect.component";
-import { SelectionModel } from "@angular/cdk/collections";
 
 
 const meta: Meta<AdvancedChipsMultiselectComponent> = {
@@ -31,7 +30,7 @@ export default meta;
 type Story = StoryObj<AdvancedChipsMultiselectComponent>;
 
 let primaryModel = {
-  opts: [{ 'item': "Initial option" }],
+  opts: [{ 'item': "Initial option" }, { 'item': "second option"}],
   selected: [{ 'item': "Initial option" }],
 }
 
@@ -43,7 +42,7 @@ export const Primary: Story = {
     props: {
       placeholder: "helloworld",
       options: primaryModel.opts,
-      selectData: primaryModel.selected,
+      selectedData: primaryModel.selected,
 
       ppSelectData: () => { return JSON.stringify(primaryModel.selected) }
     },
