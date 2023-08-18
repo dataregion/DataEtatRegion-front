@@ -35,7 +35,7 @@ workflow:
         DO_BUILD: "true"
         DO_TEST: "manual"
         DO_DEPLOY: "manual"
-        DO_E2E: "if_changed"
+        DO_E2E: "manual"
     - if: '$CI_PIPELINE_SOURCE == "push" &&  $CI_COMMIT_REF_NAME =~ "/^fix\//"'
       variables:
         DO_BUILD: "true"
