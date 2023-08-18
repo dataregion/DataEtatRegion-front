@@ -50,7 +50,7 @@ test.describe("Lorsque l'on spécifie deux programmes", () => {
   });
 });
 
-test.describe("Lorsque l'on spécifie une localiation", () => {
+test.describe("Lorsque l'on spécifie une localisation", () => {
   const urlparam = `?niveau_geo=departement&code_geo=35`;
 
   test("Les filtres sont pré remplis", async ({ page }) => {
@@ -85,6 +85,19 @@ test.describe("Lorsque l'on spécifie le plein écran", () => {
   })
 })
 
+test.describe("Lorsque l'on spécifie des bénéficiaires", () => {
+  const urlparam = "?beneficiaires=30613890001294,30613890003688";
+
+  test("Les filtres sont pré-remplis", async ({page}) => {
+    await page.goto(urlparam);
+
+    const locator = page.getByTestId('search-beneficiaires-control') 
+    await expect(locator).toContainText("30613890001294")
+    await expect(locator).toContainText("30613890003688")
+    await expect(locator).toContainText("DECATHLON")
+  })
+})
+
 test.describe("Lorsque l'on spécifie des domaines fonctionnels", () => {
   const urlparam = "?domaines_fonctionnels=0103-03-02&annee_min=2019&annee_max=2019";
 
@@ -116,17 +129,6 @@ test.describe("Lorsque l'on spécifie des regions source", () => {
 
     await expect(page.getByTestId('notif-additionnal-search-on-source-region'))
       .toContainText("filtre sur la source region")
-  })
-})
-
-test.describe("Lorsque l'on spécifie des bénéficiaires", () => {
-  const urlparam = "?beneficiaires=26350579400028,26350579400036";
-
-  test("Un message notifie que l'on recherche sur des beneficiaires vua la marque blanche", async ({page}) => {
-    await page.goto(urlparam);
-
-    await expect(page.getByTestId('notif-additionnal-search-on-beneficiaires'))
-      .toContainText("filtre sur les bénéficiaires")
   })
 })
 
