@@ -28,6 +28,8 @@ Voici les paramètres pris en charge:
 
 - Années
 
+*Par défaut, si aucun filtre n'est spécifié, on utilise l'année courante.*
+
 | Paramètre     | Description | Valeurs acceptées       | Exemple                                                                           |
 | ------------- | ----------- | ----------------------- | --------------------------------------------------------------------------------- |
 | Année minimum | A partir de | Une année. (ie: `2019`) | [`annee_min=2021`](https://budget.databretagne.fr/?annee_min=2019&annee_max=2020) |
