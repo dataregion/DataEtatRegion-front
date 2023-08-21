@@ -56,8 +56,8 @@ export class AutocompleteBeneficiaireService {
             return `${nom} (${code})`;
         } else if (code) {
             return code;
-        } else {
-            return nom;
-        }
+        } 
+
+        return nom;
     }
 }

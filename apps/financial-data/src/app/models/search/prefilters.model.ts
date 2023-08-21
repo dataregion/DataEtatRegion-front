@@ -12,7 +12,8 @@ export interface PreFilters {
   bops?: BopsPreFilter | BopsPreFilter[]
 
   location?: JSONObject[]
-  beneficiaire?: Beneficiaire // XXX: a garder pour retrocompatibilité
+  /** @deprecated ne pas utiliser, uniquement pour retro compatibilité */
+  beneficiaire?: Beneficiaire
   beneficiaires?: Beneficiaire[]
 
   domaines_fonctionnels?: string[]

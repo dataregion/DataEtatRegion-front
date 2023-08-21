@@ -158,8 +158,7 @@ export class Group {
   }
 
   get groups_desc() {
-    const g = this.groups.sort(this._group_desc);
-    return g
+    return this.groups.sort(this._group_desc);
   }
 
   constructor(
