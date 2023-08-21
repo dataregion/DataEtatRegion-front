@@ -21,12 +21,13 @@ import {
   BehaviorSubject,
   debounceTime,
   Subscription,
+  forkJoin,
 } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { BopModel } from '@models/refs/bop.models';
 import { FinancialData, FinancialDataResolverModel } from '@models/financial/financial-data-resolvers.models';
 import { FinancialDataModel } from '@models/financial/financial-data.models';
 import { DatePipe } from '@angular/common';
-import { RefSiret } from '@models/refs/RefSiret';
 import {
   JSONObject,
   Preference,
@@ -39,29 +40,52 @@ import {
   TypeLocalisation,
 } from 'apps/common-lib/src/public-api';
 import { Bop } from '@models/search/bop.model';
-import { Beneficiaire } from '@models/search/beneficiaire.model';
 import { BudgetService } from '@services/budget.service';
 import { NGXLogger } from 'ngx-logger';
 import { PreFilters } from '@models/search/prefilters.model';
 import { MarqueBlancheParsedParamsResolverModel } from '../../resolvers/marqueblanche-parsed-params.resolver';
 import { AdditionalSearchParameters, empty_additional_searchparams } from './additional-searchparams';
+import { BeneficiaireFieldData } from './beneficiaire-field-data.model';
+import { SearchForm } from './search-form.interface';
+import { AutocompleteBeneficiaireService } from './autocomplete-beneficiaire.service';
+import { SelectedData } from 'apps/common-lib/src/lib/components/advanced-chips-multiselect/advanced-chips-multiselect.component';
+import { Beneficiaire } from '@models/search/beneficiaire.model';
 
 
 @Component({
   selector: 'financial-search-data',
   templateUrl: './search-data.component.html',
   styleUrls: ['./search-data.component.scss'],
+  providers: [
+    AutocompleteBeneficiaireService,
+  ]
 })
 export class SearchDataComponent implements OnInit {
   public readonly TypeLocalisation = TypeLocalisation;
-  public searchForm!: FormGroup;
+
+  public searchForm!: FormGroup<SearchForm>;
+
+  get selectedBeneficiaires() : BeneficiaireFieldData[] {
+    return this.searchForm.get('beneficiaires')?.value as BeneficiaireFieldData[];
+  }
+  set selectedBeneficiaires(data: SelectedData[]) {
+    this.searchForm.get('beneficiaires')?.setValue(data as BeneficiaireFieldData[]);
+  }
 
   public additional_searchparams: AdditionalSearchParameters = empty_additional_searchparams;
 
   public bop: BopModel[] = [];
   public themes: string[] = [];
 
-  public filteredBeneficiaire: Observable<RefSiret[]> | null | undefined = null;
+  public filteredBeneficiaire$: Observable<BeneficiaireFieldData[]> | null = null;
+  public get beneficiaireFieldOptions$(): Observable<BeneficiaireFieldData[]> {
+    return this.filteredBeneficiaire$ || of([]);
+  }
+
+  public beneficiaireInputChange$ = new BehaviorSubject<string>('');
+  public onBeneficiaireInputChange(v: string) {
+    this.beneficiaireInputChange$.next(v);
+  }
 
   public filteredBop: BopModel[] | undefined = undefined;
 
@@ -111,9 +135,10 @@ export class SearchDataComponent implements OnInit {
     private alertService: AlertService,
     private budgetService: BudgetService,
     private logger: NGXLogger,
+    private autocompleteBeneficiaires: AutocompleteBeneficiaireService,
   ) {
     // formulaire
-    this.searchForm = new FormGroup({
+    this.searchForm = new FormGroup<SearchForm>({
       year: new FormControl<number[]>([], {
         validators: [
           Validators.min(2000),
@@ -123,9 +148,9 @@ export class SearchDataComponent implements OnInit {
 
       filterBop: new FormControl<string>(''), // controls pour le filtre des bops
 
-      bops: new FormControl<Bop | null>(null),
-      theme: new FormControl<string | null>(null),
-      beneficiaire: new FormControl<Beneficiaire | null>(null),
+      bops: new FormControl<Bop[] | null>(null),
+      theme: new FormControl<string[] | null>(null),
+      beneficiaires: new FormControl<Beneficiaire[] | null>(null),
       location: new FormControl({ value: null, disabled: false }, []),
     });
   }
@@ -186,27 +211,6 @@ export class SearchDataComponent implements OnInit {
     });
   }
 
-  public onSelectBeneficiaire(benef: RefSiret): void {
-    this.searchForm.controls['beneficiaire'].setValue(benef);
-  }
-
-  public displayBeneficiaire(element: RefSiret): string {
-    let code = element?.siret;
-    let nom = element?.denomination;
-
-    if (code && nom) {
-      return `${nom} (${code})`;
-    } else if (code) {
-      return code;
-    } else {
-      return nom;
-    }
-  }
-
-  public get beneficiaireControls(): FormControl | null {
-    return this.searchForm.get('beneficiaire') as FormControl;
-  }
-
   /**
    * Retourne le FormControl de location
    */
@@ -234,19 +238,12 @@ export class SearchDataComponent implements OnInit {
     const formValue = this.searchForm.value;
     this.searchInProgress.next(true);
 
-    // TODO: disparaitra lorsque l'on gérera le multi select beneficiaire dans le front
-    let beneficiaires = this.additional_searchparams.beneficiaires;
-    if ((!beneficiaires || beneficiaires.length === 0) && formValue.beneficiaire) {
-      beneficiaires = [formValue.beneficiaire]
-    }
-    // 
-
-    let search_parameters: SearchParameters = { 
+    let search_parameters: SearchParameters = {
       ...SearchParameters_empty,
-      beneficiaires,
-      bops: formValue.bops,
-      themes: formValue.theme,
-      years: formValue.year,
+      beneficiaires: this.selectedBeneficiaires || null,
+      bops: formValue.bops || null,
+      themes: formValue.theme || null,
+      years: formValue.year || null,
       locations:  formValue.location,
 
       domaines_fonctionnels: this.additional_searchparams?.domaines_fonctionnels || null,
@@ -264,14 +261,14 @@ export class SearchDataComponent implements OnInit {
       .subscribe({
         next: (response: FinancialDataModel[] | Error) => {
           this.searchFinish = true;
-          this.currentFilter.next(this._buildPreference(formValue));
+          this.currentFilter.next(this._buildPreference(formValue as JSONObject));
           this._searchResult = response as FinancialDataModel[];
           this.searchResultsEventEmitter.next(this._searchResult);
         },
         error: (err: Error) => {
           this.searchFinish = true;
           this._searchResult = [];
-          this.currentFilter.next(this._buildPreference(formValue));
+          this.currentFilter.next(this._buildPreference(formValue as JSONObject));
           this.searchResultsEventEmitter.next(this._searchResult);
           this.alertService.openAlertError(err.message, 8);
         },
@@ -301,7 +298,6 @@ export class SearchDataComponent implements OnInit {
   public downloadCsv(): void {
     this.searchForm.markAllAsTouched(); // pour notifier les erreurs sur le formulaire
     if (this.searchForm.valid && !this.searchInProgress.value ) {
-      const formValue = this.searchForm.value;
       this.searchInProgress.next(true);
       const csvdata = this.budgetService.getCsv(this._searchResult ?? []);
 
@@ -335,8 +331,8 @@ export class SearchDataComponent implements OnInit {
         .join('-');
     }
 
-    if (formValue.bops !== null) {
-      const bops = formValue.bops as BopModel[];
+    if (formValue.bops != null) {
+      const bops = formValue.bops;
       filename +=
         '_bops-' +
         bops
@@ -353,28 +349,30 @@ export class SearchDataComponent implements OnInit {
    */
   private _setupFilters(): void {
 
-    this.searchForm.controls['filterBop'].valueChanges.subscribe((value: string) => {
-      this.filteredBop = this._filterBop(value ? value : '');
+    this.searchForm.controls['filterBop'].valueChanges.subscribe((value: string | null) => {
+      const v = (value) ? value: '';
+      this.filteredBop = this._filterBop(v);
     });
 
     // filtre beneficiaire
-    this.filteredBeneficiaire = this.searchForm.controls[
-      'beneficiaire'
-    ].valueChanges.pipe(
-      startWith(''),
-      debounceTime(300),
-      switchMap((value) => {
-        if (value && value.length > 3) {
-          return this.budgetService.filterRefSiret(value);
-        }
-        return of([]);
-      })
-    );
+    this.filteredBeneficiaire$ =
+      this.beneficiaireInputChange$
+        .pipe(
+          startWith(''),
+          debounceTime(300),
+          switchMap((value) => {
+
+            if (!value || value.length <= 3)
+              return of([])
+
+            return this.autocompleteBeneficiaires.autocomplete$(value)
+          })
+        );
   }
 
   private _filterBop(value: string): BopModel[] {
     const filterValue = value ? value.toLowerCase() : '';
-    const themes = this.searchForm.controls['theme'].value as string[];
+    const themes = this.searchForm.controls['theme'].value;
 
     let filterGeo = this.bop.filter((option) => {
       if (themes) {
@@ -390,7 +388,7 @@ export class SearchDataComponent implements OnInit {
       );
     });
 
-    const controlBop = this.searchForm.controls['bops'].value as BopModel[];
+    const controlBop = this.searchForm.controls['bops'].value;
 
     if (controlBop) {
       // si des BOPs sont déjà sélectionné
@@ -448,9 +446,21 @@ export class SearchDataComponent implements OnInit {
       this.searchForm.controls['theme'].setValue(themeSelected);
     }
 
-    this.searchForm.controls['beneficiaire'].setValue(
-      preFilter.beneficiaire ?? null
-    );
+
+    if (preFilter.beneficiaires || preFilter.beneficiaire) {
+
+      if (preFilter.beneficiaires)
+        this.selectedBeneficiaires = preFilter.beneficiaires as BeneficiaireFieldData[];
+      else if (preFilter.beneficiaire)
+        this.selectedBeneficiaires = [preFilter.beneficiaire as BeneficiaireFieldData];
+
+      forkJoin(
+        this.selectedBeneficiaires
+          .map(ref => ref.siret)
+          .map(siret => this.autocompleteBeneficiaires.autocomplete_single$(siret))
+      )
+      .subscribe(joined => { this.selectedBeneficiaires = joined; })
+    }
 
     // Application du bops
     // Il faut rechercher dans les filtres "this.filteredBop"
@@ -462,7 +472,7 @@ export class SearchDataComponent implements OnInit {
             (bopFilter) => bop.code === bopFilter.code
           ) !== -1
       );
-      this.searchForm.controls['bops'].setValue(bopSelect);
+      this.searchForm.controls['bops'].setValue(bopSelect || null);
     }
 
     /* Paramètres additionnels qui n'apparaissent pas dans le formulaire de recherche */
@@ -479,11 +489,7 @@ export class SearchDataComponent implements OnInit {
     let sources_region = preFilter?.sources_region;
     if (sources_region)
       additional_searchparams = { ...additional_searchparams, sources_region }
-    
-    let beneficiaires = preFilter?.marqueblanche_beneficiaires;
-    if (beneficiaires)
-      additional_searchparams = { ...additional_searchparams, beneficiaires }
-    
+
     this.additional_searchparams = additional_searchparams;
 
     // lance la recherche pour afficher les resultats

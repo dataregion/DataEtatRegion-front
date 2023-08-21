@@ -9,6 +9,7 @@ import { FooterComponent } from './components/footer/footer.component';
 import { RegisterComponent } from './components/register/register.component';
 import { TermOfUseComponent } from './components/term-of-use/term-of-use.component';
 import { DisplayDateComponent } from './components/display-date/display-date.component';
+import { AdvancedChipsMultiselectComponent } from './components/advanced-chips-multiselect/advanced-chips-multiselect.component';
 
 @NgModule({
   declarations: [
@@ -24,6 +25,7 @@ import { DisplayDateComponent } from './components/display-date/display-date.com
     FormsModule,
     HeaderComponent,
     DisplayDateComponent,
+    AdvancedChipsMultiselectComponent,
   ],
   exports: [
     AlertSnackBarComponent,
@@ -33,6 +35,7 @@ import { DisplayDateComponent } from './components/display-date/display-date.com
     FooterComponent,
     TermOfUseComponent,
     RegisterComponent,
+    AdvancedChipsMultiselectComponent,
   ],
 })
 export class CommonLibModule {}

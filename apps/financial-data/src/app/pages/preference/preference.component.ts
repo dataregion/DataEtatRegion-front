@@ -27,10 +27,13 @@ export class PreferenceComponent {
     beneficiaire: {
       label: 'Bénéficiare',
       renderFn: (row: JSONObject) => {
-        if (row['denomination']) {
-          return `${row['denomination']} (${row['siret']})`;
-        }
-        return `Siret : (${row['siret']})`;
+        return this._ppBeneficiaire(row);
+      },
+    },
+    beneficiaires: {
+      label: "Bénéficiaires",
+      renderFn: (row: JSONObject) => {
+        return this._ppBeneficiaire(row);
       },
     },
     location: {
@@ -52,4 +55,11 @@ export class PreferenceComponent {
       queryParams: { uuid: uuid },
     });
   };
+
+  private _ppBeneficiaire(json: any) {
+    if (json['denomination']) {
+      return `${json['denomination']} (${json['siret']})`;
+    }
+    return `Siret : (${json['siret']})`;
+  }
 }

@@ -16,9 +16,11 @@
   </mat-card-content>
 
   <div class="last-import" *ngIf="lastImportDate">
-    <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="info"></mat-icon>
-    <span>Le dernier chargement des données financières date du <lib-display-date
-        [date]="lastImportDate"></lib-display-date> </span>
+    <mat-icon class="info-icon" aria-hidden="false" aria-label="Example home icon" fontIcon="info"></mat-icon>
+    <div>
+      Le dernier chargement complet des données financières date du <lib-display-date [date]="lastImportDate"></lib-display-date>. <br>
+      Les données prennent donc en compte la situation au dernier jour du mois précédent.
+    </div>
   </div>
 </mat-card>
 
@@ -66,7 +68,9 @@
     </div>
 
     <lib-grouping-table class="h-100" [tableData]="tableData" [columnsMetaData]="columnsMetaData"
-      [groupingColumns]="groupingColumns" (rowClick)="onRowClick($event)"></lib-grouping-table>
+      [groupingColumns]="groupingColumns" (rowClick)="onRowClick($event)"
+      [foldRootGroups]="true"
+    ></lib-grouping-table>
 
   </ng-container>
 </ng-template>

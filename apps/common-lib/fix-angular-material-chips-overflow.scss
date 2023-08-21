@@ -1,0 +1,12 @@
+// Les règles CSS suivantes 'corrigent' l'overflow des chips
+// pour angular material
+// XXX: https://stackoverflow.com/questions/76313304/angular-material-16-chip-text-with-overflow
+.mdc-evolution-chip-set__chips {
+  max-width: 100% !important;
+}
+
+.mat-mdc-standard-chip .mdc-evolution-chip__cell--primary,
+.mat-mdc-standard-chip .mdc-evolution-chip__action--primary,
+.mat-mdc-standard-chip .mat-mdc-chip-action-label {
+  overflow: hidden !important;
+}

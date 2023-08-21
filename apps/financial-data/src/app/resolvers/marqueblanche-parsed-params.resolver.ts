@@ -104,7 +104,7 @@ function beneficiaires(
 
   let preFilters: PreFilters = {
     ...previous.preFilters,
-    marqueblanche_beneficiaires: beneficiaires,
+    beneficiaires: beneficiaires,
   }
 
   return of({ ...previous, preFilters })

@@ -53,12 +53,34 @@ export class BudgetService {
     );
   }
 
-  public filterRefSiret(nomOuSiret: string): Observable<RefSiret[]> {
+  public filterRefSiret$(nomOuSiret: string): Observable<RefSiret[]> {
 
-    const params = `limit=10&query=${nomOuSiret}`;
+    const encodedNomOuSiret = encodeURIComponent(nomOuSiret);
+    const params = `limit=10&query=${encodedNomOuSiret}`;
+    const url = `${this._apiRef}/beneficiaire?${params}`;
     return this.http
-      .get<DataPagination<RefSiret>>(`${this._apiRef}/beneficiaire?${params}`)
-      .pipe(map((response) => response.items));
+      .get<DataPagination<RefSiret>>(url)
+      .pipe(
+        map(
+          (response) => {
+            if (response == null) // XXX: no content
+              return [];
+            return response.items;
+          }
+        )
+      );
+  }
+
+  public getRefSiretFromCode$(code: string): Observable<RefSiret> {
+
+    const url = `${this._apiRef}/beneficiaire/${code}`;
+    return this.http
+      .get<RefSiret>(url)
+      .pipe(
+        map(response => { 
+          return response as RefSiret 
+        })
+      );
   }
 
   public getBop(): Observable<BopModel[]> {

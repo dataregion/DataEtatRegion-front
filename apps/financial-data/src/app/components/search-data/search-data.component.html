@@ -62,24 +62,19 @@
 
       <div class="break"></div>
 
-      <mat-form-field class="field-25-width" appearance="fill" matTooltipPosition="above"
+      <lib-advanced-chips-multiselect
+        data-test-id="search-beneficiaires-control"
+        class="field-25-width field-beneficiaire"
+        appearance="fill"
+        [label]="'Bénéficiaire(s)'"
+        placeholder=""
+        matTooltipPosition="above"
         matTooltip="Saisir un nom (sans accent) ou un SIRET (Exemple: Decathlon, Rennes... ou 40447186400433,...)"
-        aria-label="Champ de selection pour bénéficiaire.">
-        <mat-label>Bénéficiaire</mat-label>
-        <input type="text" matInput formControlName="beneficiaire" [matAutocomplete]="beneficiaire">
-        <button *ngIf="searchForm.controls['beneficiaire'].value !== null" matSuffix mat-icon-button
-          (click)="searchForm.controls['beneficiaire'].setValue(null)">
-          <mat-icon>close</mat-icon>
-        </button>
-        <mat-autocomplete #beneficiaire="matAutocomplete" [displayWith]="displayBeneficiaire"
-          (optionSelected)="onSelectBeneficiaire($event.option.value)">
-          <mat-option *ngFor="let beneficiaire of filteredBeneficiaire | async" [value]="beneficiaire">
-            {{displayBeneficiaire(beneficiaire)}}
-          </mat-option>
-        </mat-autocomplete>
-
-        <mat-error *ngIf="errorsBenefOrBop">{{errorsBenefOrBop}}</mat-error>
-      </mat-form-field>
+        [options]="beneficiaireFieldOptions$ | async"
+        (inputChange)="onBeneficiaireInputChange($event)"
+        [(selectedData)]="selectedBeneficiaires"
+        >
+      </lib-advanced-chips-multiselect>
 
       <div class="spacer"></div>
 
@@ -126,15 +121,6 @@
     <mat-icon aria-hidden="false" aria-label="information">information</mat-icon>
     <span>
       Attention, vous appliquez également un filtre sur la source region
-    </span>
-  </div>
-</ng-container>
-
-<ng-container *ngIf="additional_searchparams?.beneficiaires && additional_searchparams.beneficiaires.length > 0">
-  <div data-test-id="notif-additionnal-search-on-beneficiaires">
-    <mat-icon aria-hidden="false" aria-label="information">information</mat-icon>
-    <span>
-      Attention, vous appliquez également un filtre sur les bénéficiaires.
     </span>
   </div>
 </ng-container>

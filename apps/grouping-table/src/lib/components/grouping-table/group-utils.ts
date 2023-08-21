@@ -144,11 +144,21 @@ export class Group {
     return this._count;
   }
 
+  _group_desc(a: Group, b: Group) {
+    if (a.columnValue < b.columnValue) return 1;
+    if (a.columnValue > b.columnValue) return -1;
+    return 0
+  }
+
   get groups() {
     if (!this.groupsMap) {
       return [];
     }
     return [...this.groupsMap.values()];
+  }
+
+  get groups_desc() {
+    return this.groups.sort(this._group_desc);
   }
 
   constructor(

@@ -215,7 +215,10 @@
             "configDir": "apps/common-lib/.storybook",
             "browserTarget": "common-lib:build",
             "compodoc": false,
-            "port": 6006
+            "port": 6006,
+            "styles": [
+              "./node_modules/@angular/material/prebuilt-themes/indigo-pink.css"
+            ]
           }
         },
         "build-storybook": {

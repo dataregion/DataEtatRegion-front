@@ -1,0 +1,43 @@
+<mat-form-field>
+
+  <mat-label>{{label}}</mat-label>
+
+  <mat-chip-grid #chipGrid [ariaLabel]="'Valeurs selectionnées pour ' + label">
+
+    <mat-chip-row *ngFor="let s of visible_selectedData"
+      (removed)="remove(s)"
+      [editable]="false"
+      [aria-description]="s.item"
+    >
+      {{ s.item }}
+      <button matChipRemove [attr.aria-label]="'remove ' + s.item">
+        <mat-icon>cancel</mat-icon>
+      </button>
+
+    </mat-chip-row>
+
+    <mat-chip-row *ngIf="invisible_count > 0">
+      <span >+ {{invisible_count}}</span>
+    </mat-chip-row>
+
+    <input
+      type="text"
+      #selectionInput
+      [formControl]="_inputControl"
+      [placeholder]="placeholder"
+      [matChipInputFor]="chipGrid"
+      [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+      [matChipInputAddOnBlur]="addOnBlur"
+      (matChipInputTokenEnd)="onMatChipInputEvent($event)"
+      [matAutocomplete]="auto"
+    >
+
+  </mat-chip-grid>
+
+  <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
+    <mat-option *ngFor="let option of options" [value]="option">
+      {{option.item}}
+    </mat-option>
+  </mat-autocomplete>
+
+</mat-form-field>

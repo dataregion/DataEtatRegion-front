@@ -12,12 +12,11 @@ export interface PreFilters {
   bops?: BopsPreFilter | BopsPreFilter[]
 
   location?: JSONObject[]
+  /** @deprecated ne pas utiliser, uniquement pour retro compatibilité */
   beneficiaire?: Beneficiaire
+  beneficiaires?: Beneficiaire[]
 
   domaines_fonctionnels?: string[]
   referentiels_programmation?: string[]
   sources_region?: string[]
-
-  // TODO: à intégrer comme un paramètre de recherche classique  lors de la refonte frontend
-  marqueblanche_beneficiaires?: Beneficiaire[]
 }
