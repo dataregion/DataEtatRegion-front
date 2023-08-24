@@ -1,4 +1,5 @@
 import { AggregatorFns, ColumnMetaDataDef } from "apps/grouping-table/src/lib/components/grouping-table/group-utils";
+import { renderTags } from "./renderers";
 
 const moneyFormat = new Intl.NumberFormat('fr-FR', {
     style: 'currency',
@@ -45,6 +46,14 @@ export const colonnes: ColumnMetaDataDef[] = [
             'min-width': '16ex',
             'flex-grow': '0',
         },
+    },
+    {
+        name: 'tags',
+        label: 'Tags',
+        renderFn: (row, col) => {
+            const tags = row[col.name];
+            return renderTags(tags);
+        }
     },
     {
         name: 'domaine',
