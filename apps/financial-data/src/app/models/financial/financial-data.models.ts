@@ -1,4 +1,5 @@
 import { Commune, Programme, Siret, SourceFinancialData } from "./common.models";
+import { Tag } from "./tag.model";
 
 
 export const HEADERS_CSV_FINANCIAL = [
@@ -41,4 +42,6 @@ export interface FinancialDataModel {
 
   siret: Siret;
   date_cp: string;
+
+  tags: Tag[];
 }

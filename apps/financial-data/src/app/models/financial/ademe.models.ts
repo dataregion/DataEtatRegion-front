@@ -1,5 +1,5 @@
-import { PageSize } from "apps/common-lib/src/public-api";
 import { Commune, Siret } from "./common.models";
+import { Tag } from "./tag.model";
 
 
 
@@ -16,4 +16,6 @@ export interface AdemeData{
   reference_decision: string;
   siret_beneficiaire: Siret;
   commune: Commune
+
+  tags: Tag[];
 }
