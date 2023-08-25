@@ -170,7 +170,6 @@ export class HomeComponent implements OnInit {
     });
   }
 
-  //
   displayTag(tag: Tag) {
     return tag_str(tag);
   }
