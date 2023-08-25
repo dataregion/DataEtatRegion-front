@@ -70,7 +70,7 @@
     <lib-grouping-table class="h-100" [tableData]="tableData" [columnsMetaData]="columnsMetaData"
       [groupingColumns]="groupingColumns" (rowClick)="onRowClick($event)" [foldRootGroups]="true">
 
-      <ng-template projectCell="tags" let-cell="cell">
+      <ng-template libProjectCell="tags" let-cell="cell">
 
           <mat-chip-listbox>
             <mat-chip *ngFor="let tag of cell">
