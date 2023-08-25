@@ -1,12 +1,12 @@
 import { Directive, Input, TemplateRef } from "@angular/core";
 
 @Directive({
-    selector: 'ng-template[projectCell]'
+    selector: '[libProjectCell]'
 })
 export class ProjectCellDirective {
 
     constructor(public templateRef: TemplateRef<unknown>) { }
 
-    @Input()
+    @Input('libProjectCell')
     projectCell = '';
 }
