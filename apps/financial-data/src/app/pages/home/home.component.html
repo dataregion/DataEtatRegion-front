@@ -68,9 +68,19 @@
     </div>
 
     <lib-grouping-table class="h-100" [tableData]="tableData" [columnsMetaData]="columnsMetaData"
-      [groupingColumns]="groupingColumns" (rowClick)="onRowClick($event)"
-      [foldRootGroups]="true"
-    ></lib-grouping-table>
+      [groupingColumns]="groupingColumns" (rowClick)="onRowClick($event)" [foldRootGroups]="true">
+
+      <ng-template projectCell="tags" let-cell="cell">
+
+          <mat-chip-listbox>
+            <mat-chip *ngFor="let tag of cell">
+              {{displayTag(tag)}}
+            </mat-chip>
+          </mat-chip-listbox>
+
+      </ng-template>
+
+    </lib-grouping-table>
 
   </ng-container>
 </ng-template>
