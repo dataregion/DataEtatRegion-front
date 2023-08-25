@@ -17,15 +17,15 @@
 
   <div>
 
-    <div style="display: flex; justify-content: space-between; align-items: center;margin-bottom: 1.5rem;">
-      <p style="margin:0;">Sélectionner et ordonner les données :</p>
+    <div class="select-all-container">
+      <p>Sélectionner et ordonner les données :</p>
       <button mat-stroked-button extended [color]="allDisplayed() ? 'basic' : 'primary'" type="button" (click)="onAllCheckboxChange()">
         <mat-icon>{{allDisplayed() ? 'close' : 'check_circle_outline'}}</mat-icon>
         {{'Tout ' + (allDisplayed() ? 'déselectionner' : 'sélectionner')}}
       </button>
     </div>
 
-    <div cdkDropList class="column-list" (cdkDropListDropped)="moveColumn($event)" style="width:100%;">
+    <div cdkDropList class="column-list" (cdkDropListDropped)="moveColumn($event)">
       <div
         *ngFor="let col of displayedColumns; let i = index"
         class="column-box"

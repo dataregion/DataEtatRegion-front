@@ -57,3 +57,18 @@
 .column-list.cdk-drop-list-dragging .column-box:not(.cdk-drag-placeholder) {
   transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
 }
+
+div.select-all-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+div.select-all-container > p {
+  margin:0;
+}
+
+div.column-list {
+  width: 100%;
+}
