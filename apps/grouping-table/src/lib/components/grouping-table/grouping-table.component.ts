@@ -2,6 +2,7 @@ import {
   AfterViewInit,
   ChangeDetectionStrategy,
   Component,
+  ContentChildren,
   ElementRef,
   EventEmitter,
   HostListener,
@@ -9,6 +10,7 @@ import {
   Input,
   OnChanges,
   Output,
+  QueryList,
   SimpleChanges,
   ViewChild,
   ViewEncapsulation,
@@ -21,6 +23,7 @@ import {
 } from './group-utils';
 import { GroupingTableContextService } from './grouping-table-context.service';
 import { OutputEvents } from './output-events';
+import { ProjectCellDirective } from './project-cell.directive';
 
 @Component({
   selector: 'lib-grouping-table',
@@ -33,6 +36,8 @@ import { OutputEvents } from './output-events';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GroupingTableComponent implements OnChanges, AfterViewInit {
+
+  @ContentChildren(ProjectCellDirective) projectedCells!: QueryList<ProjectCellDirective>;
 
   /** Indique si les groupes racines sont repliés / dépliés */
   @Input() foldRootGroups: boolean = false;
@@ -100,6 +105,8 @@ export class GroupingTableComponent implements OnChanges, AfterViewInit {
     if (this.columnCssStyle) {
       this.columnCssStyle.nativeElement.innerHTML = this.context.columnCssStyle;
     }
+
+    this.context.cellProjections = this.projectedCells.toArray();
   }
 
   @HostListener('scroll', ['$event.target']) onScroll(target: HTMLElement) {

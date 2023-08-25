@@ -11,6 +11,7 @@ import {
 } from "./group-utils";
 import { DomSanitizer, SafeHtml } from "@angular/platform-browser";
 import { OutputEvents } from "./output-events";
+import { ProjectCellDirective } from "./project-cell.directive";
 
 @Injectable()
 export class GroupingTableContextService {
@@ -33,7 +34,7 @@ export class GroupingTableContextService {
     data: TableData,
     columnsMetaData: ColumnsMetaData,
     groupingColumns: GroupingColumn[],
-    hideGroupingColumns = false
+    hideGroupingColumns = false,
   ) {
     this.data = data;
     this.columnsMetaData = columnsMetaData;
@@ -118,4 +119,14 @@ export class GroupingTableContextService {
   clickOnRow(row: RowData) {
     this._outputEvents?.["click-on-row"].emit(row);
   }
+
+  // #region: customisation via content projection
+  cellProjections: ProjectCellDirective[] = [];
+
+  projectionForCell(name: string): ProjectCellDirective | null {
+    return this.cellProjections?.find(projection => {
+      return projection.projectCell === name;
+    }) || null;
+  }
+  // #endregion
 }

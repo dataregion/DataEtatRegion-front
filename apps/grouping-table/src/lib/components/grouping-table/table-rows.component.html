@@ -5,8 +5,17 @@
 >
   <div
     *ngFor="let col of context.displayedColumns; index as i; first as isFirst"
-    class="grouping-table-cell {{isFirst ? '' : ('col-' + i)}}"
-  >
-    {{col.renderFn ? col.renderFn(row, col) : row[col.name]}}
+    class="grouping-table-cell {{isFirst ? '' : ('col-' + i)}}">
+
+    <ng-container *ngIf="cellCustomProjection(col.name); let projection; else defaultCellDisplay"
+        [ngTemplateOutlet]="projection?.templateRef ?? null"
+        [ngTemplateOutletContext]="{ 'column': col, 'row': row, 'cell': row[col.name] }"
+    >
+    </ng-container>
+
+    <ng-template #defaultCellDisplay>
+      {{col.renderFn ? col.renderFn(row, col) : row[col.name]}}
+    </ng-template>
   </div>
+
 </div>
