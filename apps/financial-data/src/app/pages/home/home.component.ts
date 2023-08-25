@@ -18,6 +18,7 @@ import {
   TableData,
 } from 'apps/grouping-table/src/lib/components/grouping-table/group-utils';
 import { GroupingConfigDialogComponent } from 'apps/grouping-table/src/lib/components/grouping-config-dialog/grouping-config-dialog.component';
+import { StructureColumnsDialogComponent } from 'apps/grouping-table/src/lib/components/structure-columns-dialog/structure-columns-dialog.component';
 import { InformationsSupplementairesDialogComponent } from '../../modules/informations-supplementaires/informations-supplementaires-dialog/informations-supplementaires-dialog.component';
 import { AuditHttpService } from '@services/http/audit.service';
 import { MarqueBlancheParsedParamsResolverModel } from '../../resolvers/marqueblanche-parsed-params.resolver';
@@ -142,6 +143,24 @@ export class HomeComponent implements OnInit {
       .subscribe((updatedGroupingColumns: GroupingColumn[]) => {
         if (updatedGroupingColumns) {
           this.groupingColumns = updatedGroupingColumns;
+        }
+      });
+  }
+
+  openSortColumnsDialog() {
+    let dialogRef = this.dialog.open(StructureColumnsDialogComponent, {
+      data: {
+        columns: colonnes,
+        displayedColumns: this.columnsMetaData.data
+      },
+      width: '40rem',
+      autoFocus: 'input',
+    });
+    dialogRef
+      .afterClosed()
+      .subscribe((updatedDisplayedColumns: ColumnsMetaData) => {
+        if (updatedDisplayedColumns) {
+          this.columnsMetaData = updatedDisplayedColumns;
         }
       });
   }
