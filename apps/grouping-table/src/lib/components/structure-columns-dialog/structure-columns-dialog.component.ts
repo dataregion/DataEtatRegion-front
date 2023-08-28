@@ -27,6 +27,7 @@ export type StructureColumnsDialogData = {
  * Boite de dialogue pour la sélection et l'ordre des colonnes à afficher et exporter.
  */
 @Component({
+  selector: 'lib-structure-columns-dialog',
   standalone: true,
   templateUrl: './structure-columns-dialog.component.html',
   styleUrls: ['./structure-columns-dialog.component.scss'],
