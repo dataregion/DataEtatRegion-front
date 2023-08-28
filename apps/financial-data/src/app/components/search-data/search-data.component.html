@@ -76,6 +76,16 @@
         >
       </lib-advanced-chips-multiselect>
 
+      <lib-advanced-chips-multiselect
+        class="field-25-width field-tags"
+        appearance="fill"
+        label="Tags"
+        placeholder=""
+        [options]="tagsFieldOptions$ | async"
+        (inputChange)="onTagInputChange($event)"
+        [(selectedData)]="selectedTags">
+      </lib-advanced-chips-multiselect>
+
       <div class="spacer"></div>
 
       <button mat-fab color="primary" (click)="doSearch()" matTooltip="Rechercher" aria-label="Bouton de recherche.">

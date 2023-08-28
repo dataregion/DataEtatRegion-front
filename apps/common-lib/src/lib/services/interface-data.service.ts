@@ -14,6 +14,8 @@ export interface SearchParameters {
     domaines_fonctionnels: string[] | null; 
     referentiels_programmation: string[] | null;
     source_region: string[] | null;
+
+    tags: string[] | null;
 }
 
 export const SearchParameters_empty: SearchParameters = {
@@ -26,6 +28,8 @@ export const SearchParameters_empty: SearchParameters = {
   domaines_fonctionnels: null,
   referentiels_programmation: null,
   source_region: null,
+
+  tags: null,
 }
 
 /**

@@ -54,10 +54,10 @@ export class FinancialDataHttpService  implements DataHttpService<FinancialDataM
       search_params?.beneficiaires == null &&
       search_params?.domaines_fonctionnels == null &&
       search_params?.referentiels_programmation == null &&
-      search_params?.source_region == null
-    ) {
+      search_params?.source_region == null &&
+      search_params?.tags == null
+    )
       return of();
-    }
 
     const params = this._buildparams(search_params);
 
@@ -66,7 +66,7 @@ export class FinancialDataHttpService  implements DataHttpService<FinancialDataM
 
 
   private _buildparams(
-    { beneficiaires, bops, themes, locations, years, domaines_fonctionnels, referentiels_programmation, source_region }: SearchParameters
+    { beneficiaires, bops, themes, locations, years, domaines_fonctionnels, referentiels_programmation, source_region, tags }: SearchParameters
   ): string {
     let params ='limit=5000';
     if (beneficiaires && beneficiaires.length > 0) {
@@ -98,6 +98,11 @@ export class FinancialDataHttpService  implements DataHttpService<FinancialDataM
 
     if (source_region && source_region.length > 0)
       params += `&source_region=${source_region.join(',')}`;
+
+    if (tags && tags.length > 0) {
+      const searchparam = encodeURI(tags.join(','));
+      params += `&tags=${searchparam}`;
+    }
 
     return params;
   }

@@ -23,7 +23,6 @@ import {
   Subscription,
   forkJoin,
 } from 'rxjs';
-import { map } from 'rxjs/operators';
 import { BopModel } from '@models/refs/bop.models';
 import { FinancialData, FinancialDataResolverModel } from '@models/financial/financial-data-resolvers.models';
 import { FinancialDataModel } from '@models/financial/financial-data.models';
@@ -51,6 +50,7 @@ import { SearchForm } from './search-form.interface';
 import { AutocompleteBeneficiaireService } from './autocomplete-beneficiaire.service';
 import { SelectedData } from 'apps/common-lib/src/lib/components/advanced-chips-multiselect/advanced-chips-multiselect.component';
 import { Beneficiaire } from '@models/search/beneficiaire.model';
+import { TagFieldData } from './tags-field-data.model';
 
 
 @Component({
@@ -89,6 +89,11 @@ export class SearchDataComponent implements OnInit {
   }
 
   public filteredBop: BopModel[] | undefined = undefined;
+
+  public selectedTags: TagFieldData[] = []
+  // TODO: a recupérer sur le referentiel de tags
+  public tagsFieldOptions$: Observable<TagFieldData[]> = of([{ item: 'fondvert' }, { item: 'QPV' }])
+  public onTagInputChange(v: string) { }
 
   /**
    * Indique si la recherche a été effectué
@@ -251,6 +256,8 @@ export class SearchDataComponent implements OnInit {
       themes: formValue.theme || null,
       years: formValue.year || null,
       locations:  formValue.location,
+
+      tags: this.selectedTags?.map(selection => selection.item) ?? null,
 
       domaines_fonctionnels: this.additional_searchparams?.domaines_fonctionnels || null,
       referentiels_programmation: this.additional_searchparams?.referentiels_programmation || null,
