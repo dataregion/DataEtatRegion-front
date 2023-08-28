@@ -150,7 +150,6 @@ export class HomeComponent implements OnInit {
   openSortColumnsDialog() {
     let dialogRef = this.dialog.open(StructureColumnsDialogComponent, {
       data: {
-        columns: colonnes,
         displayedColumns: this.columnsMetaData.data
       },
       width: '40rem',

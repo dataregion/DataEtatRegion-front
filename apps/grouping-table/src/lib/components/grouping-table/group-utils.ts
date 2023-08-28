@@ -22,8 +22,14 @@ export type ColumnMetaDataDef = {
   /** Libellé de la colonne, moins important que le libellé cu-dessus */
   sub_label?: string | undefined;
 
-  /** La colonne est-elle affichée dans le tableau et prise en compte dans l'export */
+  /** La colonne est-elle affichée dans le tableau de données (undefined => true) */
   displayed?: boolean | undefined;
+
+  /**
+   * La colonne peut-elle être cachée dans le tableau de données (undefined => true)
+   * Si false : la colonne sera affichée en premier dans un tableau de données
+   */
+  hideable?: boolean | undefined;
 
   /**
    * Fonction de rendu permettant d'adapter la valeur de la cellule avant affichage.

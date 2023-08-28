@@ -48,12 +48,12 @@ export class GroupingTableContextService {
   }
 
   /**
-   * Retourne la liste des colonnes sélectionnées
+   * Retourne la liste des colonnes à afficher
    * @returns ColumnMetaDataDef[]
    */
   private calculateDisplayedColumns(): ColumnMetaDataDef[] {
     return this.columnsMetaData.data.filter((col) => {
-      return col.displayed;
+      return col.displayed === undefined || col.displayed;
     });
   }
 

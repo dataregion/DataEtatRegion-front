@@ -27,7 +27,7 @@
 
     <div cdkDropList class="column-list" (cdkDropListDropped)="moveColumn($event)">
       <div
-        *ngFor="let col of displayedColumns; let i = index"
+        *ngFor="let col of getHideableColumns(); let i = index"
         class="column-box"
         cdkDrag
       >
