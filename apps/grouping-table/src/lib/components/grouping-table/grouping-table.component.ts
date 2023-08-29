@@ -39,9 +39,6 @@ export class GroupingTableComponent implements OnChanges, AfterViewInit {
 
   @ContentChildren(ProjectCellDirective) projectedCells!: QueryList<ProjectCellDirective>;
 
-  /** Indique si les groupes racines sont repliés / dépliés */
-  @Input() foldRootGroups: boolean = false;
-
   @Input() tableData!: TableData;
   @Input() columnsMetaData!: ColumnsMetaData;
   @Input() groupingColumns: GroupingColumn[] = [];
@@ -80,13 +77,19 @@ export class GroupingTableComponent implements OnChanges, AfterViewInit {
         this.tableData,
         this.columnsMetaData,
         this.groupingColumns,
+        ('groupingColumns' in changes)
       );
 
       this.rootGroup = this.context.rootGroup;
 
       // Replie / Deplie les groupes racines
-      const fold = this.foldRootGroups
       for (const group of this.rootGroup?.groups ?? []) {
+        // Si le seul changement concerne les colonnes, et que le groupe était déplié, on le redéplie
+        const fold = !(
+          'columnsMetaData' in changes &&
+          Object.keys(changes).length === 1 &&
+          !this.context.foldedGroups.has(group)
+        )
         if (fold)
           this.context.fold(group)
         else

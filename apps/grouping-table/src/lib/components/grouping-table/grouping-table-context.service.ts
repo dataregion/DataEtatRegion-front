@@ -33,12 +33,14 @@ export class GroupingTableContextService {
     data: TableData,
     columnsMetaData: ColumnsMetaData,
     groupingColumns: GroupingColumn[],
+    recalculGroups: boolean,
   ) {
     this.data = data;
     this.columnsMetaData = columnsMetaData;
     this.groupingColumns = groupingColumns;
 
-    this.rootGroup = this.calculateGroups();
+    if (recalculGroups)
+      this.rootGroup = this.calculateGroups();
     this.displayedColumns = this.calculateDisplayedColumns();
     this.columnCssStyle = this.calculateColumnStyle();
   }
