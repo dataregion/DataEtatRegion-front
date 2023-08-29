@@ -1,5 +1,5 @@
 import { Commune, Siret } from "./common.models";
-import { Tag } from "./tag.model";
+import { Tag } from "../refs/tag.model";
 
 
 
