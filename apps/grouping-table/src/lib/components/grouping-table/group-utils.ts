@@ -1,3 +1,5 @@
+import { DisplayDateComponent } from "apps/common-lib/src/lib/components/display-date/display-date.component";
+
 export type AggregateReducerContext = {
   row: RowData;
   group: Group;
@@ -131,6 +133,11 @@ export type TableData = RowData[];
 
 export type GroupingColumn = {
   columnName: string;
+};
+
+export type DisplayedOrderedColumn = {
+  columnLabel: string;
+  displayed?: boolean;
 };
 
 /**
