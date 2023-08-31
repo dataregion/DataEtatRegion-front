@@ -26,12 +26,6 @@ export type ColumnMetaDataDef = {
   displayed?: boolean | undefined;
 
   /**
-   * La colonne peut-elle être cachée dans le tableau de données (undefined => true)
-   * Si false : la colonne sera affichée en premier dans un tableau de données
-   */
-  hideable?: boolean | undefined;
-
-  /**
    * Fonction de rendu permettant d'adapter la valeur de la cellule avant affichage.
    * Peut permettre d'afficher une valeur différente de celle de la cellule, ou de gérer les sous-objets.
    * @param row ligne de données

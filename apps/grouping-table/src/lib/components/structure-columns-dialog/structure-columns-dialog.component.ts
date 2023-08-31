@@ -20,7 +20,7 @@ import {
 } from '@angular/cdk/drag-drop';
 
 export type StructureColumnsDialogData = {
-  displayedColumns: ColumnMetaDataDef[];
+  columns: ColumnMetaDataDef[];
 };
 
 /**
@@ -42,33 +42,23 @@ export type StructureColumnsDialogData = {
   ],
 })
 export class StructureColumnsDialogComponent {
-  displayedColumns: ColumnMetaDataDef[];
+  columns: ColumnMetaDataDef[];
 
   constructor(
     private dialogRef: MatDialogRef<StructureColumnsDialogComponent>,
     @Inject(MAT_DIALOG_DATA) dialogData: StructureColumnsDialogData
   ) {
-    this.displayedColumns = dialogData.displayedColumns;
-  }
-
-  /**
-   * Retourne la liste des colonnes pouvant être cachées dans le tableau de données
-   * @returns boolean
-   */
-  getHideableColumns() {
-    return this.displayedColumns.filter(col => {
-      return col.hideable === undefined || col.hideable;
-    });
+    this.columns = dialogData.columns;
   }
 
   /**
    * Vérifie si une colonne spécifique est affichée
-   * @param name Nom de la colonne
+   * @param label Nom de la colonne
    * @returns 
    */
-  isColumnDisplayed(name: string) {
-    let col = this.getHideableColumns().filter(col => {
-      return col.name === name;
+  isColumnDisplayed(label: string) {
+    let col = this.columns.filter(col => {
+      return col.label === label;
     })[0];
     return col.displayed === undefined || col.displayed;
   }
@@ -78,10 +68,9 @@ export class StructureColumnsDialogComponent {
    * @returns boolean
    */
   allDisplayed() {
-    let columns = this.getHideableColumns();
-    return columns.filter(col => {
+    return this.columns.filter(col => {
       return col.displayed === undefined || col.displayed;
-    }).length === columns.length;
+    }).length === this.columns.length;
   }
 
   /**
@@ -89,22 +78,12 @@ export class StructureColumnsDialogComponent {
    * @param event Event DragDrop
    */
   moveColumn(event: CdkDragDrop<ColumnMetaDataDef[]>) {
-    // Récupération de la liste des colonnes dans une variable
-    let columnsToSort = this.getHideableColumns();
     // Ordonnement des colonnes
     moveItemInArray(
-      columnsToSort,
+      this.columns,
       event.previousIndex,
       event.currentIndex
     );
-    // Réinsertion des colonnes à absolument afficher
-    this.displayedColumns.filter(col => {
-      return col.hideable !== undefined && !col.hideable;
-    }).forEach((col, index) => {
-      columnsToSort.splice(index, 0, col);
-    })
-    // Sauvegarde des colonnes à afficher
-    this.displayedColumns = columnsToSort;
   }
 
   /**
@@ -112,8 +91,8 @@ export class StructureColumnsDialogComponent {
    * @param event 
    */
   onCheckboxChange(event: MatCheckboxChange) {
-    const col = this.getHideableColumns().filter(col => {
-      return col.name === event.source._elementRef.nativeElement.getAttribute('data-column');
+    const col = this.columns.filter(col => {
+      return col.label === event.source._elementRef.nativeElement.getAttribute('data-column');
     })[0];
     // Si la propriété n'est pas définie, la colonne était visible par défaut : on passe à false
     col.displayed = col.displayed !== undefined ? !col.displayed : false;
@@ -124,7 +103,7 @@ export class StructureColumnsDialogComponent {
    */
   onAllCheckboxChange() {
     const allDisplayed = this.allDisplayed();
-    this.getHideableColumns().forEach(function (col) {
+    this.columns.forEach(function (col) {
       col.displayed = !allDisplayed;
     });
   }
@@ -133,6 +112,6 @@ export class StructureColumnsDialogComponent {
    * A la fermeture du dialog, retour de toutes les colonnes au HomeComponent
    */
   validate() {
-    this.dialogRef.close(new ColumnsMetaData(this.displayedColumns));
+    this.dialogRef.close(new ColumnsMetaData(this.columns));
   }
 }

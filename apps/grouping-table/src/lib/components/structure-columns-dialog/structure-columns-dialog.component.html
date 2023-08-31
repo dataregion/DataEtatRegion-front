@@ -27,7 +27,7 @@
 
     <div cdkDropList class="column-list" (cdkDropListDropped)="moveColumn($event)">
       <div
-        *ngFor="let col of getHideableColumns(); let i = index"
+        *ngFor="let col of columns; let i = index"
         class="column-box"
         cdkDrag
       >
@@ -35,9 +35,9 @@
         <div>{{col.label}}</div>
         <div>
           <mat-checkbox
-            [attr.data-column]="col.name"
-            [checked]="isColumnDisplayed(col.name)"
-            [matTooltip]="isColumnDisplayed(col.name) ? 'Déselectionner' : 'Sélectionner'"
+            [attr.data-column]="col.label"
+            [checked]="isColumnDisplayed(col.label)"
+            [matTooltip]="isColumnDisplayed(col.label) ? 'Déselectionner' : 'Sélectionner'"
             (change)="onCheckboxChange($event)"
           >
           </mat-checkbox>

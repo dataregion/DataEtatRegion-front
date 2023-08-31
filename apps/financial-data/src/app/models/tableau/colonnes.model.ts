@@ -9,7 +9,6 @@ export const colonnes: ColumnMetaDataDef[] = [
     {
         name: 'siret',
         label: 'Bénéficiaire',
-        hideable: false,
         renderFn: (row, col) =>
             row[col.name] ? row[col.name]['nom_beneficiare'] : ''
     },
