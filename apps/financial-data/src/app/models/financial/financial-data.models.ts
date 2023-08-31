@@ -20,6 +20,7 @@ export const HEADERS_CSV_FINANCIAL = [
   "type d'établissement",
   'date de dernier paiement',
   'année engagement',
+  "tags",
 ];
 
 export interface FinancialDataModel {

@@ -12,6 +12,7 @@ import { HttpClient } from '@angular/common/http';
 import { DataPagination } from 'apps/common-lib/src/lib/models/pagination/pagination.models';
 import { SourceFinancialData } from '@models/financial/common.models';
 import { unparse } from 'papaparse';
+import { tag_str } from '@models/financial/tag.model';
 
 export const DATA_HTTP_SERVICE = new InjectionToken<DataHttpService<any, FinancialDataModel>>(
   'DataHttpService'
@@ -115,7 +116,8 @@ export class BudgetService {
         item.siret.nom_beneficiare ?? '',
         item.siret.categorie_juridique ?? '',
         item.date_cp,
-        item.annee
+        item.annee,
+        item.tags?.map(tag => tag_str(tag)).join("|"),
       ];
       data.push(values);
     }
