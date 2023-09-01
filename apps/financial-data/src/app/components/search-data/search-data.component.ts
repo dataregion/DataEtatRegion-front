@@ -41,6 +41,7 @@ import {
 } from 'apps/common-lib/src/public-api';
 import { Bop } from '@models/search/bop.model';
 import { BudgetService } from '@services/budget.service';
+import { UiHttpService } from '@services/http/ui-http.service';
 import { NGXLogger } from 'ngx-logger';
 import { PreFilters } from '@models/search/prefilters.model';
 import { MarqueBlancheParsedParamsResolverModel } from '../../resolvers/marqueblanche-parsed-params.resolver';
@@ -120,6 +121,8 @@ export class SearchDataComponent implements OnInit {
    */
   @Output() currentFilter = new EventEmitter<Preference>();
 
+  public annees: number[];
+
   @Input() public set preFilter(value: PreFilters | undefined) {
     try {
       this._apply_prefilters(value);
@@ -134,6 +137,7 @@ export class SearchDataComponent implements OnInit {
     private datePipe: DatePipe,
     private alertService: AlertService,
     private budgetService: BudgetService,
+    private uiService: UiHttpService,
     private logger: NGXLogger,
     private autocompleteBeneficiaires: AutocompleteBeneficiaireService,
   ) {
@@ -153,6 +157,8 @@ export class SearchDataComponent implements OnInit {
       beneficiaires: new FormControl<Beneficiaire[] | null>(null),
       location: new FormControl({ value: null, disabled: false }, []),
     });
+    this.annees = [];
+    this.setAnnees();
   }
 
   ngOnInit(): void {
@@ -406,11 +412,14 @@ export class SearchDataComponent implements OnInit {
     }
   }
 
-  public generateArrayOfYears() {
-    const max_year = new Date().getFullYear();
-    let arr = Array(8).fill(new Date().getFullYear());
-    arr = arr.map((_val, index) => max_year - index);
-    return arr;
+  /**
+   * Appelle le endpoint GET /annees
+   */
+  public setAnnees() {
+    this.uiService.getAnnees().subscribe({
+      next: result => this.annees = result,
+      error: err => console.error(err)
+    });
   }
 
   /** Applique les filtres selectionnés au préalable*/
@@ -422,7 +431,7 @@ export class SearchDataComponent implements OnInit {
 
     if (preFilter.year) {
       let years = Array.isArray(preFilter.year) ? preFilter.year : [preFilter.year];
-      let choices = this.generateArrayOfYears();
+      let choices = this.annees;
       if (!this._isArrayIncluded(years, choices))
         throw Error(`Vous devez selectionner des années comprises entrer ${choices[choices.length - 1]} et ${choices[0]}`);
 
