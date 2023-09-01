@@ -38,6 +38,14 @@
               Grouper les lignes par
             </button>
           </li>
+          <li>
+            <button *ngIf="!grid_fullscreen && newFilter"
+              data-test-id="group-by-btn"
+              class="fr-btn fr-btn--sm fr-btn--secondary fr-btn--icon-left fr-icon-table-line"
+              (click)="openSortColumnsDialog()" aria-label="Choisir les colonnes">
+              Choisir les colonnes
+            </button>
+          </li>
         </ul>
       </div>
 
@@ -68,7 +76,7 @@
     </div>
 
     <lib-grouping-table class="h-100" [tableData]="tableData" [columnsMetaData]="columnsMetaData"
-      [groupingColumns]="groupingColumns" (rowClick)="onRowClick($event)" [foldRootGroups]="true">
+      [groupingColumns]="groupingColumns" (rowClick)="onRowClick($event)">
 
       <ng-template libProjectCell="tags" let-cell="cell">
 

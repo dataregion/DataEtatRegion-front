@@ -24,7 +24,6 @@ export class GroupingTableContextService {
   displayedColumns!: ColumnMetaDataDef[];
   foldedGroups = new Set<Group>();
   columnCssStyle: SafeHtml | null = null;
-  hideGroupingColumns!: boolean;
 
   /**
    * Initialisation du contexte.
@@ -34,14 +33,14 @@ export class GroupingTableContextService {
     data: TableData,
     columnsMetaData: ColumnsMetaData,
     groupingColumns: GroupingColumn[],
-    hideGroupingColumns = false,
+    recalculGroups: boolean,
   ) {
     this.data = data;
     this.columnsMetaData = columnsMetaData;
     this.groupingColumns = groupingColumns;
-    this.hideGroupingColumns = hideGroupingColumns;
 
-    this.rootGroup = this.calculateGroups();
+    if (recalculGroups)
+      this.rootGroup = this.calculateGroups();
     this.displayedColumns = this.calculateDisplayedColumns();
     this.columnCssStyle = this.calculateColumnStyle();
   }
@@ -50,16 +49,14 @@ export class GroupingTableContextService {
     return groupByColumns(this.data, this.groupingColumns, this.columnsMetaData);
   }
 
+  /**
+   * Retourne la liste des colonnes à afficher
+   * @returns ColumnMetaDataDef[]
+   */
   private calculateDisplayedColumns(): ColumnMetaDataDef[] {
-    // Les colonnes affichées
-    return this.hideGroupingColumns
-      // si on masque les colonnes de grouping, on filtre
-      ? this.columnsMetaData.data
-        .filter((col) =>
-          !this.groupingColumns.some(gc => gc.columnName === col.name)
-        )
-      // sinon on retourne la liste complète
-      : this.columnsMetaData.data;
+    return this.columnsMetaData.data.filter((col) => {
+      return col.displayed === undefined || col.displayed;
+    });
   }
 
   /**

@@ -1,0 +1,56 @@
+<div mat-dialog-title>
+  <div class="dialog-title">
+    <h2>Choisir les colonnes</h2>
+    <button
+      type="button"
+      mat-icon-button
+      mat-dialog-close
+      aria-label="Fermer"
+      matTooltip="Fermer"
+    >
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+</div>
+
+<mat-dialog-content class="dialog-content" data-test-id="group-choice-dialog">
+
+  <div>
+
+    <div class="select-all-container">
+      <p>Sélectionner et ordonner les données :</p>
+      <button mat-stroked-button extended [color]="allDisplayed() ? 'basic' : 'primary'" type="button" (click)="onAllCheckboxChange()">
+        <mat-icon>{{allDisplayed() ? 'close' : 'check_circle_outline'}}</mat-icon>
+        {{'Tout ' + (allDisplayed() ? 'déselectionner' : 'sélectionner')}}
+      </button>
+    </div>
+
+    <div cdkDropList class="column-list" (cdkDropListDropped)="moveColumn($event)">
+      <div
+        *ngFor="let col of columns; let i = index"
+        class="column-box"
+        cdkDrag
+      >
+        <mat-icon aria-hidden="true" fontIcon="drag_handle"></mat-icon>
+        <div>{{col.label}}</div>
+        <div>
+          <mat-checkbox
+            [attr.data-column]="col.label"
+            [checked]="isColumnDisplayed(col.label)"
+            [matTooltip]="isColumnDisplayed(col.label) ? 'Déselectionner' : 'Sélectionner'"
+            matTooltipPosition="left"
+            (change)="onCheckboxChange($event)"
+          >
+          </mat-checkbox>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button color="primary" type="button" (click)="validate()">Appliquer</button>
+  <button mat-button mat-dialog-close type="button">Annuler</button>
+</mat-dialog-actions>
