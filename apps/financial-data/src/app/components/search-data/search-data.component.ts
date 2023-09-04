@@ -413,11 +413,12 @@ export class SearchDataComponent implements OnInit {
   }
 
   /**
-   * Appelle le endpoint GET /annees
+   * Appelle le endpoint GET /annees pour récupérer les années en BDD
+   * Si des options existent déjà via un filtre ou la marque blanche, on fait l'union des deux array
    */
   public setAnnees() {
     this.uiService.getAnnees().subscribe({
-      next: result => this.annees = result,
+      next: result => this.annees = [...new Set([...this.annees, ...result])].sort().reverse(),
       error: err => console.error(err)
     });
   }
@@ -430,11 +431,8 @@ export class SearchDataComponent implements OnInit {
     this.searchForm.controls['location'].setValue(preFilter.location);
 
     if (preFilter.year) {
-      let years = Array.isArray(preFilter.year) ? preFilter.year : [preFilter.year];
-      let choices = this.annees;
-      if (!this._isArrayIncluded(years, choices))
-        throw Error(`Vous devez selectionner des années comprises entrer ${choices[choices.length - 1]} et ${choices[0]}`);
-
+      // Création des options du select avec les années demandées (filtre ou marque blanche)
+      this.annees = (Array.isArray(preFilter.year) ? preFilter.year : [preFilter.year]).sort().reverse();
       this.searchForm.controls['year'].setValue(
         Array.isArray(preFilter.year)
           ? preFilter.year
