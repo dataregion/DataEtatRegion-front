@@ -68,6 +68,13 @@ export class AdvancedChipsMultiselectComponent {
     });
   }
 
+  public get options_minus_selected() {
+    const selected = this._sanitizedSelectedData
+    return this.options?.filter(
+      option => !selected.some(selection => selection.item === option.item)
+    )
+  }
+
   // # region: event de l'input
   onMatChipInputEvent($event: MatChipInputEvent) {
     if (this.matAutoComplete.isOpen)

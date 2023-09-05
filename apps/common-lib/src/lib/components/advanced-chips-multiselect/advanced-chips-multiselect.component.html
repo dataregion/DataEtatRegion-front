@@ -35,7 +35,7 @@
   </mat-chip-grid>
 
   <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
-    <mat-option *ngFor="let option of options" [value]="option">
+    <mat-option *ngFor="let option of options_minus_selected" [value]="option">
       {{option.item}}
     </mat-option>
   </mat-autocomplete>
