@@ -61,6 +61,11 @@ export const colonnes: ColumnMetaDataDef[] = [
         renderFn: (row, _col) => row['commune']['label'],
     },
     {
+        name: 'localisation_interministerielle',
+        label: 'Localisation interministérielle',
+        renderFn: (row, _col) => _print_localisation_interministerielle(row['localisation_interministerielle']),
+    },
+    {
         name: 'n_ej',
         label: 'N° EJ',
     },
@@ -107,4 +112,12 @@ function _print_code_label(c: string | undefined, l : string | undefined): strin
   const code = c ?? '';
   const label = l ?? '';
   return  code !== '' ? `${code} - ${label}` : label;
+}
+
+function _print_localisation_interministerielle(loc:any): string {
+  const code = loc['code'] ?? '';
+  const label = loc['label'] ?? '';
+  const commune = loc['commune'] !== undefined ? `${loc['commune']['code']} - ${loc['commune']['label']}` : '';
+  const codeLabel = label !== '' ? `${code} - ${label}` : code;
+  return commune !== '' ? `${codeLabel} (${commune})` : codeLabel;
 }
