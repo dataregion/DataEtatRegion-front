@@ -128,4 +128,13 @@ export class FinancialDataHttpService  implements DataHttpService<FinancialDataM
 
       return this.http.post(`${this._apiAdministration}/referentiels`, formData);
   }
+
+  /**
+   * Récupération des années des AE 
+   * @returns 
+   */
+  public getAnnees(): Observable<number[]> {
+    return this.http.get<number[]>(`${this._apiFinancial}/ae/annees`);
+  }
+
 }

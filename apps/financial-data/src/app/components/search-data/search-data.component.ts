@@ -41,7 +41,7 @@ import {
 } from 'apps/common-lib/src/public-api';
 import { Bop } from '@models/search/bop.model';
 import { BudgetService } from '@services/budget.service';
-import { UiHttpService } from '@services/http/ui-http.service';
+import { FinancialDataHttpService } from '@services/http/financial-data-http.service';
 import { NGXLogger } from 'ngx-logger';
 import { PreFilters } from '@models/search/prefilters.model';
 import { MarqueBlancheParsedParamsResolverModel } from '../../resolvers/marqueblanche-parsed-params.resolver';
@@ -137,7 +137,7 @@ export class SearchDataComponent implements OnInit {
     private datePipe: DatePipe,
     private alertService: AlertService,
     private budgetService: BudgetService,
-    private uiService: UiHttpService,
+    private financialHttpService: FinancialDataHttpService,
     private logger: NGXLogger,
     private autocompleteBeneficiaires: AutocompleteBeneficiaireService,
   ) {
@@ -417,7 +417,7 @@ export class SearchDataComponent implements OnInit {
    * Si des options existent déjà via un filtre ou la marque blanche, on fait l'union des deux array
    */
   public setAnnees() {
-    this.uiService.getAnnees().subscribe({
+    this.financialHttpService.getAnnees().subscribe({
       next: result => this.annees = [...new Set([...this.annees, ...result])].sort().reverse(),
       error: err => console.error(err)
     });
