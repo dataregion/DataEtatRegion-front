@@ -81,7 +81,9 @@
       <ng-template libProjectCell="tags" let-cell="cell">
 
           <mat-chip-listbox>
-            <mat-chip *ngFor="let tag of cell">
+            <mat-chip *ngFor="let tag of cell"
+              [matTooltip]="tag?.description" matTooltipPosition="above"
+            >
               {{displayTag(tag)}}
             </mat-chip>
           </mat-chip-listbox>
