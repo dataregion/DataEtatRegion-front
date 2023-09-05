@@ -99,9 +99,9 @@ export class SearchDataComponent implements OnInit {
   public set selectedTags(value: SelectedData[]) {
     this._selectedTags = value as TagFieldData[];
   }
-  public filteredTags$: Observable<TagFieldData[]> | null = null;
+  public _filteredTags$: Observable<TagFieldData[]> | null = null;
   public get tagsFieldOptions$(): Observable<TagFieldData[]> {
-    return this.filteredTags$ || of([]);
+    return this._filteredTags$ || of([]);
   }
   public tagsInputChange$ = new BehaviorSubject<string>('');
   public onTagInputChange(v: string) {
@@ -396,16 +396,17 @@ export class SearchDataComponent implements OnInit {
           })
         );
 
-    this.filteredTags$ =
+    this._filteredTags$ =
       this.tagsInputChange$
         .pipe(
           startWith(''),
           debounceTime(300),
           switchMap((value) => {
-            if (!value || value.length <= 2)
+            const term = value || '';
+            if (term && term?.length < 2) // On recherche lorsque l'on a commencé à taper une valeur
               return of([])
 
-            return this.autocompleteTags.autocomplete$(value)
+            return this.autocompleteTags.autocomplete$(term)
           })
         )
   }
