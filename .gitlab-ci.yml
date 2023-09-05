@@ -75,7 +75,7 @@ workflow:
 
 #BUILD APP
 build angular financial data app:
-  image: node:16
+  image: node:lts
   stage: build-angular
   script:
     - npm ci --cache ${CI_PROJECT_DIR}/.npm --prefer-offline --quiet --force
@@ -98,7 +98,7 @@ build angular financial data app:
         - "apps/financial-data/**/*"
 
 build angular francerelance app:
-  image: node:16
+  image: node:lts
   stage: build-angular
   script:
     - npm ci --cache ${CI_PROJECT_DIR}/.npm --prefer-offline --quiet --force
