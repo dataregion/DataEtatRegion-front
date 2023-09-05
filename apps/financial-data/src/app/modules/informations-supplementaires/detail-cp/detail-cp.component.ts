@@ -25,10 +25,6 @@ export class DetailCpComponent {
     this.hasCp = this._financial.financial_cp !== undefined ? this._financial.financial_cp?.length > 0 : false;
   }
 
-  constructor() {
-
-  }
-
   format_date(date: string) {
     return new Date(date).toLocaleString([], { year: 'numeric', month: 'numeric', day: 'numeric' })
   }
