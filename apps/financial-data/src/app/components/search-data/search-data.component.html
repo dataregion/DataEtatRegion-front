@@ -53,7 +53,7 @@
         class="field-9-width" appearance="fill">
         <mat-label>Année</mat-label>
         <mat-select formControlName="year" multiple>
-          <mat-option *ngFor="let year of generateArrayOfYears()" [value]="year">
+          <mat-option *ngFor="let year of annees" [value]="year">
             {{year}}
           </mat-option>
         </mat-select>

@@ -41,6 +41,7 @@ import {
 } from 'apps/common-lib/src/public-api';
 import { Bop } from '@models/search/bop.model';
 import { BudgetService } from '@services/budget.service';
+import { FinancialDataHttpService } from '@services/http/financial-data-http.service';
 import { NGXLogger } from 'ngx-logger';
 import { PreFilters } from '@models/search/prefilters.model';
 import { MarqueBlancheParsedParamsResolverModel } from '../../resolvers/marqueblanche-parsed-params.resolver';
@@ -120,6 +121,8 @@ export class SearchDataComponent implements OnInit {
    */
   @Output() currentFilter = new EventEmitter<Preference>();
 
+  public annees: number[];
+
   @Input() public set preFilter(value: PreFilters | undefined) {
     try {
       this._apply_prefilters(value);
@@ -134,6 +137,7 @@ export class SearchDataComponent implements OnInit {
     private datePipe: DatePipe,
     private alertService: AlertService,
     private budgetService: BudgetService,
+    private financialHttpService: FinancialDataHttpService,
     private logger: NGXLogger,
     private autocompleteBeneficiaires: AutocompleteBeneficiaireService,
   ) {
@@ -153,6 +157,8 @@ export class SearchDataComponent implements OnInit {
       beneficiaires: new FormControl<Beneficiaire[] | null>(null),
       location: new FormControl({ value: null, disabled: false }, []),
     });
+    this.annees = [];
+    this.setAnnees();
   }
 
   ngOnInit(): void {
@@ -406,11 +412,15 @@ export class SearchDataComponent implements OnInit {
     }
   }
 
-  public generateArrayOfYears() {
-    const max_year = new Date().getFullYear();
-    let arr = Array(8).fill(new Date().getFullYear());
-    arr = arr.map((_val, index) => max_year - index);
-    return arr;
+  /**
+   * Appelle le endpoint GET /annees pour récupérer les années en BDD
+   * Si des options existent déjà via un filtre ou la marque blanche, on fait l'union des deux array
+   */
+  public setAnnees() {
+    this.financialHttpService.getAnnees().subscribe({
+      next: result => this.annees = [...new Set([...this.annees, ...result])].sort().reverse(),
+      error: err => console.error(err)
+    });
   }
 
   /** Applique les filtres selectionnés au préalable*/
@@ -421,11 +431,8 @@ export class SearchDataComponent implements OnInit {
     this.searchForm.controls['location'].setValue(preFilter.location);
 
     if (preFilter.year) {
-      let years = Array.isArray(preFilter.year) ? preFilter.year : [preFilter.year];
-      let choices = this.generateArrayOfYears();
-      if (!this._isArrayIncluded(years, choices))
-        throw Error(`Vous devez selectionner des années comprises entrer ${choices[choices.length - 1]} et ${choices[0]}`);
-
+      // Création des options du select avec les années demandées (filtre ou marque blanche)
+      this.annees = (Array.isArray(preFilter.year) ? preFilter.year : [preFilter.year]).sort().reverse();
       this.searchForm.controls['year'].setValue(
         Array.isArray(preFilter.year)
           ? preFilter.year
