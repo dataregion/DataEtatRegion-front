@@ -1,6 +1,7 @@
 import {
   AsyncPipe,
   NgIf,
+  NgFor,
   NgSwitch,
   NgSwitchCase,
   NgSwitchDefault,
@@ -12,6 +13,7 @@ import { Observable } from 'rxjs';
 import { ChargementOuErreurComponent } from './chargement-ou-erreur/chargement-ou-erreur.component';
 import { DetailApiDataSubventionsComponent } from './detail-api-data-subventions/detail-api-data-subventions.component';
 import { DetailApiEntrepriseComponent } from './detail-api-entreprise/detail-api-entreprise.component';
+import { DetailCpComponent } from './detail-cp/detail-cp.component';
 import {
   InformationsSupplementairesService,
 } from './services/informations-supplementaires.service';
@@ -41,6 +43,7 @@ export enum View {
   ],
   imports: [
     NgIf,
+    NgFor,
     AsyncPipe,
     NgTemplateOutlet,
     NgSwitch,
@@ -51,6 +54,7 @@ export enum View {
     DetailApiEntrepriseComponent,
     DetailApiDataSubventionsComponent,
     DetailApiDemarcheSimplifieComponent,
+    DetailCpComponent,
     OuNonRenseignePipe,
   ],
   providers: [InformationsSupplementairesService],

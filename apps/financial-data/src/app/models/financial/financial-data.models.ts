@@ -45,4 +45,13 @@ export interface FinancialDataModel {
   date_cp: string;
 
   tags: Tag[];
+  financial_cp?: FinancialCp[]
+}
+
+export interface FinancialCp {
+
+  date_base_dp: string;
+  montant: number;
+  n_dp: string;
+
 }
