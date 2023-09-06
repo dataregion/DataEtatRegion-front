@@ -1,6 +1,7 @@
 import { JSONObject } from "apps/preference-users/src/lib/models/preference.models"
 import { Bop, BopCode } from "./bop.model"
 import { Beneficiaire } from "./beneficiaire.model"
+import { TagFieldData } from "../../components/search-data/tags-field-data.model"
 
 export type ThemePreFilter =  string | null
 export type BopsPreFilter = Bop | BopCode | null
@@ -15,6 +16,8 @@ export interface PreFilters {
   /** @deprecated ne pas utiliser, uniquement pour retro compatibilité */
   beneficiaire?: Beneficiaire
   beneficiaires?: Beneficiaire[]
+
+  tags?: TagFieldData[]
 
   domaines_fonctionnels?: string[]
   referentiels_programmation?: string[]

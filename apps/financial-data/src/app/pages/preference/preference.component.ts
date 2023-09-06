@@ -27,7 +27,7 @@ export class PreferenceComponent {
     beneficiaire: {
       label: 'Bénéficiare',
       renderFn: (row: JSONObject) => {
-        return this._ppBeneficiaire(row);
+        return this._ppTags(row);
       },
     },
     beneficiaires: {
@@ -42,6 +42,12 @@ export class PreferenceComponent {
         return `${row['type']} : ${row['nom']} (${row['code']})`;
       },
     },
+    tags: {
+      label: "Tags",
+      renderFn: (row: JSONObject) => {
+        return this._ppTags(row);
+      },
+    }
   };
 
   /**
@@ -61,5 +67,9 @@ export class PreferenceComponent {
       return `${json['denomination']} (${json['siret']})`;
     }
     return `Siret : (${json['siret']})`;
+  }
+
+  private _ppTags(json: any) {
+    return `${json['item']}`;
   }
 }

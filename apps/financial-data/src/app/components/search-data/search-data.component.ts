@@ -92,12 +92,11 @@ export class SearchDataComponent implements OnInit {
   }
 
 
-  private _selectedTags: TagFieldData[] = [];
   public get selectedTags(): TagFieldData[] {
-    return this._selectedTags;
+    return this.searchForm.get('tags')?.value as TagFieldData[]
   }
   public set selectedTags(value: SelectedData[]) {
-    this._selectedTags = value as TagFieldData[];
+    this.searchForm.get('tags')?.setValue(value as TagFieldData[])
   }
   public _filteredTags$: Observable<TagFieldData[]> = of([]);
   public get tagsFieldOptions$(): Observable<TagFieldData[]> {
@@ -175,6 +174,8 @@ export class SearchDataComponent implements OnInit {
       theme: new FormControl<string[] | null>(null),
       beneficiaires: new FormControl<Beneficiaire[] | null>(null),
       location: new FormControl({ value: null, disabled: false }, []),
+
+      tags: new FormControl<TagFieldData[] | null>(null),
     });
     this.annees = [];
     this.setAnnees();
@@ -271,7 +272,7 @@ export class SearchDataComponent implements OnInit {
       years: formValue.year || null,
       locations:  formValue.location,
 
-      tags: this.selectedTags?.map(selection => selection.item) ?? null,
+      tags: formValue.tags?.map(tag => tag.item) ?? null,
 
       domaines_fonctionnels: this.additional_searchparams?.domaines_fonctionnels || null,
       referentiels_programmation: this.additional_searchparams?.referentiels_programmation || null,
@@ -503,6 +504,11 @@ export class SearchDataComponent implements OnInit {
           .map(siret => this.autocompleteBeneficiaires.autocomplete_single$(siret))
       )
       .subscribe(joined => { this.selectedBeneficiaires = joined; })
+    }
+
+    if (preFilter.tags) {
+      const prefilterTags = preFilter.tags as unknown as TagFieldData[];
+      this.searchForm.controls['tags'].setValue(prefilterTags || null);
     }
 
     // Application du bops
