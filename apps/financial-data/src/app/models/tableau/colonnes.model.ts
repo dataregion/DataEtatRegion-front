@@ -115,9 +115,13 @@ function _print_code_label(c: string | undefined, l : string | undefined): strin
 }
 
 function _print_localisation_interministerielle(loc:any): string {
-  const code = loc['code'] ?? '';
-  const label = loc['label'] ?? '';
-  const commune = loc['commune'] !== undefined ? `${loc['commune']['code']} - ${loc['commune']['label']}` : '';
-  const codeLabel = label !== '' ? `${code} - ${label}` : code;
-  return commune !== '' ? `${codeLabel} (${commune})` : codeLabel;
+  let text = 'Inconnue'
+  if (loc) {
+    const code = ('code' in loc && loc['code'] !== undefined) ? loc['code'] : '';
+    const label = ('label' in loc && loc['label'] !== undefined) ? loc['label'] : '';
+    const commune = ('commune' in loc && loc['commune'] !== undefined) ? `${loc['commune']['code']} - ${loc['commune']['label']}` : '';
+    const codeLabel = label !== '' ? `${code} - ${label}` : code;
+    text = commune !== '' ? `${codeLabel} (${commune})` : codeLabel;
+  }
+  return text
 }
