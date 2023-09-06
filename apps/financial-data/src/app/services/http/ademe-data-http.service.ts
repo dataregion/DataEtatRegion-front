@@ -27,7 +27,7 @@ export class AdemeDataHttpService implements DataHttpService<AdemeData,Financial
   }
 
   search(
-    { bops, beneficiaires, locations, years, domaines_fonctionnels, referentiels_programmation, source_region }: SearchParameters
+    { bops, beneficiaires, locations, years, domaines_fonctionnels, referentiels_programmation, source_region, tags }: SearchParameters
   ): Observable<DataPagination<AdemeData> | null> {
 
     if (
@@ -52,6 +52,11 @@ export class AdemeDataHttpService implements DataHttpService<AdemeData,Financial
 
     if (years && years.length > 0) {
       params += `&annee=${years.join(',')}`;
+    }
+
+    if (tags && tags.length > 0) {
+      const searchparam = encodeURI(tags.join(','));
+      params += `&tags=${searchparam}`;
     }
 
     return this.http.get<DataPagination<AdemeData>>(`${this._api}/ademe?${params}`);

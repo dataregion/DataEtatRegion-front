@@ -12,7 +12,7 @@ import { HttpClient } from '@angular/common/http';
 import { DataPagination } from 'apps/common-lib/src/lib/models/pagination/pagination.models';
 import { SourceFinancialData } from '@models/financial/common.models';
 import { unparse } from 'papaparse';
-import { tag_str } from '@models/financial/tag.model';
+import { Tag, tag_str } from '@models/refs/tag.model';
 
 export const DATA_HTTP_SERVICE = new InjectionToken<DataHttpService<any, FinancialDataModel>>(
   'DataHttpService'
@@ -70,6 +70,22 @@ export class BudgetService {
           }
         )
       );
+  }
+
+  public allTags$(): Observable<Tag[]> {
+    const url = `${this._apiRef}/tags`;
+
+    return this.http
+      .get<Tag[]>(url)
+      .pipe(
+        map(
+          (response) => {
+            if (response == null)
+              return [];
+            return response;
+          }
+        )
+      )
   }
 
   public getRefSiretFromCode$(code: string): Observable<RefSiret> {

@@ -1,6 +1,7 @@
 import { FormControl } from "@angular/forms";
 import { Beneficiaire } from "@models/search/beneficiaire.model";
 import { Bop } from "@models/search/bop.model";
+import { TagFieldData } from "./tags-field-data.model";
 
 export interface SearchForm {
     year: FormControl<number[] | null>;
@@ -11,4 +12,6 @@ export interface SearchForm {
     theme: FormControl<string[] | null>;
     beneficiaires: FormControl<Beneficiaire[] | null>;
     location: FormControl<any>;
+
+    tags: FormControl<TagFieldData[] | null>
 }

@@ -66,14 +66,24 @@
         data-test-id="search-beneficiaires-control"
         class="field-25-width field-beneficiaire"
         appearance="fill"
-        [label]="'Bénéficiaire(s)'"
+        label="Bénéficiaire(s)"
         placeholder=""
         matTooltipPosition="above"
         matTooltip="Saisir un nom (sans accent) ou un SIRET (Exemple: Decathlon, Rennes... ou 40447186400433,...)"
-        [options]="beneficiaireFieldOptions$ | async"
+        [options]="(beneficiaireFieldOptions$ | async)!"
         (inputChange)="onBeneficiaireInputChange($event)"
         [(selectedData)]="selectedBeneficiaires"
         >
+      </lib-advanced-chips-multiselect>
+
+      <lib-advanced-chips-multiselect
+        class="field-25-width field-tags"
+        appearance="fill"
+        label="Tags"
+        placeholder=""
+        [options]="(tagsFieldOptions$ | async)!"
+        (inputChange)="onTagInputChange($event)"
+        [(selectedData)]="selectedTags">
       </lib-advanced-chips-multiselect>
 
       <div class="spacer"></div>

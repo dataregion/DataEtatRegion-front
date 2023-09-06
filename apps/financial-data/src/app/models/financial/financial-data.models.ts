@@ -1,5 +1,5 @@
 import { Commune, Programme, Siret, SourceFinancialData } from "./common.models";
-import { Tag } from "./tag.model";
+import { Tag } from "../refs/tag.model";
 
 
 export const HEADERS_CSV_FINANCIAL = [

@@ -1,6 +1,7 @@
 export interface Tag {
     type: string
     value: string
+    description: string
 }
 
 export function tag_str(tag: Tag) {

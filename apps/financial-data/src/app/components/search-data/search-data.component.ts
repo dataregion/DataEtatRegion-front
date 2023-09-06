@@ -23,7 +23,6 @@ import {
   Subscription,
   forkJoin,
 } from 'rxjs';
-import { map } from 'rxjs/operators';
 import { BopModel } from '@models/refs/bop.models';
 import { FinancialData, FinancialDataResolverModel } from '@models/financial/financial-data-resolvers.models';
 import { FinancialDataModel } from '@models/financial/financial-data.models';
@@ -51,6 +50,8 @@ import { SearchForm } from './search-form.interface';
 import { AutocompleteBeneficiaireService } from './autocomplete-beneficiaire.service';
 import { SelectedData } from 'apps/common-lib/src/lib/components/advanced-chips-multiselect/advanced-chips-multiselect.component';
 import { Beneficiaire } from '@models/search/beneficiaire.model';
+import { TagFieldData } from './tags-field-data.model';
+import { AutocompleteTagsService } from './autocomplete-tags.service';
 
 
 @Component({
@@ -59,6 +60,7 @@ import { Beneficiaire } from '@models/search/beneficiaire.model';
   styleUrls: ['./search-data.component.scss'],
   providers: [
     AutocompleteBeneficiaireService,
+    AutocompleteTagsService,
   ]
 })
 export class SearchDataComponent implements OnInit {
@@ -66,29 +68,44 @@ export class SearchDataComponent implements OnInit {
 
   public searchForm!: FormGroup<SearchForm>;
 
-  get selectedBeneficiaires() : BeneficiaireFieldData[] {
-    return this.searchForm.get('beneficiaires')?.value as BeneficiaireFieldData[];
-  }
-  set selectedBeneficiaires(data: SelectedData[]) {
-    this.searchForm.get('beneficiaires')?.setValue(data as BeneficiaireFieldData[]);
-  }
 
   public additional_searchparams: AdditionalSearchParameters = empty_additional_searchparams;
 
   public bop: BopModel[] = [];
   public themes: string[] = [];
 
-  public filteredBeneficiaire$: Observable<BeneficiaireFieldData[]> | null = null;
-  public get beneficiaireFieldOptions$(): Observable<BeneficiaireFieldData[]> {
-    return this.filteredBeneficiaire$ || of([]);
-  }
+  public filteredBop: BopModel[] | undefined = undefined;
 
+  get selectedBeneficiaires() : BeneficiaireFieldData[] {
+    return this.searchForm.get('beneficiaires')?.value as BeneficiaireFieldData[];
+  }
+  set selectedBeneficiaires(data: SelectedData[]) {
+    this.searchForm.get('beneficiaires')?.setValue(data as BeneficiaireFieldData[]);
+  }
+  public filteredBeneficiaire$: Observable<BeneficiaireFieldData[]> = of([]);
+  public get beneficiaireFieldOptions$(): Observable<BeneficiaireFieldData[]> {
+    return this.filteredBeneficiaire$;
+  }
   public beneficiaireInputChange$ = new BehaviorSubject<string>('');
   public onBeneficiaireInputChange(v: string) {
     this.beneficiaireInputChange$.next(v);
   }
 
-  public filteredBop: BopModel[] | undefined = undefined;
+
+  public get selectedTags(): TagFieldData[] {
+    return this.searchForm.get('tags')?.value as TagFieldData[]
+  }
+  public set selectedTags(value: SelectedData[]) {
+    this.searchForm.get('tags')?.setValue(value as TagFieldData[])
+  }
+  public _filteredTags$: Observable<TagFieldData[]> = of([]);
+  public get tagsFieldOptions$(): Observable<TagFieldData[]> {
+    return this._filteredTags$;
+  }
+  public tagsInputChange$ = new BehaviorSubject<string>('');
+  public onTagInputChange(v: string) {
+    this.tagsInputChange$.next(v);
+  }
 
   /**
    * Indique si la recherche a été effectué
@@ -140,6 +157,7 @@ export class SearchDataComponent implements OnInit {
     private financialHttpService: FinancialDataHttpService,
     private logger: NGXLogger,
     private autocompleteBeneficiaires: AutocompleteBeneficiaireService,
+    private autocompleteTags: AutocompleteTagsService,
   ) {
     // formulaire
     this.searchForm = new FormGroup<SearchForm>({
@@ -156,6 +174,8 @@ export class SearchDataComponent implements OnInit {
       theme: new FormControl<string[] | null>(null),
       beneficiaires: new FormControl<Beneficiaire[] | null>(null),
       location: new FormControl({ value: null, disabled: false }, []),
+
+      tags: new FormControl<TagFieldData[] | null>(null),
     });
     this.annees = [];
     this.setAnnees();
@@ -251,6 +271,8 @@ export class SearchDataComponent implements OnInit {
       themes: formValue.theme || null,
       years: formValue.year || null,
       locations:  formValue.location,
+
+      tags: formValue.tags?.map(tag => tag.item) ?? null,
 
       domaines_fonctionnels: this.additional_searchparams?.domaines_fonctionnels || null,
       referentiels_programmation: this.additional_searchparams?.referentiels_programmation || null,
@@ -374,7 +396,22 @@ export class SearchDataComponent implements OnInit {
             return this.autocompleteBeneficiaires.autocomplete$(value)
           })
         );
+
+    this._filteredTags$ =
+      this.tagsInputChange$
+        .pipe(
+          startWith(''),
+          debounceTime(300),
+          switchMap((value) => {
+            const term = value || '';
+            if (term && term?.length < 2) // On recherche lorsque l'on a commencé à taper une valeur
+              return of([])
+
+            return this.autocompleteTags.autocomplete$(term)
+          })
+        )
   }
+
 
   private _filterBop(value: string): BopModel[] {
     const filterValue = value ? value.toLowerCase() : '';
@@ -467,6 +504,11 @@ export class SearchDataComponent implements OnInit {
           .map(siret => this.autocompleteBeneficiaires.autocomplete_single$(siret))
       )
       .subscribe(joined => { this.selectedBeneficiaires = joined; })
+    }
+
+    if (preFilter.tags) {
+      const prefilterTags = preFilter.tags as unknown as TagFieldData[];
+      this.searchForm.controls['tags'].setValue(prefilterTags || null);
     }
 
     // Application du bops
