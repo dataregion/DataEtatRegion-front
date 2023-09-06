@@ -43,7 +43,17 @@ export class AdvancedChipsMultiselectComponent {
   @Input() placeholder = 'placeholder';
   @Input() options: SelectedData[] | null = [];
 
-  @Input() selectedData: SelectedData[] = [];
+  private _selectedData: SelectedData[] = [];
+  public get selectedData(): SelectedData[] {
+    return this._selectedData;
+  }
+  @Input()
+  public set selectedData(value: SelectedData[]) {
+    if (!value)
+      this._selectedData = []
+    else
+      this._selectedData = value;
+  }
   @Output() selectedDataChange: EventEmitter<SelectedData[]> = new EventEmitter<SelectedData[]>();
 
   @Output() inputChange: EventEmitter<string> = new EventEmitter<string>();
@@ -68,8 +78,8 @@ export class AdvancedChipsMultiselectComponent {
     });
   }
 
-  public get options_minus_selected() {
-    const selected = this._sanitizedSelectedData
+  public get options_minus_selected(): SelectedData[] | undefined {
+    const selected = this.selectedData;
     return this.options?.filter(
       option => !selected.some(selection => selection.item === option.item)
     )
@@ -86,30 +96,21 @@ export class AdvancedChipsMultiselectComponent {
     // $event.chipInput!.clear();
   }
 
-  private get _sanitizedSelectedData() {
-    if (!this.selectedData) {
-      this.selectedData = [];
-      this.selectedDataChange.emit(this.selectedData);
-    }
-
-    return this.selectedData;
-  }
-
   add(value: SelectedData) {
     const v = (value?.item || '').trim();
 
     if (v) {
-      this._sanitizedSelectedData.push(value);
-      this.selectedDataChange.emit(this._sanitizedSelectedData);
+      this.selectedData.push(value);
+      this.selectedDataChange.emit(this.selectedData);
     }
   }
 
   remove(selection: any) {
-    const index = this._sanitizedSelectedData.indexOf(selection);
+    const index = this.selectedData.indexOf(selection);
 
     if (index >= 0) {
-      this._sanitizedSelectedData.splice(index, 1);
-      this.selectedDataChange.emit(this._sanitizedSelectedData);
+      this.selectedData.splice(index, 1);
+      this.selectedDataChange.emit(this.selectedData);
     }
   }
 

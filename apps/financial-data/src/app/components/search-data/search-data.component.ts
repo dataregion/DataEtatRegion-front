@@ -82,9 +82,9 @@ export class SearchDataComponent implements OnInit {
   set selectedBeneficiaires(data: SelectedData[]) {
     this.searchForm.get('beneficiaires')?.setValue(data as BeneficiaireFieldData[]);
   }
-  public filteredBeneficiaire$: Observable<BeneficiaireFieldData[]> | null = null;
+  public filteredBeneficiaire$: Observable<BeneficiaireFieldData[]> = of([]);
   public get beneficiaireFieldOptions$(): Observable<BeneficiaireFieldData[]> {
-    return this.filteredBeneficiaire$ || of([]);
+    return this.filteredBeneficiaire$;
   }
   public beneficiaireInputChange$ = new BehaviorSubject<string>('');
   public onBeneficiaireInputChange(v: string) {
@@ -99,9 +99,9 @@ export class SearchDataComponent implements OnInit {
   public set selectedTags(value: SelectedData[]) {
     this._selectedTags = value as TagFieldData[];
   }
-  public _filteredTags$: Observable<TagFieldData[]> | null = null;
+  public _filteredTags$: Observable<TagFieldData[]> = of([]);
   public get tagsFieldOptions$(): Observable<TagFieldData[]> {
-    return this._filteredTags$ || of([]);
+    return this._filteredTags$;
   }
   public tagsInputChange$ = new BehaviorSubject<string>('');
   public onTagInputChange(v: string) {
