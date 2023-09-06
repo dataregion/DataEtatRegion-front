@@ -57,12 +57,18 @@ export class GroupingConfigDialogComponent {
       columnByName[col.name] = col;
     }
 
-    this.groupingColumns = dialogData.groupingColumns.map(
+    this.groupingColumns = dialogData.groupingColumns
+    .map(
       (gpCol) => columnByName[gpCol.columnName]
     );
     this.remainingColumns = this.calculateRemainingColumns(
       this.allColumns,
       this.groupingColumns
+    )
+    .filter(
+      // TODO: verrue pour prevenir le group by tags le temps que le 
+      // grouping by tags soit correctement implémenté
+      (gpCol) => gpCol.name !== "tags" 
     );
   }
 
