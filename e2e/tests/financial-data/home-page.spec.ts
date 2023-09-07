@@ -44,7 +44,7 @@ test.describe("Page d'accueil", () => {
       page
         .getByRole('listbox', { name: 'Zone géographique' })
         .locator('.mdc-list-item__primary-text')
-    ).toHaveCount(6);
+    ).toHaveCount(7);
 
     await page.getByLabel('Année').isVisible();
     await page.getByLabel('Bénéficiaire', {exact: true}).isVisible();
