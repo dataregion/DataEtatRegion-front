@@ -1,6 +1,6 @@
 import { NgIf, NgFor } from '@angular/common';
 import { Component, Input } from '@angular/core';
-import { FinancialDataModel } from '@models/financial/financial-data.models';
+import { FinancialCp, FinancialDataModel } from '@models/financial/financial-data.models';
 
 @Component({
   standalone: true,
@@ -15,6 +15,8 @@ import { FinancialDataModel } from '@models/financial/financial-data.models';
 export class DetailCpComponent {
 
   private _financial: FinancialDataModel | undefined = undefined;
+
+  private _financialCp: FinancialCp[] | undefined = [];
   hasCp: boolean = true;
 
   get financial() {
