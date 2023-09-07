@@ -4,6 +4,7 @@ export enum TypeLocalisation {
   COMMUNE = 'Commune',
   CRTE = 'Crte',
   ARRONDISSEMENT = 'Arrondissement',
+  QPV = 'Qpv'
 }
 
 export interface GeoModel {
@@ -15,6 +16,11 @@ export interface GeoModel {
 
 export interface GeoCommuneModel extends GeoModel {
   codesPostaux: string[];
+}
+
+export interface QpvModel extends  Omit<GeoModel, 'nom'> {
+  label: string;
+  label_commune: string;
 }
 
 export interface GeoArrondissementModel extends Omit<GeoModel, 'nom'> {

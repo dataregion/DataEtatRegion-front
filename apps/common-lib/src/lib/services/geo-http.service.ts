@@ -1,7 +1,7 @@
 import { HttpClient, HttpParams } from "@angular/common/http";
 import { Injectable, InjectionToken, inject } from "@angular/core";
 
-import { GeoArrondissementModel, TypeLocalisation } from "../models/geo.models";
+import { GeoArrondissementModel, QpvModel, TypeLocalisation } from "../models/geo.models";
 import { GeoModel } from "../models/geo.models";
 import { Observable } from "rxjs";
 import { map } from "rxjs/operators";
@@ -59,6 +59,7 @@ export class GeoHttpService {
 
         switch (type) {
             case TypeLocalisation.CRTE:
+            case TypeLocalisation.QPV:
             case TypeLocalisation.ARRONDISSEMENT:
                 base = `${this.api_ref}`
                 break;
@@ -84,6 +85,9 @@ export class GeoHttpService {
             case TypeLocalisation.EPCI:
                 segment = 'epcis';
                 break;
+            case TypeLocalisation.QPV:
+                  segment = 'qpv';
+                  break;
             default:
                 throw new Error(`Non géré: ${type}`);
         }
@@ -126,6 +130,19 @@ export class GeoHttpService {
                 } as GeoModel
             })
         }
+
+        if (type === TypeLocalisation.QPV) {
+          let payload = geos as unknown as DataPagination<QpvModel>
+
+          return payload.items.map(arr => {
+              return {
+                  nom: arr.label,
+                  code: arr.code,
+                  type: TypeLocalisation.QPV
+              } as GeoModel
+          })
+      }
+
 
         return geos.map(geo => {
             return { ...geo, type: type }
@@ -213,9 +230,9 @@ export class FuzzySearchParamsBuilder extends ASearchParamsBuilder {
 
         let search_params: SearchParams;
         switch (type) {
-
             case TypeLocalisation.ARRONDISSEMENT:
-                search_params = this._arrondissement_fuzzy(term);
+            case TypeLocalisation.QPV:
+                search_params = this._arrondissement_or_crte_fuzzy(term);
                 break;
             case TypeLocalisation.COMMUNE:
                 search_params = this._commune_fuzzy(term);
@@ -236,7 +253,7 @@ export class FuzzySearchParamsBuilder extends ASearchParamsBuilder {
         return search_params;
     }
 
-    private _arrondissement_fuzzy(term: _Term): SearchParams {
+    private _arrondissement_or_crte_fuzzy(term: _Term): SearchParams {
 
         if (term) return { query: term }
         else return {}
