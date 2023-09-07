@@ -39,6 +39,10 @@ export class FinancialDataHttpService  implements DataHttpService<FinancialDataM
     return this.http.get<FinancialDataModel>(`${this._apiFinancial}/ae/${id}`);
   }
 
+  public getCp(id: number): Observable<FinancialDataModel> {
+    return this.http.get<FinancialDataModel>(`${this._apiFinancial}/ae/${id}/cp`);
+  }
+
 
   /**
    *

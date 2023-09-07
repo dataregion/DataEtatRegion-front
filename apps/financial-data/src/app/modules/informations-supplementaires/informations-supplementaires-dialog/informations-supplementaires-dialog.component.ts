@@ -3,7 +3,7 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatDialogModule } from '@angular/material/dialog';
 import { RowData } from 'apps/grouping-table/src/lib/components/grouping-table/group-utils';
 import { InformationsSupplementairesComponent } from '../informations-supplementaires.component';
-import { FinancialDataModel } from '@models/financial/financial-data.models';
+import { FinancialDataModel, FinancialCp } from '@models/financial/financial-data.models';
 import { FinancialDataHttpService } from '@services/http/financial-data-http.service';
 
 export interface InformationsSupplementairesDialogData {
@@ -29,9 +29,12 @@ export class InformationsSupplementairesDialogComponent {
     private httpService: FinancialDataHttpService
     ) {
     this.financial_data = data.row as FinancialDataModel;
+
     // Récupération de l'AE pour avoir le détails des CP associés
-    this.httpService.getById(data.row['id']).subscribe({
-      next: result => this.financial_data = result as FinancialDataModel,
+    this.httpService.getCp(data.row['id']).subscribe({
+      next: result => {
+        this.financial_data = {...this.financial_data, financial_cp: result as unknown as FinancialCp[]}
+      },
       error: err => console.error(err)
     })
   }

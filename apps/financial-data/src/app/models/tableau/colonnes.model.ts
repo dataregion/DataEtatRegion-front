@@ -115,7 +115,7 @@ function _print_code_label(c: string | undefined, l : string | undefined): strin
 }
 
 function _print_localisation_interministerielle(loc:any): string {
-  let text = 'Inconnue'
+  let text = 'Localisation inconnue'
   if (loc) {
     const code = ('code' in loc && loc['code'] !== undefined) ? loc['code'] : '';
     const label = ('label' in loc && loc['label'] !== undefined) ? loc['label'] : '';
