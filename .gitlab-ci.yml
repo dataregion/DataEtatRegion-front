@@ -30,7 +30,7 @@ workflow:
         DO_TEST: "true"
         DO_DEPLOY: "true"
         DO_E2E: "true"
-    - if: '$CI_PIPELINE_SOURCE == "push" &&  $CI_COMMIT_REF_NAME =~ "/^feature\//"'
+    - if: '$CI_PIPELINE_SOURCE == "push" &&  $CI_COMMIT_REF_NAME =~ "/^(feature|chore)\//"'
       variables:
         DO_BUILD: "true"
         DO_TEST: "manual"
