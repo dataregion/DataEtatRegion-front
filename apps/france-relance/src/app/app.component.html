@@ -2,15 +2,15 @@
   [logo]="'FranceRelance.svg'">
   <li administration *ngIf="displayAdmin">
     <button mat-icon-button routerLink='management' matTooltip="Administration" class="fr-btn" id="administration">
-      <mat-icon aria-hidden="false" aria-label="Administration" fontIcon="settings"></mat-icon>
+      <mat-icon aria-hidden="false" aria-label="Administration" fontIcon="settings"/>
     </button>
   </li>
 </lib-header>
 
 <div *ngIf="progressBarVisible === true">
-  <mat-progress-bar mode="query"></mat-progress-bar>
+  <mat-progress-bar mode="query"/>
 </div>
 
-<router-outlet class="page-content-outlet"></router-outlet>
+<router-outlet class="page-content-outlet"/>
 
-<lib-footer *ngIf="isAuthenticated" [ngClass]="{'hidden': grid_fullscreen }"></lib-footer>
+<lib-footer *ngIf="isAuthenticated" [ngClass]="{'hidden': grid_fullscreen }"/>

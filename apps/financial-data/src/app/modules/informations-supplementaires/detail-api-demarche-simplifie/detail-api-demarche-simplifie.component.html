@@ -2,7 +2,7 @@
 
 
   <div class="contenu">
-    <ng-container *ngTemplateOutlet="contenu"></ng-container>
+    <ng-container *ngTemplateOutlet="contenu"/>
   </div>
   <hr>
 </ng-container>
@@ -10,8 +10,7 @@
 <ng-template #chargement>
 
   <financial-informations-supplementaires-chargement-ou-erreur nom_service_distant="Api demarches simplifiées"
-    [erreur]="vService.api_demarche_error">
-  </financial-informations-supplementaires-chargement-ou-erreur>
+    [erreur]="vService.api_demarche_error"/>
 </ng-template>
 
 <ng-template #contenu>

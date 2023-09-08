@@ -5,7 +5,7 @@
 
   <mat-card-content class="content-column">
     <france-relance-search-data (searchResults)="tableData = $event" [preFilter]="preFilter"
-      (currentFilter)="newFilter = $event" [ngClass]="{ 'hidden': grid_fullscreen }"></france-relance-search-data>
+      (currentFilter)="newFilter = $event" [ngClass]="{ 'hidden': grid_fullscreen }"/>
 
     <div class="main-content overlay-container">
       <ng-container *ngIf="tableData && tableData.length === 0 else groupingTable">
@@ -24,12 +24,11 @@
         </button>
         <button *ngIf="newFilter" mat-icon-button color="primary" matTooltip="Enregistrer le filtre"
           (click)="openSaveFilterDialog()">
-          <mat-icon fontIcon="save"></mat-icon>
+          <mat-icon fontIcon="save"/>
         </button>
       </div>
 
       <div class="spacer"></div>
-
       <button mat-button (click)="toggle_grid_fullscreen()">
         <mat-icon matSuffix *ngIf="grid_fullscreen">close_fullscreen</mat-icon>
         <mat-icon matSuffix *ngIf="!grid_fullscreen">fullscreen</mat-icon>
@@ -37,6 +36,6 @@
       </button>
     </mat-toolbar>
     <lib-grouping-table class="h-100" [tableData]="tableData" [columnsMetaData]="columnsMetaData"
-      [groupingColumns]="groupingColumns"></lib-grouping-table>
+      [groupingColumns]="groupingColumns"/>
   </ng-container>
 </ng-template>

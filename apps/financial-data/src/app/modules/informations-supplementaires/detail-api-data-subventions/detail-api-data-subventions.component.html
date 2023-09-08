@@ -1,14 +1,14 @@
 <ng-container *ngIf="info; else chargement">
 
     <div class="contenu">
-        <ng-container *ngTemplateOutlet="contenu"></ng-container>
+        <ng-container *ngTemplateOutlet="contenu"/>
     </div>
 
     <hr>
 
     <div class="footer">
         <i>
-            Autres informations sur l'association 
+            Autres informations sur l'association
             <a title="Etablissement sur « annuaire-entreprises.data.gouv.fr »"
                 [href]="lien_data_subvention" target="_blank" rel="noopener">
             </a>
@@ -18,10 +18,9 @@
 </ng-container>
 
 <ng-template #chargement>
-    <financial-informations-supplementaires-chargement-ou-erreur 
+    <financial-informations-supplementaires-chargement-ou-erreur
         nom_service_distant="API subvention"
-        [erreur]="vService.api_subvention_full_error">
-        </financial-informations-supplementaires-chargement-ou-erreur>
+        [erreur]="vService.api_subvention_full_error"/>
 </ng-template>
 
 <ng-template #contenu>

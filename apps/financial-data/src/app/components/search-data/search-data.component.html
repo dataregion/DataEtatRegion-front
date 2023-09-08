@@ -45,7 +45,7 @@
 
       <div class="field-localisation field-30-width">
         <lib-localisation [control]="locationControls"
-          [categorySelected]="(locationControls.value &&  locationControls.value[0]) ? locationControls.value[0].type : null"></lib-localisation>
+          [categorySelected]="(locationControls.value &&  locationControls.value[0]) ? locationControls.value[0].type : null"/>
       </div>
 
       <mat-form-field
@@ -73,8 +73,7 @@
         [options]="(beneficiaireFieldOptions$ | async)!"
         (inputChange)="onBeneficiaireInputChange($event)"
         [(selectedData)]="selectedBeneficiaires"
-        >
-      </lib-advanced-chips-multiselect>
+        />
 
       <lib-advanced-chips-multiselect
         class="field-25-width field-tags"
@@ -83,24 +82,23 @@
         placeholder=""
         [options]="(tagsFieldOptions$ | async)!"
         (inputChange)="onTagInputChange($event)"
-        [(selectedData)]="selectedTags">
-      </lib-advanced-chips-multiselect>
+        [(selectedData)]="selectedTags"/>
 
       <div class="spacer"></div>
 
       <button mat-fab color="primary" (click)="doSearch()" matTooltip="Rechercher" aria-label="Bouton de recherche.">
-        <mat-icon fontIcon="search"></mat-icon>
+        <mat-icon fontIcon="search"/>
       </button>
 
       <button mat-fab color="secondary" (click)="downloadCsv()" matTooltip="Télécharger"
         aria-label="Bouton de téléchargement de données." *ngIf="searchFinish === true"
         (disabled)="searchInProgress.value === true">
-        <mat-icon fontIcon="download"></mat-icon>
+        <mat-icon fontIcon="download"/>
       </button>
 
       <button mat-fab color="warn" (click)="reset()" *ngIf="searchFinish === true" matTooltip="Effacer la recherche"
         aria-label="Bouton de réinitialisation des critères de recherche">
-        <mat-icon fontIcon="delete"></mat-icon>
+        <mat-icon fontIcon="delete"/>
       </button>
     </div>
 

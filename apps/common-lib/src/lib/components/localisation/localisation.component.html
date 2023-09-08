@@ -4,7 +4,7 @@
     data-test-id="niveau-localisation"
     (selectionChange)="selectedCategory($event)"
     [value]="categorySelected">
-    <mat-option></mat-option>
+    <mat-option/>
     <mat-option *ngFor="let type of TypeLocalisation" [value]="type">
       {{type}}
     </mat-option>
