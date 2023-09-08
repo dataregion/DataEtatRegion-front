@@ -232,7 +232,7 @@ export class FuzzySearchParamsBuilder extends ASearchParamsBuilder {
         switch (type) {
             case TypeLocalisation.ARRONDISSEMENT:
             case TypeLocalisation.QPV:
-                search_params = this._arrondissement_or_crte_fuzzy(term);
+                search_params = this._arrondissement_or_qpv_fuzzy(term);
                 break;
             case TypeLocalisation.COMMUNE:
                 search_params = this._commune_fuzzy(term);
@@ -253,7 +253,7 @@ export class FuzzySearchParamsBuilder extends ASearchParamsBuilder {
         return search_params;
     }
 
-    private _arrondissement_or_crte_fuzzy(term: _Term): SearchParams {
+    private _arrondissement_or_qpv_fuzzy(term: _Term): SearchParams {
 
         if (term) return { query: term }
         else return {}
