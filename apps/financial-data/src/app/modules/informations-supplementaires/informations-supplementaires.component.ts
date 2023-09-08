@@ -24,7 +24,7 @@ import { SubventionLight } from './models/SubventionLight';
 import { DemarcheLight } from './models/DemarcheLight';
 import { DetailApiDemarcheSimplifieComponent } from './detail-api-demarche-simplifie/detail-api-demarche-simplifie.component';
 import { FinancialDataModel } from '@models/financial/financial-data.models';
-
+/* eslint-disable no-unused-vars */
 export enum View {
   light = 'light',
   full_api_entreprise = 'full_api_entreprise',
@@ -32,6 +32,7 @@ export enum View {
   full_api_demarche = 'full_api_demarche',
   full = 'full',
 }
+/* eslint-enable no-unused-vars */
 
 @Component({
   standalone: true,
@@ -78,25 +79,25 @@ export class InformationsSupplementairesComponent implements OnInit {
   api_demarche_simplifie_light$: Observable<DemarcheLight | null> | undefined;
 
   ngOnInit() {
-    let data: FinancialDataModel =
-      this.route.snapshot.data['financial_data'];
+    const data: FinancialDataModel =
+      this._route.snapshot.data['financial_data'];
     this._init_from_resolver_model(data);
   }
 
   constructor(
-    private route: ActivatedRoute,
-    private service: InformationsSupplementairesService
+    private _route: ActivatedRoute,
+    private _service: InformationsSupplementairesService
   ) {}
 
 
   get vService(): InformationSupplementairesViewService {
-    return this.service.viewService;
+    return this._service.viewService;
   }
 
   setup() {
     if (this._financial === undefined) return;
 
-    this.service.setupViewModelService(this._financial);
+    this._service.setupViewModelService(this._financial);
     this.api_demarche_simplifie_light$ = this.vService.api_demarche_light$();
     this.entreprise_light = this.vService.entreprise_light();
     this.api_subvention_light$ = this.vService.api_subvention_light$();
@@ -123,6 +124,6 @@ export class InformationsSupplementairesComponent implements OnInit {
   }
 
   open_in_newtab() {
-    this.service.viewService.open_in_newtab();
+    this._service.viewService.open_in_newtab();
   }
 }

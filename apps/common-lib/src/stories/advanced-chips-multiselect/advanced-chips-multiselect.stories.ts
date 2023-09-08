@@ -29,7 +29,7 @@ export default meta;
 
 type Story = StoryObj<AdvancedChipsMultiselectComponent>;
 
-let primaryModel = {
+const primaryModel = {
   opts: [{ 'item': "Initial option" }, { 'item': "second option"}],
   selected: [{ 'item': "Initial option" }],
 }

@@ -1,3 +1,5 @@
+/* eslint no-unused-vars: 0 */  // --> OFF
+
 export type AggregateReducerContext = {
   row: RowData;
   group: Group;
@@ -80,7 +82,7 @@ export class AggregatorFns {
     context: AggregateReducerContext,
     accumulator?: number
   ): number {
-    let nbRows = context.group.rows?.length || 0;
+    const nbRows = context.group.rows?.length || 0;
     if (nbRows <= 1) {
       return currentValue || 0;
     }
@@ -109,7 +111,7 @@ export class ColumnsMetaData {
   }
 
   getByColumnName(name: string): ColumnMetaDataDef {
-    let metaDataDef = this.metaDataMap.get(name);
+    const metaDataDef = this.metaDataMap.get(name);
     if (!metaDataDef) {
       throw new Error(`Pas de meta-données pour la colonne "${name}"`);
     }
@@ -173,7 +175,7 @@ export class Group {
     public readonly column?: ColumnMetaDataDef,
     public readonly columnValue?: any,
     public readonly parent?: Group,
-    private columnsAggregateFns?: Record<string, AggregateReducer<any>>
+    private _columnsAggregateFns?: Record<string, AggregateReducer<any>>
   ) {}
 
   getOrCreateGroup(column: ColumnMetaDataDef, groupColumnValue: any): Group {
@@ -186,7 +188,7 @@ export class Group {
         column,
         groupColumnValue,
         this,
-        this.columnsAggregateFns
+        this._columnsAggregateFns
       );
       this.groupsMap.set(groupColumnValue, group);
     }
@@ -198,7 +200,7 @@ export class Group {
       this.rows = [];
     }
     this.rows.push(row);
-    if (this.columnsAggregateFns) {
+    if (this._columnsAggregateFns) {
       this.aggregateColumnValues(row);
     }
   }
@@ -210,8 +212,8 @@ export class Group {
     // On incrémente le nombre d'éléments
     this._count += 1;
     // On met à jour les aggrégats pour chacune des colonnes.
-    for (const columnName in this.columnsAggregateFns) {
-      const aggregateFn = this.columnsAggregateFns[columnName];
+    for (const columnName in this._columnsAggregateFns) {
+      const aggregateFn = this._columnsAggregateFns[columnName];
       this.aggregates[columnName] = aggregateFn(
         row[columnName],
         { row, group: this },

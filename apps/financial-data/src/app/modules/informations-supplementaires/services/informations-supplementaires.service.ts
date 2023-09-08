@@ -37,14 +37,14 @@ export class InformationsSupplementairesService {
   }
 
   constructor(
-    private demarche: DemarcheHttpService,
-    private ea: ExternalAPIsService
+    private _demarche: DemarcheHttpService,
+    private _ea: ExternalAPIsService
   ) {}
 
   setupViewModelService(financial_data: FinancialDataModel) {
-    let viewService = new InformationSupplementairesViewService(
-      this.demarche,
-      this.ea,
+    const viewService = new InformationSupplementairesViewService(
+      this._demarche,
+      this._ea,
       financial_data
     );
     this._viewService = viewService;

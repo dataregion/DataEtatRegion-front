@@ -26,17 +26,17 @@ export class InformationsSupplementairesDialogComponent {
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: InformationsSupplementairesDialogData,
-    private httpService: FinancialDataHttpService
+    private _httpService: FinancialDataHttpService
     ) {
     this.financial_data = data.row as FinancialDataModel;
 
     // Récupération de l'AE pour avoir le détails des CP associés
-    this.httpService.getCp(data.row['id']).subscribe({
+    this._httpService.getCp(data.row['id']).subscribe({
       next: result => {
         this.financial_data = {...this.financial_data, financial_cp: result as unknown as FinancialCp[]}
       },
       error: err => console.error(err)
     })
   }
-  
+
 }

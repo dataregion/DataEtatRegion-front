@@ -65,7 +65,7 @@ export class LocalisationComponent implements OnChanges, OnInit {
   @Input()
   public categorySelected: TypeLocalisation | null = null;
 
-  constructor(private geo: GeoLocalisationComponentService) {
+  constructor(private _geo: GeoLocalisationComponentService) {
     this.searchGeoChanged.pipe(debounceTime(300)).subscribe(() => {
       this._search();
     });
@@ -95,7 +95,7 @@ export class LocalisationComponent implements OnChanges, OnInit {
     if (this.categorySelected != null) {
       this.control.setValue(null);
       this.searchGeo = '';
-      this.geo.filterGeo(null, this.categorySelected).subscribe(
+      this._geo.filterGeo(null, this.categorySelected).subscribe(
         (response) => (this.filteredGeo = response)
       );
     }
@@ -106,7 +106,7 @@ export class LocalisationComponent implements OnChanges, OnInit {
    */
   private _search() {
     if (this.categorySelected != null) {
-      this.geo.filterGeo(this.searchGeo, this.categorySelected).subscribe(
+      this._geo.filterGeo(this.searchGeo, this.categorySelected).subscribe(
         (response: GeoModel[]) => {
           if (this.control.value) {
             // pour ne pas perdre la sélection au filtre, on conserve les valeurs du controls.

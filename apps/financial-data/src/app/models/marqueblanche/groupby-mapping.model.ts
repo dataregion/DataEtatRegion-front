@@ -1,10 +1,13 @@
+/* eslint-disable no-unused-vars */
+
 import { ColumnMetaDataDef } from "apps/grouping-table/src/lib/components/grouping-table/group-utils";
 import { GroupByFieldname } from "./groupby-fieldname.enum";
 
+
 export type GroupByMapping = { [key in GroupByFieldname]: string }
 
-/** 
- * Mapping liant les nom de champ de grouping de la marque blanche 
+/**
+ * Mapping liant les nom de champ de grouping de la marque blanche
  * vers les noms de colonne du tableau
  * Voir {@link ColumnMetaDataDef}'s name
  */

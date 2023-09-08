@@ -150,14 +150,14 @@ export class SearchDataComponent implements OnInit {
   }
 
   constructor(
-    private route: ActivatedRoute,
-    private datePipe: DatePipe,
-    private alertService: AlertService,
-    private budgetService: BudgetService,
-    private financialHttpService: FinancialDataHttpService,
-    private logger: NGXLogger,
-    private autocompleteBeneficiaires: AutocompleteBeneficiaireService,
-    private autocompleteTags: AutocompleteTagsService,
+    private _route: ActivatedRoute,
+    private _datePipe: DatePipe,
+    private _alertService: AlertService,
+    private _budgetService: BudgetService,
+    private _financialHttpService: FinancialDataHttpService,
+    private _logger: NGXLogger,
+    private _autocompleteBeneficiaires: AutocompleteBeneficiaireService,
+    private _autocompleteTags: AutocompleteTagsService,
   ) {
     // formulaire
     this.searchForm = new FormGroup<SearchForm>({
@@ -183,11 +183,11 @@ export class SearchDataComponent implements OnInit {
 
   ngOnInit(): void {
     // récupération des themes dans le resolver
-    this.route.data.subscribe(
+    this._route.data.subscribe(
       (data: Data) => {
-        let response = data as { financial: FinancialDataResolverModel, mb_parsed_params: MarqueBlancheParsedParamsResolverModel }
+        const response = data as { financial: FinancialDataResolverModel, mb_parsed_params: MarqueBlancheParsedParamsResolverModel }
 
-        let error = response.financial.error || response.mb_parsed_params?.error
+        const error = response.financial.error || response.mb_parsed_params?.error
 
         if (error) {
           this.displayError = true;
@@ -195,9 +195,9 @@ export class SearchDataComponent implements OnInit {
           return;
         }
 
-        let financial = response.financial.data! as FinancialData;
-        let mb_has_params = response.mb_parsed_params?.data?.has_marqueblanche_params;
-        let mb_prefilter = response.mb_parsed_params?.data?.preFilters;
+        const financial = response.financial.data! as FinancialData;
+        const mb_has_params = response.mb_parsed_params?.data?.has_marqueblanche_params;
+        const mb_prefilter = response.mb_parsed_params?.data?.preFilters;
 
         this.displayError = false;
         this.themes = financial.themes;
@@ -208,9 +208,9 @@ export class SearchDataComponent implements OnInit {
         if (!mb_has_params)
           return
 
-        this.logger.debug(`Mode marque blanche actif.`)
+        this._logger.debug(`Mode marque blanche actif.`)
         if (mb_prefilter) {
-          this.logger.debug(`Application des filtres`);
+          this._logger.debug(`Application des filtres`);
           this.preFilter = mb_prefilter;
         }
       }
@@ -264,7 +264,7 @@ export class SearchDataComponent implements OnInit {
     const formValue = this.searchForm.value;
     this.searchInProgress.next(true);
 
-    let search_parameters: SearchParameters = {
+    const search_parameters: SearchParameters = {
       ...SearchParameters_empty,
       beneficiaires: this.selectedBeneficiaires || null,
       bops: formValue.bops || null,
@@ -279,7 +279,7 @@ export class SearchDataComponent implements OnInit {
       source_region: this.additional_searchparams?.sources_region || null,
     }
 
-    this._search_subscription = this.budgetService
+    this._search_subscription = this._budgetService
       .search(search_parameters)
       .pipe(
         finalize(() => {
@@ -298,7 +298,7 @@ export class SearchDataComponent implements OnInit {
           this._searchResult = [];
           this.currentFilter.next(this._buildPreference(formValue as JSONObject));
           this.searchResultsEventEmitter.next(this._searchResult);
-          this.alertService.openAlertError(err.message, 8);
+          this._alertService.openAlertError(err.message, 8);
         },
       });
   }
@@ -327,11 +327,11 @@ export class SearchDataComponent implements OnInit {
     this.searchForm.markAllAsTouched(); // pour notifier les erreurs sur le formulaire
     if (this.searchForm.valid && !this.searchInProgress.value ) {
       this.searchInProgress.next(true);
-      const csvdata = this.budgetService.getCsv(this._searchResult ?? []);
+      const csvdata = this._budgetService.getCsv(this._searchResult ?? []);
 
       console.log(csvdata);
-       var url = URL.createObjectURL(csvdata);
-          var a = document.createElement('a');
+       const url = URL.createObjectURL(csvdata);
+          const a = document.createElement('a');
           a.href = url;
           a.download = this._filenameCsv();
           document.body.appendChild(a);
@@ -349,7 +349,7 @@ export class SearchDataComponent implements OnInit {
   private _filenameCsv(): string {
     const formValue = this.searchForm.value;
     console.log(formValue);
-    let filename = `${this.datePipe.transform(new Date(), 'yyyyMMdd')}_export`;
+    let filename = `${this._datePipe.transform(new Date(), 'yyyyMMdd')}_export`;
     if (formValue.location !== null) {
       const locations = formValue.location as GeoModel[];
       filename += '_' + locations[0].type + '-';
@@ -393,7 +393,7 @@ export class SearchDataComponent implements OnInit {
             if (!value || value.length <= 3)
               return of([])
 
-            return this.autocompleteBeneficiaires.autocomplete$(value)
+            return this._autocompleteBeneficiaires.autocomplete$(value)
           })
         );
 
@@ -407,7 +407,7 @@ export class SearchDataComponent implements OnInit {
             if (term && term?.length < 2) // On recherche lorsque l'on a commencé à taper une valeur
               return of([])
 
-            return this.autocompleteTags.autocomplete$(term)
+            return this._autocompleteTags.autocomplete$(term)
           })
         )
   }
@@ -417,7 +417,7 @@ export class SearchDataComponent implements OnInit {
     const filterValue = value ? value.toLowerCase() : '';
     const themes = this.searchForm.controls['theme'].value;
 
-    let filterGeo = this.bop.filter((option) => {
+    const filterGeo = this.bop.filter((option) => {
       if (themes) {
         return (
           option.label_theme != null &&
@@ -454,7 +454,7 @@ export class SearchDataComponent implements OnInit {
    * Si des options existent déjà via un filtre ou la marque blanche, on fait l'union des deux array
    */
   public setAnnees() {
-    this.financialHttpService.getAnnees().subscribe({
+    this._financialHttpService.getAnnees().subscribe({
       next: result => this.annees = [...new Set([...this.annees, ...result])].sort().reverse(),
       error: err => console.error(err)
     });
@@ -501,7 +501,7 @@ export class SearchDataComponent implements OnInit {
       forkJoin(
         this.selectedBeneficiaires
           .map(ref => ref.siret)
-          .map(siret => this.autocompleteBeneficiaires.autocomplete_single$(siret))
+          .map(siret => this._autocompleteBeneficiaires.autocomplete_single$(siret))
       )
       .subscribe(joined => { this.selectedBeneficiaires = joined; })
     }
@@ -527,15 +527,15 @@ export class SearchDataComponent implements OnInit {
     /* Paramètres additionnels qui n'apparaissent pas dans le formulaire de recherche */
     let additional_searchparams: AdditionalSearchParameters = empty_additional_searchparams;
 
-    let domaines_fonctionnels = preFilter?.domaines_fonctionnels
+    const domaines_fonctionnels = preFilter?.domaines_fonctionnels
     if (domaines_fonctionnels)
       additional_searchparams = { ...additional_searchparams, domaines_fonctionnels }
 
-    let referentiels_programmation = preFilter?.referentiels_programmation
+    const referentiels_programmation = preFilter?.referentiels_programmation
     if (referentiels_programmation)
       additional_searchparams = { ...additional_searchparams, referentiels_programmation }
 
-    let sources_region = preFilter?.sources_region;
+    const sources_region = preFilter?.sources_region;
     if (sources_region)
       additional_searchparams = { ...additional_searchparams, sources_region }
 

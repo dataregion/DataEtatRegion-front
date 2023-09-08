@@ -14,7 +14,7 @@ export class ConfirmDialogComponent {
   public title: string;
 
   constructor(
-    public dialogRef: MatDialogRef<ConfirmDialogComponent>,
+    public dialogRef: MatDialogRef<ConfirmDialogComponent>, // eslint-disable-line
     @Inject(MAT_DIALOG_DATA) public data: string
   ) {
     this.title = data;

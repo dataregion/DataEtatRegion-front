@@ -15,17 +15,17 @@ export const SETTINGS = new InjectionToken<ISettingsService>('SETTINGS');
 export class SettingsHttpService {
   constructor(
     private http: HttpClient,
-    @Inject(SETTINGS) private settingsService: ISettingsService,
-    private keycloak: KeycloakService,
-    private hostname_mapper: MultiRegionClientIdMapper,
-    private logger: NGXLogger,
+    @Inject(SETTINGS) private _settingsService: ISettingsService,
+    private _keycloak: KeycloakService,
+    private _hostname_mapper: MultiRegionClientIdMapper,
+    private _logger: NGXLogger,
   ) {}
 
   initializeApp(): Promise<any> {
     return new Promise((resolve, reject) => {
       firstValueFrom(this.http.get('assets/settings.json'))
         .then((response) => {
-          this.settingsService.setSettings(response as Settings);
+          this._settingsService.setSettings(response as Settings);
           resolve(true);
         })
         .catch((error) => {
@@ -33,24 +33,24 @@ export class SettingsHttpService {
         });
     })
     .then(async () => {
-      const is_in_production = this.settingsService.getSetting().production;
+      const is_in_production = this._settingsService.getSetting().production;
       if (is_in_production) {
-        this.logger.partialUpdateConfig({ level: NgxLoggerLevel.WARN, disableFileDetails: true });
+        this._logger.partialUpdateConfig({ level: NgxLoggerLevel.WARN, disableFileDetails: true });
       }
       else {
-        this.logger.partialUpdateConfig({ level: NgxLoggerLevel.TRACE, enableSourceMaps: true });
-        this.logger.info("Application en mode développement. Les logs sont en mode trace");
+        this._logger.partialUpdateConfig({ level: NgxLoggerLevel.TRACE, enableSourceMaps: true });
+        this._logger.info("Application en mode développement. Les logs sont en mode trace");
       }
     })
     .then(async () => {
-      const keycloak_settings = this.settingsService.getKeycloakSettings();
-      let multi_region = this.settingsService?.getKeycloakSettings()?.multi_region;
+      const keycloak_settings = this._settingsService.getKeycloakSettings();
+      const multi_region = this._settingsService?.getKeycloakSettings()?.multi_region;
 
       if (multi_region) {
-        this.logger.debug(`Initialisation de keycloak en mode multiregion`);
+        this._logger.debug(`Initialisation de keycloak en mode multiregion`);
         return await this.init_keycloak_multiregion(keycloak_settings);
       } else {
-        this.logger.debug(`Initialisation de keycloak en mode monoregion`)
+        this._logger.debug(`Initialisation de keycloak en mode monoregion`)
         return await this.init_keycloak_monoregion(keycloak_settings)
       }
     });
@@ -71,9 +71,9 @@ export class SettingsHttpService {
   async init_keycloak_multiregion(settings: KeycloakSettings) {
         try {
           const { url, realm } = settings
-          const clientId = this.hostname_mapper.kc_client_id_from_hostname(settings.hostname_client_id_mappings)
+          const clientId = this._hostname_mapper.kc_client_id_from_hostname(settings.hostname_client_id_mappings)
 
-          this.logger.debug(`Initialisation de keycloak avec url: ${url}, realm: ${realm} et le client id: ${clientId}`);
+          this._logger.debug(`Initialisation de keycloak avec url: ${url}, realm: ${realm} et le client id: ${clientId}`);
 
           return await this.init_keycloak(url, realm, clientId);
         } catch (error) {
@@ -85,7 +85,7 @@ export class SettingsHttpService {
   async init_keycloak(url: string, realm: string, clientId: string) {
     try {
 
-      const initialization = await this.keycloak.init({
+      const initialization = await this._keycloak.init({
         config: {
           url,
           realm,

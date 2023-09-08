@@ -4,7 +4,6 @@ import { KeycloakAngularModule, KeycloakService } from 'keycloak-angular';
 import {
   HttpClientModule,
   HTTP_INTERCEPTORS,
-  HttpHeaders,
 } from '@angular/common/http';
 import { LoggerModule, NgxLoggerLevel } from 'ngx-logger';
 

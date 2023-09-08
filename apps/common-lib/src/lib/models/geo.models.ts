@@ -1,3 +1,5 @@
+/* eslint no-unused-vars: 0 */  // --> OFF
+
 export enum TypeLocalisation {
   DEPARTEMENT = 'Département',
   EPCI = 'Epci',

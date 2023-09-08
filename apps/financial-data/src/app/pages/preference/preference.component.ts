@@ -11,7 +11,7 @@ import {
   templateUrl: './preference.component.html',
 })
 export class PreferenceComponent {
-  constructor(private router: Router) {}
+  constructor(private _router: Router) {}
 
   public mappingValueFilter: MapPreferenceFilterMetadata = {
     bops: {
@@ -57,7 +57,7 @@ export class PreferenceComponent {
    * @param _pref
    */
   public applyPreference = (uuid: string, _pref: Preference) => {
-    this.router.navigate([''], {
+    this._router.navigate([''], {
       queryParams: { uuid: uuid },
     });
   };

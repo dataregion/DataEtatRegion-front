@@ -23,21 +23,21 @@ export class AppComponent implements OnInit {
   }
 
   constructor(
-    private loaderService: LoaderService,
-    private sessionService: SessionService,
+    private _loaderService: LoaderService,
+    private _sessionService: SessionService,
     private _gridFullscreen: GridInFullscreenStateService,
     @Inject(SETTINGS) public readonly settings: SettingsService
   ) {}
 
   ngOnInit(): void {
-    this.loaderService.isLoading().subscribe((loading) => {
+    this._loaderService.isLoading().subscribe((loading) => {
       this.progressBarVisible = loading;
     });
 
-    this.sessionService.getUser().subscribe((user) => {
+    this._sessionService.getUser().subscribe((user) => {
       this.isAuthenticated = user !== null;
-      this.isAdmin = this.sessionService.isAdmin();
-      this.displayAdmin = this.sessionService.hasOneRole([
+      this.isAdmin = this._sessionService.isAdmin();
+      this.displayAdmin = this._sessionService.hasOneRole([
         Profil.COMPTABLE,
         Profil.ADMIN,
       ]);

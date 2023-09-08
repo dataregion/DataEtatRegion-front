@@ -32,8 +32,8 @@ export class HeaderComponent implements OnInit {
   logo: string = 'DataEtat.svg';
 
   constructor(
-    protected session: SessionService,
-    private keycloak: KeycloakService
+    protected session: SessionService, // eslint-disable-line
+    private _keycloak: KeycloakService
   ) {}
 
   public ngOnInit() {
@@ -46,8 +46,8 @@ export class HeaderComponent implements OnInit {
   }
 
   public logout() {
-    this.keycloak.logout().then(() => {
-      this.keycloak.clearToken();
+    this._keycloak.logout().then(() => {
+      this._keycloak.clearToken();
     });
     this.isLoggedIn = false;
   }

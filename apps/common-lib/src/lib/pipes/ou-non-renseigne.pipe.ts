@@ -5,7 +5,7 @@ import { Pipe, PipeTransform } from '@angular/core';
   standalone: true
 })
 export class OuNonRenseignePipe implements PipeTransform {
-
+  // eslint-disable-next-line
   transform(value: unknown, ...args: unknown[]): unknown {
 
     if ( (value === undefined) || (value === null) ) {

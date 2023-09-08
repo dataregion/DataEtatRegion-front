@@ -1,3 +1,5 @@
+/* eslint no-unused-vars: 0 */  // --> OFF
+
 
 /** Nom des paramètres supportés par les marques blanches */
 export enum QueryParam {

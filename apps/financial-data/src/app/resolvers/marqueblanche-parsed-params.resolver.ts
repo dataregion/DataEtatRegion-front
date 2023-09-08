@@ -46,12 +46,12 @@ interface _HandlerContext extends HandlerContext {
 
 function _resolver(route: ActivatedRouteSnapshot): Observable<{ data: MarqueBlancheParsedParams }> {
 
-  let logger = inject(NGXLogger);
-  let api_geo = inject(GeoHttpService)
+  const logger = inject(NGXLogger);
+  const api_geo = inject(GeoHttpService)
 
-  let empty: MarqueBlancheParsedParams = { preFilters: {}, p_group_by: [], group_by: [], has_marqueblanche_params: false, fullscreen: false }
+  const empty: MarqueBlancheParsedParams = { preFilters: {}, p_group_by: [], group_by: [], has_marqueblanche_params: false, fullscreen: false }
 
-  let uuid = route.queryParamMap.get(QueryParam.Uuid);
+  const uuid = route.queryParamMap.get(QueryParam.Uuid);
 
   if (uuid) {
     logger.debug("Paramètre UUID présent. on ne calcule pas les filtres marque blanche");
@@ -65,8 +65,8 @@ function _resolver(route: ActivatedRouteSnapshot): Observable<{ data: MarqueBlan
     has_marqueblanche_params = has_marqueblanche_params || route.queryParamMap.has(p_name);
   }
 
-  let handlerCtx = { api_geo, route, logger };
-  let model = of({ ...empty, has_marqueblanche_params })
+  const handlerCtx = { api_geo, route, logger };
+  const model = of({ ...empty, has_marqueblanche_params })
     .pipe(
       mergeMap(previous => programmes(previous, handlerCtx)),
       mergeMap(previous => localisation(previous, handlerCtx)),
@@ -96,13 +96,13 @@ function beneficiaires(
   ctx: _HandlerContext
 ): Observable<MarqueBlancheParsedParams> {
 
-  let sirets = _extract_multiple_queryparams(previous, ctx, FinancialQueryParam.Beneficiaires);
+  const sirets = _extract_multiple_queryparams(previous, ctx, FinancialQueryParam.Beneficiaires);
   if (!sirets)
     return of(previous);
-  
-  let beneficiaires = sirets.map(x => { return { siret: x } as Beneficiaire })
 
-  let preFilters: PreFilters = {
+  const beneficiaires = sirets.map(x => { return { siret: x } as Beneficiaire })
+
+  const preFilters: PreFilters = {
     ...previous.preFilters,
     beneficiaires: beneficiaires,
   }
@@ -115,11 +115,11 @@ function source_region(
   ctx: _HandlerContext
 ): Observable<MarqueBlancheParsedParams> {
 
-  let sources = _extract_multiple_queryparams(previous, ctx, FinancialQueryParam.SourceRegion);
+  const sources = _extract_multiple_queryparams(previous, ctx, FinancialQueryParam.SourceRegion);
   if (!sources)
     return of(previous)
 
-  let preFilters: PreFilters = {
+  const preFilters: PreFilters = {
     ...previous.preFilters,
     sources_region: sources
   }
@@ -132,11 +132,11 @@ function domaines_fonctionnels(
   ctx: _HandlerContext
 ): Observable<MarqueBlancheParsedParams> {
 
-  let codes = _extract_multiple_queryparams(previous, ctx, FinancialQueryParam.DomaineFonctionnel);
+  const codes = _extract_multiple_queryparams(previous, ctx, FinancialQueryParam.DomaineFonctionnel);
   if (!codes)
     return of(previous);
 
-  let preFilters: PreFilters = {
+  const preFilters: PreFilters = {
     ...previous.preFilters,
     domaines_fonctionnels: codes
   }
@@ -149,11 +149,11 @@ function referentiels_programmation(
   ctx: _HandlerContext
 ): Observable<MarqueBlancheParsedParams> {
 
-  let codes = _extract_multiple_queryparams(previous, ctx, FinancialQueryParam.ReferentielsProgrammation);
+  const codes = _extract_multiple_queryparams(previous, ctx, FinancialQueryParam.ReferentielsProgrammation);
   if (!codes)
     return of(previous);
 
-  let preFilters = {
+  const preFilters = {
     ...previous.preFilters,
     referentiels_programmation: codes
   }
@@ -167,12 +167,12 @@ function group_by(
   _: _HandlerContext,
 ): Observable<MarqueBlancheParsedParams> {
 
-  let columns: GroupingColumn[] = []
+  const columns: GroupingColumn[] = []
   for (const param_name of previous.p_group_by) {
 
     assert_is_a_GroupByFieldname(param_name)
-    let columnName = groupby_mapping[param_name]
-    let column: GroupingColumn = { columnName }
+    const columnName = groupby_mapping[param_name]
+    const column: GroupingColumn = { columnName }
 
     columns.push(column);
   }
@@ -191,15 +191,15 @@ function programmes(
   ctx: _HandlerContext,
 ): Observable<MarqueBlancheParsedParams> {
 
-  let codes = _extract_multiple_queryparams(previous, ctx, FinancialQueryParam.Programmes);
+  const codes = _extract_multiple_queryparams(previous, ctx, FinancialQueryParam.Programmes);
   if (!codes)
     return of(previous)
 
-  let bops = codes.map(code => {
+  const bops = codes.map(code => {
     return { 'code': code }
   });
 
-  let preFilters = {
+  const preFilters = {
     ...previous.preFilters,
     bops,
   }
@@ -213,8 +213,8 @@ function localisation(
   { api_geo, route, logger }: _HandlerContext,
 ): Observable<MarqueBlancheParsedParams> {
 
-  let p_niveau_geo = route.queryParamMap.get(FinancialQueryParam.Niveau_geo);
-  let p_code_geo = route.queryParamMap.get(FinancialQueryParam.Code_geo);
+  const p_niveau_geo = route.queryParamMap.get(FinancialQueryParam.Niveau_geo);
+  const p_code_geo = route.queryParamMap.get(FinancialQueryParam.Code_geo);
 
   if (_xor(p_niveau_geo, p_code_geo))
     throw Error("Vous devez utiliser `niveau_geo` et `code_geo` ensemble.")
@@ -230,14 +230,14 @@ function localisation(
     if (!niveauxLocalisationLegaux.includes(niveau_geo))
       throw Error(`Le niveau géographique doit être une de ces valeurs ${niveauxLocalisationLegaux}`)
   } catch(e) {
-    let niveaux_valides = synonymes_from_types_localisation(niveauxLocalisationLegaux)
+    const niveaux_valides = synonymes_from_types_localisation(niveauxLocalisationLegaux)
     throw Error(`Le niveau géographique doit être une de ces valeurs ${niveaux_valides}`)
   }
 
   function handle_geo(geo: GeoModel[]) {
     if (geo.length !== 1)
       throw new Error(`Impossible de trouver une localisation pour ${niveau_geo}: ${code_geo}`);
-    let _preFilters: PreFilters = {
+    const _preFilters: PreFilters = {
       ...previous.preFilters,
       location: [geo[0]] as unknown as JSONObject[] // XXX: Ici, on ne gère qu'un seul code_geo
     }
@@ -248,7 +248,7 @@ function localisation(
   }
 
   logger.debug(`Application des paramètres ${FinancialQueryParam.Niveau_geo}: ${niveau_geo} et ${FinancialQueryParam.Code_geo}: ${code_geo}`);
-  let result = filterGeo(api_geo, code_geo, niveau_geo)
+  const result = filterGeo(api_geo, code_geo, niveau_geo)
     .pipe(
       map(geo => handle_geo(geo))
     );
@@ -264,8 +264,8 @@ function annees_min_max(
 
   const annee_courante = new Date().getFullYear();
 
-  let p_annee_min = route.queryParamMap.get(FinancialQueryParam.Annee_min);
-  let p_annee_max = route.queryParamMap.get(FinancialQueryParam.Annee_max);
+  const p_annee_min = route.queryParamMap.get(FinancialQueryParam.Annee_min);
+  const p_annee_max = route.queryParamMap.get(FinancialQueryParam.Annee_max);
 
   if (_xor(p_annee_min, p_annee_max))
     throw new Error('Veuillez spécifier deux paramètres: "annee_min" et "annee_max"');
@@ -274,7 +274,7 @@ function annees_min_max(
     // Par défaut, l'année en cours
     logger.debug(`Application du paramètre d'année: année courante (${annee_courante}) (appliqué uniquement si on passe dans la marque blanche)`);
 
-    let _preFilters = {
+    const _preFilters = {
       ...previous.preFilters,
       year: [annee_courante],
     }
@@ -284,12 +284,12 @@ function annees_min_max(
     }
   }
 
-  let i_annee_min = _parse_annee(p_annee_min);
-  let i_annee_max = _parse_annee(p_annee_max);
-  let annee_min = (i_annee_min <= i_annee_max) ? i_annee_min : i_annee_max;
-  let annee_max = (i_annee_min <= i_annee_max) ? i_annee_max : i_annee_min;
+  const i_annee_min = _parse_annee(p_annee_min);
+  const i_annee_max = _parse_annee(p_annee_max);
+  const annee_min = (i_annee_min <= i_annee_max) ? i_annee_min : i_annee_max;
+  const annee_max = (i_annee_min <= i_annee_max) ? i_annee_max : i_annee_min;
 
-  let pf_annees = []
+  const pf_annees = []
   for (let annee = annee_min; annee <= annee_max; annee++)
     pf_annees.push(annee);
 
@@ -298,7 +298,7 @@ function annees_min_max(
   if (annee_max > annee_courante)
     throw new Error(`Veuillez spécifier une année max correcte (<= année en cours)`);
 
-  let _preFilters = {
+  const _preFilters = {
     ...previous.preFilters,
     year: pf_annees,
   }
@@ -309,7 +309,7 @@ function annees_min_max(
 //region fonctions utilitaires
 function filterGeo(api_geo: GeoHttpService, code_geo: string, niveau_geo: TypeLocalisation) {
 
-  let search_params = new SearchByCodeParamsBuilder()
+  const search_params = new SearchByCodeParamsBuilder()
     .withDefaultLimit(1)
     .search(code_geo, niveau_geo);
 
@@ -317,8 +317,8 @@ function filterGeo(api_geo: GeoHttpService, code_geo: string, niveau_geo: TypeLo
 }
 
 function _xor(x: any, y: any) {
-  let bx = Number(Boolean(x));
-  let by = Number(Boolean(y));
+  const bx = Number(Boolean(x));
+  const by = Number(Boolean(y));
 
   return Boolean(bx ^ by);
 }
@@ -344,11 +344,11 @@ function _extract_multiple_queryparams(
   query_param: FinancialQueryParam,
   ): string[] | undefined {
 
-    let p_params = route.queryParamMap.get(query_param);
+    const p_params = route.queryParamMap.get(query_param);
     if (!p_params)
       return;
 
-    let params = p_params.split(',');
+    const params = p_params.split(',');
     logger.debug(`Application du paramètre ${query_param}: ${params}`);
     return params;
 }

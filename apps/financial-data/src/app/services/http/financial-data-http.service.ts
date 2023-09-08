@@ -22,7 +22,7 @@ export class FinancialDataHttpService  implements DataHttpService<FinancialDataM
 
   constructor(
     private http: HttpClient,
-    @Inject(SETTINGS) readonly settings: SettingsService
+    @Inject(SETTINGS) readonly settings: SettingsService // eslint-disable-line
   ) {
     this._apiFinancial = this.settings.apiFinancialData;
     this._apiAdministration = this.settings.apiAdministration;
@@ -139,8 +139,8 @@ export class FinancialDataHttpService  implements DataHttpService<FinancialDataM
   }
 
   /**
-   * Récupération des années des AE 
-   * @returns 
+   * Récupération des années des AE
+   * @returns
    */
   public getAnnees(): Observable<number[]> {
     return this.http.get<number[]>(`${this._apiFinancial}/ae/annees`);

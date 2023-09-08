@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 export interface Shared {
   shared_username_email: string;
 }

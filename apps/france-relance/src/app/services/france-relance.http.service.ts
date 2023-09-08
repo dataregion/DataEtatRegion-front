@@ -17,7 +17,7 @@ import { Territoire } from '../models/territoire.models';
 export class FranceRelanceHttpService extends NocodbHttpService {
   constructor(
     private http: HttpClient,
-    @Inject(SETTINGS) readonly settings: SettingsService
+    @Inject(SETTINGS) readonly _settings: SettingsService
   ) {
     super();
   }
@@ -27,7 +27,7 @@ export class FranceRelanceHttpService extends NocodbHttpService {
    * @returns
    */
   public getSousAxePlanRelance(): Observable<SousAxePlanRelance[]> {
-    const apiFr = this.settings.apiFranceRelance;
+    const apiFr = this._settings.apiFranceRelance;
     const field_sous_axe = 'SousaxeDuPlanDeRelance';
     const field_axe = 'AxeDuPlanDeRelance';
 
@@ -59,7 +59,7 @@ export class FranceRelanceHttpService extends NocodbHttpService {
    * @returns
    */
   public searchStructure(search: string): Observable<Structure[]> {
-    const apiFr = this.settings.apiFranceRelance;
+    const apiFr = this._settings.apiFranceRelance;
 
     const fields = 'Structure,NuméroDeSiretSiConnu';
     const sort = 'Structure';
@@ -96,7 +96,7 @@ export class FranceRelanceHttpService extends NocodbHttpService {
    * @returns
    */
   public searchTerritoire(search: string): Observable<Territoire[]> {
-    const apiFr = this.settings.apiFranceRelance;
+    const apiFr = this._settings.apiFranceRelance;
     const fields = 'Commune,CodeInsee';
     const where = `where=(Commune,like,${search}%)`;
 
@@ -119,7 +119,7 @@ export class FranceRelanceHttpService extends NocodbHttpService {
     structure: Structure,
     territoires: Territoire[]
   ): Observable<any> {
-    const apiFr = this.settings.apiFranceRelance;
+    const apiFr = this._settings.apiFranceRelance;
 
     const fields =
       'Structure,NuméroDeSiretSiConnu,SubventionAccordée,Synthèse,axe,sous-axe,dispositif,territoire,code_insee';
@@ -141,7 +141,7 @@ export class FranceRelanceHttpService extends NocodbHttpService {
     structure: Structure,
     territoires: Territoire[]
   ): Observable<Blob> {
-    const apiFr = this.settings.apiFranceRelance;
+    const apiFr = this._settings.apiFranceRelance;
 
     const fields =
       'Structure,NuméroDeSiretSiConnu,SubventionAccordée,Synthèse,axe,sous-axe,dispositif,territoire,code_insee';

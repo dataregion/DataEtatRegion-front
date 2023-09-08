@@ -6,9 +6,9 @@ import { FinancialDataModel } from '@models/financial/financial-data.models';
 
 export const resolveInformationsSupplementaires: ResolveFn<FinancialDataModel | Error> =
   (route: ActivatedRouteSnapshot) => {
-    let source = route.params['source'];
-    let id = route.params['id'];
-    let service = inject(BudgetService);
+    const source = route.params['source'];
+    const id = route.params['id'];
+    const service = inject(BudgetService);
 
     return service.getById(source, id).pipe(
       catchError((_error) => {

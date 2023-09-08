@@ -1,6 +1,7 @@
 import { Component, Inject } from '@angular/core';
 import { MAT_SNACK_BAR_DATA } from '@angular/material/snack-bar';
 
+/* eslint-disable no-unused-vars */
 export enum AlertType {
   Error = 'error',
   Success = 'success',
@@ -11,6 +12,8 @@ export interface AlertMessage {
   message: string;
   type: AlertType;
 }
+/* eslint-enable no-unused-vars */
+
 
 @Component({
   selector: 'lib-snackbar',

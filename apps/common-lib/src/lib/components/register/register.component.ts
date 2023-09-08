@@ -5,6 +5,7 @@ import { KeycloakService } from 'keycloak-angular';
   selector: 'lib-register',
   template: '',
 })
+/* eslint no-unused-vars: 0 */  // --> OFF
 export class RegisterComponent {
   // redirection vers la page de création de compte
   constructor(protected readonly keycloak: KeycloakService) {

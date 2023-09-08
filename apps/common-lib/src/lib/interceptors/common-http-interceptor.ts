@@ -16,8 +16,8 @@ export const BYPASS_ALERT_INTERCEPTOR = new HttpContextToken<boolean>(() => fals
 @Injectable()
 export class CommonHttpInterceptor implements HttpInterceptor {
   constructor(
-    private loader: LoaderService,
-    private alertService: AlertService
+    private _loader: LoaderService,
+    private _alertService: AlertService
   ) { }
 
   intercept(
@@ -25,23 +25,23 @@ export class CommonHttpInterceptor implements HttpInterceptor {
     next: HttpHandler
   ): Observable<HttpEvent<any>> {
 
-    this.loader.startLoader();
-    let handler = next.handle(req)
+    this._loader.startLoader();
+    const handler = next.handle(req)
       .pipe(tap(
         {
           next: (event: HttpEvent<any>) => {
             if (event instanceof HttpResponse) {
-              this.loader.endLoader();
+              this._loader.endLoader();
             }
           },
           error: (_) => {
-            this.loader.endLoader();
+            this._loader.endLoader();
           }
         },
       ));
 
 
-    let bypass = req.context.get(BYPASS_ALERT_INTERCEPTOR);
+    const bypass = req.context.get(BYPASS_ALERT_INTERCEPTOR);
     if (bypass)
       return handler;
 
@@ -49,7 +49,7 @@ export class CommonHttpInterceptor implements HttpInterceptor {
       tap({
         error: (_error: HttpErrorResponse) => {
           if (_error?.status >= 500)
-            this.alertService.openAlertError('Une erreur est survenue');
+            this._alertService.openAlertError('Une erreur est survenue');
         },
       })
     );

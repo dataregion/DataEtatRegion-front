@@ -9,11 +9,11 @@ import { Beneficiaire } from "@models/search/beneficiaire.model";
 @Injectable()
 export class AutocompleteBeneficiaireService {
 
-    constructor(private budgetService: BudgetService) { }
+    constructor(private _budgetService: BudgetService) { }
 
     autocomplete$(input: string): Observable<BeneficiaireFieldData[]> {
 
-        const autocompletion$ =this.budgetService
+        const autocompletion$ =this._budgetService
             .filterRefSiret$(input)
             .pipe(
                 map((response: Beneficiaire[]) => {
@@ -32,7 +32,7 @@ export class AutocompleteBeneficiaireService {
 
     autocomplete_single$(code: string) : Observable<BeneficiaireFieldData> {
 
-        const autocompletion$ = this.budgetService
+        const autocompletion$ = this._budgetService
             .getRefSiretFromCode$(code)
             .pipe(
                 map((response: Beneficiaire) => this._map_beneficiaire_to_fieldData(response))
@@ -49,14 +49,14 @@ export class AutocompleteBeneficiaireService {
     }
 
     private _displayBeneficiaire(element: RefSiret): string {
-        let code = element?.siret;
-        let nom = element?.denomination;
+        const code = element?.siret;
+        const nom = element?.denomination;
 
         if (code && nom) {
             return `${nom} (${code})`;
         } else if (code) {
             return code;
-        } 
+        }
 
         return nom;
     }

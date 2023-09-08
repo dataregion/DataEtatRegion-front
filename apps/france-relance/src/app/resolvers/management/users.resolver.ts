@@ -7,10 +7,10 @@ import { catchError, Observable, of } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class UsersResolver  {
-  constructor(private service: UserHttpService) {}
+  constructor(private _service: UserHttpService) {}
 
   resolve(): Observable<UsersPagination | Error> {
-    return this.service.getUsers().pipe(
+    return this._service.getUsers().pipe(
       catchError((_error) => {
         return of({
           name: 'Erreur',
