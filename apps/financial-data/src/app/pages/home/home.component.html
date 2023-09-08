@@ -5,8 +5,7 @@
 
   <mat-card-content class="content-column">
     <financial-search-data (searchResultsEventEmitter)="tableData = $event" (currentFilter)="newFilter = $event"
-      [preFilter]="preFilter" [ngClass]="{ 'hidden': grid_fullscreen }">
-    </financial-search-data>
+      [preFilter]="preFilter" [ngClass]="{ 'hidden': grid_fullscreen }"/>
 
     <div class="main-content overlay-container no-content">
       <ng-container *ngIf="tableData && tableData.length === 0 else groupingTable">
@@ -16,9 +15,9 @@
   </mat-card-content>
 
   <div class="last-import" *ngIf="lastImportDate">
-    <mat-icon class="info-icon" aria-hidden="false" aria-label="Example home icon" fontIcon="info"></mat-icon>
+    <mat-icon class="info-icon" aria-hidden="false" aria-label="Example home icon" fontIcon="info"/>
     <div>
-      Le dernier chargement complet des données financières date du <lib-display-date [date]="lastImportDate"></lib-display-date>. <br>
+      Le dernier chargement complet des données financières date du <lib-display-date [date]="lastImportDate"/>. <br>
       Les données prennent donc en compte la situation au dernier jour du mois précédent.
     </div>
   </div>
@@ -62,7 +61,7 @@
           </li>
           <li>
 
-            <button 
+            <button
               data-test-id="toggle-grid-fullscreen-btn"
               class="fr-btn fr-btn--sm fr-btn--secondary fr-btn--icon-left"
               [ngClass]="{ 'fr-icon-subtract-line': grid_fullscreen, 'fr-icon-fullscreen-line': !grid_fullscreen }"

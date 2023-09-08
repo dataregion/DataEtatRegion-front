@@ -1,63 +1,61 @@
 <ng-container [ngSwitch]="view">
   <ng-container *ngSwitchCase="'light'">
 
-    <ng-container *ngTemplateOutlet="titre; context:{ libelle: 'Informations supplémentaires' }"></ng-container>
+    <ng-container *ngTemplateOutlet="titre; context:{ libelle: 'Informations supplémentaires' }"/>
 
     <div>
-      <ng-container *ngTemplateOutlet="entrepriseLight; context:{ info: entreprise_light }"></ng-container>
+      <ng-container *ngTemplateOutlet="entrepriseLight; context:{ info: entreprise_light }"/>
       <hr>
-      <ng-container *ngTemplateOutlet="subventionLight; context:{ info: api_subvention_light$ | async }"></ng-container>
+      <ng-container *ngTemplateOutlet="subventionLight; context:{ info: api_subvention_light$ | async }"/>
       <hr>
       <!-- POC DS -->
       <ng-container
-        *ngTemplateOutlet="demarcheSimplifie; context:{ info: api_demarche_simplifie_light$ | async }"></ng-container>
+        *ngTemplateOutlet="demarcheSimplifie; context:{ info: api_demarche_simplifie_light$ | async }"/>
     </div>
   </ng-container>
 
   <ng-container *ngSwitchCase="'full_api_entreprise'">
 
     <ng-container
-      *ngTemplateOutlet="titre; context:{ libelle: 'Informations supplémentaires sur l\'établissement' }"></ng-container>
+      *ngTemplateOutlet="titre; context:{ libelle: 'Informations supplémentaires sur l\'établissement' }"/>
 
-    <financial-informations-supplementaires-detail-entreprise></financial-informations-supplementaires-detail-entreprise>
+    <financial-informations-supplementaires-detail-entreprise/>
   </ng-container>
 
   <ng-container *ngSwitchCase="'full_api_data_subventions'">
 
     <ng-container
-      *ngTemplateOutlet="titre; context:{ libelle: 'Informations supplémentaires sur la subvention' }"></ng-container>
+      *ngTemplateOutlet="titre; context:{ libelle: 'Informations supplémentaires sur la subvention' }"/>
 
-    <financial-informations-supplementaires-detail-subventions></financial-informations-supplementaires-detail-subventions>
+    <financial-informations-supplementaires-detail-subventions/>
   </ng-container>
 
   <ng-container *ngSwitchCase="'full_api_demarche'">
     <ng-container
-      *ngTemplateOutlet="titre; context:{ libelle: 'Informations sur le dossier de la démarche' }"></ng-container>
+      *ngTemplateOutlet="titre; context:{ libelle: 'Informations sur le dossier de la démarche' }"/>
 
-    <financial-informations-demarche-simplifie></financial-informations-demarche-simplifie>
+    <financial-informations-demarche-simplifie/>
   </ng-container>
 
   <ng-container *ngSwitchCase="'full'">
 
-    <ng-container *ngTemplateOutlet="titre; context:{ libelle: '' }"></ng-container>
+    <ng-container *ngTemplateOutlet="titre; context:{ libelle: '' }"/>
 
     <div class="conteneur-full">
       <div class="conteneur-section">
         <ng-container
-          *ngTemplateOutlet="titre; context:{ libelle: 'Informations supplémentaires sur l\'établissement' }"></ng-container>
-        <financial-informations-supplementaires-detail-entreprise></financial-informations-supplementaires-detail-entreprise>
+          *ngTemplateOutlet="titre; context:{ libelle: 'Informations supplémentaires sur l\'établissement' }"/>
+        <financial-informations-supplementaires-detail-entreprise/>
       </div>
       <div class="conteneur-section">
         <ng-container
-          *ngTemplateOutlet="titre; context:{ libelle: 'Informations supplémentaires sur la subvention' }"></ng-container>
-        <financial-informations-supplementaires-detail-subventions></financial-informations-supplementaires-detail-subventions>
+          *ngTemplateOutlet="titre; context:{ libelle: 'Informations supplémentaires sur la subvention' }"/>
+        <financial-informations-supplementaires-detail-subventions/>
       </div>
 
       <div class="conteneur-section">
-        <ng-container
-          *ngTemplateOutlet="titre; context:{ libelle: 'Informations sur le dossier de la démarche' }">
-        </ng-container>
-        <financial-informations-demarche-simplifie></financial-informations-demarche-simplifie>
+        <ng-container *ngTemplateOutlet="titre; context:{ libelle: 'Informations sur le dossier de la démarche' }"/>
+        <financial-informations-demarche-simplifie/>
       </div>
     </div>
   </ng-container>
@@ -178,20 +176,16 @@
 </ng-template>
 
 <ng-template #loading_entreprise_light>
-  <financial-informations-supplementaires-chargement-ou-erreur nom_service_distant="entreprise.api.gouv.fr">
-  </financial-informations-supplementaires-chargement-ou-erreur>
+  <financial-informations-supplementaires-chargement-ou-erreur nom_service_distant="entreprise.api.gouv.fr"/>
 </ng-template>
 
 <ng-template #loading_subvention_light>
   <financial-informations-supplementaires-chargement-ou-erreur nom_service_distant="datasubvention.beta.gouv.fr"
-    [erreur]="vService.api_subvention_light_error">
-  </financial-informations-supplementaires-chargement-ou-erreur>
+    [erreur]="vService.api_subvention_light_error"/>
 </ng-template>
 
 <ng-template #check_demarche_simplifie>
-  <financial-informations-supplementaires-chargement-ou-erreur nom_service_distant="demarches-simplifiees.fr">
-  </financial-informations-supplementaires-chargement-ou-erreur>
+  <financial-informations-supplementaires-chargement-ou-erreur nom_service_distant="demarches-simplifiees.fr"/>
 </ng-template>
 
-<financial-informations-supplementaires-detail-cp [financial]="financial">
-</financial-informations-supplementaires-detail-cp>
+<financial-informations-supplementaires-detail-cp [financial]="financial"/>

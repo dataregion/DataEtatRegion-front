@@ -10,8 +10,7 @@
     <ng-container *ngIf="cellCustomProjection(col.name); let projection; else defaultCellDisplay"
         [ngTemplateOutlet]="projection?.templateRef ?? null"
         [ngTemplateOutletContext]="{ 'column': col, 'row': row, 'cell': row[col.name] }"
-    >
-    </ng-container>
+    />
 
     <ng-template #defaultCellDisplay>
       {{col.renderFn ? col.renderFn(row, col) : row[col.name]}}

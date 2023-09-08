@@ -1,7 +1,7 @@
 <ng-container *ngIf="info; else chargement">
 
     <div class="contenu">
-        <ng-container *ngTemplateOutlet="contenu"></ng-container>
+        <ng-container *ngTemplateOutlet="contenu"/>
     </div>
 
     <hr>
@@ -19,10 +19,9 @@
 </ng-container>
 
 <ng-template #chargement>
-    <financial-informations-supplementaires-chargement-ou-erreur 
+    <financial-informations-supplementaires-chargement-ou-erreur
         nom_service_distant="API entreprise"
-        [erreur]="vService.api_entreprise_full_error">
-    </financial-informations-supplementaires-chargement-ou-erreur>
+        [erreur]="vService.api_entreprise_full_error"/>
 </ng-template>
 
 <ng-template #contenu>
@@ -51,9 +50,9 @@
 
                 <strong>Effectif de l'organisation (INSEE) :</strong> {{info.quick.tranche_effectif.intitule |
                 ouNonRenseigne}} <br>
-                <strong>Numéro de TVA intracommunautaire : </strong> 
+                <strong>Numéro de TVA intracommunautaire : </strong>
                 <ng-container *ngIf="tva_disponible; else indisponibleInline">
-                    {{info.tva?.tva_number | ouNonRenseigne}} 
+                    {{info.tva?.tva_number | ouNonRenseigne}}
                     <br>
                 </ng-container>
             </div>
@@ -68,13 +67,13 @@
 
                 <strong>ESS (Économie Sociale et Solidaire) :</strong> {{label_ess}}<br>
 
-                <strong>Certification RGE : </strong> 
+                <strong>Certification RGE : </strong>
                 <ng-container *ngIf="rge_disponible; else indisponibleInline">
                     {{label_rge}}
                 </ng-container>
                 <br>
 
-                <strong>Certification Qualibat : </strong> 
+                <strong>Certification Qualibat : </strong>
                 <ng-container *ngIf="qualibat_disponible; else indisponibleInline">
                     {{label_qualibat}}
                 </ng-container>
