@@ -28,7 +28,12 @@
         "plugin:@angular-eslint/template/process-inline-templates"
       ],
       "rules": {
-        "no-irregular-whitespace": "off",
+        "no-irregular-whitespace": [
+          "error",
+          {
+            "skipComments": true
+          }
+        ],
         "no-unused-vars": [
           "off",
           {
