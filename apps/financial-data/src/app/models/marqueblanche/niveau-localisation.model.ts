@@ -6,6 +6,7 @@ const synonymes: { [key in TypeLocalisation]: string[] } = {
     [TypeLocalisation.COMMUNE]: ['commune'],
     [TypeLocalisation.CRTE]: ['crte'],
     [TypeLocalisation.EPCI]: ['epci'],
+    [TypeLocalisation.QPV]: ['qpv'],
 };
 
 export function synonymes_from_types_localisation(types: TypeLocalisation[]): string[] {

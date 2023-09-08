@@ -89,9 +89,20 @@ test.describe("Lorsque l'on spécifie des bénéficiaires", () => {
   const urlparam = "?beneficiaires=30613890001294,30613890003688";
 
   test("Les filtres sont pré-remplis", async ({page}) => {
-    await page.goto(urlparam);
+      await page.route(
+        /.*\/budget\/api\/v1\/beneficiaire.*/,
+        async (route: any, request:any) => {
+          const args = request.url().split('/');
+          const siret = args[args.length - 1];
 
-    const locator = page.getByTestId('search-beneficiaires-control') 
+          const json = { "denomination": "DECATHLON", "siret":siret};
+          await route.fulfill({ json });
+        }
+      );
+
+    await _navigate(page, `/${urlparam}`);
+
+    const locator = page.getByTestId('search-beneficiaires-control')
     await expect(locator).toContainText("30613890001294")
     await expect(locator).toContainText("30613890003688")
     await expect(locator).toContainText("DECATHLON")

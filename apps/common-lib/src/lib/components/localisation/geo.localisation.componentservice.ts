@@ -25,15 +25,15 @@ export class GeoLocalisationComponentService {
                     break;
                 case TypeLocalisation.COMMUNE:
                 case TypeLocalisation.CRTE:
-                    limit = 100;
-                    break;
+                case TypeLocalisation.QPV:
                 case TypeLocalisation.ARRONDISSEMENT:
                     limit = 100;
+                    break;
             }
 
             return { ...search, limit }
         }
-        
+
 
         let builder = new FuzzySearchParamsBuilder()
             .withDefaultLimit(100)
