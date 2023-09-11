@@ -76,9 +76,9 @@ export class SearchDataComponent implements OnInit, OnChanges {
   filterTerritoireInput!: ElementRef<HTMLInputElement>;
 
   public constructor(
-    private route: ActivatedRoute,
-    private alertService: AlertService,
-    private service: FranceRelanceHttpService
+    private _route: ActivatedRoute,
+    private _alertService: AlertService,
+    private _service: FranceRelanceHttpService
   ) {}
 
   /**
@@ -124,7 +124,7 @@ export class SearchDataComponent implements OnInit, OnChanges {
 
   ngOnInit(): void {
     // récupération des themes dans le resolver
-    this.route.data.subscribe(
+    this._route.data.subscribe(
       (response: { axes: SousAxePlanRelance[] | Error } | any) => {
         this.axe_plan_relance = response.axes;
       }
@@ -145,7 +145,7 @@ export class SearchDataComponent implements OnInit, OnChanges {
     if (this.searchForm.valid && !this.searchInProgress.value) {
       const formValue = this.searchForm.value;
       this.searchInProgress.next(true);
-      this.service
+      this._service
         .searchFranceRelance(
           formValue.axe_plan_relance,
           formValue.structure,
@@ -166,7 +166,7 @@ export class SearchDataComponent implements OnInit, OnChanges {
             this.searchFinish = true;
             this.currentFilter.next(this._buildPreference(formValue));
             this.searchResults.next([]);
-            this.alertService.openAlertError(err.message, 8);
+            this._alertService.openAlertError(err.message, 8);
           },
         });
     }
@@ -199,7 +199,7 @@ export class SearchDataComponent implements OnInit, OnChanges {
     if (this.searchForm.valid && !this.searchInProgress.value) {
       const formValue = this.searchForm.value;
       this.searchInProgress.next(true);
-      this.service
+      this._service
         .getCsv(
           formValue.axe_plan_relance,
           formValue.structure,
@@ -211,9 +211,8 @@ export class SearchDataComponent implements OnInit, OnChanges {
           })
         )
         .subscribe((response: Blob) => {
-          var url = URL.createObjectURL(response);
-          var a = document.createElement('a');
-          a.href = url;
+          const a = document.createElement('a');
+          a.href = URL.createObjectURL(response);
           a.download = 'export_csv.csv';
           document.body.appendChild(a);
           a.click();
@@ -244,7 +243,7 @@ export class SearchDataComponent implements OnInit, OnChanges {
     }
   }
 
-  public onSelectLaureat(event: Structure): void {}
+  public onSelectLaureat(_event: Structure): void {}
 
   public displayLaureat(laureat: Structure): string {
     if (laureat) return laureat.label + ' - ' + laureat.siret;
@@ -267,7 +266,7 @@ export class SearchDataComponent implements OnInit, OnChanges {
       debounceTime(300),
       switchMap((value) => {
         if (value && value.length > 3) {
-          return this.service.searchTerritoire(value);
+          return this._service.searchTerritoire(value);
         }
         return of([]);
       })
@@ -281,7 +280,7 @@ export class SearchDataComponent implements OnInit, OnChanges {
       debounceTime(300),
       switchMap((value) => {
         if (value && value.length > 3) {
-          return this.service.searchStructure(value);
+          return this._service.searchStructure(value);
         }
         return of([]);
       })

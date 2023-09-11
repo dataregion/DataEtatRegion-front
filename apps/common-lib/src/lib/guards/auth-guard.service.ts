@@ -1,10 +1,11 @@
 import { Injectable, inject } from '@angular/core';
 import { Location } from '@angular/common';
-import { ActivatedRouteSnapshot, CanActivateFn, CanMatchFn, GuardsCheckEnd, Router, RouterStateSnapshot } from '@angular/router';
+import { ActivatedRouteSnapshot, CanActivateFn, CanMatchFn, Router, RouterStateSnapshot } from '@angular/router';
 import { KeycloakAuthGuard, KeycloakService } from 'keycloak-angular';
 import { SessionService } from 'apps/common-lib/src/public-api';
 import { NGXLogger } from 'ngx-logger';
 import { AuthUtils } from '../services/auth-utils.service';
+/* eslint-disable no-unused-vars */
 
 @Injectable({
   providedIn: 'root',
@@ -16,16 +17,17 @@ export class AuthGuard extends KeycloakAuthGuard {
     protected location: Location,
     protected sessionService: SessionService,
     protected auth_utils: AuthUtils,
-    private logger: NGXLogger,
+    private _logger: NGXLogger,
   ) {
     super(router, keycloak);
   }
+/* eslint-enable no-unused-vars */
+
 
   private _current_roles = null;
   get current_roles() : string[] {
     if (!this._current_roles)
       this._current_roles = this.auth_utils.roles_to_uppercase(this.roles)
-
     return this._current_roles!;
   }
 
@@ -39,7 +41,7 @@ export class AuthGuard extends KeycloakAuthGuard {
   ) {
     // Force the user to log in if currently unauthenticated.
     if (!this.authenticated) {
-      this.logger.debug(`[AuthGuard] keycloak login`);
+      this._logger.debug(`[AuthGuard] keycloak login`);
       await this.keycloak.login({
         redirectUri:
           window.location.origin + this.location.prepareExternalUrl(state.url),
@@ -69,7 +71,7 @@ export class AuthGuard extends KeycloakAuthGuard {
   }
 }
 
-/** 
+/**
  * Vérifie les roles de la personne authentifiée.
  * si aucune authentification, on match
  */
@@ -78,7 +80,7 @@ export const keycloakAuthGuardCanMatchAccordingToRoles: CanMatchFn = (route) => 
   const data = route.data
   const requiredRoles: string[] = (data)? data['roles'] : [];
 
-  let guard = inject(AuthGuard)
+  const guard = inject(AuthGuard)
 
   if (!guard.currentlyAuthenticated)
     return true

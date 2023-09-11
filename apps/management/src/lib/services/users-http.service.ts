@@ -21,7 +21,7 @@ export class UserHttpService {
    */
   constructor(
     private http: HttpClient,
-    @Inject(API_MANAGEMENT_PATH) private readonly apiPath: string
+    @Inject(API_MANAGEMENT_PATH) private readonly _apiPath: string
   ) {}
 
   /**
@@ -38,7 +38,7 @@ export class UserHttpService {
   ): Observable<UsersPagination> {
     const params = `page_number=${pageNumber}&limit=${limit}&only_disable=${only_disable}`;
 
-    return this.http.get<UsersPagination>(`${this.apiPath}/users?${params}`);
+    return this.http.get<UsersPagination>(`${this._apiPath}/users?${params}`);
   }
 
   /**
@@ -48,7 +48,7 @@ export class UserHttpService {
    */
   public deleteUsers(uuid: string): Observable<any> {
     return this.http.delete(
-      `${this.apiPath}/users/${uuid}`);
+      `${this._apiPath}/users/${uuid}`);
   }
 
   /**
@@ -58,7 +58,7 @@ export class UserHttpService {
    */
   public disableUser(uuid: string): Observable<string> {
     return this.http.patch<string>(
-      `${this.apiPath}/users/${uuid}/disable`,
+      `${this._apiPath}/users/${uuid}/disable`,
       null
     );
   }
@@ -70,7 +70,7 @@ export class UserHttpService {
    */
   public enableUser(uuid: string): Observable<string> {
     return this.http.patch<string>(
-      `${this.apiPath}/users/${uuid}/enable`,
+      `${this._apiPath}/users/${uuid}/enable`,
       null
     );
   }

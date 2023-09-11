@@ -30,7 +30,7 @@ export class PreferenceUsersComponent implements OnInit {
   /**
    * FOnction de callback pour appliquer la preference
    */
-  @Input() applyPreference: (uuid: string, filter: Preference) => void;
+  @Input() applyPreference: (_uuid: string, _filter: Preference) => void;
 
   private dialog = inject(MatDialog);
 
@@ -45,14 +45,14 @@ export class PreferenceUsersComponent implements OnInit {
   public readonly json = JSON;
 
   constructor(
-    private service: PreferenceUsersHttpService,
-    private alertService: AlertService
+    private _service: PreferenceUsersHttpService,
+    private _alertService: AlertService
   ) {
     this.applyPreference = (_uuid: string) => {};
   }
 
   ngOnInit(): void {
-    this.service.getPreferences().subscribe((response) => {
+    this._service.getPreferences().subscribe((response) => {
       this.dataSource = response;
     });
   }
@@ -79,13 +79,13 @@ export class PreferenceUsersComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((result: boolean) => {
       if (result) {
-        this.service.deletePreference(uuid).subscribe({
+        this._service.deletePreference(uuid).subscribe({
           next: () => {
             this.dataSource.create_by_user =
               this.dataSource.create_by_user.filter(
                 (data) => data.uuid && data.uuid !== uuid
               );
-            this.alertService.openAlertSuccess('Suppression du filtre');
+            this._alertService.openAlertSuccess('Suppression du filtre');
           },
         });
       }
@@ -97,7 +97,7 @@ export class PreferenceUsersComponent implements OnInit {
    * @param uuid
    */
   public shareFilter(preference: Preference) {
-    const dialogRef = this.dialog.open(SavePreferenceDialogComponent, {
+    this.dialog.open(SavePreferenceDialogComponent, {
       data: preference,
       width: '40rem',
       autoFocus: 'input',

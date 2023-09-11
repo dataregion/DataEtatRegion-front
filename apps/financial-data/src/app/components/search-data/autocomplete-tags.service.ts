@@ -8,11 +8,11 @@ import { Tag, tag_str } from "@models/refs/tag.model";
 @Injectable()
 export class AutocompleteTagsService {
 
-    constructor(private budgetService: BudgetService) { }
+    constructor(private _budgetService: BudgetService) { }
 
     autocomplete$(input: string): Observable<TagFieldData[]> {
 
-        const autocompletion$ = this.budgetService
+        const autocompletion$ = this._budgetService
             .allTags$()
             .pipe(
                 map(

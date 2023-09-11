@@ -33,14 +33,14 @@ export class ManagementUserComponent implements OnInit {
   public dataSource: UsersPagination = { users: [] };
 
   constructor(
-    private userService: UserHttpService,
-    private route: ActivatedRoute,
-    private alertService: AlertService,
-    protected session: SessionService
+    private _userService: UserHttpService,
+    private _route: ActivatedRoute,
+    private _alertService: AlertService,
+    protected session: SessionService // eslint-disable-line
   ) {}
 
   ngOnInit(): void {
-    this.route.data.subscribe(
+    this._route.data.subscribe(
       (response: { usersPagination: UsersPagination | Error } | any) => {
         this.dataSource = response.usersPagination;
       }
@@ -52,9 +52,9 @@ export class ManagementUserComponent implements OnInit {
     let request: Observable<string>;
 
     if (event.checked) {
-      request = this.userService.enableUser(user.id);
+      request = this._userService.enableUser(user.id);
     } else {
-      request = this.userService.disableUser(user.id);
+      request = this._userService.disableUser(user.id);
     }
     request.subscribe({
       next: (_response: string) => {
@@ -68,7 +68,7 @@ export class ManagementUserComponent implements OnInit {
           user.enabled = !user.enabled;
         }
 
-        this.alertService.openAlertSuccess(
+        this._alertService.openAlertSuccess(
           `Utilisateur ${user.email} ${
             user.enabled ? 'activé' : 'désactivé'
           } avec succès.`
@@ -83,7 +83,7 @@ export class ManagementUserComponent implements OnInit {
   public confirmDelete(user: User): void {
     if (user.id === undefined) return;
 
-    const requestDelete = this.userService.deleteUsers(user.id);
+    const requestDelete = this._userService.deleteUsers(user.id);
 
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
       width: '250px',
@@ -100,7 +100,7 @@ export class ManagementUserComponent implements OnInit {
                 }
               );
 
-              this.alertService.openAlertSuccess(
+              this._alertService.openAlertSuccess(
                 `Utilisateur ${user.email} supprimé avec succès.`
               );
             },
@@ -136,7 +136,7 @@ export class ManagementUserComponent implements OnInit {
     pageIndex: number = 1,
     pageSize: number = 10
   ): Observable<UsersPagination> {
-    return this.userService.getUsers(only_disable, pageIndex, pageSize);
+    return this._userService.getUsers(only_disable, pageIndex, pageSize);
   }
 }
 
@@ -155,6 +155,7 @@ export class ManagementUserComponent implements OnInit {
     </mat-dialog-actions>
   `
 })
+/* eslint no-unused-vars: 0 */  // --> OFF
 export class ConfirmationDialogComponent {
   constructor(public dialogRef: MatDialogRef<ConfirmationDialogComponent>,
               @Inject(MAT_DIALOG_DATA) public message: string) {}

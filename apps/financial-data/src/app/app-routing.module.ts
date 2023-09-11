@@ -3,7 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { RegisterComponent } from 'apps/common-lib/src/lib/components/register/register.component';
 import { TermOfUseComponent } from 'apps/common-lib/src/lib/components/term-of-use/term-of-use.component';
 import { Profil } from 'apps/common-lib/src/lib/models/profil.enum.model';
-import { AuthGuard, keycloakAuthGuardCanActivate, keycloakAuthGuardCanMatchAccordingToRoles } from 'apps/common-lib/src/public-api';
+import { keycloakAuthGuardCanActivate, keycloakAuthGuardCanMatchAccordingToRoles } from 'apps/common-lib/src/public-api';
 import { HomeComponent } from './pages/home/home.component';
 import { PreferenceComponent } from './pages/preference/preference.component';
 import { resolveFinancialData } from './resolvers/financial-data.resolver';

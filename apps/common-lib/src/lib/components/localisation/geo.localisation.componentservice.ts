@@ -12,7 +12,7 @@ export class GeoLocalisationComponentService {
         type: TypeLocalisation
     ): Observable<GeoModel[]> {
 
-        let limit_handler: LimitHandler = (search, type, defaultLimit) => {
+        const limit_handler: LimitHandler = (search, type, defaultLimit) => {
             let limit = defaultLimit;
 
             switch(type) {
@@ -35,11 +35,11 @@ export class GeoLocalisationComponentService {
         }
 
 
-        let builder = new FuzzySearchParamsBuilder()
+        const builder = new FuzzySearchParamsBuilder()
             .withDefaultLimit(100)
             .withLimitHandler(limit_handler);
 
-        let search_params = builder.search(term, type);
+        const search_params = builder.search(term, type);
 
         return this.geo.search(type, search_params);
     }

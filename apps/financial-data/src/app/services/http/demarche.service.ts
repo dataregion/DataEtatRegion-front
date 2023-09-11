@@ -9,13 +9,12 @@ import {
   PersonneMorale,
 } from '@models/demarche_simplifie/demarche-graphql';
 import { ApolloQueryResult } from '@apollo/client';
-import { renderToStringWithData } from '@apollo/client/react/ssr';
 
 @Injectable({
   providedIn: 'root',
 })
 export class DemarcheHttpService {
-  constructor(private apollo: Apollo) {}
+  constructor(private _apollo: Apollo) {}
 
   public getDemarcheLight(id: number): Observable<Demarche | null> {
     const demarche = gql`
@@ -27,7 +26,7 @@ export class DemarcheHttpService {
       }
     `;
 
-    return this.apollo
+    return this._apollo
       .watchQuery<{ demarche: Demarche }>({
         query: demarche,
         variables: {
@@ -142,7 +141,7 @@ export class DemarcheHttpService {
       }
     `;
 
-    const r = this.apollo
+    const r = this._apollo
       .watchQuery<{ demarche: Demarche }>({
         query: demarche,
         variables: {

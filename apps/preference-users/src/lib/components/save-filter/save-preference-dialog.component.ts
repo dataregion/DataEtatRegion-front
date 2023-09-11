@@ -29,8 +29,8 @@ export class SavePreferenceDialogComponent {
 
   constructor(
     public dialogRef: MatDialogRef<SavePreferenceDialogComponent>,
-    private service: PreferenceUsersHttpService,
-    private alertService: AlertService,
+    private _service: PreferenceUsersHttpService,
+    private _alertService: AlertService,
     @Inject(MAT_DIALOG_DATA) public data: Preference
   ) {
     this.preference = data;
@@ -59,8 +59,8 @@ export class SavePreferenceDialogComponent {
    */
   public validate(): void {
     if (this.preference.name) {
-      this.service.savePreference(this.preference).subscribe((_response) => {
-        this.alertService.openAlertSuccess('Filtre enregistré avec succès');
+      this._service.savePreference(this.preference).subscribe((_response) => {
+        this._alertService.openAlertSuccess('Filtre enregistré avec succès');
         this.dialogRef.close(this.preference);
       });
     }
@@ -95,7 +95,7 @@ export class SavePreferenceDialogComponent {
    */
   private _searchUser() {
     if (this.searchUser.length > 3) {
-      this.service.searchUser(this.searchUser).subscribe((response) => {
+      this._service.searchUser(this.searchUser).subscribe((response) => {
         if (response.length > 0) {
           // on filtre pour éviter les doublons
           this.filterUser = response.filter(

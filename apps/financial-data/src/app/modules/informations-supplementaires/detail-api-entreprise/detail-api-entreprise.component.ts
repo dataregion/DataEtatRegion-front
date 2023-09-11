@@ -72,12 +72,12 @@ export class DetailApiEntrepriseComponent {
 
     let a_rge_active = false
 
-    let rges = this.info?.certifications_rge || []
+    const rges = this.info?.certifications_rge || []
 
     for (const rge of rges) {
 
-      let exprirationstr = rge.data.date_expiration
-      let expiration = Date.parse(exprirationstr)
+      const exprirationstr = rge.data.date_expiration
+      const expiration = Date.parse(exprirationstr)
 
       if (expiration > Date.now()) {
         a_rge_active = true;
@@ -90,7 +90,7 @@ export class DetailApiEntrepriseComponent {
 
   get qualibat_disponible() { return !this.info?.certification_qualibat_indispo }
   get label_qualibat() {
-    let a_certif_qualibat = Boolean(this.info?.certification_qualibat);
+    const a_certif_qualibat = Boolean(this.info?.certification_qualibat);
 
     return this.vue_tribool(a_certif_qualibat);
   }

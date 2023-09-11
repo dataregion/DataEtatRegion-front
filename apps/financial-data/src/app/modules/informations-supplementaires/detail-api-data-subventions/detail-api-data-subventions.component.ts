@@ -39,19 +39,19 @@ export class DetailApiDataSubventionsComponent {
   }
 
   private get action()  {
-    let actions = this.info?.subvention?.actions_proposees || []
+    const actions = this.info?.subvention?.actions_proposees || []
     if ( actions.length < 1 )
       return null;
     return actions[0];
   }
 
   get objectif() {
-    let action = this.action
+    const action = this.action
     return action?.intitule
   }
 
   get description() {
-    let action = this.action
+    const action = this.action
     return action?.objectifs
   }
 

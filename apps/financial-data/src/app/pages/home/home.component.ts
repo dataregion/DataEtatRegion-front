@@ -65,7 +65,7 @@ export class HomeComponent implements OnInit {
   defaultOrder: string[];
 
   /**
-   * Statuts des colonnes (ordre et displayed) 
+   * Statuts des colonnes (ordre et displayed)
    */
   displayedOrderedColumns: DisplayedOrderedColumn[] = [];
 
@@ -81,10 +81,10 @@ export class HomeComponent implements OnInit {
   }
 
   constructor(
-    private route: ActivatedRoute,
-    private alertService: AlertService,
-    private preferenceService: PreferenceUsersHttpService,
-    private auditService: AuditHttpService,
+    private _route: ActivatedRoute,
+    private _alertService: AlertService,
+    private _preferenceService: PreferenceUsersHttpService,
+    private _auditService: AuditHttpService,
     private _gridFullscreen: GridInFullscreenStateService,
     private _logger: NGXLogger,
   ) {
@@ -96,10 +96,10 @@ export class HomeComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.route.queryParams.subscribe((param) => {
+    this._route.queryParams.subscribe((param) => {
       /* */
       if (param[QueryParam.Uuid]) {
-        this.preferenceService
+        this._preferenceService
           .getPreference(param[QueryParam.Uuid])
           .subscribe((preference) => {
             this.preFilter = preference.filters;
@@ -115,22 +115,22 @@ export class HomeComponent implements OnInit {
               this._applyOrderAndFilter()
             }
 
-            this.alertService.openInfo(
+            this._alertService.openInfo(
               `Application du filtre ${preference.name}`
             );
           });
       }
     });
 
-    this.route.data
+    this._route.data
       .pipe(delay(0))
       .subscribe((data: Data) => {
 
-        let response = data as { mb_parsed_params: MarqueBlancheParsedParamsResolverModel }
+        const response = data as { mb_parsed_params: MarqueBlancheParsedParamsResolverModel }
 
-        let mb_has_params = response.mb_parsed_params?.data?.has_marqueblanche_params;
-        let mb_group_by = response.mb_parsed_params?.data?.group_by;
-        let mb_fullscreen = response.mb_parsed_params?.data?.fullscreen;
+        const mb_has_params = response.mb_parsed_params?.data?.has_marqueblanche_params;
+        const mb_group_by = response.mb_parsed_params?.data?.group_by;
+        const mb_fullscreen = response.mb_parsed_params?.data?.fullscreen;
 
         if (!mb_has_params)
           return;
@@ -143,7 +143,7 @@ export class HomeComponent implements OnInit {
         if (mb_fullscreen) this.toggle_grid_fullscreen();
       });
 
-    this.auditService.getLastDateUpdateData().subscribe((response) => {
+    this._auditService.getLastDateUpdateData().subscribe((response) => {
       if (response.date) {
         this.lastImportDate = response.date;
       }
@@ -151,7 +151,7 @@ export class HomeComponent implements OnInit {
   }
 
   openGroupConfigDialog() {
-    let dialogRef = this.dialog.open(GroupingConfigDialogComponent, {
+    const dialogRef = this.dialog.open(GroupingConfigDialogComponent, {
       data: {
         columns: this.columnsMetaData.data,
         groupingColumns: this.groupingColumns,
@@ -169,7 +169,7 @@ export class HomeComponent implements OnInit {
   }
 
   openSortColumnsDialog() {
-    let dialogRef = this.dialog.open(StructureColumnsDialogComponent, {
+    const dialogRef = this.dialog.open(StructureColumnsDialogComponent, {
       data: {
         defaultOrder: this.defaultOrder,
         columns: this.columnsMetaData.data,
@@ -226,13 +226,13 @@ export class HomeComponent implements OnInit {
     let newColumns: ColumnMetaDataDef[] = this.columnsMetaData.data
     // On ordonne les colonnes
     newColumns = newColumns.sort((col1, col2) => {
-      let index1 = this.displayedOrderedColumns.findIndex((col) => col.columnLabel === col1.label)
-      let index2 = this.displayedOrderedColumns.findIndex((col) => col.columnLabel === col2.label)
+      const index1 = this.displayedOrderedColumns.findIndex((col) => col.columnLabel === col1.label)
+      const index2 = this.displayedOrderedColumns.findIndex((col) => col.columnLabel === col2.label)
       return index1 - index2;
     });
     // On set le champ displayed des colonnes
     newColumns.map((col) => {
-      let displayed: boolean|undefined = this.displayedOrderedColumns.find(hiddenCol => hiddenCol.columnLabel === col.label)?.displayed
+      const displayed: boolean|undefined = this.displayedOrderedColumns.find(hiddenCol => hiddenCol.columnLabel === col.label)?.displayed
       col.displayed = displayed
     });
     // On réinstancie la variable pour la détection du ngOnChanges

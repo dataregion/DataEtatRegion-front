@@ -59,9 +59,9 @@ export class HomeComponent implements OnInit {
   }
 
   constructor(
-    private route: ActivatedRoute,
-    private alertService: AlertService,
-    private preferenceService: PreferenceUsersHttpService,
+    private _route: ActivatedRoute,
+    private _alertService: AlertService,
+    private _preferenceService: PreferenceUsersHttpService,
     private _gridFullscreen: GridInFullscreenStateService
   ) {
     const moneyFormat = new Intl.NumberFormat('fr-FR', {
@@ -111,9 +111,9 @@ export class HomeComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.route.queryParams.subscribe((param) => {
+    this._route.queryParams.subscribe((param) => {
       if (param['uuid']) {
-        this.preferenceService
+        this._preferenceService
           .getPreference(param['uuid'])
           .subscribe((preference) => {
             this.preFilter = preference.filters;
@@ -123,7 +123,7 @@ export class HomeComponent implements OnInit {
                 'grouping'
               ] as GroupingColumn[];
             }
-            this.alertService.openInfo(
+            this._alertService.openInfo(
               `Application du filtre ${preference.name}`
             );
           });
@@ -132,7 +132,7 @@ export class HomeComponent implements OnInit {
   }
 
   openGroupConfigDialog() {
-    let dialogRef = this.dialog.open(GroupingConfigDialogComponent, {
+    const dialogRef = this.dialog.open(GroupingConfigDialogComponent, {
       data: {
         columns: this.columnsMetaData.data,
         groupingColumns: this.groupingColumns,

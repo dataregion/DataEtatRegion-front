@@ -22,7 +22,7 @@ import { NGXLogger } from 'ngx-logger';
 export class AdemeDataHttpService implements DataHttpService<AdemeData,FinancialDataModel> {
   private _api! : string
 
-  constructor(private http: HttpClient, @Inject(SETTINGS) readonly settings: SettingsService, private logger: NGXLogger) {
+  constructor(private http: HttpClient, @Inject(SETTINGS) readonly settings: SettingsService, private _logger: NGXLogger) { //eslint-disable-line
     this._api = this.settings.apiFinancialData
   }
 
@@ -31,12 +31,12 @@ export class AdemeDataHttpService implements DataHttpService<AdemeData,Financial
   ): Observable<DataPagination<AdemeData> | null> {
 
     if (
-      bops?.findIndex((bop) => bop.code === 'ADEME') === -1 
+      bops?.findIndex((bop) => bop.code === 'ADEME') === -1
       || (domaines_fonctionnels && domaines_fonctionnels.length > 0)
       || (referentiels_programmation && referentiels_programmation.length > 0)
       || (source_region && source_region.length > 0)
     ) {
-      this.logger.debug(`On ne recherche pas sur les données de l'ademe`);
+      this._logger.debug(`On ne recherche pas sur les données de l'ademe`);
       return of(null);
     }
 

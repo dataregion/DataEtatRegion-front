@@ -86,7 +86,7 @@ export class AdvancedChipsMultiselectComponent {
   }
 
   // # region: event de l'input
-  onMatChipInputEvent($event: MatChipInputEvent) {
+  onMatChipInputEvent(_event: MatChipInputEvent) {
     if (this.matAutoComplete.isOpen)
       return;
 

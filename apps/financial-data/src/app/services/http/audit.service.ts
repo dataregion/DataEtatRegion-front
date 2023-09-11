@@ -15,7 +15,7 @@ import { SETTINGS } from 'apps/common-lib/src/lib/environments/settings.http.ser
 export class AuditHttpService {
   constructor(
     private http: HttpClient,
-    @Inject(SETTINGS) readonly settings: SettingsService
+    @Inject(SETTINGS) readonly settings: SettingsService //eslint-disable-line
   ) {}
 
   public getLastDateUpdateData(): Observable<{ date: string }> {

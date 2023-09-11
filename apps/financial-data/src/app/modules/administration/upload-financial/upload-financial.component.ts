@@ -62,10 +62,10 @@ export class UploadFinancialComponent implements OnInit {
   public typeSelected: DataType | null = null;
 
   constructor(
-    private service: FinancialDataHttpService,
-    private session: SessionService,
-    private auditService: AuditHttpService,
-    private alertService: AlertService
+    private _service: FinancialDataHttpService,
+    private _session: SessionService,
+    private _auditService: AuditHttpService,
+    private _alertService: AlertService
   ) {
     const max_year = new Date().getFullYear();
     let arr = Array(8).fill(new Date().getFullYear());
@@ -78,7 +78,7 @@ export class UploadFinancialComponent implements OnInit {
   }
 
   public get isAdmin(): boolean {
-    return this.session.isAdmin();
+    return this._session.isAdmin();
   }
 
   getFile(event: any) : File {
@@ -109,7 +109,7 @@ export class UploadFinancialComponent implements OnInit {
   uploadReferentiel() {
     if (this.fileReferentiel !== null ) {
       this.uploadInProgress.next(true);
-      this.service
+      this._service
         .loadReferentielFile(this.fileReferentiel)
         .pipe(
           finalize(() => {
@@ -119,13 +119,13 @@ export class UploadFinancialComponent implements OnInit {
         )
         .subscribe({
           next: () => {
-            this.alertService.openAlertSuccess(
+            this._alertService.openAlertSuccess(
               'Le fichier a bien été récupéré. Il sera traité dans les prochaines minutes.'
             );
           },
           error: (err: HttpErrorResponse) => {
             if (err.error['message']) {
-              this.alertService.openAlertError(err.error['message']);
+              this._alertService.openAlertError(err.error['message']);
             }
           },
         });
@@ -136,7 +136,7 @@ export class UploadFinancialComponent implements OnInit {
   private _doLoadFile() {
     if (this.fileFinancial !== null && this.yearSelected && this.typeSelected) {
       this.uploadInProgress.next(true);
-      this.service
+      this._service
         .loadFinancialFile(this.fileFinancial, '' + this.yearSelected, this.typeSelected)
         .pipe(
           finalize(() => {
@@ -146,14 +146,14 @@ export class UploadFinancialComponent implements OnInit {
         )
         .subscribe({
           next: () => {
-            this.alertService.openAlertSuccess(
+            this._alertService.openAlertSuccess(
               'Le fichier a bien été récupéré. Il sera traité dans les prochaines minutes.'
             );
             this._fetchAudit();
           },
           error: (err: HttpErrorResponse) => {
             if (err.error['message']) {
-              this.alertService.openAlertError(err.error['message']);
+              this._alertService.openAlertError(err.error['message']);
             }
           },
         });
@@ -161,11 +161,11 @@ export class UploadFinancialComponent implements OnInit {
   }
 
   private _fetchAudit() {
-    const financialAe$ = this.auditService
+    const financialAe$ = this._auditService
       .getHistoryData(DataType.FINANCIAL_DATA_AE)
-      .pipe(catchError((error) => of([])));
+      .pipe(catchError((_error) => of([])));
 
-    const financialCp$ = this.auditService
+    const financialCp$ = this._auditService
       .getHistoryData(DataType.FINANCIAL_DATA_CP)
       .pipe(catchError((_error) => of([])));
 

@@ -7,7 +7,7 @@ import { map } from 'rxjs/operators';
 export const resolveFinancialData: ResolveFn<FinancialDataResolverModel> =
   () => {
 
-    let service = inject(BudgetService);
+    const service = inject(BudgetService);
 
     return service.getBop().pipe(
       map(bops => {

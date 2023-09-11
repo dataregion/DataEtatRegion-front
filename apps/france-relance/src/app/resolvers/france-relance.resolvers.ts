@@ -8,10 +8,10 @@ import { ResolveFn } from '@angular/router';
 @Injectable({ providedIn: 'root' })
 export class FranceRelanceResolvers
 {
-  constructor(private service: FranceRelanceHttpService) {}
+  constructor(private _service: FranceRelanceHttpService) {}
 
   resolve(): Observable<SousAxePlanRelance[] | Error> {
-    return this.service.getSousAxePlanRelance();
+    return this._service.getSousAxePlanRelance();
   }
 }
 

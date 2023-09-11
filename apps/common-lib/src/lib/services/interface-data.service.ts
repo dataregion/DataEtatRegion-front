@@ -8,10 +8,10 @@ export interface SearchParameters {
     bops: BopModel[] | null;
     beneficiaires: RefSiret[] | null;
     years: number[] | null;
-    locations: GeoModel[] | null,  
+    locations: GeoModel[] | null,
     themes: string[] | null;
 
-    domaines_fonctionnels: string[] | null; 
+    domaines_fonctionnels: string[] | null;
     referentiels_programmation: string[] | null;
     source_region: string[] | null;
 
@@ -32,6 +32,7 @@ export const SearchParameters_empty: SearchParameters = {
   tags: null,
 }
 
+/* eslint no-unused-vars: 0 */  // --> OFF
 /**
  * Interface Http Service pour remonter des informations dans une application type Budget
  * T étant le type métier

@@ -3,7 +3,7 @@ import { MarqueBlancheParsedParams, MarqueBlancheParsedParamsResolverModel } fro
 import { Observable, of } from "rxjs";
 import { catchError } from "rxjs/operators"
 
-/** Wrapper pour gérer les erreurs dans les resolver de la marque blanche 
+/** Wrapper pour gérer les erreurs dans les resolver de la marque blanche
  * ```
  *  funtion resolverFn: Observable<T> {
  *    ... logique du resolver
@@ -14,10 +14,10 @@ import { catchError } from "rxjs/operators"
 export function passing_errors<
     U extends MarqueBlancheParsedParams,
     T extends MarqueBlancheParsedParamsResolverModel<U>
->(fn: (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => Observable<T>): ResolveFn<T> {
+>(fn: (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => Observable<T>): ResolveFn<T> { // eslint-disable-line
     return (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
         try {
-            let result = fn(route, state) as Observable<T>;
+            const result = fn(route, state) as Observable<T>;
             return result
                 .pipe(
                     catchError(error => {

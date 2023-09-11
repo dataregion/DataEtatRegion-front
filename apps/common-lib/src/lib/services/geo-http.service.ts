@@ -120,7 +120,7 @@ export class GeoHttpService {
     private _api_to_service_mapper(type: TypeLocalisation, geos: GeoModel[]) {
 
         if (type === TypeLocalisation.ARRONDISSEMENT) {
-            let payload = geos as unknown as DataPagination<GeoArrondissementModel>
+            const payload = geos as unknown as DataPagination<GeoArrondissementModel>
 
             return payload.items.map(arr => {
                 return {
@@ -132,7 +132,7 @@ export class GeoHttpService {
         }
 
         if (type === TypeLocalisation.QPV) {
-          let payload = geos as unknown as DataPagination<QpvModel>
+          const payload = geos as unknown as DataPagination<QpvModel>
 
           return payload.items.map(arr => {
               return {
@@ -157,6 +157,7 @@ type _Term = string | null;
 
 
 /** Gère le paramètre de limite de SearchParams. A utiliser avec un ASearchParamsBuilder pour personnaliser le calcul de cet argument. */
+// eslint-disable-next-line
 export type LimitHandler = (search_params: SearchParams, type: TypeLocalisation, default_limit: number) => SearchParams;
 
 /**
@@ -201,7 +202,7 @@ abstract class ASearchParamsBuilder {
         return params;
     }
 
-    protected abstract make_search_params(term: _Term, type: TypeLocalisation): SearchParams;
+    protected abstract make_search_params(_term: _Term, _type: TypeLocalisation): SearchParams;
 
     protected add_fields_commune(search_params: SearchParams): SearchParams {
         return { ...search_params, fields: 'nom,code,codeDepartement' }

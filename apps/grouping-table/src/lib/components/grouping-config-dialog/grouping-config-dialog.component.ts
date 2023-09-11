@@ -47,7 +47,7 @@ export class GroupingConfigDialogComponent {
   remainingColumns: ColumnMetaDataDef[];
 
   constructor(
-    private dialogRef: MatDialogRef<GroupingConfigDialogComponent>,
+    private _dialogRef: MatDialogRef<GroupingConfigDialogComponent>,
     @Inject(MAT_DIALOG_DATA) dialogData: GroupingConfigDialogData
   ) {
     this.allColumns = dialogData.columns;
@@ -66,9 +66,9 @@ export class GroupingConfigDialogComponent {
       this.groupingColumns
     )
     .filter(
-      // TODO: verrue pour prevenir le group by tags le temps que le 
+      // TODO: verrue pour prevenir le group by tags le temps que le
       // grouping by tags soit correctement implémenté
-      (gpCol) => gpCol.name !== "tags" 
+      (gpCol) => gpCol.name !== "tags"
     );
   }
 
@@ -113,7 +113,7 @@ export class GroupingConfigDialogComponent {
   }
 
   validate() {
-    this.dialogRef.close(
+    this._dialogRef.close(
       this.groupingColumns.map(
         (col): GroupingColumn => ({
           columnName: col.name,

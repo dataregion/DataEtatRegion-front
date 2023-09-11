@@ -26,14 +26,14 @@ export class BudgetService {
 
   constructor(
     private http: HttpClient,
-    @Inject(DATA_HTTP_SERVICE) private services: DataHttpService<any, FinancialDataModel>[],
+    @Inject(DATA_HTTP_SERVICE) private _services: DataHttpService<any, FinancialDataModel>[],
     @Inject(SETTINGS) readonly settings: SettingsService
   ) {
     this._apiRef = this.settings.apiReferentiel;
   }
 
   public search(search_params: SearchParameters): Observable<FinancialDataModel[]> {
-    const search$: Observable<FinancialDataModel[]>[] = this.services.map(service =>
+    const search$: Observable<FinancialDataModel[]>[] = this._services.map(service =>
       service.search(search_params).pipe(
         map((resultPagination: DataPagination<any> | null) => {
           if (resultPagination === null || resultPagination.pageInfo === undefined) return [];
@@ -94,8 +94,8 @@ export class BudgetService {
     return this.http
       .get<RefSiret>(url)
       .pipe(
-        map(response => { 
-          return response as RefSiret 
+        map(response => {
+          return response as RefSiret
         })
       );
   }
@@ -138,7 +138,7 @@ export class BudgetService {
       data.push(values);
     }
 
-    let csv = unparse({
+    const csv = unparse({
       fields,
       data
     });
@@ -147,7 +147,7 @@ export class BudgetService {
   }
 
   public getById(source: SourceFinancialData, id: number): Observable<FinancialDataModel> {
-    const service = this.services.find(s => s.getSource() === source);
+    const service = this._services.find(s => s.getSource() === source);
     if (service === undefined) return of()
 
     return service.getById(id).pipe(

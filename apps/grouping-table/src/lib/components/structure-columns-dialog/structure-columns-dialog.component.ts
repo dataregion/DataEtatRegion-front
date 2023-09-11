@@ -5,7 +5,6 @@ import {
   MatDialogRef,
 } from '@angular/material/dialog';
 import {
-  ColumnsMetaData,
   ColumnMetaDataDef,
   DisplayedOrderedColumn
 } from '../grouping-table/group-utils';
@@ -19,7 +18,6 @@ import {
   DragDropModule,
   moveItemInArray,
 } from '@angular/cdk/drag-drop';
-import { colonnes } from '@models/tableau/colonnes.model';
 
 export type StructureColumnsDialogData = {
   defaultOrder: string[];
@@ -55,13 +53,13 @@ export class StructureColumnsDialogComponent {
   displayedOrderedColumns: DisplayedOrderedColumn[]
 
   constructor(
-    private dialogRef: MatDialogRef<StructureColumnsDialogComponent>,
+    private _dialogRef: MatDialogRef<StructureColumnsDialogComponent>,
     @Inject(MAT_DIALOG_DATA) dialogData: StructureColumnsDialogData
   ) {
     this.defaultOrder = dialogData.defaultOrder;
     this.columns = dialogData.columns;
     this.displayedOrderedColumns = dialogData.displayedOrderedColumns;
-    // Si il n'y avais aucune option, on créé le tableau par rapport aux colonnes 
+    // Si il n'y avais aucune option, on créé le tableau par rapport aux colonnes
     if (this.displayedOrderedColumns.length === 0) {
       this.columns.forEach((col) => {
         this.displayedOrderedColumns.push({ columnLabel: col.label });
@@ -72,7 +70,7 @@ export class StructureColumnsDialogComponent {
   /**
    * Vérifie si une colonne spécifique est affichée
    * @param label Nom de la colonne
-   * @returns 
+   * @returns
    */
   isColumnDisplayed(label: string) {
     return this.displayedOrderedColumns.filter((col) => {
@@ -103,18 +101,18 @@ export class StructureColumnsDialogComponent {
     );
     // On ordonne selon le nouvel ordre
     this.displayedOrderedColumns.sort((col1, col2) => {
-      let index1 = this.columns.findIndex((col) => col1.columnLabel === col.label)
-      let index2 = this.columns.findIndex((col) => col2.columnLabel === col.label)
+      const index1 = this.columns.findIndex((col) => col1.columnLabel === col.label)
+      const index2 = this.columns.findIndex((col) => col2.columnLabel === col.label)
       return index1 - index2;
     });
   }
 
   /**
    * Récupère la colonne associée à la checkbox et modifie son attribut displayed
-   * @param event 
+   * @param event
    */
   onCheckboxChange(event: MatCheckboxChange) {
-    let col = this.displayedOrderedColumns.map((col) => {
+    this.displayedOrderedColumns.map((col) => {
       if (col.columnLabel === event.source._elementRef.nativeElement.getAttribute('data-column'))
         col = this._toggleCheckboxBoolean(col, event.checked)
     });
@@ -124,9 +122,9 @@ export class StructureColumnsDialogComponent {
    * Change l'attribut displayed de toutes les colonnes
    */
   onAllCheckboxChange() {
-    let allDisplayed = this.allDisplayed()
+    const allDisplayed = this.allDisplayed();
     this.displayedOrderedColumns.forEach((col) => {
-      col = this._toggleCheckboxBoolean(col, !allDisplayed)
+      this._toggleCheckboxBoolean(col, !allDisplayed)
     });
   }
 
@@ -134,7 +132,7 @@ export class StructureColumnsDialogComponent {
    * Toggle du statut displayed de la colonne : si true => on supprime la clé
    * @param col Colonne dont on doit gérer le displayed
    * @param checked Nouvelle valeur du displayed
-   * @returns 
+   * @returns
    */
   private _toggleCheckboxBoolean(col: DisplayedOrderedColumn, checked: boolean): DisplayedOrderedColumn {
     if (checked)
@@ -149,11 +147,11 @@ export class StructureColumnsDialogComponent {
    */
   validate() {
     // Si tout est affiché et en ordre, on vide la sauvegarde
-    let newOrder: string[] = this.columns.map((col) => col.label)
-    let sameOrder = (this.defaultOrder.length === newOrder.length) && this.defaultOrder.every((value, index) => value === newOrder[index]);  
+    const newOrder: string[] = this.columns.map((col) => col.label)
+    const sameOrder = (this.defaultOrder.length === newOrder.length) && this.defaultOrder.every((value, index) => value === newOrder[index]);
     if (sameOrder && this.allDisplayed()) {
       this.displayedOrderedColumns = []
     }
-    this.dialogRef.close(this.displayedOrderedColumns);
+    this._dialogRef.close(this.displayedOrderedColumns);
   }
 }
