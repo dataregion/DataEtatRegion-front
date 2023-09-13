@@ -5,15 +5,16 @@ import { Observable, Subject } from 'rxjs';
   providedIn: 'root',
 })
 export class LoaderService {
-  private _isLoading = false;
+  private _loadingOperationCount = 0;
+
   public loading$ = new Subject<boolean>();
 
   /**
    * Chargement en cours
    */
   public startLoader(): void {
-    this._isLoading = true;
-    this.loading$.next(this._isLoading);
+    this._loadingOperationCount++;
+    this.loading$.next(this.hasLoadingOperations());
   }
 
   /**
@@ -28,7 +29,11 @@ export class LoaderService {
    * Chargement terminé
    */
   public endLoader(): void {
-    this._isLoading = false;
-    this.loading$.next(this._isLoading);
+    this._loadingOperationCount--;
+    this.loading$.next(this.hasLoadingOperations());
+  }
+
+  private hasLoadingOperations() {
+    return this._loadingOperationCount > 0;
   }
 }
