@@ -15,4 +15,9 @@ export class TableGroupHeaderComponent {
   @Input() folded = false;
 
   context = inject(GroupingTableContextService);
+
+  groupingCustomProjection(columnName: string) {
+    const projection = this.context.projectionForGrouping(columnName);
+    return projection;
+  }
 }

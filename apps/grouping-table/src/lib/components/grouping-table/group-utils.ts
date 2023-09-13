@@ -36,6 +36,14 @@ export type ColumnMetaDataDef = {
   renderFn?: (row: RowData, col: ColumnMetaDataDef) => string | undefined;
 
   /**
+   * Fonction permettant d'effectuer le grouping.
+   * Différent de la fonction de rendu.
+   * @param row ligne de données
+   * @param col colonne de la cellule
+   */
+  groupingKeyFn?: (row: RowData, col: ColumnMetaDataDef) => string | undefined;
+
+  /**
    * Fonction d'aggrégation permettant de calculer la valeur à afficher en en-tête de colonne d'un groupe.
    * @param currentValue
    * @param context
@@ -178,11 +186,11 @@ export class Group {
     private _columnsAggregateFns?: Record<string, AggregateReducer<any>>
   ) {}
 
-  getOrCreateGroup(column: ColumnMetaDataDef, groupColumnValue: any): Group {
+  getOrCreateGroup(column: ColumnMetaDataDef, groupColumnGroupingKey: any, groupColumnValue: any): Group {
     if (!this.groupsMap) {
       this.groupsMap = new Map();
     }
-    let group = this.groupsMap.get(groupColumnValue);
+    let group = this.groupsMap.get(groupColumnGroupingKey);
     if (!group) {
       group = new Group(
         column,
@@ -190,7 +198,7 @@ export class Group {
         this,
         this._columnsAggregateFns
       );
-      this.groupsMap.set(groupColumnValue, group);
+      this.groupsMap.set(groupColumnGroupingKey, group);
     }
     return group;
   }
@@ -261,10 +269,14 @@ export const groupByColumns = (
     // tant qu'on n'a pas trouvé le niveau le plus profond où ranger la ligne, on descend
     for (const grouping of groupings) {
       const column = columnsMetaData.getByColumnName(grouping.columnName);
-      const groupKey = column.renderFn
-        ? column.renderFn(row, column)
-        : row[column.name];
-      currentGroup = currentGroup.getOrCreateGroup(column, groupKey);
+
+      const defaultRenderFn = ((row: RowData, col: ColumnMetaDataDef) => row[col.name]);
+      const groupValueFn = column.renderFn || defaultRenderFn;
+      const groupKeyFn = column.groupingKeyFn || groupValueFn;
+
+      const groupKey = groupKeyFn(row, column);
+      const groupValue = groupValueFn(row, column);
+      currentGroup = currentGroup.getOrCreateGroup(column, groupKey, groupValue);
     }
     currentGroup.addRow(row);
   }

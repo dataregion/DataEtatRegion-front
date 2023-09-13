@@ -8,11 +8,13 @@ import { TableGroupHeaderComponent } from './components/grouping-table/table-gro
 import { TableGroupComponent } from './components/grouping-table/table-group.component';
 import { TableRowsComponent } from './components/grouping-table/table-rows.component';
 import { ProjectCellDirective } from './components/grouping-table/project-cell.directive';
+import { ProjectGroupingDirective } from './components/grouping-table/project-grouping.directive';
 
 @NgModule({
   imports: [CommonModule],
   declarations: [
     ProjectCellDirective,
+    ProjectGroupingDirective,
     GroupingTableComponent,
     GroupingTableHeaderComponent,
     TableBodyComponent,
@@ -21,6 +23,6 @@ import { ProjectCellDirective } from './components/grouping-table/project-cell.d
     TableRowsComponent,
     FinancialGroupAggregatePipe,
   ],
-  exports: [GroupingTableComponent, ProjectCellDirective],
+  exports: [GroupingTableComponent, ProjectCellDirective, ProjectGroupingDirective],
 })
 export class GroupingTableModule {}

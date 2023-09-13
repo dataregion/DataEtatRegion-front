@@ -65,11 +65,6 @@ export class GroupingConfigDialogComponent {
       this.allColumns,
       this.groupingColumns
     )
-    .filter(
-      // TODO: verrue pour prevenir le group by tags le temps que le
-      // grouping by tags soit correctement implémenté
-      (gpCol) => gpCol.name !== "tags"
-    );
   }
 
   /**

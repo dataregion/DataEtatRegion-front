@@ -12,6 +12,7 @@ import {
 import { DomSanitizer, SafeHtml } from "@angular/platform-browser";
 import { OutputEvents } from "./output-events";
 import { ProjectCellDirective } from "./project-cell.directive";
+import { ProjectGroupingDirective } from "./project-grouping.directive";
 
 @Injectable()
 export class GroupingTableContextService {
@@ -117,10 +118,17 @@ export class GroupingTableContextService {
 
   // #region: customisation via content projection
   cellProjections: ProjectCellDirective[] = [];
+  groupingProjections: ProjectGroupingDirective[] = [];
 
   projectionForCell(name: string): ProjectCellDirective | null {
     return this.cellProjections?.find(projection => {
       return projection.projectCell === name;
+    }) || null;
+  }
+
+  projectionForGrouping(name: string): ProjectGroupingDirective | null {
+    return this.groupingProjections?.find(projection => {
+      return projection.projectGrouping === name;
     }) || null;
   }
   // #endregion

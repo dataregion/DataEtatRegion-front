@@ -7,8 +7,17 @@
         <div class="{{folded ? 'arrow-right' : 'arrow-down'}}"></div>
       </div>
       <div>
+
         <div>{{group.column?.label}}</div>
-        <div><strong>{{group.columnValue}}</strong></div>
+
+        <ng-container 
+          *ngIf="groupingCustomProjection(group.column!.name); let projection; else defaultCellDisplay"
+          [ngTemplateOutlet]="projection?.templateRef ?? null"
+          [ngTemplateOutletContext]="{ 'column': group.column, 'row': null, 'cell': group.columnValue }" />
+        <ng-template #defaultCellDisplay>
+          <div><strong>{{group.columnValue}}</strong></div>
+        </ng-template>
+
       </div>
       <div class="group-size">
         {{group.count}}
