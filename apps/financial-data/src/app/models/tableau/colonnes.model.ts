@@ -1,3 +1,4 @@
+import { Tag } from "@models/refs/tag.model";
 import { AggregatorFns, ColumnMetaDataDef } from "apps/grouping-table/src/lib/components/grouping-table/group-utils";
 
 const moneyFormat = new Intl.NumberFormat('fr-FR', {
@@ -49,6 +50,15 @@ export const colonnes: ColumnMetaDataDef[] = [
     {
         name: 'tags',
         label: 'Tags',
+        groupingKeyFn: (row, col) => {
+
+            const tags: Tag[] = row[col.name] || []
+            const key = tags
+                .filter(tag => tag != null)
+                .map(tag => `${tag.type} ${tag.value}`)
+                .reduceRight((p, s) => `${p} ; ${s}`, '')
+            return key;
+        }
     },
     {
         name: 'domaine',
