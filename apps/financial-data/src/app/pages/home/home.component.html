@@ -74,8 +74,12 @@
       </div>
     </div>
 
-    <lib-grouping-table class="h-100" [tableData]="tableData" [columnsMetaData]="columnsMetaData"
-      [groupingColumns]="groupingColumns" (rowClick)="onRowClick($event)">
+    <lib-grouping-table class="h-100" 
+      [tableData]="tableData" 
+      [columnsMetaData]="columnsMetaData"
+      [groupingColumns]="groupingColumns" 
+      (rowClick)="onRowClick($event)"
+    >
 
       <ng-template libProjectCell="tags" let-cell="cell">
 
@@ -83,6 +87,16 @@
             <mat-chip *ngFor="let tag of cell"
               [matTooltip]="tag?.description" matTooltipPosition="above"
             >
+              {{displayTag(tag)}}
+            </mat-chip>
+          </mat-chip-listbox>
+
+      </ng-template>
+
+      <ng-template libProjectGrouping="tags" let-cell="cell">
+
+          <mat-chip-listbox>
+            <mat-chip *ngFor="let tag of cell">
               {{displayTag(tag)}}
             </mat-chip>
           </mat-chip-listbox>
