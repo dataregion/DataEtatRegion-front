@@ -348,18 +348,17 @@ export class SearchDataComponent implements OnInit {
 
   private _filenameCsv(): string {
     const formValue = this.searchForm.value;
-    console.log(formValue);
     let filename = `${this._datePipe.transform(new Date(), 'yyyyMMdd')}_export`;
-    if (formValue.location !== null) {
+    if (formValue.location ) {
       const locations = formValue.location as GeoModel[];
       filename += '_' + locations[0].type + '-';
-      locations
+      filename += locations
         .filter((loc) => loc.code)
         .map((loc) => loc.code)
         .join('-');
     }
 
-    if (formValue.bops != null) {
+    if (formValue.bops) {
       const bops = formValue.bops;
       filename +=
         '_bops-' +
