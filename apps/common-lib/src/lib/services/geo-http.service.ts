@@ -86,8 +86,8 @@ export class GeoHttpService {
                 segment = 'epcis';
                 break;
             case TypeLocalisation.QPV:
-                  segment = 'qpv';
-                  break;
+                segment = 'qpv';
+                break;
             default:
                 throw new Error(`Non géré: ${type}`);
         }
@@ -332,6 +332,7 @@ export class SearchByCodeParamsBuilder extends ASearchParamsBuilder {
 
         switch(type) {
             case TypeLocalisation.ARRONDISSEMENT:
+            case TypeLocalisation.QPV:
                 search_params = { query: term };
                 break;
             case TypeLocalisation.COMMUNE:

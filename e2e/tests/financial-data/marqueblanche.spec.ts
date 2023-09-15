@@ -62,6 +62,18 @@ test.describe("Lorsque l'on spécifie une localisation", () => {
   });
 });
 
+test.describe("Lorsque l'on spécifie une localisation QPV", () => {
+  const urlparam = `?niveau_geo=qpv&code_geo=QP001001`;
+
+  test("Les filtres sont pré remplis", async ({ page }) => {
+    await _navigate(page, `/${urlparam}`);
+
+    let localisation = page.getByTestId('localisation-select')
+
+    await expect(localisation).toContainText("QP001001");
+  });
+});
+
 test.describe("Lorsque l'on spécifie une année min/max", () => {
   const urlparam = `?annee_min=2019&annee_max=2020`;
 

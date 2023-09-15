@@ -21,10 +21,10 @@ Voici les paramètres pris en charge:
 
 - Emplacement géographique
 
-| Paramètre           | Description         | Valeurs acceptées                                                       | Exemple                                                                                    |
-| ------------------- | ------------------- | ----------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
-| Niveau géographique | Niveau géographique | `departement`,`epci` et `commune`                                       | [`niveau_geo=epci`](https://budget.databretagne.fr/?niveau_geo=epci&code_geo=200000172)    |
-| code_geo            | Code géographique   | [COG](https://www.insee.fr/fr/recherche/recherche-geographique?debut=0) | [`code_geo=200000172`](https://budget.databretagne.fr/?niveau_geo=epci&code_geo=200000172) |
+| Paramètre           | Description         | Valeurs acceptées                                                                                                                                                                                          | Exemple                                                                                    |
+| ------------------- | ------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
+| Niveau géographique | Niveau géographique | `departement`,`epci`, `commune` et [`qpv`](https://www.insee.fr/fr/statistiques/2500477#documentation-sommaire)                                                                                            | [`niveau_geo=epci`](https://budget.databretagne.fr/?niveau_geo=epci&code_geo=200000172)    |
+| code_geo            | Code géographique   | [COG](https://www.insee.fr/fr/recherche/recherche-geographique?debut=0) ou le code quartier [QPV](https://www.data.gouv.fr/fr/datasets/quartiers-prioritaires-de-la-politique-de-la-ville-qpv/#/resources) | [`code_geo=200000172`](https://budget.databretagne.fr/?niveau_geo=epci&code_geo=200000172) |
 
 - Années
 
