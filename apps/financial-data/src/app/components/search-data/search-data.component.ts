@@ -267,6 +267,7 @@ export class SearchDataComponent implements OnInit {
     const search_parameters: SearchParameters = {
       ...SearchParameters_empty,
       beneficiaires: this.selectedBeneficiaires || null,
+      types_beneficiaires: this.additional_searchparams.types_beneficiaires,
       bops: formValue.bops || null,
       themes: formValue.theme || null,
       years: formValue.year || null,
@@ -525,6 +526,10 @@ export class SearchDataComponent implements OnInit {
 
     /* Paramètres additionnels qui n'apparaissent pas dans le formulaire de recherche */
     let additional_searchparams: AdditionalSearchParameters = empty_additional_searchparams;
+
+    const types_beneficiaires = preFilter?.types_beneficiaires;
+    if (types_beneficiaires)
+      additional_searchparams = { ...additional_searchparams, types_beneficiaires }
 
     const domaines_fonctionnels = preFilter?.domaines_fonctionnels
     if (domaines_fonctionnels)

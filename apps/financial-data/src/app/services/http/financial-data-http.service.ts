@@ -70,7 +70,7 @@ export class FinancialDataHttpService  implements DataHttpService<FinancialDataM
 
 
   private _buildparams(
-    { beneficiaires, bops, themes, locations, years, domaines_fonctionnels, referentiels_programmation, source_region, tags }: SearchParameters
+    { beneficiaires, types_beneficiaires, bops, themes, locations, years, domaines_fonctionnels, referentiels_programmation, source_region, tags }: SearchParameters
   ): string {
     let params ='limit=5000';
     if (beneficiaires && beneficiaires.length > 0) {
@@ -106,6 +106,11 @@ export class FinancialDataHttpService  implements DataHttpService<FinancialDataM
     if (tags && tags.length > 0) {
       const searchparam = encodeURI(tags.join(','));
       params += `&tags=${searchparam}`;
+    }
+
+    if (types_beneficiaires && types_beneficiaires.length > 0) {
+      const searchparam = encodeURI(types_beneficiaires.join(","));
+      params += `&types_beneficiaires=${searchparam}`;
     }
 
     return params;

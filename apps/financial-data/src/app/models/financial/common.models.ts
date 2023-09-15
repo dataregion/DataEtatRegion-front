@@ -1,5 +1,12 @@
 /* eslint-disable no-unused-vars */
 
+export enum TypeCategorieJuridique {
+  ENTREPRISE = 'Entreprise',
+  COLLECTIVITE = 'Collectivité',
+  ASSOCIATION = 'Association',
+  ETAT = 'Etat',
+}
+
 export interface Programme {
   code?: string;
   label: string;
@@ -9,7 +16,7 @@ export interface Programme {
 export interface Siret {
   code: string;
   nom_beneficiare: string,
-  categorie_juridique?: string
+  categorie_juridique?: TypeCategorieJuridique
 }
 
 export interface Commune {
