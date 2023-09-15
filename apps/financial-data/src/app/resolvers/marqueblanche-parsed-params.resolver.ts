@@ -35,6 +35,7 @@ const niveauxLocalisationLegaux = [
   TypeLocalisation.DEPARTEMENT,
   TypeLocalisation.EPCI,
   TypeLocalisation.COMMUNE,
+  TypeLocalisation.QPV
 ]
 
 /** Paramètres pour une fonction qui calcule les pré-filtres*/
