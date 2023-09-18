@@ -243,6 +243,8 @@ export class HomeComponent implements OnInit {
       const displayed: boolean|undefined = this.displayedOrderedColumns.find(hiddenCol => hiddenCol.columnLabel === col.label)?.displayed
       if (displayed !== undefined && !displayed)
         col.displayed = false
+      else
+        delete col.displayed;
     });
     // On réinstancie la variable pour la détection du ngOnChanges
     this.columnsMetaData = new ColumnsMetaData(newColumns);
