@@ -17,6 +17,8 @@ export enum FinancialQueryParam {
     SourceRegion = 'source_region',
 
     Beneficiaires = 'beneficiaires',
+
+    TypesBeneficiaires = 'types_beneficiaires'
 }
 const values_FinancialQueryParam = Object.values(FinancialQueryParam);
 

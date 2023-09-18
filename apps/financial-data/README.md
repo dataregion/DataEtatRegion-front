@@ -72,3 +72,9 @@ Voici les paramètres pris en charge:
 | Paramètre     | Description                             | Valeurs acceptées          | Exemple                                                                                                                    |
 | ------------- | --------------------------------------- | -------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
 | Bénéficiaires | Les sirets à inclure dans la rechercher | siret du/des bénéficiaires | [beneficiaires=19141687400011,34305956400959](https://budget.databretagne.fr/?beneficiaires=19141687400011,34305956400959) |
+
+- Types bénéficiaires
+
+| Paramètre             | Description                      | Valeurs acceptées                                   | Exemple                                                                                                                |
+| --------------------- | -------------------------------- | --------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
+| Type de bénéficiaires | Le(s) type(s) de bénéficiaire(s) | `entreprise`, `association`, `etat`, `collectivite` | [types_beneficaires=entreprise,association](https://budget.databretagne.fr/?types_beneficaires=entreprise,association) |

@@ -3,10 +3,12 @@ import { DataPagination } from '../models/pagination/pagination.models';
 import { RefSiret } from '@models/refs/RefSiret';
 import { BopModel } from '@models/refs/bop.models';
 import { GeoModel } from '../models/geo.models';
+import { TypeCategorieJuridique } from '@models/financial/common.models';
 
 export interface SearchParameters {
     bops: BopModel[] | null;
     beneficiaires: RefSiret[] | null;
+    types_beneficiaires: TypeCategorieJuridique[] | null;
     years: number[] | null;
     locations: GeoModel[] | null,
     themes: string[] | null;
@@ -21,6 +23,7 @@ export interface SearchParameters {
 export const SearchParameters_empty: SearchParameters = {
   bops: null,
   beneficiaires: null,
+  types_beneficiaires: null,
   years: null,
   locations: null,
   themes: null,

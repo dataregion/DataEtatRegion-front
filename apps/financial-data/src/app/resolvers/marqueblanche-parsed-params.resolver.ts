@@ -22,6 +22,7 @@ import { GroupingColumn } from 'apps/grouping-table/src/lib/components/grouping-
 import { groupby_mapping } from '@models/marqueblanche/groupby-mapping.model';
 import { synonymes_from_types_localisation, to_type_localisation } from '@models/marqueblanche/niveau-localisation.model';
 import { Beneficiaire } from '@models/search/beneficiaire.model';
+import { to_types_categories_juridiques } from '@models/marqueblanche/type-etablissement.model';
 
 export interface MarqueBlancheParsedParams extends Params {
   preFilters: PreFilters,
@@ -72,6 +73,7 @@ function _resolver(route: ActivatedRouteSnapshot): Observable<{ data: MarqueBlan
       mergeMap(previous => programmes(previous, handlerCtx)),
       mergeMap(previous => localisation(previous, handlerCtx)),
       mergeMap(previous => beneficiaires(previous, handlerCtx)),
+      mergeMap(previous => type_beneficiaire(previous, handlerCtx)),
     )
     .pipe(
       mergeMap(previous => domaines_fonctionnels(previous, handlerCtx)),
@@ -109,6 +111,26 @@ function beneficiaires(
   }
 
   return of({ ...previous, preFilters })
+}
+
+function type_beneficiaire(
+  previous: MarqueBlancheParsedParams,
+  ctx: _HandlerContext
+): Observable<MarqueBlancheParsedParams> {
+
+  const types_beneficiaires = 
+    _extract_multiple_queryparams(previous, ctx, FinancialQueryParam.TypesBeneficiaires)
+    ?.map(x => to_types_categories_juridiques(x))
+
+  if (!types_beneficiaires)
+    return of(previous)
+
+  const preFilters: PreFilters = {
+    ...previous.preFilters,
+    types_beneficiaires,
+  }
+
+  return of({ ... previous, preFilters })
 }
 
 function source_region(
