@@ -89,13 +89,7 @@ export class HomeComponent implements OnInit {
     private _logger: NGXLogger,
   ) {
     // Récupération de l'ordre des colonnes par défaut
-    this.defaultOrder = colonnes.map(c => { 
-      const col: DisplayedOrderedColumn = {columnLabel: c.label}
-      if ('displayed' in c && !c.displayed) {
-        col['displayed'] = false;
-      }
-      return col;
-    });
+    this.defaultOrder = this._getDefaultOrder();
 
     this.columnsMetaData = new ColumnsMetaData(colonnes);
     this.preFilter = undefined;
@@ -104,7 +98,7 @@ export class HomeComponent implements OnInit {
   ngOnInit() {
     this._route.queryParams.subscribe((param) => {
       // Ordre et affichage de base des colonnes
-      this.displayedOrderedColumns = this.defaultOrder;
+      this.displayedOrderedColumns = this._getDefaultOrder();
       // Si une recherche doit être appliquée
       if (param[QueryParam.Uuid]) {
         this._preferenceService
@@ -248,6 +242,16 @@ export class HomeComponent implements OnInit {
     });
     // On réinstancie la variable pour la détection du ngOnChanges
     this.columnsMetaData = new ColumnsMetaData(newColumns);
+  }
+
+  private _getDefaultOrder(): DisplayedOrderedColumn[] {
+    return colonnes.map(c => { 
+      const col: DisplayedOrderedColumn = {columnLabel: c.label}
+      if ('displayed' in c && !c.displayed) {
+        col['displayed'] = false;
+      }
+      return col;
+    });
   }
 
 }
