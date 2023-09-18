@@ -37,8 +37,6 @@
           <mat-checkbox
             [attr.data-column]="col.label"
             [checked]="isColumnDisplayed(col.label)"
-            [matTooltip]="isColumnDisplayed(col.label) ? 'Déselectionner' : 'Sélectionner'"
-            matTooltipPosition="left"
             (change)="onCheckboxChange($event)"
           />
         </div>

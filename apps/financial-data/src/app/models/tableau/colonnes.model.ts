@@ -48,19 +48,6 @@ export const colonnes: ColumnMetaDataDef[] = [
         },
     },
     {
-        name: 'tags',
-        label: 'Tags',
-        groupingKeyFn: (row, col) => {
-
-            const tags: Tag[] = row[col.name] || []
-            const key = tags
-                .filter(tag => tag != null)
-                .map(tag => `${tag.type} ${tag.value}`)
-                .reduceRight((p, s) => `${p} ; ${s}`, '')
-            return key;
-        }
-    },
-    {
         name: 'domaine',
         label: 'Domaine fonctionnel',
         renderFn: (row, _col) => row['domaine_fonctionnel'] ? _print_code_label(row['domaine_fonctionnel']['code'], row['domaine_fonctionnel']['label']) : '',
@@ -80,23 +67,39 @@ export const colonnes: ColumnMetaDataDef[] = [
         label: 'N° EJ',
     },
     {
+        name: 'tags',
+        label: 'Tags',
+        groupingKeyFn: (row, col) => {
+            const tags: Tag[] = row[col.name] || []
+            const key = tags
+                .filter(tag => tag != null)
+                .map(tag => `${tag.type} ${tag.value}`)
+                .reduceRight((p, s) => `${p} ; ${s}`, '')
+            return key;
+        }
+    },
+    {
         name: 'theme',
         label: 'Thème',
+        displayed: false,
         renderFn: (row, _col) => row['programme']['theme'] ?? '',
     },
     {
         name: 'nom_programme',
         label: 'Programme',
+        displayed: false,
         renderFn: (row, _col) => _print_code_label(row['programme']['code'], row['programme']['label']),
     },
     {
         name: 'ref_programmation',
         label: 'Ref Programmation',
+        displayed: false,
         renderFn: (row, _col) => _print_code_label(row['referentiel_programmation']['code'], row['referentiel_programmation']['label']),
     },
     {
         name: 'siret',
         label: 'Siret',
+        displayed: false,
         renderFn: (row, col) => row[col.name] ? row[col.name]['code'] : '',
         columnStyle: {
             'min-width': '16ex',
@@ -106,12 +109,26 @@ export const colonnes: ColumnMetaDataDef[] = [
     {
         name: 'type_etablissement',
         label: `Type d'établissement`,
+        displayed: false,
         renderFn: (row, _col) =>
             row['siret']['categorie_juridique'] !== null ? row['siret']['categorie_juridique'] : 'Non renseigné',
     },
     {
+        name: 'compte_budgetaire',
+        label: 'Compte budgétaire',
+        displayed: false,
+        renderFn: (row, col) => row[col.name] ? row[col.name] : '',
+    },
+    {
+        name: 'contrat_etat_region',
+        label: 'CPER',
+        displayed: false,
+        renderFn: (row, col) => row[col.name] && row[col.name] !== "#" ? row[col.name] : '',
+    },
+    {
         name: 'date_cp',
         label: 'Date dernier paiement',
+        displayed: false,
         renderFn: (row, col) =>
             row[col.name] ? new Date(row[col.name]).toLocaleString([], { year: 'numeric', month: 'numeric', day: 'numeric' }) : '',
     },
@@ -125,10 +142,10 @@ function _print_code_label(c: string | undefined, l : string | undefined): strin
 }
 
 function _print_localisation_interministerielle(loc:any): string {
-  let text = 'Localisation inconnue'
+  let text = '';
   if (loc) {
-    const code = ('code' in loc && loc['code'] !== undefined) ? loc['code'] : '';
-    const label = ('label' in loc && loc['label'] !== undefined) ? loc['label'] : '';
+    const code = ('code' in loc && loc['code'] !== undefined && loc['code'] !== null) ? loc['code'] : '';
+    const label = ('label' in loc && loc['label'] !== undefined && loc['label'] !== null) ? loc['label'] : '';
     const commune = ('commune' in loc && loc['commune'] !== undefined) ? `${loc['commune']['code']} - ${loc['commune']['label']}` : '';
     const codeLabel = label !== '' ? `${code} - ${label}` : code;
     text = commune !== '' ? `${codeLabel} (${commune})` : codeLabel;

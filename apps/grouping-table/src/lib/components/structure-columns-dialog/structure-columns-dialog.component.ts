@@ -20,7 +20,7 @@ import {
 } from '@angular/cdk/drag-drop';
 
 export type StructureColumnsDialogData = {
-  defaultOrder: string[];
+  defaultOrder: DisplayedOrderedColumn[];
   columns: ColumnMetaDataDef[];
   displayedOrderedColumns: DisplayedOrderedColumn[]
 };
@@ -46,7 +46,7 @@ export type StructureColumnsDialogData = {
 export class StructureColumnsDialogComponent {
 
   // Référence pour toujours connaître l'ordre de base des colonnes
-  defaultOrder: string[];
+  defaultOrder: DisplayedOrderedColumn[];
   // Liste des colonnes pour l'affichage de la liste
   columns: ColumnMetaDataDef[];
   // Liste des statuts des colonnes
@@ -61,8 +61,12 @@ export class StructureColumnsDialogComponent {
     this.displayedOrderedColumns = dialogData.displayedOrderedColumns;
     // Si il n'y avais aucune option, on créé le tableau par rapport aux colonnes
     if (this.displayedOrderedColumns.length === 0) {
-      this.columns.forEach((col) => {
-        this.displayedOrderedColumns.push({ columnLabel: col.label });
+      this.defaultOrder.forEach((col) => {
+        const c: DisplayedOrderedColumn = { columnLabel: col.columnLabel }
+        if ('displayed' in col && !col.displayed) {
+          c['displayed'] = false;
+        }
+        this.displayedOrderedColumns.push(c);
       })
     }
   }
@@ -146,10 +150,19 @@ export class StructureColumnsDialogComponent {
    * A la fermeture du dialog, retour de toutes les colonnes au HomeComponent
    */
   validate() {
-    // Si tout est affiché et en ordre, on vide la sauvegarde
-    const newOrder: string[] = this.columns.map((col) => col.label)
-    const sameOrder = (this.defaultOrder.length === newOrder.length) && this.defaultOrder.every((value, index) => value === newOrder[index]);
-    if (sameOrder && this.allDisplayed()) {
+    let same: boolean = true;
+    // Comparaison avec l'ordre de base, si une différence trouvée : break et same = false
+    this.columns.every((col, index) => {
+      const ref: DisplayedOrderedColumn | undefined = this.defaultOrder.at(index);
+      if ((ref && col.label !== ref.columnLabel)
+      || (ref && !('displayed' in col) && 'displayed' in ref && !ref.displayed)
+      || (ref && !('displayed' in ref) && 'displayed' in col && !col.displayed)) {
+        same = false
+      }
+      return same
+    })
+    // Si aucune différence trouvée, on vide la sauvegarde
+    if (same) {
       this.displayedOrderedColumns = []
     }
     this._dialogRef.close(this.displayedOrderedColumns);

@@ -62,7 +62,7 @@ export class HomeComponent implements OnInit {
   /**
    * Ordre des colonnes par défaut
    */
-  defaultOrder: string[];
+  defaultOrder: DisplayedOrderedColumn[];
 
   /**
    * Statuts des colonnes (ordre et displayed)
@@ -89,7 +89,13 @@ export class HomeComponent implements OnInit {
     private _logger: NGXLogger,
   ) {
     // Récupération de l'ordre des colonnes par défaut
-    this.defaultOrder = colonnes.map(col => col.label);
+    this.defaultOrder = colonnes.map(c => { 
+      const col: DisplayedOrderedColumn = {columnLabel: c.label}
+      if ('displayed' in c && !c.displayed) {
+        col['displayed'] = false;
+      }
+      return col;
+    });
 
     this.columnsMetaData = new ColumnsMetaData(colonnes);
     this.preFilter = undefined;
@@ -97,7 +103,9 @@ export class HomeComponent implements OnInit {
 
   ngOnInit() {
     this._route.queryParams.subscribe((param) => {
-      /* */
+      // Ordre et affichage de base des colonnes
+      this.displayedOrderedColumns = this.defaultOrder;
+      // Si une recherche doit être appliquée
       if (param[QueryParam.Uuid]) {
         this._preferenceService
           .getPreference(param[QueryParam.Uuid])
@@ -109,7 +117,7 @@ export class HomeComponent implements OnInit {
               this.groupingColumns = preference.options['grouping'] as GroupingColumn[];
             }
 
-            // Application des préférences de sélection et d'ordre des colonnes
+            // Application des préférences d'ordre et d'affichage des colonnes
             if (preference.options && preference.options['displayOrder']) {
               this.displayedOrderedColumns = preference.options['displayOrder'] as DisplayedOrderedColumn[];
               this._applyOrderAndFilter()
@@ -233,7 +241,8 @@ export class HomeComponent implements OnInit {
     // On set le champ displayed des colonnes
     newColumns.map((col) => {
       const displayed: boolean|undefined = this.displayedOrderedColumns.find(hiddenCol => hiddenCol.columnLabel === col.label)?.displayed
-      col.displayed = displayed
+      if (displayed !== undefined && !displayed)
+        col.displayed = false
     });
     // On réinstancie la variable pour la détection du ngOnChanges
     this.columnsMetaData = new ColumnsMetaData(newColumns);
