@@ -1,5 +1,12 @@
+.infos-cp {
+  display: flex;
+}
+.infos-cp > span {
+  flex: 0 0 20em;
+}
+
 .wrapper-table-detail-cp {
-  overflow-x: scroll;
+  overflow-x: auto;
 }
 .table-detail-cp {
   width: 100%;
@@ -27,3 +34,4 @@
 .table-detail-cp td:not(.last) {
   border-bottom: 0px;
 }
+
