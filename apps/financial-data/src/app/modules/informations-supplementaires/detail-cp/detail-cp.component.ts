@@ -1,6 +1,6 @@
-import { NgIf, NgFor } from '@angular/common';
+import { NgIf, NgFor, CurrencyPipe } from '@angular/common';
 import { Component, Input } from '@angular/core';
-import { FinancialCp, FinancialDataModel } from '@models/financial/financial-data.models';
+import { FinancialDataModel } from '@models/financial/financial-data.models';
 
 @Component({
   standalone: true,
@@ -9,14 +9,14 @@ import { FinancialCp, FinancialDataModel } from '@models/financial/financial-dat
   styleUrls: ['../commun-informations-supplementaires.scss', './detail-cp.component.scss'],
   imports: [
     NgIf,
-    NgFor
+    NgFor,
+    CurrencyPipe
   ]
 })
 export class DetailCpComponent {
 
   private _financial: FinancialDataModel | undefined = undefined;
-
-  private _financialCp: FinancialCp[] | undefined = [];
+  
   hasCp: boolean = true;
 
   get financial() {

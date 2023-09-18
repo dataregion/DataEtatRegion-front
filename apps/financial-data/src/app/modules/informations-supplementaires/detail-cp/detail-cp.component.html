@@ -1,23 +1,29 @@
 <ng-container *ngIf="hasCp; else erreur">
-  <strong class="titre">Détail paiement :</strong>
+  <div class="infos-cp">
+    <span><strong>N°EJ : </strong>{{ financial.n_ej }}</span>
+    <span><strong>N°Poste : </strong>{{ financial.n_poste_ej }}</span>
+  </div>
+  <div class="infos-cp">
+    <span><strong>Montant engagé : </strong>{{ financial.montant_ae | currency:'EUR' }}</span>
+    <span><strong>Total payé : </strong>{{ financial.montant_cp | currency:'EUR' }}</span>
+  </div>
+
   <div class="wrapper-table-detail-cp">
     <table class="table-detail-cp">
       <tr>
-        <th>N° DP (Demande de Paiement)</th>
+        <th><strong>N° DP (Demande de Paiement)</strong></th>
         <td *ngFor="let cp of financial.financial_cp">{{ cp.n_dp }}</td>
       </tr>
       <tr>
-        <th>Date de paiement</th>
+        <th><strong>Date de paiement</strong></th>
         <td *ngFor="let cp of financial.financial_cp">{{ format_date(cp.date_base_dp) }}</td>
       </tr>
       <tr>
-        <th class="last">Montant payé</th>
-        <td class="last" *ngFor="let cp of financial.financial_cp">{{ cp.montant }}</td>
+        <th class="last"><strong>Montant payé</strong></th>
+        <td class="last" *ngFor="let cp of financial.financial_cp">{{ cp.montant | currency:'EUR' }}</td>
       </tr>
     </table>
   </div>
-  <div><strong>N°EJ : </strong>{{ financial.n_ej }}</div>
-  <div><strong>N°Poste : </strong>{{ financial.n_poste_ej }}</div>
 </ng-container>
 
 

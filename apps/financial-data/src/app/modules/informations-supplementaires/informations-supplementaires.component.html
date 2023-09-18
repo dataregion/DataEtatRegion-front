@@ -9,8 +9,9 @@
       <ng-container *ngTemplateOutlet="subventionLight; context:{ info: api_subvention_light$ | async }"/>
       <hr>
       <!-- POC DS -->
-      <ng-container
-        *ngTemplateOutlet="demarcheSimplifie; context:{ info: api_demarche_simplifie_light$ | async }"/>
+      <ng-container *ngTemplateOutlet="demarcheSimplifie; context:{ info: api_demarche_simplifie_light$ | async }"/>
+      <hr>
+      <financial-informations-supplementaires-detail-cp [financial]="financial"/>
     </div>
   </ng-container>
 
@@ -187,5 +188,8 @@
 <ng-template #check_demarche_simplifie>
   <financial-informations-supplementaires-chargement-ou-erreur nom_service_distant="demarches-simplifiees.fr"/>
 </ng-template>
+<<<<<<< Updated upstream
 
 <financial-informations-supplementaires-detail-cp [financial]="financial"/>
+=======
+>>>>>>> Stashed changes
