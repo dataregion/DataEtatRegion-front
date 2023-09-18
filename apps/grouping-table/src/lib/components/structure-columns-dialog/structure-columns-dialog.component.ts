@@ -159,7 +159,6 @@ export class StructureColumnsDialogComponent {
       || (ref && !('displayed' in ref) && 'displayed' in col && !col.displayed)) {
         same = false
       }
-      console.log(same)
       return same
     })
     // Si aucune différence trouvée, on vide la sauvegarde
