@@ -77,4 +77,4 @@ Voici les paramètres pris en charge:
 
 | Paramètre             | Description                      | Valeurs acceptées                                   | Exemple                                                                                                                |
 | --------------------- | -------------------------------- | --------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
-| Type de bénéficiaires | Le(s) type(s) de bénéficiaire(s) | `entreprise`, `association`, `etat`, `collectivite` | [types_beneficaires=entreprise,association](https://budget.databretagne.fr/?types_beneficaires=entreprise,association) |
+| Type de bénéficiaires | Le(s) type(s) de bénéficiaire(s) | `entreprise`, `association`, `etat`, `collectivite` | [types_beneficiaires=entreprise,association](https://budget.databretagne.fr/?types_beneficiaires=entreprise,association) |
