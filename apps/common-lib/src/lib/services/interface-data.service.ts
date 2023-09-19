@@ -5,10 +5,15 @@ import { BopModel } from '@models/refs/bop.models';
 import { GeoModel } from '../models/geo.models';
 import { TypeCategorieJuridique } from '@models/financial/common.models';
 
+export enum OtherTypeCategorieJuridique {
+  AUTRES = 'autres'
+}
+export type SearchTypeCategorieJuridique = TypeCategorieJuridique | OtherTypeCategorieJuridique;
+
 export interface SearchParameters {
     bops: BopModel[] | null;
     beneficiaires: RefSiret[] | null;
-    types_beneficiaires: TypeCategorieJuridique[] | null;
+    types_beneficiaires: SearchTypeCategorieJuridique[] | null;
     years: number[] | null;
     locations: GeoModel[] | null,
     themes: string[] | null;

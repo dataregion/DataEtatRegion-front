@@ -1,23 +1,25 @@
 /* eslint-disable no-unused-vars */
 
 import { TypeCategorieJuridique } from "@models/financial/common.models";
+import { OtherTypeCategorieJuridique, SearchTypeCategorieJuridique } from "apps/common-lib/src/public-api";
 
-const synonymes: { [key in TypeCategorieJuridique]: string[] } = {
+const synonymes: { [key in SearchTypeCategorieJuridique]: string[] } = {
    [TypeCategorieJuridique.ASSOCIATION]: ["Association", "association"], 
    [TypeCategorieJuridique.COLLECTIVITE]: ["Collectivité", "collectivite", "collectivité"],
    [TypeCategorieJuridique.ENTREPRISE]: ["Entreprise", "entreprise"],
    [TypeCategorieJuridique.ETAT]: ["État", "Etat", "état", "etat"],
+   [OtherTypeCategorieJuridique.AUTRES]: ["Autres", "Autre", "autres", "autre"],
 };
 
-export function synonymes_from_types_localisation(types: TypeCategorieJuridique[]): string[] {
+export function synonymes_from_types_localisation(types: SearchTypeCategorieJuridique[]): string[] {
     return types.flatMap(type => synonymes[type]);
 }
 
 /* eslint-enable no-unused-vars */
 
-export function to_types_categories_juridiques(name: string): TypeCategorieJuridique {
+export function to_types_categories_juridiques(name: string): SearchTypeCategorieJuridique {
     for (const key in synonymes) {
-        const k = key as TypeCategorieJuridique;
+        const k = key as SearchTypeCategorieJuridique;
         const elements = synonymes[k];
         if (elements.includes(name)) {
             return k;
