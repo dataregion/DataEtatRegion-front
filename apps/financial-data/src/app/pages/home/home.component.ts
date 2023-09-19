@@ -90,6 +90,8 @@ export class HomeComponent implements OnInit {
   ) {
     // Récupération de l'ordre des colonnes par défaut
     this.defaultOrder = this._getDefaultOrder();
+    // Ordre et affichage de base des colonnes
+    this.displayedOrderedColumns = this._getDefaultOrder();
 
     this.columnsMetaData = new ColumnsMetaData(colonnes);
     this.preFilter = undefined;
@@ -97,8 +99,6 @@ export class HomeComponent implements OnInit {
 
   ngOnInit() {
     this._route.queryParams.subscribe((param) => {
-      // Ordre et affichage de base des colonnes
-      this.displayedOrderedColumns = this._getDefaultOrder();
       // Si une recherche doit être appliquée
       if (param[QueryParam.Uuid]) {
         this._preferenceService
