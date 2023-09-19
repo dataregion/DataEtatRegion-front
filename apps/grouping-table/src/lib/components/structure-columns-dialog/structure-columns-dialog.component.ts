@@ -59,16 +59,6 @@ export class StructureColumnsDialogComponent {
     this.defaultOrder = dialogData.defaultOrder;
     this.columns = dialogData.columns;
     this.displayedOrderedColumns = dialogData.displayedOrderedColumns;
-    // Si il n'y avais aucune option, on créé le tableau par rapport aux colonnes
-    if (this.displayedOrderedColumns.length === 0) {
-      this.defaultOrder.forEach((col) => {
-        const c: DisplayedOrderedColumn = { columnLabel: col.columnLabel }
-        if ('displayed' in col && !col.displayed) {
-          c['displayed'] = false;
-        }
-        this.displayedOrderedColumns.push(c);
-      })
-    }
   }
 
   /**
@@ -152,9 +142,9 @@ export class StructureColumnsDialogComponent {
   validate() {
     let same: boolean = true;
     // Comparaison avec l'ordre de base, si une différence trouvée : break et same = false
-    this.columns.every((col, index) => {
+    this.displayedOrderedColumns.every((col, index) => {
       const ref: DisplayedOrderedColumn | undefined = this.defaultOrder.at(index);
-      if ((ref && col.label !== ref.columnLabel)
+      if ((ref && col.columnLabel !== ref.columnLabel)
       || (ref && !('displayed' in col) && 'displayed' in ref && !ref.displayed)
       || (ref && !('displayed' in ref) && 'displayed' in col && !col.displayed)) {
         same = false
