@@ -200,7 +200,6 @@ export class SearchDataComponent implements OnInit {
         this.themes = financial.themes;
         this.bop = financial.bop;
         this.annees = financial.annees;
-        console.log(this.annees)
 
         this.filteredBop = this.bop;
 
