@@ -43,8 +43,6 @@ export const Primary: Story = {
       placeholder: "helloworld",
       options: primaryModel.opts,
       selectedData: primaryModel.selected,
-
-      ppSelectData: () => { return JSON.stringify(primaryModel.selected) }
     },
   })
 }

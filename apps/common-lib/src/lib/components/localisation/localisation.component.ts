@@ -1,9 +1,8 @@
 import {
   Component,
   Input,
-  OnChanges,
-  OnInit,
-  SimpleChanges,
+  Output,
+  EventEmitter,
 } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { FormsModule } from '@angular/forms';
@@ -14,11 +13,11 @@ import { MatSelectModule } from '@angular/material/select';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 
-import { FormControl } from '@angular/forms';
-import { debounceTime, Subject } from 'rxjs';
+import { Subject } from 'rxjs';
 import { GeoModel, TypeLocalisation } from '../../models/geo.models';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { GeoLocalisationComponentService } from './geo.localisation.componentservice';
+import { SelectMultiFilterComponent } from '../select-multi-filter/select-multi-filter.component';
 
 @Component({
   selector: 'lib-localisation',
@@ -33,6 +32,7 @@ import { GeoLocalisationComponentService } from './geo.localisation.componentser
     MatFormFieldModule,
     MatTooltipModule,
     ReactiveFormsModule,
+    SelectMultiFilterComponent,
   ],
   styles: [
     `
@@ -48,83 +48,88 @@ import { GeoLocalisationComponentService } from './geo.localisation.componentser
   ],
   providers: [GeoLocalisationComponentService],
 })
-export class LocalisationComponent implements OnChanges, OnInit {
-  public category: TypeLocalisation | undefined;
-
-  public readonly TypeLocalisation = Object.values(TypeLocalisation);
+export class LocalisationComponent {
 
   public searchGeoChanged = new Subject<string>();
 
-  @Input()
-  control!: FormControl<any>;
-
-  public filteredGeo: GeoModel[] | undefined = undefined;
-
-  public searchGeo: string = '';
+  private _selectedNiveau: TypeLocalisation[] | null = null;
+  private _selectedLocalisation: GeoModel[] | null = null;
 
   @Input()
-  public categorySelected: TypeLocalisation | null = null;
+  public selectedNiveauString: string = ''
 
-  constructor(private _geo: GeoLocalisationComponentService) {
-    this.searchGeoChanged.pipe(debounceTime(300)).subscribe(() => {
-      this._search();
-    });
-  }
+  // Liste des niveaux de localisation
+  public niveaux = Object.values(TypeLocalisation);
 
-  ngOnInit(): void {
-    this._search();
-  }
-
-  ngOnChanges(_changes: SimpleChanges): void {
-    if (this.control.value) {
-      this._search();
-    }
-  }
-
-  public changeSearchGeo(): void {
-    this.searchGeoChanged.next(this.searchGeo);
-  }
+  // Liste des Geomodel
+  public geomodels: GeoModel[] | null = null;
+  public filteredGeomodels: GeoModel[] | null = null;
 
   /**
-   *  A la selection d'une categorie de territoire, enable le champ et récupère les values associés
-   * @param event
+   * Niveau
    */
-  public selectedCategory(event: any) {
-    this.categorySelected = event.value;
-
-    if (this.categorySelected != null) {
-      this.control.setValue(null);
-      this.searchGeo = '';
-      this._geo.filterGeo(null, this.categorySelected).subscribe(
-        (response) => (this.filteredGeo = response)
-      );
+  //@Output() selectedNiveauChange = new EventEmitter<TypeLocalisation[] | null | undefined>();
+  get selectedNiveau() : TypeLocalisation[] | null | undefined {
+    return this._selectedNiveau;
+  }
+  @Input()
+  set selectedNiveau(data: TypeLocalisation[] | null | undefined) {
+    this._selectedNiveau = data != null ? data : null;
+    this.selectedNiveauString = data != null ? data[0] as string : '';
+    // Mise en place des options du select selon le niveau géographique sélectionné
+    if (this._selectedNiveau != null && this._selectedNiveau[0] != null) {
+      this._selectedLocalisation = null;
+      this._geo.filterGeo(null, this._selectedNiveau[0]).subscribe((response) => {
+        this.geomodels = response
+        this.filteredGeomodels = this.geomodels
+      });
+    } else {
+      this.geomodels = null
+      this.filteredGeomodels = this.geomodels
     }
+    this.selectedNiveauChange.emit(this._selectedNiveau);
+  }
+  @Output() selectedNiveauChange = new EventEmitter<TypeLocalisation[] | null>();
+
+  
+  /**
+   * Localisation
+   */
+  //@Output() selectedLocalisationChange = new EventEmitter<GeoModel[] | null | undefined>();
+  get selectedLocalisation() : GeoModel[] | null | undefined {
+    return this._selectedLocalisation;
+  }
+  @Input()
+  set selectedLocalisation(data: GeoModel[] | null | undefined) {
+    this._selectedLocalisation = data != null ? data : null;
+    this.selectedLocalisationChange.emit(this._selectedLocalisation);
+  }
+  @Output() selectedLocalisationChange = new EventEmitter<GeoModel[] | null>();
+
+  constructor(private _geo: GeoLocalisationComponentService) {}
+
+  public filterGeomodels = (value: string): GeoModel[] | null => {
+    console.log('filter')
+    this.filteredGeomodels = this.geomodels ? this.geomodels?.filter((gm) => {
+      return gm.code.toLowerCase().startsWith(value.toLowerCase()) || gm.nom.toLowerCase().startsWith(value.toLowerCase())
+    }) : [];
+    return this.filteredGeomodels;
   }
 
-  /**
-   * Lance la recherche sur le champ Controls quand l'utilisateur saisie une donnée au clavier
-   */
-  private _search() {
-    if (this.categorySelected != null) {
-      this._geo.filterGeo(this.searchGeo, this.categorySelected).subscribe(
-        (response: GeoModel[]) => {
-          if (this.control.value) {
-            // pour ne pas perdre la sélection au filtre, on conserve les valeurs du controls.
-            this.filteredGeo = [
-              ...this.control.value,
-              ...response.filter(
-                (element) =>
-                  this.control.value.findIndex(
-                    (valueSelected: GeoModel) =>
-                      valueSelected.code === element.code
-                  ) === -1 // on retire les doublons éventuels
-              ),
-            ];
-          } else {
-            this.filteredGeo = response;
-          }
-        }
-      );
+  public renderGeomodelOption = (geo: GeoModel) => {
+    return geo.code + ' - ' + geo.nom
+  }
+
+  public renderTriggerLabel = (geomodels: GeoModel[]) => {
+    let label: string = ''
+    if (geomodels && geomodels.length > 0) {
+      label += geomodels[0].code + ' - ' + geomodels[0].nom
+      if (geomodels.length == 2) {
+        label += ' (+' + (geomodels.length - 1) + ' autre)'
+      } else if (geomodels.length > 2) {
+        label += ' (+' + (geomodels.length - 1) + ' autres)'
+      }
     }
+    return label
   }
 }

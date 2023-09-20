@@ -2,11 +2,11 @@
 
 export enum TypeLocalisation {
   DEPARTEMENT = 'Département',
-  EPCI = 'Epci',
+  EPCI = 'EPCI',
   COMMUNE = 'Commune',
-  CRTE = 'Crte',
+  CRTE = 'CRTE',
   ARRONDISSEMENT = 'Arrondissement',
-  QPV = 'Qpv'
+  QPV = 'QPV'
 }
 
 export interface GeoModel {

@@ -10,6 +10,7 @@ import { RegisterComponent } from './components/register/register.component';
 import { TermOfUseComponent } from './components/term-of-use/term-of-use.component';
 import { DisplayDateComponent } from './components/display-date/display-date.component';
 import { AdvancedChipsMultiselectComponent } from './components/advanced-chips-multiselect/advanced-chips-multiselect.component';
+import { SelectMultiFilterComponent } from './components/select-multi-filter/select-multi-filter.component';
 
 @NgModule({
   declarations: [
@@ -26,6 +27,7 @@ import { AdvancedChipsMultiselectComponent } from './components/advanced-chips-m
     HeaderComponent,
     DisplayDateComponent,
     AdvancedChipsMultiselectComponent,
+    SelectMultiFilterComponent,
   ],
   exports: [
     AlertSnackBarComponent,
@@ -36,6 +38,7 @@ import { AdvancedChipsMultiselectComponent } from './components/advanced-chips-m
     TermOfUseComponent,
     RegisterComponent,
     AdvancedChipsMultiselectComponent,
+    SelectMultiFilterComponent,
   ],
 })
 export class CommonLibModule {}

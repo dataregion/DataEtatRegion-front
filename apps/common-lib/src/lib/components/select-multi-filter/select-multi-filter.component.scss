@@ -1,7 +1,17 @@
 
+/* lib-select-multi-filter, lib-select-multi-filter + lib-select-multi-filter, .box .field-localisation + lib-select-multi-filter, .box .field-localisation {
+  margin-left: 8px;
+} */
 .box .select-multi-filter + .select-multi-filter, .box .field-localisation + .select-multi-filter, .box .field-localisation {
   margin-left: 8px;
 }
+
+
+.mat-mdc-select-panel {
+  padding: 0px !important;
+}
+
+
 
 .box button {
   margin-left: 15px
