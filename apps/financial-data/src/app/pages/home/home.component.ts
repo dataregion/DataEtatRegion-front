@@ -196,6 +196,7 @@ export class HomeComponent implements OnInit {
       if (this.displayedOrderedColumns.length) {
         this.newFilter.options['displayOrder'] = this.displayedOrderedColumns;
       }
+      this.newFilter.name = '';
     }
 
     const dialogRef = this.dialog.open(SavePreferenceDialogComponent, {
@@ -204,9 +205,7 @@ export class HomeComponent implements OnInit {
       autoFocus: 'input',
     });
 
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result) this.newFilter = undefined;
-    });
+    dialogRef.afterClosed().subscribe((_) => { });
   }
 
   onRowClick(row: RowData) {
