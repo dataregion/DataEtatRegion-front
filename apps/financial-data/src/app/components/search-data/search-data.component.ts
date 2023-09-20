@@ -73,6 +73,7 @@ export class SearchDataComponent implements OnInit {
 
   public bop: BopModel[] = [];
   public themes: string[] = [];
+  public annees: number[] = [];
 
   public filteredBop: BopModel[] | undefined = undefined;
 
@@ -138,8 +139,6 @@ export class SearchDataComponent implements OnInit {
    */
   @Output() currentFilter = new EventEmitter<Preference>();
 
-  public annees: number[];
-
   @Input() public set preFilter(value: PreFilters | undefined) {
     try {
       this._apply_prefilters(value);
@@ -177,8 +176,6 @@ export class SearchDataComponent implements OnInit {
 
       tags: new FormControl<TagFieldData[] | null>(null),
     });
-    this.annees = [];
-    this.setAnnees();
   }
 
   ngOnInit(): void {
@@ -202,6 +199,8 @@ export class SearchDataComponent implements OnInit {
         this.displayError = false;
         this.themes = financial.themes;
         this.bop = financial.bop;
+        this.annees = financial.annees;
+        console.log(this.annees)
 
         this.filteredBop = this.bop;
 
@@ -449,17 +448,6 @@ export class SearchDataComponent implements OnInit {
     }
   }
 
-  /**
-   * Appelle le endpoint GET /annees pour récupérer les années en BDD
-   * Si des options existent déjà via un filtre ou la marque blanche, on fait l'union des deux array
-   */
-  public setAnnees() {
-    this._financialHttpService.getAnnees().subscribe({
-      next: result => this.annees = [...new Set([...this.annees, ...result])].sort().reverse(),
-      error: err => console.error(err)
-    });
-  }
-
   /** Applique les filtres selectionnés au préalable*/
   private _apply_prefilters(preFilter?: PreFilters) {
     if (preFilter == null)
@@ -468,8 +456,10 @@ export class SearchDataComponent implements OnInit {
     this.searchForm.controls['location'].setValue(preFilter.location);
 
     if (preFilter.year) {
-      // Création des options du select avec les années demandées (filtre ou marque blanche)
-      this.annees = (Array.isArray(preFilter.year) ? preFilter.year : [preFilter.year]).sort().reverse();
+      // Ajout aux options du select des années demandées (filtre ou marque blanche)
+      this.annees = this.annees.concat((Array.isArray(preFilter.year) ? preFilter.year : [preFilter.year]).sort().reverse()).filter((value, index, array) => {
+        return array.indexOf(value) === index;
+      });
       this.searchForm.controls['year'].setValue(
         Array.isArray(preFilter.year)
           ? preFilter.year
