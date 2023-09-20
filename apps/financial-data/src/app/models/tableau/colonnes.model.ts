@@ -126,6 +126,12 @@ export const colonnes: ColumnMetaDataDef[] = [
         renderFn: (row, col) => row[col.name] && row[col.name] !== "#" ? row[col.name] : '',
     },
     {
+        name: 'groupe_marchandise',
+        label: 'Groupe marchandise',
+        displayed: false,
+        renderFn: (row, _col) => _print_code_label(row['groupe_marchandise']['code'], row['groupe_marchandise']['label']),
+    },
+    {
         name: 'date_cp',
         label: 'Date dernier paiement',
         displayed: false,
