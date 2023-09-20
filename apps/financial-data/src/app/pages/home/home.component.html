@@ -30,7 +30,7 @@
       <div>
         <ul class="fr-btns-group--inline">
           <li>
-            <button *ngIf="!grid_fullscreen && newFilter"
+            <button *ngIf="!grid_fullscreen"
               data-test-id="group-by-btn"
               class="fr-btn fr-btn--sm fr-btn--secondary fr-btn--icon-left fr-icon-menu-2-fill"
               (click)="openGroupConfigDialog()" aria-label="Grouper les lignes par">
@@ -38,7 +38,7 @@
             </button>
           </li>
           <li>
-            <button *ngIf="!grid_fullscreen && newFilter"
+            <button *ngIf="!grid_fullscreen"
               data-test-id="chose-columns-btn"
               class="fr-btn fr-btn--sm fr-btn--secondary fr-btn--icon-left fr-icon-table-line"
               (click)="openSortColumnsDialog()" aria-label="Choisir les colonnes">
