@@ -456,9 +456,12 @@ export class SearchDataComponent implements OnInit {
 
     if (preFilter.year) {
       // Ajout aux options du select des années demandées (filtre ou marque blanche)
-      this.annees = this.annees.concat((Array.isArray(preFilter.year) ? preFilter.year : [preFilter.year]).sort().reverse()).filter((value, index, array) => {
-        return array.indexOf(value) === index;
-      });
+      // .filter() pour supprimer d'éventuels doublons
+      this.annees = this.annees
+                    .concat(Array.isArray(preFilter.year) ? preFilter.year : [preFilter.year])
+                    .sort()
+                    .reverse()
+                    .filter((annee, index, annees) => annees.indexOf(annee) === index);
       this.searchForm.controls['year'].setValue(
         Array.isArray(preFilter.year)
           ? preFilter.year
