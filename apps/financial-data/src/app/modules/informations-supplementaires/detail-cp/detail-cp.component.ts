@@ -26,7 +26,7 @@ export class DetailCpComponent {
   messageErreur(): string {
     let erreur = "Erreur lors de la récupération de l'engagement";
     if (this._financial) {
-      this._financial?.source in this._messagesErreurs ? this._messagesErreurs[this._financial?.source] : "Détails paiement : information indisponible"
+      erreur = this._financial?.source in this._messagesErreurs ? this._messagesErreurs[this._financial?.source] : "Détails paiement : information indisponible"
     }
     return erreur;
   }
