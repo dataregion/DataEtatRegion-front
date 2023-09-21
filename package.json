@@ -32,7 +32,7 @@
     "@angular/platform-browser-dynamic": "^16.2.6",
     "@angular/router": "^16.2.6",
     "@apollo/client": "^3.8.4",
-    "@gouvfr/dsfr": "^1.8.5",
+    "@gouvfr/dsfr": "^1.10.1",
     "apollo-angular": "^5.0.2",
     "graphql": "^16.8.1",
     "keycloak-angular": "^14.1.0",
