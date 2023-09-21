@@ -24,7 +24,11 @@ export class DetailCpComponent {
     "ADEME" : "Détails paiement : information indisponible",
   }
   messageErreur(): string {
-    return this._financial ? this._messagesErreurs[this._financial?.source] : "Erreur lors de la récupération de l'engagement"
+    let erreur = "Erreur lors de la récupération de l'engagement";
+    if (this._financial) {
+      this._financial?.source in this._messagesErreurs ? this._messagesErreurs[this._financial?.source] : "Détails paiement : information indisponible"
+    }
+    return erreur;
   }
 
   get financial() {
