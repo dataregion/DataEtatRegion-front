@@ -55,16 +55,11 @@ export class SelectMultiFilterComponent<T> implements OnChanges {
   // Options sélectionnées
   private _selected: T[] | null = [];
   public get selected(): T | T[] | null | undefined {
-    if (this.hasMultiple) {
-      return this._selected
-    }
-    return this._selected !== null ? this._selected[0] : null;
+    return this.hasMultiple ? this._selected : (this._selected != null ? this._selected[0] : null);
   }
   @Input()
   public set selected(value: T | T[] | null | undefined) {
     this._selected = value != null ? (Array.isArray(value) ? value : [value]) : null
-    console.log("set " + this.placeholder, this._selected)
-    console.log("options " + this.placeholder, this.options)
   }
   @Output() selectedChange = new EventEmitter<T[] | null>();
 
@@ -85,7 +80,6 @@ export class SelectMultiFilterComponent<T> implements OnChanges {
    * @param changes 
    */
   ngOnChanges(changes: SimpleChanges) {
-    console.log('changes pour ' + this.placeholder, changes)
     // Mise à jour des options
     if ('options' in changes)
       this.options = changes['options'].currentValue
@@ -119,12 +113,11 @@ export class SelectMultiFilterComponent<T> implements OnChanges {
    * Emit de l'event de selection
    * @param value
    */
-  onChange(value: T[] | null) {
-    console.log("onchange emit", value)
+  onChange(value: T[] | null | undefined) {
     if (!Array.isArray(value))
-      this.selectedChange.emit(value !== null ? [value as unknown as T] : null);
+      this.selectedChange.emit(value != null ? [value as unknown as T] : null);
     else
-      this.selectedChange.emit(value !== null ? value as unknown as T[] : null);
+      this.selectedChange.emit(value != null ? value as unknown as T[] : null);
   }
 
   /**
@@ -140,8 +133,6 @@ export class SelectMultiFilterComponent<T> implements OnChanges {
    * @returns 
    */
   filter(text: string): void {
-    console.log('o=================')
-    console.log(text)
     // Booléen pour affichage de l'option vide
     this.filterInput = text;
     this.searching = this.filterInput.length > 0;

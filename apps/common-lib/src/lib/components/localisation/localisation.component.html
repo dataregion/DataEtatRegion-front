@@ -1,6 +1,7 @@
 <div style="display:flex;">
   <lib-select-multi-filter [hasMultiple]="false" [canFilter]="false" [canSelectAll]="false"
     data-test-id="niveau-localisation"
+    class="select-multi-filter"
     [placeholder]="'Zone géographique'"
     [options]="niveaux"
     [(selected)]="selectedNiveau"
@@ -9,6 +10,7 @@
 
   <lib-select-multi-filter [hasMultiple]="true" [canFilter]="true" [canSelectAll]="false"
     data-test-id="localisation-select"
+    class="select-multi-filter"
     [placeholder]="selectedNiveauString"
     matTooltip="Filtrer sur une zone géographique" matTooltipPosition="above"
     [options]="filteredGeomodels"

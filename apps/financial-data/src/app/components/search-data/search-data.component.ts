@@ -329,26 +329,6 @@ export class SearchDataComponent implements OnInit {
   }
 
   /**
-   * Change la valeur du bop pour déclencher une nouvelle recherche de BOP associé aux themes
-   */
-  // public onSelectTheme(_event: any): void {
-  //   //this.searchForm.patchValue( { filterBop: '', bops: null } );
-  //   //this.selectedBops = [];
-  //   this.searchForm.patchValue( { bops: null } );
-  // }
-
-  /**
-   * Action déclenché quand on annule le theme
-   */
-  // public cancelTheme(): void {
-  //   this.searchForm.patchValue({
-  //     theme: null,
-  //     //filterBop: '',
-  //     bops: null,
-  //   });
-  // }
-
-  /**
    * Retourne le ValidationErrors benefOrBopRequired
    */
   public get errorsBenefOrBop(): ValidationErrors | null {
@@ -381,7 +361,6 @@ export class SearchDataComponent implements OnInit {
       referentiels_programmation: this.additional_searchparams?.referentiels_programmation || null,
       source_region: this.additional_searchparams?.sources_region || null,
     }
-    console.log(search_parameters)
 
     this._search_subscription = this._budgetService
       .search(search_parameters)
@@ -517,9 +496,7 @@ export class SearchDataComponent implements OnInit {
     // Set de la zone géographique et du niveau de localisation
     this.selectedLocation = preFilter.location as unknown as GeoModel[]
     this.selectedNiveau = this.selectedLocation != null ? this.selectedLocation.map(gm => gm.type) as TypeLocalisation[] : null;
-    console.log("prefilter", preFilter)
 
-    //this.searchForm.controls['location'].setValue(preFilter.location);
     if (preFilter.year) {
       // Ajout aux options du select des années demandées (filtre ou marque blanche)
       // .filter() pour supprimer d'éventuels doublons
@@ -545,7 +522,6 @@ export class SearchDataComponent implements OnInit {
             (themeFilter) =>  themeFilter  === theme
           ) !== -1
       );
-      //this.searchForm.controls['theme'].setValue(themeSelected);
       this.selectedTheme = themeSelected
     }
 
@@ -567,7 +543,6 @@ export class SearchDataComponent implements OnInit {
 
     if (preFilter.tags) {
       const prefilterTags = preFilter.tags as unknown as TagFieldData[];
-      //this.searchForm.controls['tags'].setValue(prefilterTags || null);
       this.selectedTags = prefilterTags
     }
 
@@ -582,7 +557,6 @@ export class SearchDataComponent implements OnInit {
           ) !== -1
       );
       this.selectedBops = bopSelect;
-      //this.searchForm.controls['bops'].setValue(bopSelect || null);
     }
 
     /* Paramètres additionnels qui n'apparaissent pas dans le formulaire de recherche */

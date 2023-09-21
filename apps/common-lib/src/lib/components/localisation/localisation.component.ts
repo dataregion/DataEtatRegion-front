@@ -23,6 +23,7 @@ import { SelectMultiFilterComponent } from '../select-multi-filter/select-multi-
   selector: 'lib-localisation',
   standalone: true,
   templateUrl: './localisation.component.html',
+  styleUrls: ['./localisation.component.scss'],
   imports: [
     MatSelectModule,
     CommonModule,
@@ -68,7 +69,6 @@ export class LocalisationComponent {
   /**
    * Niveau
    */
-  //@Output() selectedNiveauChange = new EventEmitter<TypeLocalisation[] | null | undefined>();
   get selectedNiveau() : TypeLocalisation[] | null | undefined {
     return this._selectedNiveau;
   }
@@ -82,10 +82,15 @@ export class LocalisationComponent {
       this._geo.filterGeo(null, this._selectedNiveau[0]).subscribe((response) => {
         this.geomodels = response
         this.filteredGeomodels = this.geomodels
+        // Reset des options sélectionnées
+        this.selectedLocalisation = this.filteredGeomodels.filter(gm => {
+          return this.selectedLocalisation?.map(loc => loc.code).includes(gm.code)
+        });
       });
     } else {
       this.geomodels = null
       this.filteredGeomodels = this.geomodels
+      this.selectedLocalisation = null;
     }
     this.selectedNiveauChange.emit(this._selectedNiveau);
   }
@@ -95,7 +100,6 @@ export class LocalisationComponent {
   /**
    * Localisation
    */
-  //@Output() selectedLocalisationChange = new EventEmitter<GeoModel[] | null | undefined>();
   get selectedLocalisation() : GeoModel[] | null | undefined {
     return this._selectedLocalisation;
   }
@@ -109,7 +113,6 @@ export class LocalisationComponent {
   constructor(private _geo: GeoLocalisationComponentService) {}
 
   public filterGeomodels = (value: string): GeoModel[] | null => {
-    console.log('filter')
     this.filteredGeomodels = this.geomodels ? this.geomodels?.filter((gm) => {
       return gm.code.toLowerCase().startsWith(value.toLowerCase()) || gm.nom.toLowerCase().startsWith(value.toLowerCase())
     }) : [];
