@@ -66,6 +66,8 @@ export class LocalisationComponent {
   public geomodels: GeoModel[] | null = null;
   public filteredGeomodels: GeoModel[] | null = null;
 
+  constructor(private _geo: GeoLocalisationComponentService) {}
+
   /**
    * Niveau
    */
@@ -110,13 +112,11 @@ export class LocalisationComponent {
   }
   @Output() selectedLocalisationChange = new EventEmitter<GeoModel[] | null>();
 
-  constructor(private _geo: GeoLocalisationComponentService) {}
-
   public filterGeomodels = (value: string): GeoModel[] | null => {
     this.filteredGeomodels = this.geomodels ? this.geomodels?.filter((gm) => {
-      return gm.code.toLowerCase().startsWith(value.toLowerCase()) || gm.nom.toLowerCase().startsWith(value.toLowerCase())
+      return gm.code.toLowerCase().startsWith(value.toLowerCase()) || gm.nom.toLowerCase().includes(value.toLowerCase())
     }) : [];
-    return this.filteredGeomodels;
+    return this.selectedLocalisation != null ? [...this.selectedLocalisation, ...this.filteredGeomodels] : this.filteredGeomodels;
   }
 
   public renderGeomodelOption = (geo: GeoModel) => {

@@ -161,7 +161,6 @@ export class SearchDataComponent implements OnInit {
   /**
    * Locations
    */
-  //@ViewChild(LocalisationComponent) locComponent!: LocalisationComponent;
   private _selectedNiveau: TypeLocalisation[] | null | undefined = null
   get selectedNiveau() : TypeLocalisation[] | null | undefined {
     return this._selectedNiveau;
@@ -174,7 +173,6 @@ export class SearchDataComponent implements OnInit {
   }
   set selectedLocation(data: GeoModel[] | null | undefined) {
     this.searchForm.get('location')?.setValue(data != null ? data : null);
-    //this.selectedNiveau = data != null ? data.map(gm => gm.type) as TypeLocalisation[] : null;
   }
 
 

@@ -1,5 +1,5 @@
 import { Component, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
-import { CommonModule, NgIf, NgFor } from '@angular/common';
+import { CommonModule, NgFor } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, ValidationErrors } from '@angular/forms';
 import { MatTooltipModule} from '@angular/material/tooltip';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -33,7 +33,6 @@ import { MatButtonModule } from '@angular/material/button';
 })
 export class SelectMultiFilterComponent<T> implements OnChanges {
   
-
   // Select multiple ?
   @Input() hasMultiple: boolean = false;
 
@@ -141,10 +140,17 @@ export class SelectMultiFilterComponent<T> implements OnChanges {
       this.filteredOptions = this.filterFunction(text ? text : '');
     // Sinon on considère les options comme des string pour filtrer
     else{
-      this.filteredOptions = this.options ? this.options?.filter((opt) => {
+      const filtered = this.options ? this.options?.filter((opt) => {
         const optStr = opt ? (opt as string).toLowerCase() : '';
         return optStr.startsWith(text.toLowerCase());
       }) : [];
+      this.filteredOptions = this._selected != null ?
+        [
+          // Concaténation des éléments sélectionnés avec les éléments filtrés (en supprimant les doublons éventuels)
+          ...this._selected,
+          ...filtered.filter((el) => !this._selected?.includes(el))
+        ]
+        : filtered
     }
   }
 
