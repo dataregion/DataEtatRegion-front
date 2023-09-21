@@ -31,12 +31,15 @@ export class InformationsSupplementairesDialogComponent {
     this.financial_data = data.row as FinancialDataModel;
 
     // Récupération de l'AE pour avoir le détails des CP associés
-    this._httpService.getCp(data.row['id']).subscribe({
-      next: result => {
-        this.financial_data = {...this.financial_data, financial_cp: result as unknown as FinancialCp[]}
-      },
-      error: err => console.error(err)
-    })
+    console.log(this.financial_data.source)
+    if (this.financial_data.source === "CHORUS") {
+      this._httpService.getCp(data.row['id']).subscribe({
+        next: result => {
+          this.financial_data = {...this.financial_data, financial_cp: result as unknown as FinancialCp[]}
+        },
+        error: err => console.error(err)
+      })
+    }
   }
 
 }
