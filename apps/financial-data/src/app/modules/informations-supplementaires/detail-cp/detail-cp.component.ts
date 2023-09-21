@@ -19,6 +19,18 @@ export class DetailCpComponent {
   
   hasCp: boolean = true;
 
+  private _messagesErreurs = {
+    "CHORUS" : "Aucun crédit de paiement",
+    "ADEME" : "Détails paiement : information indisponible",
+  }
+  messageErreur(): string {
+    let erreur = "Erreur lors de la récupération de l'engagement";
+    if (this._financial) {
+      erreur = this._financial?.source in this._messagesErreurs ? this._messagesErreurs[this._financial?.source] : "Détails paiement : information indisponible"
+    }
+    return erreur;
+  }
+
   get financial() {
     return this._financial!;
   }
