@@ -1,13 +1,13 @@
-<ng-container *ngIf="hasCp; else erreur">
-  <div class="infos-cp">
-    <span><strong>N°EJ : </strong>{{ financial.n_ej }}</span>
-    <span><strong>N°Poste : </strong>{{ financial.n_poste_ej }}</span>
-  </div>
-  <div class="infos-cp">
-    <span><strong>Montant engagé : </strong>{{ financial.montant_ae | currency:'EUR' }}</span>
-    <span><strong>Total payé : </strong>{{ financial.montant_cp | currency:'EUR' }}</span>
-  </div>
+<div class="infos-cp">
+  <span><strong>N°EJ : </strong>{{ financial.n_ej }}</span>
+  <span><strong>N°Poste : </strong>{{ financial.n_poste_ej }}</span>
+</div>
+<div class="infos-cp">
+  <span><strong>Montant engagé : </strong>{{ financial.montant_ae | currency:'EUR' }}</span>
+  <span><strong>Total payé : </strong>{{ financial.montant_cp | currency:'EUR' }}</span>
+</div>
 
+<ng-container *ngIf="hasCp; else erreur">
   <div class="wrapper-table-detail-cp">
     <table class="table-detail-cp">
       <tr>
@@ -28,5 +28,7 @@
 
 
 <ng-template #erreur>
-  <strong>Aucun crédit de paiement</strong>
+  <div style="margin-top: 15px;">
+    <strong>{{ messageErreur() }}</strong>
+  </div>
 </ng-template>

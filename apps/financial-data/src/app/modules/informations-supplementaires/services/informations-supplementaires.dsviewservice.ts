@@ -17,7 +17,6 @@ export class DemarchesSimplifieesViewService {
         has_more_info: boolean;
         title?: string;
     }> {
-        console.log(this._financial);
         const code_depart = this._financial.commune.code.substring(0, 2);
         const annee = this._financial.annee;
         const code_ref = this._financial.referentiel_programmation.code;
