@@ -18,6 +18,7 @@ export const HEADERS_CSV_FINANCIAL = [
   'siret',
   'nom beneficiaire',
   "type d'établissement",
+  "code qpv",
   'date de dernier paiement',
   'année engagement',
   "tags",

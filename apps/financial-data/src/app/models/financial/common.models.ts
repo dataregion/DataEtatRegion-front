@@ -17,6 +17,7 @@ export interface Siret {
   code: string;
   nom_beneficiare: string,
   categorie_juridique?: TypeCategorieJuridique
+  code_qpv?: string
 }
 
 export interface Commune {
