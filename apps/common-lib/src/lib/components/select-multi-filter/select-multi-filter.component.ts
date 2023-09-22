@@ -154,7 +154,6 @@ export class SelectMultiFilterComponent<T> implements OnChanges {
         ]
         : filtered
     }
-    console.log('filtered ', this.filteredOptions?.length)
   }
 
   /**

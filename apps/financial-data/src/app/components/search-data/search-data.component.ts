@@ -407,7 +407,6 @@ export class SearchDataComponent implements OnInit {
       this.searchInProgress.next(true);
       const csvdata = this._budgetService.getCsv(this._searchResult ?? []);
 
-      console.log(csvdata);
        const url = URL.createObjectURL(csvdata);
           const a = document.createElement('a');
           a.href = url;

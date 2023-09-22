@@ -31,7 +31,6 @@ export class InformationsSupplementairesDialogComponent {
     this.financial_data = data.row as FinancialDataModel;
 
     // Récupération de l'AE pour avoir le détails des CP associés
-    console.log(this.financial_data.source)
     if (this.financial_data.source === "CHORUS") {
       this._httpService.getCp(data.row['id']).subscribe({
         next: result => {
