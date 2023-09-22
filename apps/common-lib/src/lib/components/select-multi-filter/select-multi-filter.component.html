@@ -3,8 +3,8 @@
   <mat-select [multiple]="hasMultiple ? 'true' : null" [(ngModel)]="selected" (selectionChange)="onChange($event.value)">
 
     <mat-select-trigger>{{renderLabel()}}</mat-select-trigger>
-    <div *ngIf="hasMultiple && canSelectAll && (filteredOptions !== null && filteredOptions.length !== 0)" style="display:flex; justify-content:center;align-items:center;">
-      <button mat-stroked-button extended [color]="allSelected() ? 'basic' : 'primary'" type="button" (click)="toggleAll()" style="width:100%; border:0px; border-radius:0;">
+    <div *ngIf="hasMultiple && canSelectAll && (filteredOptions !== null && filteredOptions.length !== 0)" class="btn-select-all-wrapper">
+      <button mat-stroked-button extended [color]="allSelected() ? 'basic' : 'primary'" type="button" (click)="toggleAll()">
         <mat-icon>{{allSelected() ? 'close' : 'check_circle_outline'}}</mat-icon>
         {{'Tout ' + (allSelected() ? 'déselectionner' : 'sélectionner')}}
       </button>

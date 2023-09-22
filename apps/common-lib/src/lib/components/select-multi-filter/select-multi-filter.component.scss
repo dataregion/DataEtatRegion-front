@@ -23,6 +23,17 @@
   width: 9%;
 }
 
+.btn-select-all-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.btn-select-all-wrapper > button {
+  width: 100%;
+  border: 0px;
+  border-radius: 0;
+}
+
 // Deprecated : en attendant d'une vraie alternative
 ::ng-deep .mat-mdc-option.no-result .mat-pseudo-checkbox {
   display:none;
