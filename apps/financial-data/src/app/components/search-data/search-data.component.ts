@@ -4,7 +4,6 @@ import {
   Input,
   OnInit,
   Output,
-  ViewChild,
 } from '@angular/core';
 import {
   FormControl,
@@ -41,7 +40,6 @@ import {
 } from 'apps/common-lib/src/public-api';
 import { Bop } from '@models/search/bop.model';
 import { BudgetService } from '@services/budget.service';
-import { FinancialDataHttpService } from '@services/http/financial-data-http.service';
 import { NGXLogger } from 'ngx-logger';
 import { PreFilters } from '@models/search/prefilters.model';
 import { MarqueBlancheParsedParamsResolverModel } from '../../resolvers/marqueblanche-parsed-params.resolver';
@@ -50,7 +48,6 @@ import { BeneficiaireFieldData } from './beneficiaire-field-data.model';
 import { SearchForm } from './search-form.interface';
 import { AutocompleteBeneficiaireService } from './autocomplete-beneficiaire.service';
 import { SelectedData } from 'apps/common-lib/src/lib/components/advanced-chips-multiselect/advanced-chips-multiselect.component';
-import { LocalisationComponent } from 'apps/common-lib/src/lib/components/localisation/localisation.component';
 import { Beneficiaire } from '@models/search/beneficiaire.model';
 import { TagFieldData } from './tags-field-data.model';
 import { AutocompleteTagsService } from './autocomplete-tags.service';
