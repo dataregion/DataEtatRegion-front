@@ -8,6 +8,7 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 /**
  * Select paramétrable (multiple ? filter ?)
@@ -29,6 +30,7 @@ import { MatButtonModule } from '@angular/material/button';
     NgFor,
     MatInputModule,
     MatButtonModule,
+    MatCheckboxModule,
   ]
 })
 export class SelectMultiFilterComponent<T> implements OnChanges {
@@ -104,7 +106,7 @@ export class SelectMultiFilterComponent<T> implements OnChanges {
    * Sélection de toutes les options
    */
    toggleAll() {
-    this.selected = this.selected !== null && Array.isArray(this.selected) && this.selected?.length !== this.filteredOptions?.length ? this.filteredOptions : []
+    this.selected = this.selected === null || (Array.isArray(this.selected) && this.selected?.length !== this.filteredOptions?.length) ? this.filteredOptions : []
     this.onChange(this.selected)
   }
 
@@ -152,6 +154,7 @@ export class SelectMultiFilterComponent<T> implements OnChanges {
         ]
         : filtered
     }
+    console.log('filtered ', this.filteredOptions?.length)
   }
 
   /**
