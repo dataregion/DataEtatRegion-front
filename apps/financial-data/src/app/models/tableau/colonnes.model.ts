@@ -109,7 +109,7 @@ export const colonnes: ColumnMetaDataDef[] = [
     {
         name: 'qpv',
         label: 'QPV',
-        renderFn: (row, _col) => row['siret']['qpv'] != null ?  _print_code_label(row['siret']['qpv']['code'], row['siret']['qpv']['label']) : 'Non renseigné',
+        renderFn: (row, _col) => row['siret']['qpv'] != null ?  _print_code_label(row['siret']['qpv']['code'], row['siret']['qpv']['label']) : '',
     },
     {
         name: 'type_etablissement',
