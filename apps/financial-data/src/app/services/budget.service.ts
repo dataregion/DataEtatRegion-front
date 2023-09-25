@@ -13,7 +13,6 @@ import { DataPagination } from 'apps/common-lib/src/lib/models/pagination/pagina
 import { SourceFinancialData } from '@models/financial/common.models';
 import { unparse } from 'papaparse';
 import { Tag, tag_str } from '@models/refs/tag.model';
-import { CdkPortal } from '@angular/cdk/portal';
 
 export const DATA_HTTP_SERVICE = new InjectionToken<DataHttpService<any, FinancialDataModel>>(
   'DataHttpService'
@@ -49,10 +48,7 @@ export class BudgetService {
 
 
     return forkJoin(search$).pipe(
-      map((response) => {
-        console.log(response)
-        return response.flatMap(data => [...data])
-      })
+      map((response) => response.flatMap(data => [...data]))
     );
   }
 
