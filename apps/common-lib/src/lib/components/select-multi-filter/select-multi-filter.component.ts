@@ -70,12 +70,47 @@ export class SelectMultiFilterComponent<T> implements OnChanges {
   // Icon prefix
   @Input() icon: string = '';
 
-  // Fonctions injectées (doivent être déclarées en lambda)
-  @Input() filterFunction: any = undefined;
-  @Input() renderFunction: any = undefined;
-  @Input() renderLabelFunction: any = undefined;
-
+  /**
+   * Fonction de filtrage par défaut, peut-être remplacée par injection
+   * @param text 
+   * @returns 
+   */
+  @Input()
+  filterFunction(text: string): T[] {
+    // Filtre par défaut : options considérées comme des string
+    this.filteredOptions = this.options ? this.options?.filter((opt) => {
+      const optStr = opt ? (opt as string).toLowerCase() : '';
+      return optStr.includes(text.toLowerCase());
+    }) : [];
+    return this.filteredOptions;
+  }
   
+  /**
+   * Fonction de rendu d'une option par défaut, peut-être remplacée par injection
+   * @param option 
+   * @returns 
+   */
+  @Input()
+  renderFunction(option: T): string {
+    // Affichage par défaut : option telle quelle
+    return option as string;
+  }
+
+  /**
+   * Fonction de rendu des options sélectionnées par défaut, peut-être remplacée par injection
+   * @param selected 
+   * @returns 
+   */
+  @Input()
+  renderLabelFunction(selected: T | T[] | null | undefined): string {
+    // Affichage par défaut : options jointes par des virgules
+    let label: string = ''
+    if (selected != null) {
+      label += this.hasMultiple ? (selected as string[]).join(', ') : selected as string;
+    }
+    return label
+  }
+
   /**
    * Actions au changement des inputs
    * @param changes 
@@ -130,30 +165,22 @@ export class SelectMultiFilterComponent<T> implements OnChanges {
 
   /**
    * Filtrage des option par défaut OU spécifique des options
-   * @param option 
+   * @param text
    * @returns 
    */
   filter(text: string): void {
-    // Booléen pour affichage de l'option vide
+    // Sauvegarde du texte
     this.filterInput = text;
     this.searching = this.filterInput.length > 0;
-    // Si une fonction de filtre spécifique a été fournie, on la call
-    if (this.filterFunction !== undefined)
-      this.filteredOptions = this.filterFunction(text ? text : '');
-    // Sinon on considère les options comme des string pour filtrer
-    else{
-      const filtered = this.options ? this.options?.filter((opt) => {
-        const optStr = opt ? (opt as string).toLowerCase() : '';
-        return optStr.startsWith(text.toLowerCase());
-      }) : [];
-      this.filteredOptions = this._selected != null ?
-        [
-          // Concaténation des éléments sélectionnés avec les éléments filtrés (en supprimant les doublons éventuels)
-          ...this._selected,
-          ...filtered.filter((el) => !this._selected?.includes(el))
-        ]
-        : filtered
-    }
+    // Filtre
+    this.filteredOptions = this.filterFunction(text ? text : '');
+    // Concaténation des éléments sélectionnés avec les éléments filtrés (en supprimant les doublons éventuels)
+    this.filteredOptions = this._selected != null ?
+      [
+        ...Array.isArray(this._selected) ? this._selected : [this._selected],
+        ...this.filteredOptions.filter((el) => !this._selected?.includes(el))
+      ]
+      : this.filteredOptions
   }
 
   /**
@@ -162,12 +189,7 @@ export class SelectMultiFilterComponent<T> implements OnChanges {
    * @returns 
    */
   render(option: T): string {
-    // Si une fonction de rendu spécifique a été fournie, on la call
-    if (this.renderFunction !== undefined) {
-      return this.renderFunction(option);
-    }
-    // Sinon on affiche l'option telle quelle
-    return option as string;
+    return this.renderFunction(option);
   }
 
   /**
@@ -175,16 +197,7 @@ export class SelectMultiFilterComponent<T> implements OnChanges {
    * @returns 
    */
    renderLabel(): string {
-    // Si une fonction de rendu spécifique a été fournie, on la call
-    if (this.renderLabelFunction !== undefined) {
-      return this.renderLabelFunction(this.selected);
-    }
-    // Sinon on affiche les options jointes par des virgules
-    let label: string = ''
-    if (this.selected !== null) {
-      label += this.hasMultiple ? (this.selected as string[]).join(', ') : this.selected as string;
-    }
-    return label
+    return this.renderLabelFunction(this.selected);
   }
 
 }

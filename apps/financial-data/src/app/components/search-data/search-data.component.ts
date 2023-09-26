@@ -108,7 +108,7 @@ export class SearchDataComponent implements OnInit {
     this.searchForm.get('bops')?.setValue(data != null ? data : null);
   }
   // Les fonctions injectées au component DOIVENT être lambdas pour garder le contexte initial
-  public renderBopOption = (bop: BopModel) => {
+  public renderBopOption = (bop: BopModel): string => {
     return bop.code + (bop.label === null ?  '' : ' - ' + bop.label)
   }
   public filterBop = (value: string): BopModel[] => {

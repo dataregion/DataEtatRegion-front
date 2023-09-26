@@ -13,7 +13,6 @@ import { MatSelectModule } from '@angular/material/select';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 
-import { Subject } from 'rxjs';
 import { GeoModel, TypeLocalisation } from '../../models/geo.models';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { GeoLocalisationComponentService } from './geo.localisation.componentservice';
@@ -35,23 +34,9 @@ import { SelectMultiFilterComponent } from '../select-multi-filter/select-multi-
     ReactiveFormsModule,
     SelectMultiFilterComponent,
   ],
-  styles: [
-    `
-      .location {
-        margin-left: 6px;
-      }
-    `,
-    `
-      .field-100-width {
-        width: 100%;
-      }
-    `,
-  ],
   providers: [GeoLocalisationComponentService],
 })
 export class LocalisationComponent {
-
-  public searchGeoChanged = new Subject<string>();
 
   private _selectedNiveau: TypeLocalisation[] | null = null;
   private _selectedLocalisation: GeoModel[] | null = null;
@@ -76,7 +61,7 @@ export class LocalisationComponent {
   }
   @Input()
   set selectedNiveau(data: TypeLocalisation[] | null | undefined) {
-    this._selectedNiveau = data != null ? data : null;
+    this._selectedNiveau = data ?? null;
     this.selectedNiveauString = data != null ? data[0] as string : '';
     // Mise en place des options du select selon le niveau géographique sélectionné
     if (this._selectedNiveau != null && this._selectedNiveau[0] != null) {
@@ -112,18 +97,19 @@ export class LocalisationComponent {
   }
   @Output() selectedLocalisationChange = new EventEmitter<GeoModel[] | null>();
 
-  public filterGeomodels = (value: string): GeoModel[] | null => {
+  public filterGeomodels = (value: string): GeoModel[] => {
+    // Filtre des options
     this.filteredGeomodels = this.geomodels ? this.geomodels?.filter((gm) => {
       return gm.code.toLowerCase().startsWith(value.toLowerCase()) || gm.nom.toLowerCase().includes(value.toLowerCase())
     }) : [];
-    return this.selectedLocalisation != null ? [...this.selectedLocalisation, ...this.filteredGeomodels] : this.filteredGeomodels;
+    return this.filteredGeomodels;
   }
 
-  public renderGeomodelOption = (geo: GeoModel) => {
+  public renderGeomodelOption = (geo: GeoModel): string => {
     return geo.code + ' - ' + geo.nom
   }
 
-  public renderTriggerLabel = (geomodels: GeoModel[]) => {
+  public renderBopLabel = (geomodels: GeoModel[]): string => {
     let label: string = ''
     if (geomodels && geomodels.length > 0) {
       label += geomodels[0].code + ' - ' + geomodels[0].nom
