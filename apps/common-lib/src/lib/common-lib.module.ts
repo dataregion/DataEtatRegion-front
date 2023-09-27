@@ -10,7 +10,7 @@ import { RegisterComponent } from './components/register/register.component';
 import { TermOfUseComponent } from './components/term-of-use/term-of-use.component';
 import { DisplayDateComponent } from './components/display-date/display-date.component';
 import { AdvancedChipsMultiselectComponent } from './components/advanced-chips-multiselect/advanced-chips-multiselect.component';
-import { SelectMultiFilterComponent } from './components/select-multi-filter/select-multi-filter.component';
+import { SelectMultipleComponent } from './components/select-multiple/select-multiple.component';
 
 @NgModule({
   declarations: [
@@ -27,7 +27,7 @@ import { SelectMultiFilterComponent } from './components/select-multi-filter/sel
     HeaderComponent,
     DisplayDateComponent,
     AdvancedChipsMultiselectComponent,
-    SelectMultiFilterComponent,
+    SelectMultipleComponent,
   ],
   exports: [
     AlertSnackBarComponent,
@@ -38,7 +38,7 @@ import { SelectMultiFilterComponent } from './components/select-multi-filter/sel
     TermOfUseComponent,
     RegisterComponent,
     AdvancedChipsMultiselectComponent,
-    SelectMultiFilterComponent,
+    SelectMultipleComponent,
   ],
 })
 export class CommonLibModule {}

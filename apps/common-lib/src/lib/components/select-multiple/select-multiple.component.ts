@@ -11,13 +11,13 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 
 /**
- * Select paramétrable (multiple ? filter ?)
+ * Select multiple paramétrable
  */
 @Component({
-  selector: 'lib-select-multi-filter',
+  selector: 'lib-select-multiple',
   standalone: true,
-  templateUrl: './select-multi-filter.component.html',
-  styleUrls: ['./select-multi-filter.component.scss'],
+  templateUrl: './select-multiple.component.html',
+  styleUrls: ['./select-multiple.component.scss'],
   imports: [
     CommonModule,
     MatIconModule,
@@ -33,11 +33,8 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
     MatCheckboxModule,
   ]
 })
-export class SelectMultiFilterComponent<T> implements OnChanges {
+export class SelectMultipleComponent<T> implements OnChanges {
   
-  // Select multiple ?
-  @Input() hasMultiple: boolean = false;
-
   // Select all ?
   @Input() canSelectAll: boolean = false;
 
@@ -54,13 +51,13 @@ export class SelectMultiFilterComponent<T> implements OnChanges {
   filteredOptions: T[] | null = [];
 
   // Options sélectionnées
-  private _selected: T[] | null = [];
-  public get selected(): T | T[] | null | undefined {
-    return this.hasMultiple ? this._selected : (this._selected != null ? this._selected[0] : null);
+  private _selected: T[] | null = null;
+  public get selected(): T[] | null {
+    return this._selected;
   }
   @Input()
-  public set selected(value: T | T[] | null | undefined) {
-    this._selected = value != null ? (Array.isArray(value) ? value : [value]) : null
+  public set selected(value: T[] | null) {
+    this._selected = value ?? null;
   }
   @Output() selectedChange = new EventEmitter<T[] | null>();
 
@@ -102,13 +99,9 @@ export class SelectMultiFilterComponent<T> implements OnChanges {
    * @returns 
    */
   @Input()
-  renderLabelFunction(selected: T | T[] | null | undefined): string {
+  renderLabelFunction(selected: T | T[] | null): string {
     // Affichage par défaut : options jointes par des virgules
-    let label: string = ''
-    if (selected != null) {
-      label += this.hasMultiple ? (selected as string[]).join(', ') : selected as string;
-    }
-    return label
+    return selected != null ? (selected as string[]).join(', ') : ''
   }
 
   /**
@@ -117,31 +110,29 @@ export class SelectMultiFilterComponent<T> implements OnChanges {
    */
   ngOnChanges(changes: SimpleChanges) {
     // Mise à jour des options
-    if ('options' in changes)
+    if ('options' in changes && 'selected' in changes) {
       this.options = changes['options'].currentValue
-    // Application du filtre après reset des options
-    if (this.canFilter && this.filterInput !== '')
-      this.filter(this.filterInput)
-    else
       this.filteredOptions = this.options;
+      this.filterInput = ''
+    }
   }
 
   /**
    * Sélection de toutes les options
    */
-   allSelected() {
-    return this.selected !== null && Array.isArray(this.selected) && this.selected?.length === this.filteredOptions?.length;
+   allSelected(): boolean {
+    return this.selected != null ? this.selected?.length === this.filteredOptions?.length : false;
   }
 
-  hasMultipleSelected() {
-    return this.selected !== null && Array.isArray(this.selected) && this.selected.length > 0;
+  hasMultipleSelected(): boolean {
+    return this.selected != null ? this.selected?.length > 0 : false;
   }
 
   /**
    * Sélection de toutes les options
    */
    toggleAll() {
-    this.selected = this.selected === null || (Array.isArray(this.selected) && this.selected?.length !== this.filteredOptions?.length) ? this.filteredOptions : []
+    this.selected = !this.allSelected() ? this.filteredOptions : []
     this.onChange(this.selected)
   }
 
@@ -149,11 +140,8 @@ export class SelectMultiFilterComponent<T> implements OnChanges {
    * Emit de l'event de selection
    * @param value
    */
-  onChange(value: T[] | null | undefined) {
-    if (!Array.isArray(value))
-      this.selectedChange.emit(value != null ? [value as unknown as T] : null);
-    else
-      this.selectedChange.emit(value != null ? value as unknown as T[] : null);
+  onChange(value: T[] | null) {
+    this.selectedChange.emit(value ?? null);
   }
 
   /**
@@ -168,17 +156,17 @@ export class SelectMultiFilterComponent<T> implements OnChanges {
    * @param text
    * @returns 
    */
-  filter(text: string): void {
+  filter(text?: string): void {
     // Sauvegarde du texte
-    this.filterInput = text;
+    this.filterInput = text === undefined ? this.filterInput : text;
     this.searching = this.filterInput.length > 0;
     // Filtre
     this.filteredOptions = this.filterFunction(text ? text : '');
     // Concaténation des éléments sélectionnés avec les éléments filtrés (en supprimant les doublons éventuels)
-    this.filteredOptions = this._selected != null ?
+    this.filteredOptions = this.selected != null ?
       [
-        ...Array.isArray(this._selected) ? this._selected : [this._selected],
-        ...this.filteredOptions.filter((el) => !this._selected?.includes(el))
+        ...this.selected,
+        ...this.filteredOptions.filter((el) => !this.selected?.includes(el))
       ]
       : this.filteredOptions
   }

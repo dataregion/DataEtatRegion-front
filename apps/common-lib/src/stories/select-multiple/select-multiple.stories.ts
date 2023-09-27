@@ -2,12 +2,12 @@ import { moduleMetadata, type Meta, type StoryObj, applicationConfig } from "@st
 
 import { provideAnimations } from "@angular/platform-browser/animations";
 import { MaterialModule } from "../../public-api";
-import { SelectMultiFilterComponent } from "../../lib/components/select-multi-filter/select-multi-filter.component";
+import { SelectMultipleComponent } from "../../lib/components/select-multiple/select-multiple.component";
 import { BopModel } from "@models/refs/bop.models";
 
 
-const meta: Meta<SelectMultiFilterComponent<string>> = {
-  component: SelectMultiFilterComponent,
+const meta: Meta<SelectMultipleComponent<string>> = {
+  component: SelectMultipleComponent,
   decorators: [
     applicationConfig({
       providers: [provideAnimations()],
@@ -19,7 +19,6 @@ const meta: Meta<SelectMultiFilterComponent<string>> = {
     })
   ],
   argTypes: {
-    hasMultiple: { control: 'boolean' },
     canFilter: { control: 'boolean' },
     canSelectAll: { control: 'boolean' },
   },
@@ -27,35 +26,9 @@ const meta: Meta<SelectMultiFilterComponent<string>> = {
 
 export default meta;
 
-type StoryString = StoryObj<SelectMultiFilterComponent<string>>;
-type StoryNumber = StoryObj<SelectMultiFilterComponent<number>>;
-type StoryObject = StoryObj<SelectMultiFilterComponent<BopModel>>;
+type StoryNumber = StoryObj<SelectMultipleComponent<number>>;
+type StoryObject = StoryObj<SelectMultipleComponent<BopModel>>;
 
-export const SelectString: StoryString = {
-  name: "Select - String",
-  render: (args) => ({
-    props: {
-      // Attributes
-      id: "zone-geo-select",
-      placeholder: "Zone géographique",
-      class: "field-100-width",
-      // Select
-      options: ["Département", "EPCI", "Commune", "CRTE", "Arrondissement", "QPV"],
-      selected: [],
-      // Parameters
-      icon: 'map',
-      hasMultiple: args.hasMultiple,
-      canFilter: args.canFilter,
-      canSelectAll: args.canSelectAll,
-    },
-    
-  }),
-  args: {
-    hasMultiple: false,
-    canFilter: false,
-    canSelectAll: false
-  },
-}
 export const SelectNumber: StoryNumber = {
   name: "Select - Number",
   render: (args) => ({
@@ -68,13 +41,11 @@ export const SelectNumber: StoryNumber = {
       options: [2023, 2022, 2021, 2020, 2019, 2018, 2017],
       selected: [],
       icon: "calendar_month",
-      hasMultiple: args.hasMultiple,
       canFilter: args.canFilter,
       canSelectAll: args.canSelectAll
     },
   }),
   args: {
-    hasMultiple: true,
     canFilter: false,
     canSelectAll: true,
   },
@@ -148,13 +119,11 @@ export const SelectObject: StoryObject = {
       filterFunction: filterBops,
       renderFunction: (opt: BopModel) => opt.code + " - " + opt.label,
       // Parameters
-      hasMultiple: args.hasMultiple,
       canFilter: args.canFilter,
       canSelectAll: args.canSelectAll
     },
   }),
   args: {
-    hasMultiple: true,
     canFilter: true,
     canSelectAll: true,
   },

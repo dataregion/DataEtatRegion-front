@@ -79,10 +79,10 @@ export class SearchDataComponent implements OnInit {
   /**
    * Themes
    */
-  get selectedTheme() : string[] | null | undefined {
-    return this.searchForm.get('theme')?.value;
+  get selectedTheme() : string[] | null {
+    return this.searchForm.get('theme')?.value ?? null;
   }
-  set selectedTheme(data: string[] | null | undefined) {
+  set selectedTheme(data: string[] | null) {
     this.searchForm.get('theme')?.setValue(data != null ? data : null);
     // Filtrage des bops en fonction des thèmes sélectionnés
     this.filteredBop = [];
@@ -101,10 +101,10 @@ export class SearchDataComponent implements OnInit {
   /**
    * Bops
    */
-  get selectedBops() : BopModel[] | null | undefined {
-    return this.searchForm.get('bops')?.value;
+  get selectedBops() : BopModel[] | null {
+    return this.searchForm.get('bops')?.value ?? null;
   }
-  set selectedBops(data: BopModel[] | null | undefined) {
+  set selectedBops(data: BopModel[] | null) {
     this.searchForm.get('bops')?.setValue(data != null ? data : null);
   }
   // Les fonctions injectées au component DOIVENT être lambdas pour garder le contexte initial
@@ -158,17 +158,17 @@ export class SearchDataComponent implements OnInit {
   /**
    * Locations
    */
-  private _selectedNiveau: TypeLocalisation[] | null | undefined = null
-  get selectedNiveau() : TypeLocalisation[] | null | undefined {
+  private _selectedNiveau: TypeLocalisation | null = null
+  get selectedNiveau() : TypeLocalisation | null {
     return this._selectedNiveau;
   }
-  set selectedNiveau(data: TypeLocalisation[] | null | undefined) {
+  set selectedNiveau(data: TypeLocalisation | null) {
     this._selectedNiveau = data;
   }
-  get selectedLocation() : GeoModel[] | null | undefined {
-    return this.searchForm.get('location')?.value;
+  get selectedLocation() : GeoModel[] | null {
+    return this.searchForm.get('location')?.value ?? null;
   }
-  set selectedLocation(data: GeoModel[] | null | undefined) {
+  set selectedLocation(data: GeoModel[] | null) {
     this.searchForm.get('location')?.setValue(data != null ? data : null);
   }
 
@@ -176,10 +176,10 @@ export class SearchDataComponent implements OnInit {
   /**
    * Year
    */
-  get selectedYear() : number[] | null | undefined {
-    return this.searchForm.get('year')?.value;
+  get selectedYear() : number[] | null {
+    return this.searchForm.get('year')?.value ?? null;
   }
-  set selectedYear(data: number[] | null | undefined) {
+  set selectedYear(data: number[] | null) {
     this.searchForm.get('year')?.setValue(data != null ? data : null);
   }
 
@@ -489,7 +489,7 @@ export class SearchDataComponent implements OnInit {
 
     // Set de la zone géographique et du niveau de localisation
     this.selectedLocation = preFilter.location as unknown as GeoModel[]
-    this.selectedNiveau = this.selectedLocation != null ? this.selectedLocation.map(gm => gm.type) as TypeLocalisation[] : null;
+    this.selectedNiveau = this.selectedLocation != null ? this.selectedLocation.map(gm => gm.type)[0] as TypeLocalisation : null;
 
     if (preFilter.year) {
       // Ajout aux options du select des années demandées (filtre ou marque blanche)
@@ -550,7 +550,7 @@ export class SearchDataComponent implements OnInit {
             (bopFilter) => bop.code === bopFilter.code
           ) !== -1
       );
-      this.selectedBops = bopSelect;
+      this.selectedBops = bopSelect ?? null;
     }
 
     /* Paramètres additionnels qui n'apparaissent pas dans le formulaire de recherche */

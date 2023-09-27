@@ -16,7 +16,7 @@ import { MatInputModule } from '@angular/material/input';
 import { GeoModel, TypeLocalisation } from '../../models/geo.models';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { GeoLocalisationComponentService } from './geo.localisation.componentservice';
-import { SelectMultiFilterComponent } from '../select-multi-filter/select-multi-filter.component';
+import { SelectMultipleComponent } from '../select-multiple/select-multiple.component';
 
 @Component({
   selector: 'lib-localisation',
@@ -32,13 +32,13 @@ import { SelectMultiFilterComponent } from '../select-multi-filter/select-multi-
     MatFormFieldModule,
     MatTooltipModule,
     ReactiveFormsModule,
-    SelectMultiFilterComponent,
+    SelectMultipleComponent,
   ],
   providers: [GeoLocalisationComponentService],
 })
 export class LocalisationComponent {
 
-  private _selectedNiveau: TypeLocalisation[] | null = null;
+  private _selectedNiveau: TypeLocalisation | null = null;
   private _selectedLocalisation: GeoModel[] | null = null;
 
   @Input()
@@ -56,17 +56,17 @@ export class LocalisationComponent {
   /**
    * Niveau
    */
-  get selectedNiveau() : TypeLocalisation[] | null | undefined {
+  get selectedNiveau() : TypeLocalisation | null {
     return this._selectedNiveau;
   }
   @Input()
-  set selectedNiveau(data: TypeLocalisation[] | null | undefined) {
+  set selectedNiveau(data: TypeLocalisation | null) {
     this._selectedNiveau = data ?? null;
-    this.selectedNiveauString = data != null ? data[0] as string : '';
+    this.selectedNiveauString = this._selectedNiveau as string ?? '';
     // Mise en place des options du select selon le niveau géographique sélectionné
-    if (this._selectedNiveau != null && this._selectedNiveau[0] != null) {
+    if (this._selectedNiveau != null) {
       this._selectedLocalisation = null;
-      this._geo.filterGeo(null, this._selectedNiveau[0]).subscribe((response) => {
+      this._geo.filterGeo(null, this._selectedNiveau).subscribe((response) => {
         this.geomodels = response
         this.filteredGeomodels = this.geomodels
         // Reset des options sélectionnées
@@ -81,17 +81,17 @@ export class LocalisationComponent {
     }
     this.selectedNiveauChange.emit(this._selectedNiveau);
   }
-  @Output() selectedNiveauChange = new EventEmitter<TypeLocalisation[] | null>();
+  @Output() selectedNiveauChange = new EventEmitter<TypeLocalisation | null>();
 
   
   /**
    * Localisation
    */
-  get selectedLocalisation() : GeoModel[] | null | undefined {
+  get selectedLocalisation() : GeoModel[] | null {
     return this._selectedLocalisation;
   }
   @Input()
-  set selectedLocalisation(data: GeoModel[] | null | undefined) {
+  set selectedLocalisation(data: GeoModel[] | null) {
     this._selectedLocalisation = data != null ? data : null;
     this.selectedLocalisationChange.emit(this._selectedLocalisation);
   }

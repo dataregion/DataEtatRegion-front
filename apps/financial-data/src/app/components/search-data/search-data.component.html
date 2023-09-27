@@ -10,35 +10,35 @@
   <form [formGroup]="searchForm" autocomplete="off">
     <div class="box">
       
-      <lib-select-multi-filter [hasMultiple]="true" [canFilter]="true" [canSelectAll]="true"
-        class="select-multi-filter field-20-width"
+      <lib-select-multiple [canFilter]="true" [canSelectAll]="true"
         [placeholder]="'Thème'"
         [options]="themes"
         [(selected)]="selectedTheme"
         [error]="errorsBenefOrBop"
+        class="select-multiple field-20-width"
         />
 
-      <lib-select-multi-filter [hasMultiple]="true" [canFilter]="true" [canSelectAll]="true"
-        class="select-multi-filter field-25-width"
+      <lib-select-multiple [canFilter]="true" [canSelectAll]="true"
         [placeholder]="'Programme'"
-        matTooltip="Saisir un nom ou un numéro de programme (Exemple : 102 ou Accès et retour à l’emploi)" matTooltipPosition="above"
         [options]="filteredBop"
         [(selected)]="selectedBops"
-        [renderFunction]="renderBopOption"
         [filterFunction]="filterBop"
+        [renderFunction]="renderBopOption"
         [renderLabelFunction]="renderTriggerLabel"
+        class="select-multiple field-25-width"
+        matTooltip="Saisir un nom ou un numéro de programme (Exemple : 102 ou Accès et retour à l’emploi)" matTooltipPosition="above"
         />
 
       <div class="field-localisation field-30-width">
         <lib-localisation [(selectedNiveau)]="selectedNiveau" [(selectedLocalisation)]="selectedLocation" />
       </div>
 
-      <lib-select-multi-filter [hasMultiple]="true" [canFilter]="false" [canSelectAll]="true"
-        data-test-id="annees-form-field"
-        class="select-multi-filter field-5-width"
+      <lib-select-multiple [canFilter]="false" [canSelectAll]="true"
         [placeholder]="'Année'"
         [options]="annees"
         [(selected)]="selectedYear"
+        data-test-id="annees-form-field"
+        class="select-multi-filter field-5-width"
         icon="calendar_month"
         />
 

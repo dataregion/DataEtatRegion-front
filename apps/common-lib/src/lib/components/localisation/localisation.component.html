@@ -1,23 +1,25 @@
 <div class="localisation-wrapper-fields">
-  <lib-select-multi-filter [hasMultiple]="false" [canFilter]="false" [canSelectAll]="false"
-    data-test-id="niveau-localisation"
-    class="select-multi-filter"
-    [placeholder]="'Zone géographique'"
-    [options]="niveaux"
-    [(selected)]="selectedNiveau"
-    icon="map"
-    />
-
-  <lib-select-multi-filter [hasMultiple]="true" [canFilter]="true" [canSelectAll]="false"
-    data-test-id="localisation-select"
-    class="select-multi-filter"
+  <mat-form-field appearance="fill" class="select-single">
+    <mat-label>Zone géographique</mat-label>
+    <mat-select data-test-id="niveau-localisation" [(ngModel)]="selectedNiveau">
+      <mat-option/>
+      <mat-option *ngFor="let niveau of niveaux" [value]="niveau">
+        {{niveau}}
+      </mat-option>
+    </mat-select>
+    <mat-icon matSuffix>map</mat-icon>
+  </mat-form-field>
+  
+  <lib-select-multiple [canFilter]="true" [canSelectAll]="false"
     [placeholder]="selectedNiveauString"
-    matTooltip="Filtrer sur une zone géographique" matTooltipPosition="above"
     [options]="filteredGeomodels"
     [(selected)]="selectedLocalisation"
-    icon="map"
     [filterFunction]="filterGeomodels"
     [renderFunction]="renderGeomodelOption"
     [renderLabelFunction]="renderBopLabel"
+    data-test-id="localisation-select"
+    class="select-multiple"
+    matTooltip="Filtrer sur une zone géographique" matTooltipPosition="above"
+    icon="map"
     />
 </div>

@@ -1,9 +1,9 @@
-<mat-form-field class="field-100-width select-multi-filter" apperance="fill">
+<mat-form-field class="field-100-width select-multiple" apperance="fill">
   <mat-label>{{placeholder}}</mat-label>
-  <mat-select [multiple]="hasMultiple ? 'true' : null" [(ngModel)]="selected" (selectionChange)="onChange($event.value)">
+  <mat-select multiple [(ngModel)]="selected" (selectionChange)="onChange($event.value)">
 
     <mat-select-trigger>{{renderLabel()}}</mat-select-trigger>
-    <div *ngIf="hasMultiple && canSelectAll && (filteredOptions !== null && filteredOptions.length !== 0)" class="btn-select-all-wrapper">
+    <div *ngIf="canSelectAll && (filteredOptions !== null && filteredOptions.length !== 0)" class="btn-select-all-wrapper">
       <button mat-stroked-button extended [color]="allSelected() ? 'basic' : 'primary'" type="button" (click)="toggleAll()">
         <mat-icon>{{allSelected() ? 'close' : 'check_circle_outline'}}</mat-icon>
         {{'Tout ' + (allSelected() ? 'déselectionner' : 'sélectionner')}}
@@ -15,7 +15,6 @@
     </mat-form-field>
 
     <mat-option *ngIf="canFilter && (filteredOptions === null || filteredOptions?.length === 0)" class="no-result" disabled>Aucun résultat</mat-option>
-    <mat-option *ngIf="!hasMultiple && !searching"/>
     <mat-option *ngFor="let opt of filteredOptions" [value]="opt">{{render(opt)}}</mat-option>
 
   </mat-select>
