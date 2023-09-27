@@ -35,10 +35,15 @@
 }
 
 // Deprecated : en attendant d'une vraie alternative
+
+// L'option a la classe custom no-result : n'impacte pas les autres options de l'application
 ::ng-deep .mat-mdc-option.no-result .mat-pseudo-checkbox {
-  display:none;
+  display: none;
 }
 
+// Fix CSS du container des options des mat-select de l'application
+// - Suppression du padding top et bottom
+// - Suppression du scroll horizontal 
 ::ng-deep div.mat-mdc-select-panel.mdc-menu-surface {
   padding-top: 0px;
   padding-bottom: 0px;
