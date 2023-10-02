@@ -5,6 +5,7 @@ import { RowData } from 'apps/grouping-table/src/lib/components/grouping-table/g
 import { InformationsSupplementairesComponent } from '../informations-supplementaires.component';
 import { FinancialDataModel, FinancialCp } from '@models/financial/financial-data.models';
 import { FinancialDataHttpService } from '@services/http/financial-data-http.service';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 export interface InformationsSupplementairesDialogData {
   row: RowData
@@ -32,7 +33,9 @@ export class InformationsSupplementairesDialogComponent {
 
     // Récupération de l'AE pour avoir le détails des CP associés
     if (this.financial_data.source === "CHORUS") {
-      this._httpService.getCp(data.row['id']).subscribe({
+      this._httpService.getCp(data.row['id'])
+      .pipe(takeUntilDestroyed())
+      .subscribe({
         next: result => {
           this.financial_data = {...this.financial_data, financial_cp: result as unknown as FinancialCp[]}
         },
