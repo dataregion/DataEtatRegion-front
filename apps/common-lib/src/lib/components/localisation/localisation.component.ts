@@ -3,6 +3,8 @@ import {
   Input,
   Output,
   EventEmitter,
+  DestroyRef,
+  inject,
 } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { FormsModule } from '@angular/forms';
@@ -17,6 +19,9 @@ import { GeoModel, TypeLocalisation } from '../../models/geo.models';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { GeoLocalisationComponentService } from './geo.localisation.componentservice';
 import { SelectMultipleComponent } from '../select-multiple/select-multiple.component';
+
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop'
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'lib-localisation',
@@ -38,8 +43,11 @@ import { SelectMultipleComponent } from '../select-multiple/select-multiple.comp
 })
 export class LocalisationComponent {
 
+  private _destroyRef = inject(DestroyRef)
+
   private _selectedNiveau: TypeLocalisation | null = null;
   private _selectedLocalisation: GeoModel[] | null = null;
+  private _subFilterGeo: Subscription | null = null;
 
   @Input()
   public selectedNiveauString: string = ''
@@ -51,43 +59,51 @@ export class LocalisationComponent {
   public geomodels: GeoModel[] | null = null;
   public filteredGeomodels: GeoModel[] | null = null;
 
-  constructor(private _geo: GeoLocalisationComponentService) {}
+  constructor(private _geo: GeoLocalisationComponentService) { }
 
   /**
    * Niveau
    */
-  get selectedNiveau() : TypeLocalisation | null {
+  get selectedNiveau(): TypeLocalisation | null {
     return this._selectedNiveau;
   }
   @Input()
   set selectedNiveau(data: TypeLocalisation | null) {
     this._selectedNiveau = data ?? null;
     this.selectedNiveauString = this._selectedNiveau as string ?? '';
+
+    this.geomodels = null
+    this.filteredGeomodels = this.geomodels
+    this.selectedLocalisation = null;
+
     // Mise en place des options du select selon le niveau géographique sélectionné
     if (this._selectedNiveau != null) {
       this._selectedLocalisation = null;
-      this._geo.filterGeo(null, this._selectedNiveau).subscribe((response) => {
-        this.geomodels = response
-        this.filteredGeomodels = this.geomodels
-        // Reset des options sélectionnées
-        this.selectedLocalisation = this.filteredGeomodels.filter(gm => {
-          return this.selectedLocalisation?.map(loc => loc.code).includes(gm.code)
+
+      if (this._subFilterGeo)
+        this._subFilterGeo.unsubscribe();
+
+      this._subFilterGeo = this._geo.filterGeo(null, this._selectedNiveau)
+        .pipe(takeUntilDestroyed(this._destroyRef))
+        .subscribe((response) => {
+          this.geomodels = response
+          this.filteredGeomodels = this.geomodels
+          // Reset des options sélectionnées
+          this.selectedLocalisation = this.filteredGeomodels.filter(gm => {
+            return this.selectedLocalisation?.map(loc => loc.code).includes(gm.code)
+          });
         });
-      });
-    } else {
-      this.geomodels = null
-      this.filteredGeomodels = this.geomodels
-      this.selectedLocalisation = null;
     }
+
     this.selectedNiveauChange.emit(this._selectedNiveau);
   }
   @Output() selectedNiveauChange = new EventEmitter<TypeLocalisation | null>();
 
-  
+
   /**
    * Localisation
    */
-  get selectedLocalisation() : GeoModel[] | null {
+  get selectedLocalisation(): GeoModel[] | null {
     return this._selectedLocalisation;
   }
   @Input()
