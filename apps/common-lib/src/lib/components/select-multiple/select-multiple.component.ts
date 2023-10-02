@@ -69,8 +69,7 @@ export class SelectMultipleComponent<T> implements OnChanges {
 
   /**
    * Fonction de filtrage par défaut, peut-être remplacée par injection
-   * @param text 
-   * @returns 
+   * @param text input utilisateur utilisé pour filtrer
    */
   @Input()
   filterFunction(text: string): T[] {
@@ -85,7 +84,6 @@ export class SelectMultipleComponent<T> implements OnChanges {
   /**
    * Fonction de rendu d'une option par défaut, peut-être remplacée par injection
    * @param option 
-   * @returns 
    */
   @Input()
   renderFunction(option: T): string {
@@ -99,7 +97,7 @@ export class SelectMultipleComponent<T> implements OnChanges {
    * @returns 
    */
   @Input()
-  renderLabelFunction(selected: T | T[] | null): string {
+  renderLabelFunction(selected: T[] | null): string {
     // Affichage par défaut : options jointes par des virgules
     return selected != null ? (selected as string[]).join(', ') : ''
   }

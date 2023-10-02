@@ -3,12 +3,14 @@
   <mat-select multiple [(ngModel)]="selected" (selectionChange)="onChange($event.value)">
 
     <mat-select-trigger>{{renderLabel()}}</mat-select-trigger>
+
     <div *ngIf="canSelectAll && (filteredOptions !== null && filteredOptions.length !== 0)" class="btn-select-all-wrapper">
       <button mat-stroked-button extended [color]="allSelected() ? 'basic' : 'primary'" type="button" (click)="toggleAll()">
         <mat-icon>{{allSelected() ? 'close' : 'check_circle_outline'}}</mat-icon>
         {{'Tout ' + (allSelected() ? 'déselectionner' : 'sélectionner')}}
       </button>
     </div>
+
     <mat-form-field *ngIf="canFilter" class="field-100-width" appearance="fill">
       <mat-label>Rechercher</mat-label>
       <input type="text" class="fr-input" matInput [(ngModel)]="filterInput" (ngModelChange)="filter($event)" (keydown)="$event.stopPropagation()">
