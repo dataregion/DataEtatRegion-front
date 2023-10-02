@@ -49,7 +49,6 @@ export class LocalisationComponent {
   private _selectedLocalisation: GeoModel[] | null = null;
   private _subFilterGeo: Subscription | null = null;
 
-  @Input()
   public selectedNiveauString: string = ''
 
   // Liste des niveaux de localisation

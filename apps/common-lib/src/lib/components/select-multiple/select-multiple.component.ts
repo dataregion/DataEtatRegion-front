@@ -116,12 +116,17 @@ export class SelectMultipleComponent<T> implements OnChanges {
   }
 
   /**
-   * Sélection de toutes les options
+   * Toutes les options sont-elles sélectionnées ?
+   * @returns 
    */
    allSelected(): boolean {
     return this.selected != null ? this.selected?.length === this.filteredOptions?.length : false;
   }
 
+  /**
+   * Des options sont-elles sélectionnées ? 
+   * @returns 
+   */
   hasMultipleSelected(): boolean {
     return this.selected != null ? this.selected?.length > 0 : false;
   }
@@ -130,8 +135,7 @@ export class SelectMultipleComponent<T> implements OnChanges {
    * Sélection de toutes les options
    */
    toggleAll() {
-    this.selected = !this.allSelected() ? this.filteredOptions : []
-    this.onChange(this.selected)
+    this.onChange(!this.allSelected() ? this.filteredOptions : null)
   }
 
   /**
