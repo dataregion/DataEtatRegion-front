@@ -48,9 +48,7 @@ export class BudgetService {
 
 
     return forkJoin(search$).pipe(
-      map((response) => {
-        return response.flatMap(data => [...data])
-      })
+      map((response) => response.flatMap(data => [...data]))
     );
   }
 
@@ -131,6 +129,7 @@ export class BudgetService {
         item.siret.code,
         item.siret.nom_beneficiare ?? '',
         item.siret.categorie_juridique ?? '',
+        item.siret.code_qpv ?? '',
         item.date_cp,
         item.annee,
         item.tags?.map(tag => tag_str(tag)).join("|"),
@@ -138,12 +137,11 @@ export class BudgetService {
       data.push(values);
     }
 
-    const csv = unparse({
+    const csv = "sep=,\n" + unparse({
       fields,
       data
     });
-
-    return new Blob(csv.split('\n'), { type: 'text/csv;charset=utf-8;' });
+    return new Blob([csv], { type: 'text/csv;charset=utf-8;' });
   }
 
   public getById(source: SourceFinancialData, id: number): Observable<FinancialDataModel> {
