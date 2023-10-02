@@ -4,11 +4,10 @@ import {
   HttpRequest,
   HttpHandler,
   HttpEvent,
-  HttpResponse,
   HttpErrorResponse,
   HttpContextToken,
 } from '@angular/common/http';
-import { Observable, tap } from 'rxjs';
+import { Observable, finalize, tap } from 'rxjs';
 import { AlertService, LoaderService } from 'apps/common-lib/src/public-api';
 
 export const BYPASS_ALERT_INTERCEPTOR = new HttpContextToken<boolean>(() => false)
@@ -27,18 +26,12 @@ export class CommonHttpInterceptor implements HttpInterceptor {
 
     this._loader.startLoader();
     const handler = next.handle(req)
-      .pipe(tap(
-        {
-          next: (event: HttpEvent<any>) => {
-            if (event instanceof HttpResponse) {
-              this._loader.endLoader();
-            }
-          },
-          error: (_) => {
+      .pipe(
+        finalize(() => {
+          setTimeout(() => {
             this._loader.endLoader();
-          }
-        },
-      ));
+          })
+        }));
 
 
     const bypass = req.context.get(BYPASS_ALERT_INTERCEPTOR);
