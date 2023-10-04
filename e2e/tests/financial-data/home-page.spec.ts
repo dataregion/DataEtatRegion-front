@@ -18,8 +18,9 @@ test.describe("Page d'accueil", () => {
       .getByRole('button', { name: "Information de l'utilisateur" })
       .isVisible();
     
-    const clickBackdrop = async () => { // XXX: for closing opened select
-      await page.locator('.cdk-overlay-backdrop').first().click();
+    const clickOnBody = async () => { // XXX: for closing opened select
+      // await page.locator('.cdk-overlay-backdrop').first().click();
+      await page.locator('body').click();
     }
 
     // vérification du formulaire
@@ -30,29 +31,30 @@ test.describe("Page d'accueil", () => {
         .locator('.mdc-list-item__primary-text')
     ).toHaveCount(16);
     await page.getByLabel('Thème').last().click({force: true});
+    await clickOnBody();
 
-    await clickBackdrop()
     await page.getByLabel('Programme').click();
     await expect(
       page
         .getByRole('listbox', { name: 'Programme' })
         .locator('.mdc-list-item__primary-text')
     ).toHaveCount(26);
+    await clickOnBody();
 
     // vérification des niveaux de localisation
-    await clickBackdrop();
     await page.locator('[data-test-id="localisation-select"]').click()
     await expect(
       page.getByText('Aucun résultat')
     ).toBeTruthy();
+    await clickOnBody();
 
-    await clickBackdrop();
     await page.getByLabel('Zone géographique').click()
     await expect(
       page
         .getByRole('listbox', { name: 'Zone géographique' })
         .locator('.mdc-list-item__primary-text')
     ).toHaveCount(7);
+    await clickOnBody();
 
     await page.getByLabel('Année').isVisible();
     await page.getByLabel('Bénéficiaire', {exact: true}).isVisible();
