@@ -48,7 +48,10 @@ export class BudgetService {
 
 
     return forkJoin(search$).pipe(
-      map((response) => response.flatMap(data => [...data]))
+      map((response) => {
+        console.log(response)
+        return response.flatMap(data => [...data])
+      })
     );
   }
 
@@ -131,6 +134,12 @@ export class BudgetService {
         item.commune.arrondissement?.label ?? '',
         item.commune.label_departement ?? '',
         item.commune.label_region ?? '',
+        item.localisation_interministerielle?.code ?? '',
+        item.localisation_interministerielle?.label ?? '',
+        item.compte_budgetaire ?? '',
+        item.contrat_etat_region && item.contrat_etat_region !== '#' ? item.contrat_etat_region : '',
+        item.groupe_marchandise?.code ?? '',
+        item.groupe_marchandise?.label ?? '',
         item.siret.code,
         item.siret.nom_beneficiare ?? '',
         item.siret.categorie_juridique ?? '',

@@ -7,6 +7,11 @@ export enum TypeCategorieJuridique {
   ETAT = 'Etat',
 }
 
+export interface CodeLabel {
+  code: string;
+  label: string;
+}
+
 export interface Programme {
   code?: string;
   label: string;
@@ -20,9 +25,7 @@ export interface Siret {
   code_qpv?: string
 }
 
-export interface Commune {
-  label: string;
-  code: string;
+export interface Commune extends CodeLabel {
   label_crte: string;
   code_crte: string;
   label_epci: string;
@@ -34,10 +37,9 @@ export interface Commune {
   arrondissement?: Arrondissement;
 }
 
-export interface Arrondissement {
-  code: string;
-  label: string;
-}
+export interface Arrondissement extends CodeLabel {}
+export interface GroupeMarchandise extends CodeLabel {}
+export interface LocalisationInterministerielle extends CodeLabel {}
 
 export enum SourceFinancialData {
   ADEME = 'ADEME',
