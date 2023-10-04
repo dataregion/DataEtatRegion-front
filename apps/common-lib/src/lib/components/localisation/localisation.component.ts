@@ -71,14 +71,8 @@ export class LocalisationComponent {
     this._selectedNiveau = data ?? null;
     this.selectedNiveauString = this._selectedNiveau as string ?? '';
 
-    this.geomodels = null
-    this.filteredGeomodels = this.geomodels
-    this.selectedLocalisation = null;
-
     // Mise en place des options du select selon le niveau géographique sélectionné
     if (this._selectedNiveau != null) {
-      this._selectedLocalisation = null;
-
       if (this._subFilterGeo)
         this._subFilterGeo.unsubscribe();
 
@@ -92,6 +86,10 @@ export class LocalisationComponent {
             return this.selectedLocalisation?.map(loc => loc.code).includes(gm.code)
           });
         });
+    } else {
+      this.geomodels = null
+      this.filteredGeomodels = this.geomodels
+      this.selectedLocalisation = null;
     }
 
     this.selectedNiveauChange.emit(this._selectedNiveau);
