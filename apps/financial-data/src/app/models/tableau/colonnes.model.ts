@@ -58,6 +58,36 @@ export const colonnes: ColumnMetaDataDef[] = [
         renderFn: (row, _col) => row['commune']['label'],
     },
     {
+        name: 'label_crte',
+        label: 'CRTE du SIRET',
+        displayed: false,
+        renderFn: (row, _col) => row['commune']['label_crte'],
+    },
+    {
+        name: 'label_epci',
+        label: 'EPCI du SIRET',
+        displayed: false,
+        renderFn: (row, _col) => row['commune']['label_epci'],
+    },
+    {
+        name: 'label_arrondissement',
+        label: 'Arrondissement du SIRET',
+        displayed: false,
+        renderFn: (row, _col) => row['commune']['arrondissement'] !== null ? row['commune']['arrondissement']['label'] : '',
+    },
+    {
+        name: 'label_departement',
+        label: 'Département du SIRET',
+        displayed: false,
+        renderFn: (row, _col) => row['commune']['label_departement'],
+    },
+    {
+        name: 'label_region',
+        label: 'Région du SIRET',
+        displayed: false,
+        renderFn: (row, _col) => row['commune']['label_region'],
+    },
+    {
         name: 'localisation_interministerielle',
         label: 'Localisation interministérielle',
         renderFn: (row, _col) => _print_localisation_interministerielle(row['localisation_interministerielle']),
