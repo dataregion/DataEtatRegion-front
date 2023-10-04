@@ -17,6 +17,10 @@ test.describe("Page d'accueil", () => {
     await page
       .getByRole('button', { name: "Information de l'utilisateur" })
       .isVisible();
+    
+    const clickBackdrop = async () => { // XXX: for closing opened select
+      await page.locator('.cdk-overlay-backdrop').first().click();
+    }
 
     // vérification du formulaire
     await page.getByLabel('Thème').click();
@@ -25,9 +29,10 @@ test.describe("Page d'accueil", () => {
         .getByRole('listbox', { name: 'Thème' })
         .locator('.mdc-list-item__primary-text')
     ).toHaveCount(16);
+    await page.getByLabel('Thème').last().click({force: true});
 
-    await page.getByLabel('Programme').click({ force: true });
-    await page.getByLabel('Programme').click({ force: true });
+    await clickBackdrop()
+    await page.getByLabel('Programme').click();
     await expect(
       page
         .getByRole('listbox', { name: 'Programme' })
@@ -35,11 +40,14 @@ test.describe("Page d'accueil", () => {
     ).toHaveCount(26);
 
     // vérification des niveaux de localisation
+    await clickBackdrop();
+    await page.locator('[data-test-id="localisation-select"]').click()
     await expect(
-      page.locator('data-test-id=category-localisation')
-    ).toBeEmpty();
-    await page.getByTestId('niveau-localisation').click({ force: true });
-    await page.getByTestId('niveau-localisation').click({ force: true });
+      page.getByText('Aucun résultat')
+    ).toBeTruthy();
+
+    await clickBackdrop();
+    await page.getByLabel('Zone géographique').click()
     await expect(
       page
         .getByRole('listbox', { name: 'Zone géographique' })

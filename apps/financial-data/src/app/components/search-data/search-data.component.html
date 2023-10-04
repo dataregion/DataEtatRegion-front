@@ -10,7 +10,9 @@
   <form [formGroup]="searchForm" autocomplete="off">
     <div class="box">
       
-      <lib-select-multiple [canFilter]="true" [canSelectAll]="true"
+      <lib-select-multiple 
+        data-test-id="themes-form-field"
+        [canFilter]="true" [canSelectAll]="true"
         [placeholder]="'Thème'"
         [options]="themes"
         [(selected)]="selectedTheme"
@@ -19,6 +21,7 @@
         />
 
       <lib-select-multiple [canFilter]="true" [canSelectAll]="true"
+        data-test-id="programmes-form-field"
         [placeholder]="'Programme'"
         [options]="filteredBop"
         [(selected)]="selectedBops"
