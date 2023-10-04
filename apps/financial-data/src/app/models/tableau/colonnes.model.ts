@@ -173,6 +173,13 @@ export const colonnes: ColumnMetaDataDef[] = [
         renderFn: (row, col) =>
             row[col.name] ? new Date(row[col.name]).toLocaleString([], { year: 'numeric', month: 'numeric', day: 'numeric' }) : '',
     },
+    {
+        name: 'date_replication',
+        label: 'Date création EJ',
+        displayed: false,
+        renderFn: (row, col) =>
+            row[col.name] ? new Date(row[col.name]).toLocaleString([], { year: 'numeric', month: 'numeric', day: 'numeric' }) : '',
+    },
 ]
 
 
