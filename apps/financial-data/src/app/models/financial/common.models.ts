@@ -23,6 +23,20 @@ export interface Siret {
 export interface Commune {
   label: string;
   code: string;
+  label_crte: string;
+  code_crte: string;
+  label_epci: string;
+  code_epci: string;
+  label_departement: string;
+  code_departement: string;
+  label_region: string;
+  code_region: string;
+  arrondissement?: Arrondissement;
+}
+
+export interface Arrondissement {
+  code: string;
+  label: string;
 }
 
 export enum SourceFinancialData {

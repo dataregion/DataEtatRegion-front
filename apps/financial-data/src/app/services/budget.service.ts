@@ -126,6 +126,11 @@ export class BudgetService {
         item.domaine_fonctionnel?.label ?? '',
         item.referentiel_programmation.label ?? '',
         item.commune.label ?? '',
+        item.commune.label_crte ?? '',
+        item.commune.label_epci ?? '',
+        item.commune.arrondissement?.label ?? '',
+        item.commune.label_departement ?? '',
+        item.commune.label_region ?? '',
         item.siret.code,
         item.siret.nom_beneficiare ?? '',
         item.siret.categorie_juridique ?? '',
@@ -137,11 +142,11 @@ export class BudgetService {
       data.push(values);
     }
 
-    const csv = "sep=,\n" + unparse({
+    const csv = unparse({
       fields,
       data
     });
-    return new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    return new Blob(csv.split('\n'), { type: 'text/csv;charset=utf-8;' });
   }
 
   public getById(source: SourceFinancialData, id: number): Observable<FinancialDataModel> {
