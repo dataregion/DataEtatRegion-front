@@ -94,8 +94,8 @@ export class SearchDataComponent implements OnInit {
       });
     else {
       this.filteredBop = this.bop;
-      this.selectedBops = null
     }
+    this.selectedBops = null
   }
 
   /**
