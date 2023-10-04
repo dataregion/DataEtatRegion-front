@@ -1,4 +1,4 @@
-import { Commune, Programme, Siret, SourceFinancialData } from "./common.models";
+import { Commune, Programme, Siret, GroupeMarchandise, LocalisationInterministerielle, SourceFinancialData } from "./common.models";
 import { Tag } from "../refs/tag.model";
 
 
@@ -20,13 +20,19 @@ export const HEADERS_CSV_FINANCIAL = [
   'arrondissement',
   'département',
   'région',
+  'code localisation interministérielle',
+  'localisation interministérielle',
+  'compte budgétaire',
+  'cper',
+  'code groupe marchandise',
+  'groupe marchandise',
   'siret',
   'nom beneficiaire',
   "type d'établissement",
   "code qpv",
   'date de dernier paiement',
   'année engagement',
-  "tags",
+  'tags',
 ];
 
 export interface FinancialDataModel {
@@ -44,6 +50,11 @@ export interface FinancialDataModel {
   domaine_fonctionnel?: any;
   programme: Programme;
   referentiel_programmation: any
+
+  compte_budgetaire?: string;
+  contrat_etat_region?: string;
+  groupe_marchandise?: GroupeMarchandise;
+  localisation_interministerielle?: LocalisationInterministerielle;
 
   annee: number;
 
