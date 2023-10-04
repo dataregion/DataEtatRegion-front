@@ -22,25 +22,25 @@ variables:
 workflow:
   rules:
     # Désactive les pipelines sur création de branche
-    - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BEFORE_SHA == "0000000000000000000000000000000000000000"'
-      when: never
+    # - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BEFORE_SHA == "0000000000000000000000000000000000000000"'
+    #   when: never
     - if: '$CI_PIPELINE_SOURCE == "push" && ($CI_COMMIT_BRANCH == "main" || $CI_COMMIT_BRANCH == "develop" )'
       variables:
         DO_BUILD: "true"
         DO_TEST: "true"
         DO_DEPLOY: "true"
         DO_E2E: "true"
-    - if: '$CI_PIPELINE_SOURCE == "push" &&  $CI_COMMIT_REF_NAME =~ "/^(feature|chore)\//"'
+    - if: '$CI_PIPELINE_SOURCE == "push" &&  $CI_COMMIT_BRANCH =~ /^(feature|chore)\/.*/'
       variables:
         DO_BUILD: "true"
         DO_TEST: "manual"
         DO_DEPLOY: "manual"
         DO_E2E: "manual"
-    - if: '$CI_PIPELINE_SOURCE == "push" &&  $CI_COMMIT_REF_NAME =~ "/^fix\//"'
+    - if: '$CI_PIPELINE_SOURCE == "push" &&  $CI_COMMIT_BRANCH =~ /^bugfix\/.*/'
       variables:
         DO_BUILD: "true"
-        DO_TEST: "manual"
-        DO_DEPLOY: "manual"
+        DO_TEST: "true"
+        DO_DEPLOY: "true"
         DO_E2E: "true"
     - if: '$CI_PIPELINE_SOURCE == "web"'
     - if: '$CI_PIPELINE_SOURCE == "schedule"'
