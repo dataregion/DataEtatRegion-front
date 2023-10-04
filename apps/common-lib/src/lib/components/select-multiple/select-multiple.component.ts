@@ -108,7 +108,7 @@ export class SelectMultipleComponent<T> implements OnChanges {
    */
   ngOnChanges(changes: SimpleChanges) {
     // Mise à jour des options
-    if ('options' in changes && 'selected' in changes) {
+    if ('options' in changes) {
       this.options = changes['options'].currentValue
       this.filteredOptions = this.options;
       this.filterInput = ''

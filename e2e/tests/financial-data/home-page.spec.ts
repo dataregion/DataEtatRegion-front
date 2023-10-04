@@ -30,7 +30,6 @@ test.describe("Page d'accueil", () => {
         .getByRole('listbox', { name: 'Thème' })
         .locator('.mdc-list-item__primary-text')
     ).toHaveCount(16);
-    await page.getByLabel('Thème').last().click({force: true});
     await clickOnBody();
 
     await page.getByLabel('Programme').click();
