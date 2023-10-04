@@ -1,8 +1,7 @@
 
-.box .mat-mdc-form-field + .mat-mdc-form-field, .box .field-localisation + .mat-mdc-form-field, .box .field-localisation {
+.box .select-multiple + .select-multiple, .box .field-localisation + .select-multiple, .box .field-localisation {
   margin-left: 8px;
 }
-
 
 .box button {
   margin-left: 15px

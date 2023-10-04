@@ -4,14 +4,10 @@ import { Bop } from "@models/search/bop.model";
 import { TagFieldData } from "./tags-field-data.model";
 
 export interface SearchForm {
-    year: FormControl<number[] | null>;
-
-    filterBop: FormControl<string | null>;
-
-    bops: FormControl<Bop[] | null>;
     theme: FormControl<string[] | null>;
-    beneficiaires: FormControl<Beneficiaire[] | null>;
+    bops: FormControl<Bop[] | null>;
     location: FormControl<any>;
-
+    year: FormControl<number[] | null>;
+    beneficiaires: FormControl<Beneficiaire[] | null>;
     tags: FormControl<TagFieldData[] | null>
 }

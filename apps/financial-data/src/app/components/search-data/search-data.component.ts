@@ -40,7 +40,6 @@ import {
 } from 'apps/common-lib/src/public-api';
 import { Bop } from '@models/search/bop.model';
 import { BudgetService } from '@services/budget.service';
-import { FinancialDataHttpService } from '@services/http/financial-data-http.service';
 import { NGXLogger } from 'ngx-logger';
 import { PreFilters } from '@models/search/prefilters.model';
 import { MarqueBlancheParsedParamsResolverModel } from '../../resolvers/marqueblanche-parsed-params.resolver';
@@ -75,8 +74,118 @@ export class SearchDataComponent implements OnInit {
   public themes: string[] = [];
   public annees: number[] = [];
 
-  public filteredBop: BopModel[] | undefined = undefined;
+  public filteredBop: BopModel[] | null = null;
 
+  /**
+   * Themes
+   */
+  get selectedTheme() : string[] | null {
+    return this.searchForm.get('theme')?.value ?? null;
+  }
+  set selectedTheme(data: string[] | null) {
+    this.searchForm.get('theme')?.setValue(data != null ? data : null);
+    // Filtrage des bops en fonction des thèmes sélectionnés
+    this.filteredBop = [];
+    if (this.selectedTheme && this.selectedTheme.length > 0)
+      this.selectedTheme?.forEach((theme) => {
+        const filtered = this.bop.filter(bop => theme !== null && theme.includes(bop.label_theme));
+        if (this.filteredBop)
+          this.filteredBop = this.filteredBop?.concat(filtered);
+      });
+    else {
+      this.filteredBop = this.bop;
+      this.selectedBops = null
+    }
+  }
+
+  /**
+   * Bops
+   */
+  get selectedBops() : BopModel[] | null {
+    return this.searchForm.get('bops')?.value ?? null;
+  }
+  set selectedBops(data: BopModel[] | null) {
+    this.searchForm.get('bops')?.setValue(data != null ? data : null);
+  }
+  // Les fonctions injectées au component DOIVENT être lambdas pour garder le contexte initial
+  public renderBopOption = (bop: BopModel): string => {
+    return bop.code + (bop.label === null ?  '' : ' - ' + bop.label)
+  }
+  public filterBop = (value: string): BopModel[] => {
+    const filterValue = value ? value.toLowerCase() : '';
+    const themes = this.searchForm.controls['theme'].value;
+
+    const filterGeo = this.bop.filter((option) => {
+      if (themes) {
+        return (
+          option.label_theme != null &&
+          themes.includes(option.label_theme) &&
+          option.label?.toLowerCase().includes(filterValue)
+        );
+      }
+      return (
+        option.label?.toLowerCase().includes(filterValue) ||
+        option.code.startsWith(filterValue)
+      );
+    });
+
+    const controlBop = this.searchForm.controls['bops'].value;
+
+    if (controlBop) {
+      // si des BOPs sont déjà sélectionné
+      return [
+        ...controlBop,
+        ...filterGeo.filter(
+          (element) =>
+            controlBop.findIndex(
+              (valueSelected: BopModel) => valueSelected.code === element.code
+            ) === -1 // on retire les doublons éventuels
+        ),
+      ];
+    } else {
+      return filterGeo;
+    }
+  }
+  public renderTriggerLabel = (bops: BopModel[]) => {
+    let label: string = ''
+    if (bops)
+      bops.forEach((bop, i) => {
+        label += (bop.code + ' - ' + bop.label) + (i !== bops.length - 1 ? ', ' : '')
+      })
+    return label
+  }
+
+  /**
+   * Locations
+   */
+  private _selectedNiveau: TypeLocalisation | null = null
+  get selectedNiveau() : TypeLocalisation | null {
+    return this._selectedNiveau;
+  }
+  set selectedNiveau(data: TypeLocalisation | null) {
+    this._selectedNiveau = data;
+  }
+  get selectedLocation() : GeoModel[] | null {
+    return this.searchForm.get('location')?.value ?? null;
+  }
+  set selectedLocation(data: GeoModel[] | null) {
+    this.searchForm.get('location')?.setValue(data != null ? data : null);
+  }
+
+
+  /**
+   * Year
+   */
+  get selectedYear() : number[] | null {
+    return this.searchForm.get('year')?.value ?? null;
+  }
+  set selectedYear(data: number[] | null) {
+    this.searchForm.get('year')?.setValue(data != null ? data : null);
+  }
+
+  /**
+   * Beneficiaires
+   */
   get selectedBeneficiaires() : BeneficiaireFieldData[] {
     return this.searchForm.get('beneficiaires')?.value as BeneficiaireFieldData[];
   }
@@ -92,7 +201,9 @@ export class SearchDataComponent implements OnInit {
     this.beneficiaireInputChange$.next(v);
   }
 
-
+  /**
+   * Tags
+   */
   public get selectedTags(): TagFieldData[] {
     return this.searchForm.get('tags')?.value as TagFieldData[]
   }
@@ -153,27 +264,22 @@ export class SearchDataComponent implements OnInit {
     private _datePipe: DatePipe,
     private _alertService: AlertService,
     private _budgetService: BudgetService,
-    private _financialHttpService: FinancialDataHttpService,
     private _logger: NGXLogger,
     private _autocompleteBeneficiaires: AutocompleteBeneficiaireService,
     private _autocompleteTags: AutocompleteTagsService,
   ) {
-    // formulaire
+    // Formulaire avc champs déclarés dans l'ordre
     this.searchForm = new FormGroup<SearchForm>({
+      theme: new FormControl<string[] | null>(null),
+      bops: new FormControl<Bop[] | null>(null),
+      location: new FormControl({ value: null, disabled: false }, []),
       year: new FormControl<number[]>([], {
         validators: [
           Validators.min(2000),
           Validators.max(new Date().getFullYear()),
         ],
       }),
-
-      filterBop: new FormControl<string>(''), // controls pour le filtre des bops
-
-      bops: new FormControl<Bop[] | null>(null),
-      theme: new FormControl<string[] | null>(null),
       beneficiaires: new FormControl<Beneficiaire[] | null>(null),
-      location: new FormControl({ value: null, disabled: false }, []),
-
       tags: new FormControl<TagFieldData[] | null>(null),
     });
   }
@@ -218,37 +324,10 @@ export class SearchDataComponent implements OnInit {
   }
 
   /**
-   * Change la valeur du bop pour déclencher une nouvelle recherche de BOP associé aux themes
-   */
-  public onSelectTheme(_event: any): void {
-    this.searchForm.patchValue( { filterBop: '', bops: null } );
-  }
-
-  /**
-   * Action déclenché quand on annule le theme
-   */
-  public cancelTheme(): void {
-    this.searchForm.patchValue({
-      theme: null,
-      filterBop: '',
-      bops: null,
-    });
-  }
-
-  /**
-   * Retourne le FormControl de location
-   */
-  public get locationControls(): FormControl {
-    return this.searchForm.get('location') as FormControl;
-  }
-
-  /**
    * Retourne le ValidationErrors benefOrBopRequired
    */
   public get errorsBenefOrBop(): ValidationErrors | null {
-    return this.searchForm.errors != null
-      ? this.searchForm.errors['benefOrBopRequired']
-      : null;
+    return this.searchForm.errors != null ? this.searchForm.errors['benefOrBopRequired'] : null;
   }
 
   /**
@@ -328,7 +407,6 @@ export class SearchDataComponent implements OnInit {
       this.searchInProgress.next(true);
       const csvdata = this._budgetService.getCsv(this._searchResult ?? []);
 
-      console.log(csvdata);
        const url = URL.createObjectURL(csvdata);
           const a = document.createElement('a');
           a.href = url;
@@ -374,13 +452,7 @@ export class SearchDataComponent implements OnInit {
    * filtrage des données des formulaires pour les autocomplete
    */
   private _setupFilters(): void {
-
-    this.searchForm.controls['filterBop'].valueChanges.subscribe((value: string | null) => {
-      const v = (value) ? value: '';
-      this.filteredBop = this._filterBop(v);
-    });
-
-    // filtre beneficiaire
+    // Filtre beneficiaires
     this.filteredBeneficiaire$ =
       this.beneficiaireInputChange$
         .pipe(
@@ -394,7 +466,7 @@ export class SearchDataComponent implements OnInit {
             return this._autocompleteBeneficiaires.autocomplete$(value)
           })
         );
-
+    // Filtre tags
     this._filteredTags$ =
       this.tagsInputChange$
         .pipe(
@@ -410,49 +482,14 @@ export class SearchDataComponent implements OnInit {
         )
   }
 
-
-  private _filterBop(value: string): BopModel[] {
-    const filterValue = value ? value.toLowerCase() : '';
-    const themes = this.searchForm.controls['theme'].value;
-
-    const filterGeo = this.bop.filter((option) => {
-      if (themes) {
-        return (
-          option.label_theme != null &&
-          themes.includes(option.label_theme) &&
-          option.label?.toLowerCase().includes(filterValue)
-        );
-      }
-      return (
-        option.label?.toLowerCase().includes(filterValue) ||
-        option.code.startsWith(filterValue)
-      );
-    });
-
-    const controlBop = this.searchForm.controls['bops'].value;
-
-    if (controlBop) {
-      // si des BOPs sont déjà sélectionné
-      return [
-        ...controlBop,
-        ...filterGeo.filter(
-          (element) =>
-            controlBop.findIndex(
-              (valueSelected: BopModel) => valueSelected.code === element.code
-            ) === -1 // on retire les doublons éventuels
-        ),
-      ];
-    } else {
-      return filterGeo;
-    }
-  }
-
   /** Applique les filtres selectionnés au préalable*/
   private _apply_prefilters(preFilter?: PreFilters) {
     if (preFilter == null)
       return
 
-    this.searchForm.controls['location'].setValue(preFilter.location);
+    // Set de la zone géographique et du niveau de localisation
+    this.selectedLocation = preFilter.location as unknown as GeoModel[]
+    this.selectedNiveau = this.selectedLocation != null ? this.selectedLocation.map(gm => gm.type)[0] as TypeLocalisation : null;
 
     if (preFilter.year) {
       // Ajout aux options du select des années demandées (filtre ou marque blanche)
@@ -479,7 +516,7 @@ export class SearchDataComponent implements OnInit {
             (themeFilter) =>  themeFilter  === theme
           ) !== -1
       );
-      this.searchForm.controls['theme'].setValue(themeSelected);
+      this.selectedTheme = themeSelected
     }
 
 
@@ -500,7 +537,7 @@ export class SearchDataComponent implements OnInit {
 
     if (preFilter.tags) {
       const prefilterTags = preFilter.tags as unknown as TagFieldData[];
-      this.searchForm.controls['tags'].setValue(prefilterTags || null);
+      this.selectedTags = prefilterTags
     }
 
     // Application du bops
@@ -513,7 +550,7 @@ export class SearchDataComponent implements OnInit {
             (bopFilter) => bop.code === bopFilter.code
           ) !== -1
       );
-      this.searchForm.controls['bops'].setValue(bopSelect || null);
+      this.selectedBops = bopSelect ?? null;
     }
 
     /* Paramètres additionnels qui n'apparaissent pas dans le formulaire de recherche */

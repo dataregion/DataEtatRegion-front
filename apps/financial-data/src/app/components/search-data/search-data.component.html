@@ -9,56 +9,38 @@
 <ng-template #form>
   <form [formGroup]="searchForm" autocomplete="off">
     <div class="box">
+      
+      <lib-select-multiple [canFilter]="true" [canSelectAll]="true"
+        [placeholder]="'Thème'"
+        [options]="themes"
+        [(selected)]="selectedTheme"
+        [error]="errorsBenefOrBop"
+        class="select-multiple field-20-width"
+        />
 
-      <mat-form-field class="field-20-width" appearance="fill">
-        <mat-label>Thème</mat-label>
-        <mat-select formControlName="theme" multiple (selectionChange)="onSelectTheme($event)">
-          <mat-option *ngFor="let theme of themes" [value]="theme">
-            {{theme}}
-          </mat-option>
-        </mat-select>
-        <button *ngIf="searchForm.controls['theme'].value !== null" matSuffix mat-icon-button (click)="cancelTheme()">
-          <mat-icon>close</mat-icon>
-        </button>
-
-        <mat-error *ngIf="errorsBenefOrBop">{{errorsBenefOrBop}}</mat-error>
-      </mat-form-field>
-
-      <mat-form-field
-        data-test-id="programmes-form-field"
-        class="field-25-width" appearance="fill" matTooltipPosition="above"
-        matTooltip="Saisir un nom ou un numéro de programme (Exemple : 102 ou Accès et retour à l’emploi)">
-        <mat-label>Programme</mat-label>
-        <mat-select formControlName="bops" multiple>
-          <mat-form-field class="field-100-width" appearance="fill">
-            <mat-label>Filtrer</mat-label>
-            <input type="text" class="fr-input" matInput formControlName="filterBop">
-          </mat-form-field>
-          <mat-option *ngFor="let bop of filteredBop" [value]="bop"> {{bop.code}} - {{bop.label === null ?  '' : bop.label}}</mat-option>
-        </mat-select>
-        <button *ngIf="searchForm.controls['bops'].value !== null" matSuffix mat-icon-button
-          (click)="searchForm.controls['bops'].setValue(null)">
-          <mat-icon>close</mat-icon>
-        </button>
-        <mat-error *ngIf="errorsBenefOrBop">{{errorsBenefOrBop}}</mat-error>
-      </mat-form-field>
+      <lib-select-multiple [canFilter]="true" [canSelectAll]="true"
+        [placeholder]="'Programme'"
+        [options]="filteredBop"
+        [(selected)]="selectedBops"
+        [filterFunction]="filterBop"
+        [renderFunction]="renderBopOption"
+        [renderLabelFunction]="renderTriggerLabel"
+        class="select-multiple field-25-width"
+        matTooltip="Saisir un nom ou un numéro de programme (Exemple : 102 ou Accès et retour à l’emploi)" matTooltipPosition="above"
+        />
 
       <div class="field-localisation field-30-width">
-        <lib-localisation [control]="locationControls"
-          [categorySelected]="(locationControls.value &&  locationControls.value[0]) ? locationControls.value[0].type : null"/>
+        <lib-localisation [(selectedNiveau)]="selectedNiveau" [(selectedLocalisation)]="selectedLocation" />
       </div>
 
-      <mat-form-field
+      <lib-select-multiple [canFilter]="false" [canSelectAll]="true"
+        [placeholder]="'Année'"
+        [options]="annees"
+        [(selected)]="selectedYear"
         data-test-id="annees-form-field"
-        class="field-9-width" appearance="fill">
-        <mat-label>Année</mat-label>
-        <mat-select formControlName="year" multiple>
-          <mat-option *ngFor="let year of annees" [value]="year">
-            {{year}}
-          </mat-option>
-        </mat-select>
-        <mat-icon matSuffix>calendar_month</mat-icon>
-      </mat-form-field>
+        class="select-multiple field-5-width"
+        icon="calendar_month"
+        />
 
       <div class="break"></div>
 
