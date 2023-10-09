@@ -33,7 +33,9 @@
       <ng-container matColumnDef="administration">
         <th mat-header-cell *matHeaderCellDef> Administration </th>
         <td mat-cell *matCellDef="let element">
-          <span *ngIf="element.attributes.administration && element.attributes.administration.length > 0">
+          <span *ngIf="element.attributes !== undefined
+                    && element.attributes.administration !== undefined
+                    && element.attributes.administration.length > 0">
             {{element.attributes.administration[0]}}
           </span>
         </td>
