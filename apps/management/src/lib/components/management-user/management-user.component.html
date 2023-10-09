@@ -29,6 +29,15 @@
         <td mat-cell *matCellDef="let element"> {{element.username}} </td>
       </ng-container>
 
+      <!-- usernamle Column -->
+      <ng-container matColumnDef="administration">
+        <th mat-header-cell *matHeaderCellDef> Administration </th>
+        <td mat-cell *matCellDef="let element">
+          <span *ngIf="element.attributes.administration && element.attributes.administration.length > 0">
+            {{element.attributes.administration[0]}}
+          </span>
+        </td>
+      </ng-container>
 
       <!-- Enabled Column -->
       <ng-container matColumnDef="enabled">
