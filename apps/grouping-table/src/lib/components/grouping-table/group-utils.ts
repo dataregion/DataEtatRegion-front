@@ -27,6 +27,9 @@ export type ColumnMetaDataDef = {
   /** La colonne est-elle affichée dans le tableau de données (undefined => true) */
   displayed?: boolean | undefined;
 
+  /** La colonne est-elle affichée dans le tableau de données (undefined => true) */
+  grouping?: boolean | undefined;
+
   /**
    * Fonction de rendu permettant d'adapter la valeur de la cellule avant affichage.
    * Peut permettre d'afficher une valeur différente de celle de la cellule, ou de gérer les sous-objets.
@@ -141,6 +144,7 @@ export type TableData = RowData[];
 
 export type GroupingColumn = {
   columnName: string;
+  selected?: boolean;
 };
 
 export type DisplayedOrderedColumn = {

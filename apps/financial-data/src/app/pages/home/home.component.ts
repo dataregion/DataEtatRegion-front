@@ -27,7 +27,7 @@ import { MarqueBlancheParsedParamsResolverModel } from '../../resolvers/marquebl
 import { NGXLogger } from 'ngx-logger';
 import { delay } from 'rxjs';
 import { PreFilters } from '@models/search/prefilters.model';
-import { colonnes } from '@models/tableau/colonnes.model';
+import { colonnes, groupingOrder } from '@models/tableau/colonnes.model';
 import { QueryParam } from 'apps/common-lib/src/lib/models/marqueblanche/query-params.enum';
 import { Tag, tag_str } from '@models/refs/tag.model';
 
@@ -55,9 +55,7 @@ export class HomeComponent implements OnInit {
 
   lastImportDate: string | null = null;
 
-  groupingColumns: GroupingColumn[] = [
-    { columnName: 'annee' }
-  ];
+  groupingColumns: GroupingColumn[];
 
   /**
    * Ordre des colonnes par défaut
@@ -92,6 +90,7 @@ export class HomeComponent implements OnInit {
     this.defaultOrder = this._getDefaultOrder();
     // Ordre et affichage de base des colonnes
     this.displayedOrderedColumns = this._getDefaultOrder();
+    this.groupingColumns = this._getDefaultOrderGrouping();
 
     this.columnsMetaData = new ColumnsMetaData(colonnes);
     this.preFilter = undefined;
@@ -155,7 +154,13 @@ export class HomeComponent implements OnInit {
   openGroupConfigDialog() {
     const dialogRef = this.dialog.open(GroupingConfigDialogComponent, {
       data: {
-        columns: this.columnsMetaData.data,
+        columns: this.columnsMetaData.data
+          .filter((col) => groupingOrder.includes(col.name))
+          .sort((col1, col2) => {
+            const index1 = groupingOrder.findIndex((col) => col === col1.name)
+            const index2 = groupingOrder.findIndex((col) => col === col2.name)
+            return index1 - index2;
+          }),
         groupingColumns: this.groupingColumns,
       },
       width: '40rem',
@@ -249,6 +254,13 @@ export class HomeComponent implements OnInit {
       if ('displayed' in c && !c.displayed) {
         col['displayed'] = false;
       }
+      return col;
+    });
+  }
+
+  private _getDefaultOrderGrouping(): GroupingColumn[] {
+    return colonnes.filter(c => c.grouping != null && c.grouping).map(c => {
+      const col: GroupingColumn = {columnName: c.name}
       return col;
     });
   }
