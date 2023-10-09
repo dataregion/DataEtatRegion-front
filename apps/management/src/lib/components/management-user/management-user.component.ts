@@ -22,6 +22,7 @@ export class ManagementUserComponent implements OnInit {
     'firstName',
     'lastName',
     'username',
+    'administration',
     'enabled',
   ];
 
