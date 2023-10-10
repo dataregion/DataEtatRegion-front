@@ -6,6 +6,15 @@ const moneyFormat = new Intl.NumberFormat('fr-FR', {
     currency: 'EUR',
 });
 
+export const groupingOrder: string[] = [
+    'annee',
+    'label_region', 'label_departement', 'label_crte', 'label_epci', 'label_arrondissement', 'label_commune', 'qpv',
+    'theme', 'nom_programme', 'domaine', 'ref_programmation',
+    'siret', 'type_etablissement',
+    'n_ej', 'compte_budgetaire', 'groupe_marchandise',
+    'tags',
+]
+
 export const colonnes: ColumnMetaDataDef[] = [
     {
         name: 'siret',
@@ -29,6 +38,7 @@ export const colonnes: ColumnMetaDataDef[] = [
     {
         name: 'annee',
         label: 'Année d\'engagement',
+        grouping: true,
         columnStyle: {
             'min-width': '22ex',
             'flex-grow': '0',

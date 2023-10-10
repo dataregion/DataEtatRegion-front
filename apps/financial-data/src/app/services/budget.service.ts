@@ -49,7 +49,6 @@ export class BudgetService {
 
     return forkJoin(search$).pipe(
       map((response) => {
-        console.log(response)
         return response.flatMap(data => [...data])
       })
     );
