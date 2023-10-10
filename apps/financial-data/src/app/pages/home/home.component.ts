@@ -27,7 +27,7 @@ import { MarqueBlancheParsedParamsResolverModel } from '../../resolvers/marquebl
 import { NGXLogger } from 'ngx-logger';
 import { delay } from 'rxjs';
 import { PreFilters } from '@models/search/prefilters.model';
-import { colonnes, groupingOrder } from '@models/tableau/colonnes.model';
+import { colonnes } from '@models/tableau/colonnes.model';
 import { QueryParam } from 'apps/common-lib/src/lib/models/marqueblanche/query-params.enum';
 import { Tag, tag_str } from '@models/refs/tag.model';
 
@@ -154,13 +154,7 @@ export class HomeComponent implements OnInit {
   openGroupConfigDialog() {
     const dialogRef = this.dialog.open(GroupingConfigDialogComponent, {
       data: {
-        columns: this.columnsMetaData.data
-          .filter((col) => groupingOrder.includes(col.name))
-          .sort((col1, col2) => {
-            const index1 = groupingOrder.findIndex((col) => col === col1.name)
-            const index2 = groupingOrder.findIndex((col) => col === col2.name)
-            return index1 - index2;
-          }),
+        columns: this.columnsMetaData.data,
         groupingColumns: this.groupingColumns,
       },
       width: '40rem',

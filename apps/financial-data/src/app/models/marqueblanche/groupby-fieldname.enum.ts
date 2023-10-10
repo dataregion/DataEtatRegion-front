@@ -1,14 +1,24 @@
 /* eslint-disable no-unused-vars */
 
 export enum GroupByFieldname {
-    Beneficiaire = "beneficiaire",
+    Annee_engagement = "annee_engagement",
+    Region="region",
+    Departement="departement",
+    CRTE="crte",
+    EPCI="epci",
+    Arrondissement="arrondissement",
+    Commune = "commune",
+    QPV = "qpv",
     Theme = "theme",
     Programme = "programme",
     DomaineFonctionnel = "domaine_fonctionnel",
     ReferentielProgrammation = "referentiel_programmation",
-    Commune = "commune",
+    Beneficiaire = "beneficiaire",
     TypeEtablissement = "type_etablissement",
-    Annee_engagement = "annee_engagement",
+    N_EJ = "n_ej",
+    CompteBudgetaire = "compte_budgetaire",
+    GroupeMarchandise = "groupe_marchandise",
+    Tags = "tags",
 }
 
 export function assert_is_a_GroupByFieldname(v: any): asserts v is GroupByFieldname {

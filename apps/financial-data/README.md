@@ -23,7 +23,7 @@ Voici les paramètres pris en charge:
 
 | Paramètre           | Description         | Valeurs acceptées                                                                                                                                                                                          | Exemple                                                                                    |
 | ------------------- | ------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
-| Niveau géographique | Niveau géographique | `departement`,`epci`, `commune` et [`qpv`](https://www.insee.fr/fr/statistiques/2500477#documentation-sommaire)                                                                                            | [`niveau_geo=epci`](https://budget.databretagne.fr/?niveau_geo=epci&code_geo=200000172)    |
+| Niveau géographique | Niveau géographique | `departement`,`epci`, `commune`, [`qpv`](https://www.insee.fr/fr/statistiques/2500477#documentation-sommaire)                                                                                            | [`niveau_geo=epci`](https://budget.databretagne.fr/?niveau_geo=epci&code_geo=200000172)    |
 | code_geo            | Code géographique   | [COG](https://www.insee.fr/fr/recherche/recherche-geographique?debut=0) ou le code quartier [QPV](https://www.data.gouv.fr/fr/datasets/quartiers-prioritaires-de-la-politique-de-la-ville-qpv/#/resources) | [`code_geo=200000172`](https://budget.databretagne.fr/?niveau_geo=epci&code_geo=200000172) |
 
 - Années
@@ -39,7 +39,7 @@ Voici les paramètres pris en charge:
 
 | Paramètre   | Description         | Valeurs acceptées                                                                                                                             | Exemple                                                                                                                                             |
 | ----------- | ------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Grouper par | Grouper par colonne | `beneficiaire`, `theme`, `programme`, `domaine_fonctionnel`, `referentiel_programmation`, `commune`, `type_etablissement`, `annee_engagement` | [`grouper_par=beneficiaire,theme`](https://budget.databretagne.fr/?programmes=101,102&annee_min=2019&annee_max=2019&grouper_par=beneficiaire,theme) |
+| Grouper par | Grouper par colonne | `annee_engagement`, `region`, `departement`, `crte`, `epci`, `arrondissement`, `commune`, `qpv`, `theme`, `programme`, `domaine_fonctionnel`, `referentiel_programmation`, `beneficiaire`, `type_etablissement`, `n_ej`, `compte_budgetaire`, `groupe_marchandise`, `tags` | [`grouper_par=beneficiaire,theme`](https://budget.databretagne.fr/?programmes=101,102&annee_min=2019&annee_max=2019&grouper_par=beneficiaire,theme) |
 
 - Plein écran
 
