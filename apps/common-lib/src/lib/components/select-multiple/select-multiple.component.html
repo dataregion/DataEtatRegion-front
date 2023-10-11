@@ -4,7 +4,7 @@
 
     <mat-select-trigger>{{renderLabel()}}</mat-select-trigger>
 
-    <mat-form-field *ngIf="canFilter" class="field-100-width" appearance="fill">
+    <mat-form-field *ngIf="canFilter" class="field-100-width filter-input" appearance="fill">
       <mat-label>Rechercher</mat-label>
       <input type="text" class="fr-input" matInput [(ngModel)]="filterInput" (ngModelChange)="filter($event)" (keydown)="$event.stopPropagation()">
     </mat-form-field>
