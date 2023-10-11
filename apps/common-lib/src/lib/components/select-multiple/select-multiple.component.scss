@@ -41,6 +41,12 @@
   display: none;
 }
 
+// L'option a la classe custom no-result : n'impacte pas les autres options de l'application
+::ng-deep .filter-input > .mat-mdc-form-field-subscript-wrapper {
+  height: 0px;
+}
+
+
 // Fix CSS du container des options des mat-select de l'application
 // - Suppression du padding top et bottom
 // - Suppression du scroll horizontal 
