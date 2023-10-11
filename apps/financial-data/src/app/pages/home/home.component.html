@@ -59,6 +59,16 @@
               Sauvegarder la recherche
             </button>
           </li>
+
+          <li>
+            <button *ngIf="!grid_fullscreen && searchData.searchFinish === true" 
+              class="fr-btn fr-btn--sm fr-btn--secondary fr-btn--icon-left fr-icon-download-fill" 
+              (click)="downloadCsv()" aria-label="Bouton de téléchargement de données."
+              [disabled]="searchData.searchInProgress.value === true">
+              Télécharger les données
+            </button>
+          </li>
+          
           <li>
 
             <button

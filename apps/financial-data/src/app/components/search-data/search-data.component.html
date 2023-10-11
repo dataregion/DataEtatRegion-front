@@ -70,12 +70,6 @@
         <mat-icon fontIcon="search"/>
       </button>
 
-      <button mat-fab color="secondary" (click)="downloadCsv()" matTooltip="Télécharger"
-        aria-label="Bouton de téléchargement de données." *ngIf="searchFinish === true"
-        (disabled)="searchInProgress.value === true">
-        <mat-icon fontIcon="download"/>
-      </button>
-
       <button mat-fab color="warn" (click)="reset()" *ngIf="searchFinish === true" matTooltip="Effacer la recherche"
         aria-label="Bouton de réinitialisation des critères de recherche">
         <mat-icon fontIcon="delete"/>
