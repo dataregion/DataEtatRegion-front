@@ -21,7 +21,7 @@ import { GeoLocalisationComponentService } from './geo.localisation.componentser
 import { SelectMultipleComponent } from '../select-multiple/select-multiple.component';
 
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop'
-import { Subscription } from 'rxjs';
+import { debounceTime, Subscription, Subject, startWith } from 'rxjs';
 
 @Component({
   selector: 'lib-localisation',
@@ -58,7 +58,14 @@ export class LocalisationComponent {
   public geomodels: GeoModel[] | null = null;
   public filteredGeomodels: GeoModel[] | null = null;
 
-  constructor(private _geo: GeoLocalisationComponentService) { }
+  input: string = '';
+  inputFilter = new Subject<string>();
+
+  constructor(private _geo: GeoLocalisationComponentService) {
+    this.inputFilter.pipe(debounceTime(500)).subscribe(value => {
+      this._search();    
+    });
+  }
 
   /**
    * Niveau
@@ -80,7 +87,10 @@ export class LocalisationComponent {
         .pipe(takeUntilDestroyed(this._destroyRef))
         .subscribe((response) => {
           this.geomodels = response
-          this.filteredGeomodels = this.geomodels
+          this.filteredGeomodels = [
+            ...this.selectedLocalisation?.filter(gm => gm.type === this.selectedNiveauString) ?? [],
+            ...this.geomodels
+          ];
           // Reset des options sélectionnées
           this.selectedLocalisation = this.filteredGeomodels.filter(gm => {
             return this.selectedLocalisation?.map(loc => loc.code).includes(gm.code)
@@ -111,11 +121,21 @@ export class LocalisationComponent {
   @Output() selectedLocalisationChange = new EventEmitter<GeoModel[] | null>();
 
   public filterGeomodels = (value: string): GeoModel[] => {
-    // Filtre des options
-    this.filteredGeomodels = this.geomodels ? this.geomodels?.filter((gm) => {
-      return gm.code.toLowerCase().startsWith(value.toLowerCase()) || gm.nom.toLowerCase().includes(value.toLowerCase())
-    }) : [];
-    return this.filteredGeomodels;
+    this.input = value;
+    this.inputFilter.next(value);
+    return this.filteredGeomodels ?? [];
+  }
+
+  private _search() {
+    if (this.selectedNiveau != null) {
+      this._geo.filterGeo(this.input !== '' ? this.input : null, this.selectedNiveau).subscribe((response: GeoModel[]) => {
+          this.filteredGeomodels = response;
+          // Reset des options sélectionnées
+          this.selectedLocalisation = this.filteredGeomodels.filter(gm => {
+            return this.selectedLocalisation?.map(loc => loc.code).includes(gm.code)
+          });
+      });
+    }
   }
 
   public renderGeomodelOption = (geo: GeoModel): string => {

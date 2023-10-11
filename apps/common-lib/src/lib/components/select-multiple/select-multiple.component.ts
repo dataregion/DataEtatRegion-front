@@ -111,7 +111,9 @@ export class SelectMultipleComponent<T> implements OnChanges {
     if ('options' in changes) {
       this.options = changes['options'].currentValue
       this.filteredOptions = this.options;
-      this.filterInput = ''
+    }
+    if ('selected' in changes) {
+      this.selectedChange.emit(changes['selected'].currentValue ?? null);
     }
   }
 
@@ -163,7 +165,11 @@ export class SelectMultipleComponent<T> implements OnChanges {
     this.filterInput = text === undefined ? this.filterInput : text;
     this.searching = this.filterInput.length > 0;
     // Filtre
-    this.filteredOptions = this.filterFunction(text ? text : '');
+    const newOptions = this.filterFunction(text ? text : '');
+    if (newOptions == null || newOptions.length === 0)
+      return
+
+    this.filteredOptions = newOptions;
     // Concaténation des éléments sélectionnés avec les éléments filtrés (en supprimant les doublons éventuels)
     this.filteredOptions = this.selected != null ?
       [

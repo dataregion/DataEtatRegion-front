@@ -62,6 +62,18 @@ test.describe("Lorsque l'on spécifie une localisation", () => {
   });
 });
 
+test.describe("Lorsque l'on spécifie une commune qui n'est pas dans les 100 premières de France", () => {
+  const urlparam = `?niveau_geo=commune&code_geo=35238`;
+
+  test("Les filtres sont pré remplis", async ({ page }) => {
+    await _navigate(page, `/${urlparam}`);
+
+    let localisation = page.getByTestId('localisation-select')
+
+    await expect(localisation).toContainText("Rennes");
+  });
+});
+
 test.describe("Lorsque l'on spécifie une localisation QPV", () => {
   const urlparam = `?niveau_geo=qpv&code_geo=QP001001`;
 
