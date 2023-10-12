@@ -226,13 +226,13 @@ export class HomeComponent implements OnInit {
     let newColumns: ColumnMetaDataDef[] = this.columnsMetaData.data
     // On ordonne les colonnes
     newColumns = newColumns.sort((col1, col2) => {
-      const index1 = this.displayedOrderedColumns.findIndex((col) => col.columnName === col1.name)
-      const index2 = this.displayedOrderedColumns.findIndex((col) => col.columnName === col2.name)
+      const index1 = this.displayedOrderedColumns.findIndex((col) => col.columnLabel === col1.label)
+      const index2 = this.displayedOrderedColumns.findIndex((col) => col.columnLabel === col2.label)
       return index1 - index2;
     });
     // On set le champ displayed des colonnes
     newColumns.map((col) => {
-      const displayed: boolean|undefined = this.displayedOrderedColumns.find(hiddenCol => hiddenCol.columnName === col.name)?.displayed
+      const displayed: boolean|undefined = this.displayedOrderedColumns.find(hiddenCol => hiddenCol.columnLabel === col.label)?.displayed
       if (displayed !== undefined && !displayed)
         col.displayed = false
       else
@@ -244,7 +244,7 @@ export class HomeComponent implements OnInit {
 
   private _getDefaultOrder(): DisplayedOrderedColumn[] {
     return colonnes.map(c => { 
-      const col: DisplayedOrderedColumn = {columnName: c.name}
+      const col: DisplayedOrderedColumn = {columnLabel: c.label}
       if ('displayed' in c && !c.displayed) {
         col['displayed'] = false;
       }

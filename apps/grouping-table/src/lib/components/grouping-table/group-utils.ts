@@ -148,7 +148,7 @@ export type GroupingColumn = {
 };
 
 export type DisplayedOrderedColumn = {
-  columnName: string;
+  columnLabel: string;
   displayed?: boolean;
 };
 
