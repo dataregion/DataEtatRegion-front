@@ -64,15 +64,20 @@ export class LocalisationComponent {
   constructor(private _geo: GeoLocalisationComponentService) {
     this.inputFilter.pipe(debounceTime(300), takeUntilDestroyed(this._destroyRef)).subscribe(() => {
       if (this.selectedNiveau != null) {
+        const term = this.input !== '' ? this.input : null;
+
         if (this._subFilterGeo)
           this._subFilterGeo.unsubscribe();
-        this._subFilterGeo = this._geo.filterGeo(this.input !== '' ? this.input : null, this.selectedNiveau).subscribe((response: GeoModel[]) => {
+
+        this._subFilterGeo = this._geo.filterGeo(term, this.selectedNiveau)
+          .pipe(takeUntilDestroyed(this._destroyRef))
+          .subscribe((response: GeoModel[]) => {
             this.filteredGeomodels = response;
             // Reset des options sélectionnées
             this.selectedLocalisation = this.filteredGeomodels.filter(gm => {
               return this.selectedLocalisation?.map(loc => loc.code).includes(gm.code)
             });
-        });
+          });
       }
     });
   }
