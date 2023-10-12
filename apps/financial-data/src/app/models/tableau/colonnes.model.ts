@@ -10,17 +10,17 @@ export const groupingOrder: string[] = [
     'annee',
     'label_region', 'label_departement', 'label_crte', 'label_epci', 'label_arrondissement', 'label_commune', 'qpv',
     'theme', 'nom_programme', 'domaine', 'ref_programmation',
-    'siret', 'type_etablissement',
+    'beneficiaire', 'type_etablissement',
     'n_ej', 'compte_budgetaire', 'groupe_marchandise',
     'tags',
 ]
 
 export const colonnes: ColumnMetaDataDef[] = [
     {
-        name: 'siret',
+        name: 'beneficiaire',
         label: 'Bénéficiaire',
-        renderFn: (row, col) =>
-            row[col.name] ? row[col.name]['nom_beneficiare'] : ''
+        renderFn: (row) =>
+            row['siret'] ? row['siret']['nom_beneficiare'] : ''
     },
     {
         name: 'montant_ae',
