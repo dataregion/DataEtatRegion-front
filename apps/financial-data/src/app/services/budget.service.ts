@@ -13,7 +13,6 @@ import { DataPagination } from 'apps/common-lib/src/lib/models/pagination/pagina
 import { SourceFinancialData } from '@models/financial/common.models';
 import { unparse } from 'papaparse';
 import { Tag, tag_str } from '@models/refs/tag.model';
-import { LoggerModule } from 'ngx-logger';
 
 export const DATA_HTTP_SERVICE = new InjectionToken<DataHttpService<any, FinancialDataModel>>(
   'DataHttpService'
