@@ -62,8 +62,18 @@ export class LocalisationComponent {
   inputFilter = new Subject<string>();
 
   constructor(private _geo: GeoLocalisationComponentService) {
-    this.inputFilter.pipe(debounceTime(500)).subscribe(value => {
-      this._search();    
+    this.inputFilter.pipe(debounceTime(300), takeUntilDestroyed(this._destroyRef)).subscribe(value => {
+      if (this.selectedNiveau != null) {
+        if (this._subFilterGeo)
+          this._subFilterGeo.unsubscribe();
+        this._subFilterGeo = this._geo.filterGeo(this.input !== '' ? this.input : null, this.selectedNiveau).subscribe((response: GeoModel[]) => {
+            this.filteredGeomodels = response;
+            // Reset des options sélectionnées
+            this.selectedLocalisation = this.filteredGeomodels.filter(gm => {
+              return this.selectedLocalisation?.map(loc => loc.code).includes(gm.code)
+            });
+        });
+      }
     });
   }
 
@@ -124,18 +134,6 @@ export class LocalisationComponent {
     this.input = value;
     this.inputFilter.next(value);
     return this.filteredGeomodels ?? [];
-  }
-
-  private _search() {
-    if (this.selectedNiveau != null) {
-      this._geo.filterGeo(this.input !== '' ? this.input : null, this.selectedNiveau).subscribe((response: GeoModel[]) => {
-          this.filteredGeomodels = response;
-          // Reset des options sélectionnées
-          this.selectedLocalisation = this.filteredGeomodels.filter(gm => {
-            return this.selectedLocalisation?.map(loc => loc.code).includes(gm.code)
-          });
-      });
-    }
   }
 
   public renderGeomodelOption = (geo: GeoModel): string => {
