@@ -21,7 +21,7 @@ import { GeoLocalisationComponentService } from './geo.localisation.componentser
 import { SelectMultipleComponent } from '../select-multiple/select-multiple.component';
 
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop'
-import { debounceTime, Subscription, Subject, startWith } from 'rxjs';
+import { debounceTime, Subscription, Subject } from 'rxjs';
 
 @Component({
   selector: 'lib-localisation',
@@ -62,7 +62,7 @@ export class LocalisationComponent {
   inputFilter = new Subject<string>();
 
   constructor(private _geo: GeoLocalisationComponentService) {
-    this.inputFilter.pipe(debounceTime(300), takeUntilDestroyed(this._destroyRef)).subscribe(value => {
+    this.inputFilter.pipe(debounceTime(300), takeUntilDestroyed(this._destroyRef)).subscribe(() => {
       if (this.selectedNiveau != null) {
         if (this._subFilterGeo)
           this._subFilterGeo.unsubscribe();
