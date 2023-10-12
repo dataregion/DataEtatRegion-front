@@ -1,4 +1,5 @@
 import {
+  AfterViewInit,
   Component,
   EventEmitter,
   Input,
@@ -62,7 +63,7 @@ import { AutocompleteTagsService } from './autocomplete-tags.service';
     AutocompleteTagsService,
   ]
 })
-export class SearchDataComponent implements OnInit {
+export class SearchDataComponent implements OnInit, AfterViewInit {
   public readonly TypeLocalisation = TypeLocalisation;
 
   public searchForm!: FormGroup<SearchForm>;
@@ -284,43 +285,49 @@ export class SearchDataComponent implements OnInit {
     });
   }
 
+  private _on_route_data(data: Data) {
+    const response = data as { financial: FinancialDataResolverModel, mb_parsed_params: MarqueBlancheParsedParamsResolverModel }
+
+    const error = response.financial.error || response.mb_parsed_params?.error
+
+    if (error) {
+      this.displayError = true;
+      this.error = error;
+      return;
+    }
+
+    const financial = response.financial.data! as FinancialData;
+    const mb_has_params = response.mb_parsed_params?.data?.has_marqueblanche_params;
+    const mb_prefilter = response.mb_parsed_params?.data?.preFilters;
+
+    this.displayError = false;
+    this.themes = financial.themes;
+    this.bop = financial.bop;
+    this.annees = financial.annees;
+
+    this.filteredBop = this.bop;
+
+    if (!mb_has_params)
+      return
+
+    this._logger.debug(`Mode marque blanche actif.`)
+    if (mb_prefilter) {
+      this._logger.debug(`Application des filtres`);
+      this.preFilter = mb_prefilter;
+    }
+  }
+
   ngOnInit(): void {
+    this._setupFilters();
+  }
+
+  ngAfterViewInit(): void {
     // récupération des themes dans le resolver
     this._route.data.subscribe(
       (data: Data) => {
-        const response = data as { financial: FinancialDataResolverModel, mb_parsed_params: MarqueBlancheParsedParamsResolverModel }
-
-        const error = response.financial.error || response.mb_parsed_params?.error
-
-        if (error) {
-          this.displayError = true;
-          this.error = error;
-          return;
-        }
-
-        const financial = response.financial.data! as FinancialData;
-        const mb_has_params = response.mb_parsed_params?.data?.has_marqueblanche_params;
-        const mb_prefilter = response.mb_parsed_params?.data?.preFilters;
-
-        this.displayError = false;
-        this.themes = financial.themes;
-        this.bop = financial.bop;
-        this.annees = financial.annees;
-
-        this.filteredBop = this.bop;
-
-        if (!mb_has_params)
-          return
-
-        this._logger.debug(`Mode marque blanche actif.`)
-        if (mb_prefilter) {
-          this._logger.debug(`Application des filtres`);
-          this.preFilter = mb_prefilter;
-        }
+        setTimeout(() => { this._on_route_data(data) }, 0); 
       }
     );
-
-    this._setupFilters();
   }
 
   /**
