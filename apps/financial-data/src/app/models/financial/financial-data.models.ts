@@ -31,6 +31,7 @@ export const HEADERS_CSV_FINANCIAL = [
   "type d'établissement",
   "code qpv",
   'date de dernier paiement',
+  'date création ej',
   'année engagement',
   'tags',
 ];
@@ -60,6 +61,7 @@ export interface FinancialDataModel {
 
   siret: Siret;
   date_cp: string;
+  date_replication: string;
 
   tags: Tag[];
   financial_cp?: FinancialCp[]
