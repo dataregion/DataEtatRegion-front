@@ -35,8 +35,8 @@
         <div>{{col.label}}</div>
         <div>
           <mat-checkbox
-            [attr.data-column]="col.label"
-            [checked]="isColumnDisplayed(col.label)"
+            [attr.data-column]="col.name"
+            [checked]="isColumnDisplayed(col.name)"
             (change)="onCheckboxChange($event)"
           />
         </div>

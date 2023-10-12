@@ -63,12 +63,12 @@ export class StructureColumnsDialogComponent {
 
   /**
    * Vérifie si une colonne spécifique est affichée
-   * @param label Nom de la colonne
+   * @param name Nom de la colonne
    * @returns
    */
-  isColumnDisplayed(label: string) {
+  isColumnDisplayed(name: string) {
     return this.displayedOrderedColumns.filter((col) => {
-      return col.columnLabel === label && (col.displayed === undefined || col.displayed);
+      return col.columnName === name && (col.displayed === undefined || col.displayed);
     }).length === 1 || this.displayedOrderedColumns.length === 0;
   }
 
@@ -95,8 +95,8 @@ export class StructureColumnsDialogComponent {
     );
     // On ordonne selon le nouvel ordre
     this.displayedOrderedColumns.sort((col1, col2) => {
-      const index1 = this.columns.findIndex((col) => col1.columnLabel === col.label)
-      const index2 = this.columns.findIndex((col) => col2.columnLabel === col.label)
+      const index1 = this.columns.findIndex((col) => col1.columnName === col.name)
+      const index2 = this.columns.findIndex((col) => col2.columnName === col.name)
       return index1 - index2;
     });
   }
@@ -107,7 +107,7 @@ export class StructureColumnsDialogComponent {
    */
   onCheckboxChange(event: MatCheckboxChange) {
     this.displayedOrderedColumns.map((col) => {
-      if (col.columnLabel === event.source._elementRef.nativeElement.getAttribute('data-column'))
+      if (col.columnName === event.source._elementRef.nativeElement.getAttribute('data-column'))
         col = this._toggleCheckboxBoolean(col, event.checked)
     });
   }
@@ -144,7 +144,7 @@ export class StructureColumnsDialogComponent {
     // Comparaison avec l'ordre de base, si une différence trouvée : break et same = false
     this.displayedOrderedColumns.every((col, index) => {
       const ref: DisplayedOrderedColumn | undefined = this.defaultOrder.at(index);
-      if ((ref && col.columnLabel !== ref.columnLabel)
+      if ((ref && col.columnName !== ref.columnName)
       || (ref && !('displayed' in col) && 'displayed' in ref && !ref.displayed)
       || (ref && !('displayed' in ref) && 'displayed' in col && !col.displayed)) {
         same = false
