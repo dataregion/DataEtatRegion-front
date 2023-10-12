@@ -70,6 +70,9 @@ export class GeoHttpService {
 
         let segment = '';
         switch (type) {
+            case TypeLocalisation.REGION:
+                segment = 'regions';
+                break;
             case TypeLocalisation.ARRONDISSEMENT:
                 segment = 'arrondissement';
                 break;
@@ -241,6 +244,7 @@ export class FuzzySearchParamsBuilder extends ASearchParamsBuilder {
             case TypeLocalisation.CRTE:
                 search_params = this._crte_fuzzy(term);
                 break;
+            case TypeLocalisation.REGION:
             case TypeLocalisation.DEPARTEMENT:
                 search_params = this._departement_fuzzy(term);
                 break;
@@ -341,6 +345,7 @@ export class SearchByCodeParamsBuilder extends ASearchParamsBuilder {
             case TypeLocalisation.CRTE:
                 search_params = { nom: term };
                 break;
+            case TypeLocalisation.REGION:
             case TypeLocalisation.DEPARTEMENT:
                 search_params = { code: term };
                 break;

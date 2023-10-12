@@ -2,6 +2,7 @@ import { TypeLocalisation } from "apps/common-lib/src/public-api"
 /* eslint-disable no-unused-vars */
 
 const synonymes: { [key in TypeLocalisation]: string[] } = {
+    [TypeLocalisation.REGION]: ['region'],
     [TypeLocalisation.DEPARTEMENT]: ['departement'],
     [TypeLocalisation.ARRONDISSEMENT]: ['arrondissement'],
     [TypeLocalisation.COMMUNE]: ['commune'],

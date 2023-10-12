@@ -53,13 +53,14 @@ export class FinancialDataHttpService  implements DataHttpService<FinancialDataM
     if (
       search_params?.bops == null &&
       search_params?.themes == null &&
-      search_params?.years == null &&
+      search_params?.niveau == null &&
       search_params?.locations == null &&
+      search_params?.years == null &&
       search_params?.beneficiaires == null &&
+      search_params?.tags == null &&
       search_params?.domaines_fonctionnels == null &&
       search_params?.referentiels_programmation == null &&
-      search_params?.source_region == null &&
-      search_params?.tags == null
+      search_params?.source_region == null
     )
       return of();
 
@@ -70,7 +71,7 @@ export class FinancialDataHttpService  implements DataHttpService<FinancialDataM
 
 
   private _buildparams(
-    { beneficiaires, types_beneficiaires, bops, themes, locations, years, domaines_fonctionnels, referentiels_programmation, source_region, tags }: SearchParameters
+    { beneficiaires, types_beneficiaires, bops, themes, niveau, locations, years, domaines_fonctionnels, referentiels_programmation, source_region, tags }: SearchParameters
   ): string {
     let params ='limit=5000';
     if (beneficiaires && beneficiaires.length > 0) {
@@ -85,6 +86,9 @@ export class FinancialDataHttpService  implements DataHttpService<FinancialDataM
       params += `&theme=${themes.join(',')}`;
     }
 
+    if (niveau) {
+      params += `&niveau_geo=${niveau.normalize('NFD').replace(/\p{Diacritic}/gu, '').toLowerCase()}`
+    }
     if (locations && locations.length > 0) {
       const listCode = locations.map((l) => l.code).join(',');
       params += `&code_geo=${listCode}`
