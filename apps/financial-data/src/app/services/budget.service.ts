@@ -144,6 +144,7 @@ export class BudgetService {
         item.siret.categorie_juridique ?? '',
         item.siret.code_qpv ?? '',
         item.date_cp,
+        item.date_replication,
         item.annee,
         item.tags?.map(tag => tag_str(tag)).join("|"),
       ];

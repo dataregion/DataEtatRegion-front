@@ -91,6 +91,7 @@ export class AdemeDataHttpService implements DataHttpService<AdemeData,Financial
       siret: ademe.siret_beneficiaire,
 
       date_cp: date_versement[date_versement.length - 1],
+      date_replication: ademe.date_convention,
 
       tags: ademe.tags,
     }
