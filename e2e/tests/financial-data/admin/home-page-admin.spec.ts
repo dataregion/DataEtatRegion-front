@@ -1,4 +1,4 @@
-import { test, expect, Page } from '@playwright/test';
+import { test, expect } from '@playwright/test';
 import mockRefApi from '../../utils/mock-api';
 
 test.describe("Page d'accueil", () => {
