@@ -160,6 +160,7 @@ export class Group {
   private groupsMap?: Map<any, Group>;
   aggregates?: Record<string, any>;
   rows?: RowData[];
+  folded: boolean = true;
 
   /** Nombre total d'éléments (= nombre d'éléments + nombre d'éléments dans les sous-groupes). */
   get count() {
@@ -256,7 +257,8 @@ export class RootGroup extends Group {
 export const groupByColumns = (
   table: TableData,
   groupings: GroupingColumn[],
-  columnsMetaData: ColumnsMetaData
+  columnsMetaData: ColumnsMetaData,
+  previousRoot: RootGroup
 ): RootGroup => {
   // On construit l'ensemble des fonctions d'aggrégation.
   const aggregateFns: Record<string, AggregateReducer<any>> = {};
@@ -267,22 +269,53 @@ export const groupByColumns = (
     }
   }
 
-  const root = new RootGroup(aggregateFns);
-  for (const row of table) {
-    let currentGroup = root;
-    // tant qu'on n'a pas trouvé le niveau le plus profond où ranger la ligne, on descend
-    for (const grouping of groupings) {
-      const column = columnsMetaData.getByColumnName(grouping.columnName);
+  // Vérification : la nouvelle structure de grouping (Grouping[]) a-t-elle changé par rapport à l'ancienne (RootGroup) 
+  let same: boolean = false;
+  if (previousRoot && previousRoot.groups.length !== 0) {
+    // On travaille avec une copie de groupings car on va faire des shift() 
+    same = check_grouping_structure([...groupings], previousRoot)
+  }
 
-      const defaultRenderFn = ((row: RowData, col: ColumnMetaDataDef) => row[col.name]);
-      const groupValueFn = column.renderFn || defaultRenderFn;
-      const groupKeyFn = column.groupingKeyFn || groupValueFn;
-
-      const groupKey = groupKeyFn(row, column);
-      const groupValue = groupValueFn(row, column);
-      currentGroup = currentGroup.getOrCreateGroup(column, groupKey, groupValue);
+  // Si aucun changement de structure, on ne recréé par les groupes et on retourne l'ancien contexte
+  let root = previousRoot
+  if (!same) {
+    root = new RootGroup(aggregateFns);
+    for (const row of table) {
+      let currentGroup = root;
+      // tant qu'on n'a pas trouvé le niveau le plus profond où ranger la ligne, on descend
+      for (const grouping of groupings) {
+        const column = columnsMetaData.getByColumnName(grouping.columnName);
+  
+        const defaultRenderFn = ((row: RowData, col: ColumnMetaDataDef) => row[col.name]);
+        const groupValueFn = column.renderFn || defaultRenderFn;
+        const groupKeyFn = column.groupingKeyFn || groupValueFn;
+  
+        const groupKey = groupKeyFn(row, column);
+        const groupValue = groupValueFn(row, column);
+        currentGroup = currentGroup.getOrCreateGroup(column, groupKey, groupValue);
+      }
+      currentGroup.addRow(row);
     }
-    currentGroup.addRow(row);
   }
   return root;
 };
+
+/**
+ * Fonction récursive qui compare la nouvelle structure de grouping avec l'ancienne
+ */
+export const check_grouping_structure = (newGroupings: GroupingColumn[], group: Group):boolean => {
+  // Si on a parcouru tous les nouveaux ou anciens groupes : dernière vérification
+  if (newGroupings.length === 0 || group.groups.length === 0) {
+    // S'il ne reste plus aucun groupe dans la nouvelle ET dans l'ancienne structure : on dépile true
+    return newGroupings.length === 0 && group.groups.length === 0;
+  }
+
+  // Si on a une différence entre les noms de colonnes alors la structure a changé : on dépile false
+  if (newGroupings[0].columnName !== group.groups[0].column?.name) {
+    return false;
+  }
+  
+  // On continue de plonger avec des nouveaux paramètres : pop sur le nouveau grouping & récupération du groupe enfant de l'ancienne structure 
+  newGroupings.shift()
+  return check_grouping_structure(newGroupings ?? [], group.groups[0]);
+}

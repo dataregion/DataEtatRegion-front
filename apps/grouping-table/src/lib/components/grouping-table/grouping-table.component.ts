@@ -87,15 +87,9 @@ export class GroupingTableComponent implements OnChanges, AfterViewInit {
 
       this.rootGroup = this.context.rootGroup;
 
-      // Replie / Deplie les groupes racines
+      // Replie / Déplie les groupes
       for (const group of this.rootGroup?.groups ?? []) {
-        // Si le seul changement concerne les colonnes, et que le groupe était déplié, on le redéplie
-        const fold = !(
-          'columnsMetaData' in changes &&
-          Object.keys(changes).length === 1 &&
-          !this.context.foldedGroups.has(group)
-        )
-        if (fold)
+        if (group.folded)
           this.context.fold(group)
         else
           this.context.unfold(group)
