@@ -19,6 +19,7 @@ test.describe("Mes recherches", () => {
     await apply_locator.click()
     await page.waitForURL('./?uuid=**')
 
-    await expect(page.getByLabel("Bénéficiaire").first()).toContainText('DECATHLON')
+    const search_benef = page.getByTestId('search-beneficiaires-control')
+    await expect(search_benef).toContainText('DECATHLON')
   })
 })
