@@ -104,7 +104,7 @@ export class LocalisationComponent {
           this.geomodels = response
           this.filteredGeomodels = [
             ...this.selectedLocalisation?.filter(gm => gm.type === this.selectedNiveauString) ?? [],
-            ...this.geomodels
+            ...this.geomodels.filter((gm) => !this.selectedLocalisation?.map(loc => loc.code).includes(gm.code))
           ];
           // Reset des options sélectionnées
           this.selectedLocalisation = this.filteredGeomodels.filter(gm => {
