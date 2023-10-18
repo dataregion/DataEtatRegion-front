@@ -273,10 +273,10 @@ export const groupByColumns = (
   let same: boolean = false;
   if (previousRoot && previousRoot.groups.length !== 0) {
     // On travaille avec une copie de groupings car on va faire des shift() 
-    same = check_grouping_structure([...groupings], previousRoot)
+    same = _check_grouping_structure([...groupings], previousRoot)
   }
 
-  // Si aucun changement de structure, on ne recréé par les groupes et on retourne l'ancien contexte
+  // Si aucun changement de structure, on ne recréé pas les groupes et on retourne l'ancien contexte
   let root = previousRoot
   if (!same) {
     root = new RootGroup(aggregateFns);
@@ -303,7 +303,7 @@ export const groupByColumns = (
 /**
  * Fonction récursive qui compare la nouvelle structure de grouping avec l'ancienne
  */
-export const check_grouping_structure = (newGroupings: GroupingColumn[], group: Group):boolean => {
+const _check_grouping_structure = (newGroupings: GroupingColumn[], group: Group):boolean => {
   // Si on a parcouru tous les nouveaux ou anciens groupes : dernière vérification
   if (newGroupings.length === 0 || group.groups.length === 0) {
     // S'il ne reste plus aucun groupe dans la nouvelle ET dans l'ancienne structure : on dépile true
@@ -317,5 +317,5 @@ export const check_grouping_structure = (newGroupings: GroupingColumn[], group: 
   
   // On continue de plonger avec des nouveaux paramètres : pop sur le nouveau grouping & récupération du groupe enfant de l'ancienne structure 
   newGroupings.shift()
-  return check_grouping_structure(newGroupings ?? [], group.groups[0]);
+  return _check_grouping_structure(newGroupings ?? [], group.groups[0]);
 }
