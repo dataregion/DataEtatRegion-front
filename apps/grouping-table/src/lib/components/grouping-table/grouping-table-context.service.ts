@@ -23,7 +23,6 @@ export class GroupingTableContextService {
   groupingColumns!: GroupingColumn[];
   rootGroup!: RootGroup;
   displayedColumns!: ColumnMetaDataDef[];
-  foldedGroups = new Set<Group>();
   columnCssStyle: SafeHtml | null = null;
 
   /**
@@ -45,7 +44,7 @@ export class GroupingTableContextService {
   }
 
   private calculateGroups(): RootGroup {
-    return groupByColumns(this.data, this.groupingColumns, this.columnsMetaData);
+    return groupByColumns(this.data, this.groupingColumns, this.columnsMetaData, this.rootGroup);
   }
 
   /**
@@ -79,15 +78,15 @@ export class GroupingTableContextService {
   }
 
   isFolded(group: Group): boolean {
-    return group ? this.foldedGroups.has(group) : false;
+    return group.folded;
   }
 
   fold(group: Group) {
-    this.foldedGroups.add(group);
+    group.folded = true;
   }
 
   unfold(group: Group) {
-    this.foldedGroups.delete(group);
+    group.folded = false;
   }
 
   /**
@@ -95,13 +94,8 @@ export class GroupingTableContextService {
    * @return true si plié, false sinon
    */
   toggle(group: Group): boolean {
-    if (this.isFolded(group)) {
-      this.unfold(group);
-      return false;
-    } else {
-      this.fold(group);
-      return true;
-    }
+    group.folded = !group.folded;
+    return group.folded;
   }
 
   /*
