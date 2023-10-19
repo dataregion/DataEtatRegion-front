@@ -52,7 +52,7 @@ test.describe("Page d'accueil", () => {
       page
         .getByRole('listbox', { name: 'Zone géographique' })
         .locator('.mdc-list-item__primary-text')
-    ).toHaveCount(7);
+    ).toHaveCount(8);
     await clickOnBody();
 
     await page.getByLabel('Année').isVisible();
