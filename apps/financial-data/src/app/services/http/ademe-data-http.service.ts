@@ -27,7 +27,7 @@ export class AdemeDataHttpService implements DataHttpService<AdemeData,Financial
   }
 
   search(
-    { bops, beneficiaires, locations, years, domaines_fonctionnels, referentiels_programmation, source_region, tags }: SearchParameters
+    { bops, beneficiaires, niveau, locations, years, domaines_fonctionnels, referentiels_programmation, source_region, tags }: SearchParameters
   ): Observable<DataPagination<AdemeData> | null> {
 
     if (
@@ -45,6 +45,9 @@ export class AdemeDataHttpService implements DataHttpService<AdemeData,Financial
     if (beneficiaires && beneficiaires.length > 0) {
       params += `&siret_beneficiaire=${beneficiaires.map(x => x.siret).join(',')}`;
     }
+    if (niveau) {
+      params += `&niveau_geo=${niveau.normalize('NFD').replace(/\p{Diacritic}/gu, '').toLowerCase()}`
+    }
     if (locations && locations.length > 0) {
       const listCode = locations.map((l) => l.code).join(',');
       params += `&code_geo=${listCode}`
@@ -54,6 +57,9 @@ export class AdemeDataHttpService implements DataHttpService<AdemeData,Financial
     if (years && years.length > 0) {
       params += `&annee=${years.join(',')}`;
     }
+
+    if (source_region && source_region.length > 0)
+      params += `&source_region=${source_region.join(',')}`;
 
     if (tags && tags.length > 0) {
       const searchparam = encodeURI(tags.join(','));

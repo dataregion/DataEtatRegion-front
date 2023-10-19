@@ -70,6 +70,9 @@ export class GeoHttpService {
 
         let segment = '';
         switch (type) {
+            case TypeLocalisation.REGION:
+                segment = 'regions';
+                break;
             case TypeLocalisation.ARRONDISSEMENT:
                 segment = 'arrondissement';
                 break;
@@ -241,6 +244,9 @@ export class FuzzySearchParamsBuilder extends ASearchParamsBuilder {
             case TypeLocalisation.CRTE:
                 search_params = this._crte_fuzzy(term);
                 break;
+            case TypeLocalisation.REGION:
+                search_params = this._region_fuzzy(term);
+                break;
             case TypeLocalisation.DEPARTEMENT:
                 search_params = this._departement_fuzzy(term);
                 break;
@@ -297,6 +303,19 @@ export class FuzzySearchParamsBuilder extends ASearchParamsBuilder {
         if (!term) return {}
 
         let params: SearchParams = {}
+        if (term.length <= 3 && !isNaN(Number(term.substring(0, 1)))) {
+            params = { code: term };
+        } else {
+            params = { nom: term };
+        }
+        return params;
+    }
+
+    private _region_fuzzy(term: _Term): SearchParams {
+
+        if (!term) return {}
+
+        let params: SearchParams = {}
         if (term.length <= 2 && !isNaN(Number(term.substring(0, 1)))) {
             params = { code: term };
         } else {
@@ -341,6 +360,7 @@ export class SearchByCodeParamsBuilder extends ASearchParamsBuilder {
             case TypeLocalisation.CRTE:
                 search_params = { nom: term };
                 break;
+            case TypeLocalisation.REGION:
             case TypeLocalisation.DEPARTEMENT:
                 search_params = { code: term };
                 break;

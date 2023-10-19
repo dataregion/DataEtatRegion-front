@@ -23,6 +23,7 @@ export class GeoLocalisationComponentService {
                     if (Object.keys(search).length > 0) // Si on recherche un EPCI, on retourne les 5 premiers résultats, sinon default
                         limit = 5;
                     break;
+                case TypeLocalisation.REGION:
                 case TypeLocalisation.COMMUNE:
                 case TypeLocalisation.CRTE:
                 case TypeLocalisation.QPV:

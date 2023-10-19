@@ -84,7 +84,7 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
     return this.searchForm.get('theme')?.value ?? null;
   }
   set selectedTheme(data: string[] | null) {
-    this.searchForm.get('theme')?.setValue(data != null ? data : null);
+    this.searchForm.get('theme')?.setValue(data ?? null);
     // Filtrage des bops en fonction des thèmes sélectionnés
     this.filteredBop = [];
     if (this.selectedTheme && this.selectedTheme.length > 0)
@@ -106,7 +106,7 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
     return this.searchForm.get('bops')?.value ?? null;
   }
   set selectedBops(data: BopModel[] | null) {
-    this.searchForm.get('bops')?.setValue(data != null ? data : null);
+    this.searchForm.get('bops')?.setValue(data ?? null);
   }
   // Les fonctions injectées au component DOIVENT être lambdas pour garder le contexte initial
   public renderBopOption = (bop: BopModel): string => {
@@ -159,18 +159,17 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
   /**
    * Locations
    */
-  private _selectedNiveau: TypeLocalisation | null = null
   get selectedNiveau() : TypeLocalisation | null {
-    return this._selectedNiveau;
+    return this.searchForm.get('niveau')?.value ?? null;
   }
   set selectedNiveau(data: TypeLocalisation | null) {
-    this._selectedNiveau = data;
+    this.searchForm.get('niveau')?.setValue(data ?? null);
   }
   get selectedLocation() : GeoModel[] | null {
     return this.searchForm.get('location')?.value ?? null;
   }
   set selectedLocation(data: GeoModel[] | null) {
-    this.searchForm.get('location')?.setValue(data != null ? data : null);
+    this.searchForm.get('location')?.setValue(data ?? null);
   }
 
 
@@ -181,7 +180,7 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
     return this.searchForm.get('year')?.value ?? null;
   }
   set selectedYear(data: number[] | null) {
-    this.searchForm.get('year')?.setValue(data != null ? data : null);
+    this.searchForm.get('year')?.setValue(data ?? null);
   }
 
   /**
@@ -273,6 +272,7 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
     this.searchForm = new FormGroup<SearchForm>({
       theme: new FormControl<string[] | null>(null),
       bops: new FormControl<Bop[] | null>(null),
+      niveau: new FormControl<TypeLocalisation | null>(null),
       location: new FormControl({ value: null, disabled: false }, []),
       year: new FormControl<number[]>([], {
         validators: [
@@ -355,6 +355,7 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
       bops: formValue.bops || null,
       themes: formValue.theme || null,
       years: formValue.year || null,
+      niveau:  formValue.niveau || null,
       locations:  formValue.location,
 
       tags: formValue.tags?.map(tag => tag.item) ?? null,
