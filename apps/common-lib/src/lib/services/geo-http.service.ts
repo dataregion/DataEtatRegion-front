@@ -245,6 +245,8 @@ export class FuzzySearchParamsBuilder extends ASearchParamsBuilder {
                 search_params = this._crte_fuzzy(term);
                 break;
             case TypeLocalisation.REGION:
+                search_params = this._region_fuzzy(term);
+                break;
             case TypeLocalisation.DEPARTEMENT:
                 search_params = this._departement_fuzzy(term);
                 break;
@@ -297,6 +299,19 @@ export class FuzzySearchParamsBuilder extends ASearchParamsBuilder {
     }
 
     private _departement_fuzzy(term: _Term): SearchParams {
+
+        if (!term) return {}
+
+        let params: SearchParams = {}
+        if (term.length <= 3 && !isNaN(Number(term.substring(0, 1)))) {
+            params = { code: term };
+        } else {
+            params = { nom: term };
+        }
+        return params;
+    }
+
+    private _region_fuzzy(term: _Term): SearchParams {
 
         if (!term) return {}
 

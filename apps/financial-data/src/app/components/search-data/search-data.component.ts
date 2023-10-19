@@ -159,7 +159,6 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
   /**
    * Locations
    */
-  private _selectedNiveau: TypeLocalisation | null = null
   get selectedNiveau() : TypeLocalisation | null {
     return this.searchForm.get('niveau')?.value ?? null;
   }
