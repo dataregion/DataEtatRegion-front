@@ -27,7 +27,6 @@ import {
 import { BopModel } from '@models/refs/bop.models';
 import { FinancialData, FinancialDataResolverModel } from '@models/financial/financial-data-resolvers.models';
 import { FinancialDataModel } from '@models/financial/financial-data.models';
-import { DatePipe } from '@angular/common';
 import {
   JSONObject,
   Preference,
