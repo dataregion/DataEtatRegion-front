@@ -16,8 +16,8 @@ import { DataPagination } from 'apps/common-lib/src/lib/models/pagination/pagina
 @Injectable({
   providedIn: 'root',
 })
-export class FinancialDataHttpService  implements DataHttpService<FinancialDataModel,FinancialDataModel> {
-  private _apiFinancial! : string;
+export class FinancialDataHttpService implements DataHttpService<FinancialDataModel, FinancialDataModel> {
+  private _apiFinancial!: string;
   private _apiAdministration!: string;
 
   constructor(
@@ -28,7 +28,7 @@ export class FinancialDataHttpService  implements DataHttpService<FinancialDataM
     this._apiAdministration = this.settings.apiAdministration;
   }
   mapToGeneric(object: FinancialDataModel): FinancialDataModel {
-    return {...object, source: SourceFinancialData.CHORUS};
+    return { ...object, source: SourceFinancialData.CHORUS };
   }
 
   getSource(): string {
@@ -74,7 +74,7 @@ export class FinancialDataHttpService  implements DataHttpService<FinancialDataM
   private _buildparams(
     { beneficiaires, types_beneficiaires, bops, themes, niveau, locations, years, domaines_fonctionnels, referentiels_programmation, source_region, tags }: SearchParameters
   ): string {
-    let params ='limit=5000';
+    let params = 'limit=5000';
     if (beneficiaires && beneficiaires.length > 0) {
       params += `&siret_beneficiaire=${beneficiaires.map(x => x.siret).join(',')}`;
     }
@@ -141,11 +141,18 @@ export class FinancialDataHttpService  implements DataHttpService<FinancialDataM
   }
 
 
-  public loadReferentielFile(file: any) : Observable<any> {
-      const formData = new FormData();
-      formData.append('fichier', file);
+  public loadReferentielFile(file: any): Observable<any> {
+    const formData = new FormData();
+    formData.append('fichier', file);
 
-      return this.http.post(`${this._apiAdministration}/referentiels`, formData);
+    return this.http.post(`${this._apiAdministration}/referentiels`, formData);
+  }
+
+  public loadMajTagsFile(file: any): Observable<any> {
+    const formData = new FormData();
+    formData.append('fichier', file);
+
+    return this.http.post(`${this._apiFinancial}/tags/maj_ae_tags_from_export`, formData);
   }
 
   /**
