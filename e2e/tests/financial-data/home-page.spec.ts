@@ -55,6 +55,14 @@ test.describe("Page d'accueil", () => {
     ).toHaveCount(8);
     await clickOnBody();
 
+    await page.getByLabel('Type de bénéficiaire').click()
+    await expect(
+      page
+        .getByRole('listbox', { name: 'Type de bénéficiaire' })
+        .locator('.mdc-list-item__primary-text')
+    ).toHaveCount(5);
+    await clickOnBody();
+
     await page.getByLabel('Année').isVisible();
     await page.getByLabel('Bénéficiaire', {exact: true}).isVisible();
     expect((await page.locator('form').getByRole('button').count()) == 1);
