@@ -41,7 +41,7 @@
         [options]="annees"
         [(selected)]="selectedYear"
         data-test-id="annees-form-field"
-        class="select-multiple field-5-width"
+        class="select-multiple field-15-width"
         icon="calendar_month"
         />
 
@@ -58,6 +58,15 @@
         [options]="(beneficiaireFieldOptions$ | async)!"
         (inputChange)="onBeneficiaireInputChange($event)"
         [(selectedData)]="selectedBeneficiaires"
+        />
+
+      <lib-select-multiple [canFilter]="false" [canSelectAll]="true"
+        data-test-id="types-beneficiaires-form-field"
+        [placeholder]="'Type de bénéficiaire'"
+        [options]="typesBenef"
+        [(selected)]="selectedTypesBenef"
+        [renderFunction]="renderTypesBenefOption"
+        class="select-multiple field-15-width"
         />
 
       <lib-advanced-chips-multiselect

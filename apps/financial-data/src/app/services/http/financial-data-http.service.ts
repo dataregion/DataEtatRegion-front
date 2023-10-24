@@ -57,6 +57,7 @@ export class FinancialDataHttpService  implements DataHttpService<FinancialDataM
       search_params?.locations == null &&
       search_params?.years == null &&
       search_params?.beneficiaires == null &&
+      search_params?.types_beneficiaires == null &&
       search_params?.tags == null &&
       search_params?.domaines_fonctionnels == null &&
       search_params?.referentiels_programmation == null &&

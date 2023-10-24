@@ -35,8 +35,10 @@ import {
 import {
   AlertService,
   GeoModel,
+  OtherTypeCategorieJuridique,
   SearchParameters,
   SearchParameters_empty,
+  SearchTypeCategorieJuridique,
   TypeLocalisation,
 } from 'apps/common-lib/src/public-api';
 import { Bop } from '@models/search/bop.model';
@@ -52,6 +54,7 @@ import { SelectedData } from 'apps/common-lib/src/lib/components/advanced-chips-
 import { Beneficiaire } from '@models/search/beneficiaire.model';
 import { TagFieldData } from './tags-field-data.model';
 import { AutocompleteTagsService } from './autocomplete-tags.service';
+import { TypeCategorieJuridique } from '@models/financial/common.models';
 
 
 @Component({
@@ -172,7 +175,6 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
     this.searchForm.get('location')?.setValue(data ?? null);
   }
 
-
   /**
    * Year
    */
@@ -181,6 +183,26 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
   }
   set selectedYear(data: number[] | null) {
     this.searchForm.get('year')?.setValue(data ?? null);
+  }
+
+  /**
+   * Type bénéficiaire
+   */
+  public typesBenef: SearchTypeCategorieJuridique[] = [
+    TypeCategorieJuridique.COLLECTIVITE,
+    TypeCategorieJuridique.ASSOCIATION,
+    TypeCategorieJuridique.ENTREPRISE,
+    TypeCategorieJuridique.ETAT,
+    OtherTypeCategorieJuridique.AUTRES,
+  ]
+  get selectedTypesBenef() : SearchTypeCategorieJuridique[] | null {
+    return this.additional_searchparams.types_beneficiaires ?? null;
+  }
+  set selectedTypesBenef(data: SearchTypeCategorieJuridique[] | null) {
+    this.additional_searchparams.types_beneficiaires = data ?? [];
+  }
+  public renderTypesBenefOption = (type: SearchTypeCategorieJuridique): string => {
+    return type.charAt(0).toUpperCase() + type.slice(1)
   }
 
   /**
@@ -281,6 +303,7 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
         ],
       }),
       beneficiaires: new FormControl<Beneficiaire[] | null>(null),
+      types_beneficiaires: new FormControl<SearchTypeCategorieJuridique[] | null>(null),
       tags: new FormControl<TagFieldData[] | null>(null),
     });
   }
