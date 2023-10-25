@@ -8,6 +8,7 @@ import { BehaviorSubject, finalize } from "rxjs";
 @Component({
     selector: 'financial-update-tags.component',
     templateUrl: './update-tags.component.html',
+    styleUrls: [ '../common-for-pages-with-uploads.scss' ],
 })
 export class UpdateTagsComponent {
 
