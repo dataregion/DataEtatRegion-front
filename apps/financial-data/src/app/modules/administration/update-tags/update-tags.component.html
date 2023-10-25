@@ -1,0 +1,51 @@
+<mat-card class="mat-card">
+
+  <mat-card-header>
+    <mat-card-title>
+      Mettre à jour des tags par lot
+    </mat-card-title>
+    <mat-card-subtitle>
+      <span>
+        Prenez un export récent (depuis l'accueil, lorsque vous faites une recherche) et changez le champ
+        <pre style="display: inline;">tags</pre> sur les lignes que vous voulez éditer. <br>
+        Veuillez prendre le soin d'effacer les lignes que vous ne souhaitez pas modifier. <br>
+        Une fois le fichier prêt, vous pouvez le soumettre ici. <br>
+
+        <br>
+
+        <i>Afin de spécifier plusieurs tags pour une ligne, utilisez le caractère <pre style="display: inline;">|</pre> (pipe). Exemple: <pre style="display: inline;">Fond vert|CPER:215-20</pre></i> <br>
+        <i>Pour le moment, l'édition des tags en lot ne fonctionne que sur les données provenant de chorus.</i>
+
+      </span>
+    </mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content>
+
+    <div class="line">
+      <div class="col">
+        <input type="file" class="file-input" accept=".csv" (change)="fileMajTag = getFile($event)"
+          #fileUploadReferentiel>
+        <div class="file-upload">
+
+          <span>{{ fileMajTag !== null ? fileMajTag.name : "Séléctionnez le fichier de mise à jour des tags" }}</span>
+
+          <button mat-mini-fab color="primary" class="upload-btn" *ngIf="fileMajTag === null"
+            (click)="fileUploadReferentiel.click()">
+            <mat-icon>attach_file</mat-icon>
+          </button>
+
+          <button mat-mini-fab color="warn" class="cancel-upload" *ngIf="fileMajTag !== null"
+            (click)="fileMajTag = null">
+            <mat-icon class="cancel-upload" (click)="fileMajTag = null">delete_forever</mat-icon>
+          </button>
+        </div>
+      </div>
+
+      <button mat-fab color="primary" *ngIf="fileMajTag !== null" (click)="uploadFileMajTag()"
+        (disabled)="uploadInProgress.value === true">
+        <mat-icon fontIcon="upload_file" />
+      </button>
+
+    </div>
+  </mat-card-content>
+</mat-card>
