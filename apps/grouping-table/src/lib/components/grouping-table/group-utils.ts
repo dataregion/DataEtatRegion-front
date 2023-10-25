@@ -258,7 +258,8 @@ export const groupByColumns = (
   table: TableData,
   groupings: GroupingColumn[],
   columnsMetaData: ColumnsMetaData,
-  previousRoot: RootGroup
+  previousRoot: RootGroup,
+  dataChanges: boolean
 ): RootGroup => {
   // On construit l'ensemble des fonctions d'aggrégation.
   const aggregateFns: Record<string, AggregateReducer<any>> = {};
@@ -271,7 +272,7 @@ export const groupByColumns = (
 
   // Vérification : la nouvelle structure de grouping (Grouping[]) a-t-elle changé par rapport à l'ancienne (RootGroup) 
   let same: boolean = false;
-  if (previousRoot && previousRoot.groups.length !== 0) {
+  if (previousRoot && previousRoot.groups.length !== 0 && !dataChanges) {
     // On travaille avec une copie de groupings car on va faire des shift() 
     same = _check_grouping_structure([...groupings], previousRoot)
   }

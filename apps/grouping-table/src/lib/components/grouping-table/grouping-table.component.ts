@@ -82,7 +82,8 @@ export class GroupingTableComponent implements OnChanges, AfterViewInit {
       this.context.initContext(
         this.tableData,
         this.columnsMetaData,
-        this.groupingColumns
+        this.groupingColumns,
+        'tableData' in changes
       );
 
       this.rootGroup = this.context.rootGroup;
