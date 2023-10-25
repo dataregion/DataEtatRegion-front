@@ -5,6 +5,11 @@ import { keycloakAuthGuardCanActivate } from 'apps/common-lib/src/public-api';
 import { ManagementUserComponent } from 'apps/management/src/lib/components/management-user/management-user.component';
 import { resolveUsers } from '../../resolvers/management/users.resolver';
 import { UploadFinancialComponent } from './upload-financial/upload-financial.component';
+import { UpdateTagsComponent } from './update-tags/update-tags.component';
+
+export const profiles_required_for_managment_page = [Profil.ADMIN]
+export const profiles_required_for_upload_page = [Profil.ADMIN, Profil.COMPTABLE]
+export const profiles_required_for_tags_page = [Profil.USERS]
 
 const routes: Routes = [
   {
@@ -12,7 +17,7 @@ const routes: Routes = [
     component: ManagementUserComponent,
     canActivate: [keycloakAuthGuardCanActivate],
     data: {
-      roles: [Profil.ADMIN],
+      roles: profiles_required_for_managment_page,
     },
     resolve: {
       usersPagination: resolveUsers,
@@ -23,9 +28,17 @@ const routes: Routes = [
     component: UploadFinancialComponent,
     canActivate: [keycloakAuthGuardCanActivate],
     data: {
-      roles: [Profil.ADMIN, Profil.COMPTABLE],
+      roles: profiles_required_for_upload_page,
     },
   },
+  {
+    path: 'update-tags',
+    component: UpdateTagsComponent,
+    canActivate: [keycloakAuthGuardCanActivate],
+    data: {
+      roles: profiles_required_for_tags_page,
+    },
+  }
 ];
 
 @NgModule({

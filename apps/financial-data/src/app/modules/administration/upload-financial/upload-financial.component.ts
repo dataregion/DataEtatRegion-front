@@ -44,7 +44,6 @@ export class UploadFinancialComponent implements OnInit {
 
   public fileFinancial: File | null = null;
   public fileReferentiel: File | null = null;
-  public fileMajTag: File | null = null;
 
   public years;
   public dataSource: AuditUpdateData[] = [];
@@ -115,34 +114,6 @@ export class UploadFinancialComponent implements OnInit {
         .pipe(
           finalize(() => {
             this.fileReferentiel = null;
-            this.uploadInProgress.next(false);
-          })
-        )
-        .subscribe({
-          next: () => {
-            this._alertService.openAlertSuccess(
-              'Le fichier a bien été récupéré. Il sera traité dans les prochaines minutes.'
-            );
-          },
-          error: (err: HttpErrorResponse) => {
-            if (err.error['message']) {
-              this._alertService.openAlertError(err.error['message']);
-            }
-          },
-        });
-
-    }
-  }
-  
-  uploadFileMajTag() {
-    
-    if (this.fileMajTag !== null ) {
-      this.uploadInProgress.next(true);
-      this._service
-        .loadMajTagsFile(this.fileMajTag)
-        .pipe(
-          finalize(() => {
-            this.fileMajTag = null;
             this.uploadInProgress.next(false);
           })
         )

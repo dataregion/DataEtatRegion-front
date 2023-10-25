@@ -1,9 +1,9 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { SETTINGS } from 'apps/common-lib/src/lib/environments/settings.http.service';
-import { Profil } from 'apps/common-lib/src/lib/models/profil.enum.model';
 import { GridInFullscreenStateService } from 'apps/common-lib/src/lib/services/grid-in-fullscreen-state.service';
 import { LoaderService, SessionService } from 'apps/common-lib/src/public-api';
 import { SettingsService } from '../environments/settings.service';
+import { profiles_required_for_managment_page, profiles_required_for_tags_page, profiles_required_for_upload_page } from './modules/administration/administration-routing.module';
 
 @Component({
   selector: 'financial-root',
@@ -14,9 +14,9 @@ export class AppComponent implements OnInit {
   public progressBarVisible: boolean = false;
   public isAuthenticated: boolean = false;
 
-  public isAdmin = false;
-
-  public displayAdmin = false;
+  public showManageUsersPage = false;
+  public showUploadFinancialDataPage: boolean = false;
+  public showUpdateTagsPage: boolean = false;
 
   get grid_fullscreen() {
     return this._gridFullscreen.fullscreen;
@@ -36,11 +36,10 @@ export class AppComponent implements OnInit {
 
     this._sessionService.getUser().subscribe((user) => {
       this.isAuthenticated = user !== null;
-      this.isAdmin = this._sessionService.isAdmin();
-      this.displayAdmin = this._sessionService.hasOneRole([
-        Profil.COMPTABLE,
-        Profil.ADMIN,
-      ]);
+
+      this.showManageUsersPage = this._sessionService.hasOneRole(profiles_required_for_managment_page);
+      this.showUploadFinancialDataPage = this._sessionService.hasOneRole(profiles_required_for_upload_page);
+      this.showUpdateTagsPage = this._sessionService.hasOneRole(profiles_required_for_tags_page);
     });
   }
 

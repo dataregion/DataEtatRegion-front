@@ -48,7 +48,7 @@ const routes: Routes = [
     path: 'administration',
     canMatch: [keycloakAuthGuardCanMatchAccordingToRoles],
     data: {
-      roles: [Profil.ADMIN, Profil.COMPTABLE],
+      roles: [Profil.USERS],
     },
     loadChildren: () =>
       import('./modules/administration/administration.module').then(
