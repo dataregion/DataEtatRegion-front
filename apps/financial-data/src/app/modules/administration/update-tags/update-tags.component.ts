@@ -6,6 +6,7 @@ import { BudgetService } from "@services/budget.service";
 import { FinancialDataHttpService } from "@services/http/financial-data-http.service";
 import { AlertService } from "apps/common-lib/src/public-api";
 import { BehaviorSubject, finalize } from "rxjs";
+import { Clipboard } from "@angular/cdk/clipboard";
 
 
 @Component({
@@ -28,6 +29,7 @@ export class UpdateTagsComponent {
         private _service: FinancialDataHttpService,
         private _budgetService: BudgetService,
         private _alertService: AlertService,
+        private _clipboard: Clipboard,
     ) {
         this._budgetService.allTags$()
             .pipe(takeUntilDestroyed(this._destroyRef))
@@ -68,5 +70,11 @@ export class UpdateTagsComponent {
     
     displayTagCodename(tag: Tag) {
         return tag_fullname(tag)
+    }
+    
+    copyTagToClipboard(tag: Tag) {
+        const content = this.displayTagCodename(tag)
+        this._clipboard.copy(content)
+        this._alertService.openAlertCopiedInClipboard(content);
     }
 }

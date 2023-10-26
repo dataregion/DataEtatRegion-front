@@ -70,7 +70,16 @@
 
         <tbody>
           <tr *ngFor="let tag of tags">
-            <td>{{ displayTagCodename(tag) }}</td>
+            <td>
+              <div class="flex-container flex-row align-center">
+                <button mat-icon-button (click)="copyTagToClipboard(tag)">
+                  <mat-icon>content_copy</mat-icon>
+                </button>
+                <span>
+                  {{ displayTagCodename(tag) }}
+                </span>
+              </div>
+            </td>
             <td>{{ tag.description }}</td>
           </tr>
         </tbody>
