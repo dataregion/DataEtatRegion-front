@@ -13,7 +13,10 @@
 
         <br>
 
-        <i>Afin de spécifier plusieurs tags pour une ligne, utilisez le caractère <pre style="display: inline;">|</pre> (pipe). Exemple: <pre style="display: inline;">Fond vert|CPER:215-20</pre></i> <br>
+        <i>Afin de spécifier plusieurs tags pour une ligne, utilisez le caractère
+          <pre style="display: inline;">|</pre> (pipe). Exemple:
+          <pre style="display: inline;">fonds-vert|cper:215-20</pre>
+        </i> <br>
         <i>Pour le moment, l'édition des tags en lot ne fonctionne que sur les données provenant de chorus.</i>
 
       </span>
@@ -48,4 +51,32 @@
 
     </div>
   </mat-card-content>
+</mat-card>
+
+<mat-card>
+
+  <mat-card-content>
+    <div class="fr-table" style="text-align: center;">
+      <table>
+
+        <caption>Référence des tags disponibles</caption>
+
+        <thead>
+          <tr>
+            <td>Nom</td>
+            <td>Description</td>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let tag of tags">
+            <td>{{ displayTagCodename(tag) }}</td>
+            <td>{{ tag.description }}</td>
+          </tr>
+        </tbody>
+
+      </table>
+    </div>
+  </mat-card-content>
+
 </mat-card>
