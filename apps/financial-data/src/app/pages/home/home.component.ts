@@ -29,7 +29,7 @@ import { delay } from 'rxjs';
 import { PreFilters } from '@models/search/prefilters.model';
 import { colonnes } from '@models/tableau/colonnes.model';
 import { QueryParam } from 'apps/common-lib/src/lib/models/marqueblanche/query-params.enum';
-import { Tag, tag_fullname } from '@models/refs/tag.model';
+import { Tag } from '@models/refs/tag.model';
 
 @Component({
   selector: 'financial-home',
