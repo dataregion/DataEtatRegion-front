@@ -195,11 +195,22 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
     TypeCategorieJuridique.ETAT,
     OtherTypeCategorieJuridique.AUTRES,
   ]
+  private _prettyTypes = new Map<SearchTypeCategorieJuridique, string>([
+    [TypeCategorieJuridique.ETAT, "État"],
+    [OtherTypeCategorieJuridique.AUTRES, "Autres"]
+  ]);
   get selectedTypesBenef() : SearchTypeCategorieJuridique[] | null {
     return this.additional_searchparams.types_beneficiaires ?? null;
   }
   set selectedTypesBenef(data: SearchTypeCategorieJuridique[] | null) {
     this.additional_searchparams.types_beneficiaires = data ?? [];
+  }
+  public renderTypesBenefOption = (t: SearchTypeCategorieJuridique): string => {
+    const type: string | undefined = this._prettyTypes.has(t) ? this._prettyTypes.get(t) : t;
+    return type ? type.charAt(0).toUpperCase() + type.slice(1) : ""
+  }
+  public renderTypesBenefLabel = (types: SearchTypeCategorieJuridique[]) => {
+    return types.map(t => this._prettyTypes.has(t) ? this._prettyTypes.get(t) : t).join(', ')
   }
 
   /**

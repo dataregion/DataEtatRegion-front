@@ -4,7 +4,7 @@ export enum TypeCategorieJuridique {
   ENTREPRISE = 'Entreprise',
   COLLECTIVITE = 'Collectivité',
   ASSOCIATION = 'Association',
-  ETAT = 'État',
+  ETAT = 'Etat',
 }
 
 export interface CodeLabel {

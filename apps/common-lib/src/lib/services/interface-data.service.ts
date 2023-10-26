@@ -6,7 +6,7 @@ import { GeoModel, TypeLocalisation } from '../models/geo.models';
 import { TypeCategorieJuridique } from '@models/financial/common.models';
 
 export enum OtherTypeCategorieJuridique {
-  AUTRES = 'Autres'
+  AUTRES = 'autres'
 }
 export type SearchTypeCategorieJuridique = TypeCategorieJuridique | OtherTypeCategorieJuridique;
 
