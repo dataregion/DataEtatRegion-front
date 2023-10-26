@@ -12,7 +12,7 @@ import { HttpClient } from '@angular/common/http';
 import { DataPagination } from 'apps/common-lib/src/lib/models/pagination/pagination.models';
 import { SourceFinancialData } from '@models/financial/common.models';
 import { unparse } from 'papaparse';
-import { Tag, tag_str } from '@models/refs/tag.model';
+import { Tag, tag_fullname } from '@models/refs/tag.model';
 
 export const DATA_HTTP_SERVICE = new InjectionToken<DataHttpService<any, FinancialDataModel>>(
   'DataHttpService'
@@ -146,7 +146,7 @@ export class BudgetService {
         item.date_cp,
         item.date_replication,
         item.annee,
-        item.tags?.map(tag => tag_str(tag)).join("|"),
+        item.tags?.map(tag => tag_fullname(tag)).join("|"),
       ];
       data.push(values);
     }
