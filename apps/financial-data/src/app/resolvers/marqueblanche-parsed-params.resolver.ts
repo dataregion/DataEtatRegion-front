@@ -33,6 +33,7 @@ export type MarqueBlancheParsedParamsResolverModel = ResolverModel<MarqueBlanche
 export const resolveMarqueBlancheParsedParams: ResolveFn<MarqueBlancheParsedParamsResolverModel> = passing_errors(_resolver)
 
 const niveauxLocalisationLegaux = [
+  TypeLocalisation.REGION,
   TypeLocalisation.DEPARTEMENT,
   TypeLocalisation.EPCI,
   TypeLocalisation.COMMUNE,

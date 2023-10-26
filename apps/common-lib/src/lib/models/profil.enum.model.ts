@@ -11,4 +11,8 @@ export enum Profil {
    * Accountant profile
    */
   COMPTABLE = 'COMPTABLE',
+  /**
+   * Profil utilisateur connecté
+   */
+  USERS = 'USERS',
 }

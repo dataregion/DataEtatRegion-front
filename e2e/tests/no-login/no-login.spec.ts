@@ -1,4 +1,4 @@
-import { test, expect, PageScreenshotOptions, Page } from '@playwright/test';
+import { test, expect } from '@playwright/test';
 
 test.describe("Page d'authentification", () => {
   test.beforeEach(async ({ page }) => {

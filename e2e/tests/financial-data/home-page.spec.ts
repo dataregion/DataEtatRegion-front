@@ -52,7 +52,15 @@ test.describe("Page d'accueil", () => {
       page
         .getByRole('listbox', { name: 'Zone géographique' })
         .locator('.mdc-list-item__primary-text')
-    ).toHaveCount(7);
+    ).toHaveCount(8);
+    await clickOnBody();
+
+    await page.getByLabel('Type de bénéficiaire').click()
+    await expect(
+      page
+        .getByRole('listbox', { name: 'Type de bénéficiaire' })
+        .locator('.mdc-list-item__primary-text')
+    ).toHaveCount(5);
     await clickOnBody();
 
     await page.getByLabel('Année').isVisible();

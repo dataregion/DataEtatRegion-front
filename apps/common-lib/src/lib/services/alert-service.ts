@@ -10,6 +10,10 @@ import {
 })
 export class AlertService {
   constructor(private _snackBar: MatSnackBar) {}
+  
+  public openAlertCopiedInClipboard(content: string): void {
+    this.openAlertSuccess(`'${content}' copié dans le presse-papier.`)
+  }
 
   public openAlertSuccess(message: string): void {
     this._snackBar.openFromComponent(AlertSnackBarComponent, {

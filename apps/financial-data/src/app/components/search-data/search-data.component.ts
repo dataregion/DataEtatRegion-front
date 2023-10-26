@@ -35,8 +35,10 @@ import {
 import {
   AlertService,
   GeoModel,
+  OtherTypeCategorieJuridique,
   SearchParameters,
   SearchParameters_empty,
+  SearchTypeCategorieJuridique,
   TypeLocalisation,
 } from 'apps/common-lib/src/public-api';
 import { Bop } from '@models/search/bop.model';
@@ -52,6 +54,8 @@ import { SelectedData } from 'apps/common-lib/src/lib/components/advanced-chips-
 import { Beneficiaire } from '@models/search/beneficiaire.model';
 import { TagFieldData } from './tags-field-data.model';
 import { AutocompleteTagsService } from './autocomplete-tags.service';
+import { TypeCategorieJuridique } from '@models/financial/common.models';
+import { tag_fullname } from '@models/refs/tag.model';
 
 
 @Component({
@@ -84,7 +88,7 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
     return this.searchForm.get('theme')?.value ?? null;
   }
   set selectedTheme(data: string[] | null) {
-    this.searchForm.get('theme')?.setValue(data != null ? data : null);
+    this.searchForm.get('theme')?.setValue(data ?? null);
     // Filtrage des bops en fonction des thèmes sélectionnés
     this.filteredBop = [];
     if (this.selectedTheme && this.selectedTheme.length > 0)
@@ -106,7 +110,7 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
     return this.searchForm.get('bops')?.value ?? null;
   }
   set selectedBops(data: BopModel[] | null) {
-    this.searchForm.get('bops')?.setValue(data != null ? data : null);
+    this.searchForm.get('bops')?.setValue(data ?? null);
   }
   // Les fonctions injectées au component DOIVENT être lambdas pour garder le contexte initial
   public renderBopOption = (bop: BopModel): string => {
@@ -159,20 +163,18 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
   /**
    * Locations
    */
-  private _selectedNiveau: TypeLocalisation | null = null
   get selectedNiveau() : TypeLocalisation | null {
-    return this._selectedNiveau;
+    return this.searchForm.get('niveau')?.value ?? null;
   }
   set selectedNiveau(data: TypeLocalisation | null) {
-    this._selectedNiveau = data;
+    this.searchForm.get('niveau')?.setValue(data ?? null);
   }
   get selectedLocation() : GeoModel[] | null {
     return this.searchForm.get('location')?.value ?? null;
   }
   set selectedLocation(data: GeoModel[] | null) {
-    this.searchForm.get('location')?.setValue(data != null ? data : null);
+    this.searchForm.get('location')?.setValue(data ?? null);
   }
-
 
   /**
    * Year
@@ -181,7 +183,35 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
     return this.searchForm.get('year')?.value ?? null;
   }
   set selectedYear(data: number[] | null) {
-    this.searchForm.get('year')?.setValue(data != null ? data : null);
+    this.searchForm.get('year')?.setValue(data ?? null);
+  }
+
+  /**
+   * Type bénéficiaire
+   */
+  public typesBenef: SearchTypeCategorieJuridique[] = [
+    TypeCategorieJuridique.COLLECTIVITE,
+    TypeCategorieJuridique.ASSOCIATION,
+    TypeCategorieJuridique.ENTREPRISE,
+    TypeCategorieJuridique.ETAT,
+    OtherTypeCategorieJuridique.AUTRES,
+  ]
+  private _prettyTypes = new Map<SearchTypeCategorieJuridique, string>([
+    [TypeCategorieJuridique.ETAT, "État"],
+    [OtherTypeCategorieJuridique.AUTRES, "Autres"]
+  ]);
+  get selectedTypesBenef() : SearchTypeCategorieJuridique[] | null {
+    return this.additional_searchparams.types_beneficiaires ?? null;
+  }
+  set selectedTypesBenef(data: SearchTypeCategorieJuridique[] | null) {
+    this.additional_searchparams.types_beneficiaires = data ?? [];
+  }
+  public renderTypesBenefOption = (t: SearchTypeCategorieJuridique): string => {
+    const type: string | undefined = this._prettyTypes.has(t) ? this._prettyTypes.get(t) : t;
+    return type ? type.charAt(0).toUpperCase() + type.slice(1) : ""
+  }
+  public renderTypesBenefLabel = (types: SearchTypeCategorieJuridique[]) => {
+    return types.map(t => this._prettyTypes.has(t) ? this._prettyTypes.get(t) : t).join(', ')
   }
 
   /**
@@ -273,6 +303,7 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
     this.searchForm = new FormGroup<SearchForm>({
       theme: new FormControl<string[] | null>(null),
       bops: new FormControl<Bop[] | null>(null),
+      niveau: new FormControl<TypeLocalisation | null>(null),
       location: new FormControl({ value: null, disabled: false }, []),
       year: new FormControl<number[]>([], {
         validators: [
@@ -281,6 +312,7 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
         ],
       }),
       beneficiaires: new FormControl<Beneficiaire[] | null>(null),
+      types_beneficiaires: new FormControl<SearchTypeCategorieJuridique[] | null>(null),
       tags: new FormControl<TagFieldData[] | null>(null),
     });
   }
@@ -355,9 +387,10 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
       bops: formValue.bops || null,
       themes: formValue.theme || null,
       years: formValue.year || null,
+      niveau:  formValue.niveau || null,
       locations:  formValue.location,
 
-      tags: formValue.tags?.map(tag => tag.item) ?? null,
+      tags: formValue.tags?.map(tag => tag_fullname(tag)) ?? null,
 
       domaines_fonctionnels: this.additional_searchparams?.domaines_fonctionnels || null,
       referentiels_programmation: this.additional_searchparams?.referentiels_programmation || null,

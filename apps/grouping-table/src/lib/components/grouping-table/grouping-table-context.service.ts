@@ -23,7 +23,6 @@ export class GroupingTableContextService {
   groupingColumns!: GroupingColumn[];
   rootGroup!: RootGroup;
   displayedColumns!: ColumnMetaDataDef[];
-  foldedGroups = new Set<Group>();
   columnCssStyle: SafeHtml | null = null;
 
   /**
@@ -34,18 +33,19 @@ export class GroupingTableContextService {
     data: TableData,
     columnsMetaData: ColumnsMetaData,
     groupingColumns: GroupingColumn[],
+    dataChanges: boolean
   ) {
     this.data = data;
     this.columnsMetaData = columnsMetaData;
     this.groupingColumns = groupingColumns;
 
-    this.rootGroup = this.calculateGroups();
+    this.rootGroup = this.calculateGroups(dataChanges);
     this.displayedColumns = this.calculateDisplayedColumns();
     this.columnCssStyle = this.calculateColumnStyle();
   }
 
-  private calculateGroups(): RootGroup {
-    return groupByColumns(this.data, this.groupingColumns, this.columnsMetaData);
+  private calculateGroups(dataChanges: boolean): RootGroup {
+    return groupByColumns(this.data, this.groupingColumns, this.columnsMetaData, this.rootGroup, dataChanges);
   }
 
   /**
@@ -79,15 +79,15 @@ export class GroupingTableContextService {
   }
 
   isFolded(group: Group): boolean {
-    return group ? this.foldedGroups.has(group) : false;
+    return group.folded;
   }
 
   fold(group: Group) {
-    this.foldedGroups.add(group);
+    group.folded = true;
   }
 
   unfold(group: Group) {
-    this.foldedGroups.delete(group);
+    group.folded = false;
   }
 
   /**
@@ -95,13 +95,8 @@ export class GroupingTableContextService {
    * @return true si plié, false sinon
    */
   toggle(group: Group): boolean {
-    if (this.isFolded(group)) {
-      this.unfold(group);
-      return false;
-    } else {
-      this.fold(group);
-      return true;
-    }
+    group.folded = !group.folded;
+    return group.folded;
   }
 
   /*

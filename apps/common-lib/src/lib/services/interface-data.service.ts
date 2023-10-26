@@ -2,7 +2,7 @@ import { Observable } from 'rxjs';
 import { DataPagination } from '../models/pagination/pagination.models';
 import { RefSiret } from '@models/refs/RefSiret';
 import { BopModel } from '@models/refs/bop.models';
-import { GeoModel } from '../models/geo.models';
+import { GeoModel, TypeLocalisation } from '../models/geo.models';
 import { TypeCategorieJuridique } from '@models/financial/common.models';
 
 export enum OtherTypeCategorieJuridique {
@@ -12,32 +12,32 @@ export type SearchTypeCategorieJuridique = TypeCategorieJuridique | OtherTypeCat
 
 export interface SearchParameters {
     bops: BopModel[] | null;
+    themes: string[] | null;
+    niveau: TypeLocalisation | null;
+    locations: GeoModel[] | null,
+    years: number[] | null;
     beneficiaires: RefSiret[] | null;
     types_beneficiaires: SearchTypeCategorieJuridique[] | null;
-    years: number[] | null;
-    locations: GeoModel[] | null,
-    themes: string[] | null;
+    tags: string[] | null;
 
     domaines_fonctionnels: string[] | null;
     referentiels_programmation: string[] | null;
     source_region: string[] | null;
-
-    tags: string[] | null;
 }
 
 export const SearchParameters_empty: SearchParameters = {
+  themes: null,
   bops: null,
+  niveau: null,
+  locations: null,
+  years: null,
   beneficiaires: null,
   types_beneficiaires: null,
-  years: null,
-  locations: null,
-  themes: null,
+  tags: null,
 
   domaines_fonctionnels: null,
   referentiels_programmation: null,
   source_region: null,
-
-  tags: null,
 }
 
 /* eslint no-unused-vars: 0 */  // --> OFF

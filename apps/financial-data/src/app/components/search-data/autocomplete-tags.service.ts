@@ -3,7 +3,7 @@ import { BudgetService } from "@services/budget.service";
 import { TagFieldData } from "./tags-field-data.model";
 import { Observable } from "rxjs";
 import { map } from 'rxjs/operators';
-import { Tag, tag_str } from "@models/refs/tag.model";
+import { Tag, tag_fullname } from "@models/refs/tag.model";
 
 @Injectable()
 export class AutocompleteTagsService {
@@ -17,14 +17,19 @@ export class AutocompleteTagsService {
             .pipe(
                 map(
                     (tags) => {
-                        return ( tags || [] ).filter(
-                            tag => tag_str(tag).startsWith(input)
+                        return (tags || []).filter(
+                            tag => {
+                                return (
+                                    tag_fullname(tag).startsWith(input)
+                                    || tag.display_name.startsWith(input)
+                                )
+                            }
                         )
                     }
                 ),
                 map(
                     (tags) => {
-                        return ( tags || [] ).map(
+                        return (tags || []).map(
                             tags => {
                                 return this._map_tags_to_fielddata(tags)
                             }
@@ -40,7 +45,7 @@ export class AutocompleteTagsService {
     private _map_tags_to_fielddata(tag: Tag): TagFieldData {
         return {
             ...tag,
-            item: tag_str(tag),
+            item: tag.display_name,
         }
     }
 }
