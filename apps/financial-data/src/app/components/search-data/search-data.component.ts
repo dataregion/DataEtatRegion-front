@@ -201,9 +201,6 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
   set selectedTypesBenef(data: SearchTypeCategorieJuridique[] | null) {
     this.additional_searchparams.types_beneficiaires = data ?? [];
   }
-  public renderTypesBenefOption = (type: SearchTypeCategorieJuridique): string => {
-    return type.charAt(0).toUpperCase() + type.slice(1)
-  }
 
   /**
    * Beneficiaires
