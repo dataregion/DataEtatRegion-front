@@ -27,7 +27,7 @@ import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.compone
 @Component({
   selector: 'financial-upload-financial-component',
   templateUrl: './upload-financial.component.html',
-  styleUrls: ['./upload-financial.component.scss'],
+  styleUrls: [ '../common-for-pages-with-uploads.scss' ],
 })
 export class UploadFinancialComponent implements OnInit {
 
