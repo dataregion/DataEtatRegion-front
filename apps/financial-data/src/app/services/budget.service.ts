@@ -146,7 +146,7 @@ export class BudgetService {
         item.date_cp,
         item.date_replication,
         item.annee,
-        item.tags?.map(tag => tag_fullname(tag)).join("|"),
+        item.tags?.map(tag => tag_fullname(tag)).join(" "),
       ];
       data.push(values);
     }
