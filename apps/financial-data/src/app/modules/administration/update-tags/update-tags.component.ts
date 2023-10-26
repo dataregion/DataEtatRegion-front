@@ -1,8 +1,12 @@
 import { HttpErrorResponse } from "@angular/common/http";
-import { Component } from "@angular/core";
+import { Component, DestroyRef, inject } from "@angular/core";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import { Tag, tag_fullname } from "@models/refs/tag.model";
+import { BudgetService } from "@services/budget.service";
 import { FinancialDataHttpService } from "@services/http/financial-data-http.service";
 import { AlertService } from "apps/common-lib/src/public-api";
 import { BehaviorSubject, finalize } from "rxjs";
+import { Clipboard } from "@angular/cdk/clipboard";
 
 
 @Component({
@@ -17,12 +21,20 @@ export class UpdateTagsComponent {
 
     public fileMajTag: File | null = null;
 
-    /**
-     *
-     */
+    public tags: Tag[] = [];
+
+    private _destroyRef = inject(DestroyRef)
+
     constructor(
         private _service: FinancialDataHttpService,
-        private _alertService: AlertService) { }
+        private _budgetService: BudgetService,
+        private _alertService: AlertService,
+        private _clipboard: Clipboard,
+    ) {
+        this._budgetService.allTags$()
+            .pipe(takeUntilDestroyed(this._destroyRef))
+            .subscribe(tags => this.tags = tags)
+    }
 
     uploadFileMajTag() {
 
@@ -54,5 +66,15 @@ export class UpdateTagsComponent {
 
     getFile(event: any): File {
         return event.target.files[0];
+    }
+    
+    displayTagCodename(tag: Tag) {
+        return tag_fullname(tag)
+    }
+    
+    copyTagToClipboard(tag: Tag) {
+        const content = this.displayTagCodename(tag)
+        this._clipboard.copy(content)
+        this._alertService.openAlertCopiedInClipboard(content);
     }
 }

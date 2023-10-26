@@ -55,6 +55,7 @@ import { Beneficiaire } from '@models/search/beneficiaire.model';
 import { TagFieldData } from './tags-field-data.model';
 import { AutocompleteTagsService } from './autocomplete-tags.service';
 import { TypeCategorieJuridique } from '@models/financial/common.models';
+import { tag_fullname } from '@models/refs/tag.model';
 
 
 @Component({
@@ -389,7 +390,7 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
       niveau:  formValue.niveau || null,
       locations:  formValue.location,
 
-      tags: formValue.tags?.map(tag => tag.item) ?? null,
+      tags: formValue.tags?.map(tag => tag_fullname(tag)) ?? null,
 
       domaines_fonctionnels: this.additional_searchparams?.domaines_fonctionnels || null,
       referentiels_programmation: this.additional_searchparams?.referentiels_programmation || null,
