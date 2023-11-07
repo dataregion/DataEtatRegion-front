@@ -514,7 +514,7 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
           debounceTime(300),
           switchMap((value) => {
             const term = value || '';
-            if (term && term?.length < 2) // On recherche lorsque l'on a commencé à taper une valeur
+            if (term && term?.length < 1) // On recherche lorsque l'on a commencé à taper une valeur
               return of([])
 
             return this._autocompleteTags.autocomplete$(term)
