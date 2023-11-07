@@ -52,7 +52,7 @@
         </mat-form-field>
       </div>
 
-      <button mat-fab color="primary" *nIf="fileFinancial !== null" (click)="uploadFinancialFile()"
+      <button mat-fab color="primary" *ngIf="fileFinancial !== null" (click)="uploadFinancialFile()"
         (disabled)="uploadInProgress.value === true">
         <mat-icon fontIcon="upload_file" />
       </button>
