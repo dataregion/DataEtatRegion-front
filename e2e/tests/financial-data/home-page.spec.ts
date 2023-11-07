@@ -76,6 +76,12 @@ test.describe('Page de Management', () => {
     await page.goto('./management');
     await page.waitForURL('./');
     expect(page.url()).not.toContain('/management');
-    await expect(page.locator('id=administration')).toHaveCount(0);
+    // Le menu est visible
+    await expect(page.locator('id=administration')).toBeVisible();
+    await page.locator('id=administration').click();
+    // Un seul sous-menu visible : la modification des tags
+    const menuTags = page.getByRole('menuitem');
+    await expect(menuTags).toHaveCount(1);
+    expect(menuTags).toHaveText("Modifier les tags")
   });
 });
