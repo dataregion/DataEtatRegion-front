@@ -82,6 +82,6 @@ test.describe('Page de Management', () => {
     // Un seul sous-menu visible : la modification des tags
     const menuTags = page.getByRole('menuitem');
     await expect(menuTags).toHaveCount(1);
-    expect(menuTags).toHaveText("Modifier les tags")
+    await expect(menuTags).toHaveText("Modifier les tags")
   });
 });
