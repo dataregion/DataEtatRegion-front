@@ -73,10 +73,17 @@ export class LocalisationComponent {
           .pipe(takeUntilDestroyed(this._destroyRef))
           .subscribe((response: GeoModel[]) => {
             this.filteredGeomodels = response;
-            // Reset des options sélectionnées
-            this.selectedLocalisation = this.filteredGeomodels.filter(gm => {
-              return this.selectedLocalisation?.map(loc => loc.code).includes(gm.code)
-            });
+            // Concaténation des éléments sélectionnés avec les éléments filtrés (en supprimant les doublons éventuels)
+            this.filteredGeomodels = this.selectedLocalisation != null ?
+              [
+                ...this.selectedLocalisation,
+                ...this.filteredGeomodels.filter((el) => !this.selectedLocalisation?.map(s => s.code).includes(el.code))
+              ]
+              : this.filteredGeomodels
+            // // Reset des options sélectionnées
+            // this.selectedLocalisation = this.filteredGeomodels.filter(gm => {
+            //   return this.selectedLocalisation?.map(loc => loc.code).includes(gm.code)
+            // });
           });
       }
     });
@@ -102,14 +109,14 @@ export class LocalisationComponent {
         .pipe(takeUntilDestroyed(this._destroyRef))
         .subscribe((response) => {
           this.geomodels = response
-          this.filteredGeomodels = [
-            ...this.selectedLocalisation?.filter(gm => gm.type === this.selectedNiveauString) ?? [],
-            ...this.geomodels.filter((gm) => !this.selectedLocalisation?.map(loc => loc.code).includes(gm.code))
-          ];
-          // Reset des options sélectionnées
-          this.selectedLocalisation = this.filteredGeomodels.filter(gm => {
-            return this.selectedLocalisation?.map(loc => loc.code).includes(gm.code)
-          });
+          this.filteredGeomodels = this.geomodels;
+          // Concaténation des éléments sélectionnés avec les éléments filtrés (en supprimant les doublons éventuels)
+          this.filteredGeomodels = this.selectedLocalisation != null ?
+            [
+              ...this.selectedLocalisation,
+              ...this.filteredGeomodels.filter((el) => !this.selectedLocalisation?.map(s => s.code).includes(el.code))
+            ]
+            : this.filteredGeomodels
         });
     } else {
       this.geomodels = null

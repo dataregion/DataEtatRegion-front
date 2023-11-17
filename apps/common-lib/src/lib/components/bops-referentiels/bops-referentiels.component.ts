@@ -23,6 +23,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop'
 import { debounceTime, Subscription, Subject } from 'rxjs';
 import { ReferentielProgrammation } from '@models/refs/referentiel_programmation.model';
 import { BopModel } from '@models/refs/bop.models';
+import { BreakpointObserver } from '@angular/cdk/layout';
 
 @Component({
   selector: 'lib-bops-referentiels',
@@ -86,23 +87,27 @@ export class BopsReferentielsComponent {
   private _subFilterRef: Subscription | null = null;
 
   constructor(private _refs: BopsReferentielsComponentService) {
-    this.inputRefFilter.pipe(debounceTime(300), takeUntilDestroyed(this._destroyRef)).subscribe(() => {
-      if (this.selectedBops != null) {
+    this.inputRefFilter.pipe(
+      debounceTime(300),
+      takeUntilDestroyed(this._destroyRef))
+      .subscribe(() => {
         const term = this.input !== '' ? this.input : null;
-
         if (this._subFilterRef)
           this._subFilterRef.unsubscribe();
-        this._subFilterRef = this._refs.filterRefs(term, this.selectedBops)
+        this._subFilterRef = this._refs.filterRefs(term, this.selectedBops || null)
           .pipe(takeUntilDestroyed(this._destroyRef))
           .subscribe((response: ReferentielProgrammation[]) => {
             this.filteredReferentiels = response;
-            // Reset des options sélectionnées
-            this.selectedReferentiels = this.filteredReferentiels.filter(gm => {
-              return this.selectedReferentiels?.map(ref => ref.code).includes(gm.code)
-            });
+            // Concaténation des éléments sélectionnés avec les éléments filtrés (en supprimant les doublons éventuels)
+            this.filteredReferentiels = this.selectedReferentiels != null ?
+            [
+              ...this.selectedReferentiels,
+              ...this.filteredReferentiels.filter((el) => !this.selectedReferentiels?.map(s => s.code).includes(el.code))
+            ]
+            : this.filteredReferentiels
+            return response;
           });
-      }
-    });
+      })
   }
 
 
@@ -150,14 +155,14 @@ export class BopsReferentielsComponent {
         .pipe(takeUntilDestroyed(this._destroyRef))
         .subscribe((response: ReferentielProgrammation[]) => {
           this.referentiels = response
-          // Set des nouvelles options
-          this.filteredReferentiels = this.referentiels.filter((ref) => {
-            return !this.selectedReferentiels?.map(ref => ref.code).includes(ref.code)
-          });
-          // Reset des options sélectionnées
-          this.selectedReferentiels = this.filteredReferentiels.filter(ref => {
-            return this.selectedReferentiels?.map(ref => ref.code).includes(ref.code)
-          });
+          this.filteredReferentiels = this.referentiels;
+          // Concaténation des éléments sélectionnés avec les éléments filtrés (en supprimant les doublons éventuels)
+          this.filteredReferentiels = this.selectedReferentiels != null ?
+            [
+              ...this.selectedReferentiels,
+              ...this.filteredReferentiels.filter((el) => !this.selectedReferentiels?.map(s => s.code).includes(el.code))
+            ]
+            : this.filteredReferentiels
         });
     } else {
       this.referentiels = null
@@ -220,7 +225,8 @@ export class BopsReferentielsComponent {
   }
   @Input()
   set selectedReferentiels(data: ReferentielProgrammation[] | null) {
-    this._selectedReferentiels = data ?? null;
+    console.log(data)
+    this._selectedReferentiels = data;
     this.selectedReferentielsChange.emit(this._selectedReferentiels);
   }
   // Les fonctions injectées au component DOIVENT être lambdas pour garder le contexte initial

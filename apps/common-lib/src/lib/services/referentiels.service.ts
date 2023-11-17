@@ -20,13 +20,13 @@ export class ReferentielsHttpService {
     public search(term: string | null, programmes: BopModel[] | null): Observable<ReferentielProgrammation[]> {
         let url = `${this._remove_trailing_slash(this.api_ref)}/ref-programmation?limit=500`
         if (term)
-          url += '&query=' + term
+          url += '&code=' + term
         if (programmes)
           url += '&code_programme=' + programmes.map(p => p.code).join(',')
         return this.http.get<ReferentielProgrammation[]>(url)
             .pipe(map((response) => {
                 const result = response as unknown as DataPagination<ReferentielProgrammation>
-                return result.items;
+                return result ? result.items : [];
             }));
     }
 

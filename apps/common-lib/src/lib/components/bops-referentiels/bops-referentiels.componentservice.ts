@@ -8,7 +8,7 @@ export class BopsReferentielsComponentService {
 
     private refs = inject(ReferentielsHttpService);
 
-    public filterRefs(term: string | null, programmes: BopModel[]): Observable<ReferentielProgrammation[]> {
+    public filterRefs(term: string | null, programmes: BopModel[] | null): Observable<ReferentielProgrammation[]> {
         return this.refs.search(term, programmes);
     }
 }
