@@ -97,6 +97,7 @@ export class BopsReferentielsComponent {
           .pipe(takeUntilDestroyed(this._destroyRef))
           .subscribe((response: ReferentielProgrammation[]) => {
             this.filteredReferentiels = response;
+            // TODO : Facto du filter générique pour gérer aussi les Observable  
             // Concaténation des éléments sélectionnés avec les éléments filtrés (en supprimant les doublons éventuels)
             this.filteredReferentiels = this.selectedReferentiels != null ?
             [
@@ -155,6 +156,7 @@ export class BopsReferentielsComponent {
         .subscribe((response: ReferentielProgrammation[]) => {
           this.referentiels = response
           this.filteredReferentiels = this.referentiels;
+          // TODO : Facto du filter générique pour gérer aussi les Observable  
           // Concaténation des éléments sélectionnés avec les éléments filtrés (en supprimant les doublons éventuels)
           this.filteredReferentiels = this.selectedReferentiels != null ?
             [
