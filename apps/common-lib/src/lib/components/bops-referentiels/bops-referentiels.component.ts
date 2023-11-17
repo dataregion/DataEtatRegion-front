@@ -23,7 +23,6 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop'
 import { debounceTime, Subscription, Subject } from 'rxjs';
 import { ReferentielProgrammation } from '@models/refs/referentiel_programmation.model';
 import { BopModel } from '@models/refs/bop.models';
-import { BreakpointObserver } from '@angular/cdk/layout';
 
 @Component({
   selector: 'lib-bops-referentiels',
@@ -225,7 +224,6 @@ export class BopsReferentielsComponent {
   }
   @Input()
   set selectedReferentiels(data: ReferentielProgrammation[] | null) {
-    console.log(data)
     this._selectedReferentiels = data;
     this.selectedReferentielsChange.emit(this._selectedReferentiels);
   }

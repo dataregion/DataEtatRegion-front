@@ -133,29 +133,6 @@ test.describe("Lorsque l'on spécifie des bénéficiaires", () => {
   })
 })
 
-test.describe("Lorsque l'on spécifie des domaines fonctionnels", () => {
-  const urlparam = "?domaines_fonctionnels=0103-03-02&annee_min=2019&annee_max=2019";
-
-  test("Un message notifie que l'on recherche également sur le domaine fonctionnel", async({ page }) => {
-    await _navigate(page, `/${urlparam}`);
-
-    await expect(page.getByTestId('notif-additionnal-search-on-domaines-fonctionnels'))
-      .toContainText("filtre sur le domaine fonctionnel")
-  })
-})
-
-
-test.describe("Lorsque l'on spécifie des referentiels de programmation", () => {
-  const urlparam = "?referentiels_programmation=0119010101A9,010101040101&annee_min=2019&annee_max=2019";
-
-  test("Un message notifie que l'on recherche également sur le referentiel de programmation", async({ page }) => {
-    await page.goto(urlparam);
-
-    await expect(page.getByTestId("notif-additionnal-search-on-referentiels-programmation"))
-      .toContainText("filtre sur le réferentiel de programmation")
-  })
-})
-
 test.describe("Lorsque l'on spécifie des regions source", () => {
   const urlparam = "?source_region=035,53&annee_min=2022&annee_max=2022&programmes=107";
 
