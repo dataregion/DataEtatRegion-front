@@ -10,27 +10,12 @@
   <form [formGroup]="searchForm" autocomplete="off">
     <div class="box">
       
-      <lib-select-multiple 
-        data-test-id="themes-form-field"
-        [canFilter]="true" [canSelectAll]="true"
-        [placeholder]="'Thème'"
-        [options]="themes"
-        [(selected)]="selectedTheme"
-        [error]="errorsBenefOrBop"
-        class="select-multiple field-20-width"
-        />
-
-      <lib-select-multiple [canFilter]="true" [canSelectAll]="true"
-        data-test-id="programmes-form-field"
-        [placeholder]="'Programme'"
-        [options]="filteredBop"
-        [(selected)]="selectedBops"
-        [filterFunction]="filterBop"
-        [renderFunction]="renderBopOption"
-        [renderLabelFunction]="renderTriggerLabel"
-        class="select-multiple field-25-width"
-        matTooltip="Saisir un nom ou un numéro de programme (Exemple : 102 ou Accès et retour à l’emploi)" matTooltipPosition="above"
-        />
+      <div class="field-bops-referentiels field-50-width">
+        <lib-bops-referentiels
+          [themes]="themes" [(selectedThemes)]="selectedThemes"
+          [bops]="filteredBops" [(selectedBops)]="selectedBops"
+          [referentiels]="filteredReferentiels" [(selectedReferentiels)]="selectedReferentiels" />
+      </div>
 
       <div class="field-localisation field-30-width">
         <lib-localisation [(selectedNiveau)]="selectedNiveau" [(selectedLocalisation)]="selectedLocation" />
@@ -106,15 +91,6 @@
     <mat-icon aria-hidden="false" aria-label="information">information</mat-icon>
     <span>
       Attention, vous appliquez également un filtre sur le domaine fonctionnel
-    </span>
-  </div>
-</ng-container>
-
-<ng-container *ngIf="additional_searchparams?.referentiels_programmation && additional_searchparams.referentiels_programmation.length > 0">
-  <div data-test-id="notif-additionnal-search-on-referentiels-programmation">
-    <mat-icon aria-hidden="false" aria-label="information">information</mat-icon>
-    <span>
-      Attention, vous appliquez également un filtre sur le réferentiel de programmation
     </span>
   </div>
 </ng-container>
