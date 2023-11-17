@@ -4,6 +4,7 @@ import { RefSiret } from '@models/refs/RefSiret';
 import { BopModel } from '@models/refs/bop.models';
 import { GeoModel, TypeLocalisation } from '../models/geo.models';
 import { TypeCategorieJuridique } from '@models/financial/common.models';
+import { ReferentielProgrammation } from '@models/refs/referentiel_programmation.model';
 
 export enum OtherTypeCategorieJuridique {
   AUTRES = 'autres'
@@ -11,8 +12,9 @@ export enum OtherTypeCategorieJuridique {
 export type SearchTypeCategorieJuridique = TypeCategorieJuridique | OtherTypeCategorieJuridique;
 
 export interface SearchParameters {
+  themes: string[] | null;
     bops: BopModel[] | null;
-    themes: string[] | null;
+    referentiels_programmation: ReferentielProgrammation[] | null;
     niveau: TypeLocalisation | null;
     locations: GeoModel[] | null,
     years: number[] | null;
@@ -21,13 +23,13 @@ export interface SearchParameters {
     tags: string[] | null;
 
     domaines_fonctionnels: string[] | null;
-    referentiels_programmation: string[] | null;
     source_region: string[] | null;
 }
 
 export const SearchParameters_empty: SearchParameters = {
   themes: null,
   bops: null,
+  referentiels_programmation: null,
   niveau: null,
   locations: null,
   years: null,
@@ -36,7 +38,6 @@ export const SearchParameters_empty: SearchParameters = {
   tags: null,
 
   domaines_fonctionnels: null,
-  referentiels_programmation: null,
   source_region: null,
 }
 
