@@ -53,18 +53,24 @@ npx playwright test --config=playwright.dev.config.ts
 
 Le dossier [apps/clients](./apps/clients/) contient des clients d'api, ces derniers peuvent être générées automatiquement.
 
-**Les exemples sont données avec les URL de l'environnement d'intégration**
+**Les exemples sont données avec les URL de l'environnement de production**
 
-## Data subventions
+## APIs externes
+
+*endpoint qui intègre les APIs externes comme data subvention*
 
  - url api: [https://api.databretagne.fr/apis-externes/swagger.json](https://api.databretagne.fr/apis-externes/swagger.json)
- - Commande de génération:
 
-Depuis la racine du projet: 
 ```
-docker run --rm -v "$(pwd)/apps/clients:/local" openapitools/openapi-generator-cli generate \
-              -i "https://api.databretagne.fr/apis-externes/swagger.json" \
-              -g typescript-angular \
-              -o /local/apis-externes \
-              --additional-properties npmName=ds-client,npmVersion=1.0.0,snapshot=false,ngVersion="15.0.1",apiModulePrefix=ae,configurationPrefix=ae
+./generate_openapi_client.sh -p ae -s "https://api.databretagne.fr/apis-externes/swagger.json" -t $(pwd)/apps/clients/ -n apis-externes
+```
+
+## API des lignes budgetaires
+
+*Endpoint qui expose les lignes budgetaires*
+
+  - url api: [http://api.databretagne.fr/financial-data/api/v2/swagger.json](http://api.databretagne.fr/financial-data/api/v2/swagger.json)
+
+```
+./generate_openapi_client.sh -p budget -s "http://api.databretagne.fr/financial-data/api/v2/swagger.json" -t $(pwd)/apps/clients/ -n budget
 ```
