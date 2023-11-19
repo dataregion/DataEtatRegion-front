@@ -11,6 +11,8 @@ git_push.sh
 index.ts
 model/enrichedFlattenFinancialLinesSchema.ts
 model/models.ts
+model/paginatedBudgetLines.ts
+model/pagination.ts
 model/tagsSchema.ts
 ng-package.json
 package.json

@@ -3,7 +3,7 @@ import { DataPagination } from '../models/pagination/pagination.models';
 import { RefSiret } from '@models/refs/RefSiret';
 import { BopModel } from '@models/refs/bop.models';
 import { GeoModel, TypeLocalisation } from '../models/geo.models';
-import { TypeCategorieJuridique } from '@models/financial/common.models';
+import { SourceFinancialData, TypeCategorieJuridique } from '@models/financial/common.models';
 import { ReferentielProgrammation } from '@models/refs/referentiel_programmation.model';
 
 export enum OtherTypeCategorieJuridique {
@@ -51,9 +51,9 @@ export interface DataHttpService<T,M> {
 
   search(search_parameters: SearchParameters): Observable<DataPagination<T> | null>;
 
-  getById(id: any, ...options: any[]): Observable<T>;
+  getById(source: SourceFinancialData, id: any, ...options: any[]): Observable<T>;
 
   mapToGeneric(object: T): M;
 
-  getSource(): string;
+  getSources(): string[];
 }

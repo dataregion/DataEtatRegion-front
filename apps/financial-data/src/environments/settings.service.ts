@@ -10,6 +10,7 @@ import {
 
 class Api implements IApi {
   financial_data = '';
+  financial_data_v2 = '';
   administration = '';
   geo = '';
   referentiel = '';
@@ -56,6 +57,10 @@ export class SettingsService implements ISettingsService {
 
   public get apiFinancialData(): string {
     return (this.settings.apis as Api).financial_data;
+  }
+
+  public get apiFinancialDataV2(): string {
+    return (this.settings.apis as Api).financial_data_v2;
   }
 
   public get apiAdministration(): string {

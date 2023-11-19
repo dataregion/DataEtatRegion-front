@@ -1,7 +1,7 @@
 export interface Tag {
     type: string
-    value: string
-    description: string
+    value?: string
+    description?: string
     display_name: string
 }
 

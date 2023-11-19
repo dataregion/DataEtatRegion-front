@@ -1,6 +1,6 @@
 /**
  * API Data transform
- * API de gestion des données financières
+ * Api de d\'accès aux données financières de l\'état <br /><strong>C\'est une API dediée à l\'outil interne de consultation budget. utilisez pas cette API pour intégrer nos données à votre système.</strong>
  *
  * The version of the OpenAPI document: 2.0
  * 
@@ -13,6 +13,8 @@ import { HttpHeaders }                                       from '@angular/comm
 
 import { Observable }                                        from 'rxjs';
 
+import { EnrichedFlattenFinancialLinesSchema } from '../model/models';
+import { PaginatedBudgetLines } from '../model/models';
 
 
 import { budgetConfiguration }                                     from '../configuration';
@@ -39,6 +41,20 @@ export interface BudgetServiceInterface {
      * @param referentielProgrammation Le(s) code(s) du référentiel de programmation.
      * @param tags Le(s) tag(s) à inclure
      */
-    getBudgetCtrl(pageNumber?: string, limit?: string, codeProgramme?: Array<string>, niveauGeo?: string, codeGeo?: Array<string>, theme?: Array<string>, siretBeneficiaire?: Array<string>, typesBeneficiaires?: Array<string>, annee?: Array<number>, domaineFonctionnel?: Array<string>, referentielProgrammation?: Array<string>, tags?: Array<string>, extraHttpRequestParams?: any): Observable<{}>;
+    getBudgetCtrl(pageNumber?: string, limit?: string, codeProgramme?: Array<string>, niveauGeo?: string, codeGeo?: Array<string>, theme?: Array<string>, siretBeneficiaire?: Array<string>, typesBeneficiaires?: Array<string>, annee?: Array<number>, domaineFonctionnel?: Array<string>, referentielProgrammation?: Array<string>, tags?: Array<string>, extraHttpRequestParams?: any): Observable<PaginatedBudgetLines>;
+
+    /**
+     * 
+     * 
+     * @param source 
+     * @param id 
+     */
+    getGetBudgetCtrl(source: string, id: string, extraHttpRequestParams?: any): Observable<EnrichedFlattenFinancialLinesSchema>;
+
+    /**
+     * 
+     * 
+     */
+    getGetPlageAnnees(extraHttpRequestParams?: any): Observable<Array<number>>;
 
 }

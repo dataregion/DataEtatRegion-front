@@ -1,6 +1,6 @@
 /**
  * API Data transform
- * API de gestion des données financières
+ * Api de d\'accès aux données financières de l\'état <br /><strong>C\'est une API dediée à l\'outil interne de consultation budget. utilisez pas cette API pour intégrer nos données à votre système.</strong>
  *
  * The version of the OpenAPI document: 2.0
  * 
@@ -18,6 +18,10 @@ import { HttpClient, HttpHeaders, HttpParams,
 import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
+// @ts-ignore
+import { EnrichedFlattenFinancialLinesSchema } from '../model/enrichedFlattenFinancialLinesSchema';
+// @ts-ignore
+import { PaginatedBudgetLines } from '../model/paginatedBudgetLines';
 
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
@@ -109,10 +113,10 @@ export class BudgetService implements BudgetServiceInterface {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getBudgetCtrl(pageNumber?: string, limit?: string, codeProgramme?: Array<string>, niveauGeo?: string, codeGeo?: Array<string>, theme?: Array<string>, siretBeneficiaire?: Array<string>, typesBeneficiaires?: Array<string>, annee?: Array<number>, domaineFonctionnel?: Array<string>, referentielProgrammation?: Array<string>, tags?: Array<string>, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext}): Observable<any>;
-    public getBudgetCtrl(pageNumber?: string, limit?: string, codeProgramme?: Array<string>, niveauGeo?: string, codeGeo?: Array<string>, theme?: Array<string>, siretBeneficiaire?: Array<string>, typesBeneficiaires?: Array<string>, annee?: Array<number>, domaineFonctionnel?: Array<string>, referentielProgrammation?: Array<string>, tags?: Array<string>, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext}): Observable<HttpResponse<any>>;
-    public getBudgetCtrl(pageNumber?: string, limit?: string, codeProgramme?: Array<string>, niveauGeo?: string, codeGeo?: Array<string>, theme?: Array<string>, siretBeneficiaire?: Array<string>, typesBeneficiaires?: Array<string>, annee?: Array<number>, domaineFonctionnel?: Array<string>, referentielProgrammation?: Array<string>, tags?: Array<string>, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext}): Observable<HttpEvent<any>>;
-    public getBudgetCtrl(pageNumber?: string, limit?: string, codeProgramme?: Array<string>, niveauGeo?: string, codeGeo?: Array<string>, theme?: Array<string>, siretBeneficiaire?: Array<string>, typesBeneficiaires?: Array<string>, annee?: Array<number>, domaineFonctionnel?: Array<string>, referentielProgrammation?: Array<string>, tags?: Array<string>, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined, context?: HttpContext}): Observable<any> {
+    public getBudgetCtrl(pageNumber?: string, limit?: string, codeProgramme?: Array<string>, niveauGeo?: string, codeGeo?: Array<string>, theme?: Array<string>, siretBeneficiaire?: Array<string>, typesBeneficiaires?: Array<string>, annee?: Array<number>, domaineFonctionnel?: Array<string>, referentielProgrammation?: Array<string>, tags?: Array<string>, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<PaginatedBudgetLines>;
+    public getBudgetCtrl(pageNumber?: string, limit?: string, codeProgramme?: Array<string>, niveauGeo?: string, codeGeo?: Array<string>, theme?: Array<string>, siretBeneficiaire?: Array<string>, typesBeneficiaires?: Array<string>, annee?: Array<number>, domaineFonctionnel?: Array<string>, referentielProgrammation?: Array<string>, tags?: Array<string>, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<PaginatedBudgetLines>>;
+    public getBudgetCtrl(pageNumber?: string, limit?: string, codeProgramme?: Array<string>, niveauGeo?: string, codeGeo?: Array<string>, theme?: Array<string>, siretBeneficiaire?: Array<string>, typesBeneficiaires?: Array<string>, annee?: Array<number>, domaineFonctionnel?: Array<string>, referentielProgrammation?: Array<string>, tags?: Array<string>, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<PaginatedBudgetLines>>;
+    public getBudgetCtrl(pageNumber?: string, limit?: string, codeProgramme?: Array<string>, niveauGeo?: string, codeGeo?: Array<string>, theme?: Array<string>, siretBeneficiaire?: Array<string>, typesBeneficiaires?: Array<string>, annee?: Array<number>, domaineFonctionnel?: Array<string>, referentielProgrammation?: Array<string>, tags?: Array<string>, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<any> {
 
         let localVarQueryParameters = new HttpParams({encoder: this.encoder});
         if (pageNumber !== undefined && pageNumber !== null) {
@@ -177,6 +181,7 @@ export class BudgetService implements BudgetServiceInterface {
         if (localVarHttpHeaderAcceptSelected === undefined) {
             // to determine the Accept header
             const httpHeaderAccepts: string[] = [
+                'application/json'
             ];
             localVarHttpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
         }
@@ -202,10 +207,138 @@ export class BudgetService implements BudgetServiceInterface {
         }
 
         let localVarPath = `/budget`;
-        return this.httpClient.request<any>('get', `${this.configuration.basePath}${localVarPath}`,
+        return this.httpClient.request<PaginatedBudgetLines>('get', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
                 params: localVarQueryParameters,
+                responseType: <any>responseType_,
+                withCredentials: this.configuration.withCredentials,
+                headers: localVarHeaders,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * @param source 
+     * @param id 
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public getGetBudgetCtrl(source: string, id: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<EnrichedFlattenFinancialLinesSchema>;
+    public getGetBudgetCtrl(source: string, id: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<EnrichedFlattenFinancialLinesSchema>>;
+    public getGetBudgetCtrl(source: string, id: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<EnrichedFlattenFinancialLinesSchema>>;
+    public getGetBudgetCtrl(source: string, id: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<any> {
+        if (source === null || source === undefined) {
+            throw new Error('Required parameter source was null or undefined when calling getGetBudgetCtrl.');
+        }
+        if (id === null || id === undefined) {
+            throw new Error('Required parameter id was null or undefined when calling getGetBudgetCtrl.');
+        }
+
+        let localVarHeaders = this.defaultHeaders;
+
+        let localVarCredential: string | undefined;
+        // authentication (Bearer) required
+        localVarCredential = this.configuration.lookupCredential('Bearer');
+        if (localVarCredential) {
+            localVarHeaders = localVarHeaders.set('Authorization', localVarCredential);
+        }
+
+        let localVarHttpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (localVarHttpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+                'application/json'
+            ];
+            localVarHttpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
+        if (localVarHttpHeaderAcceptSelected !== undefined) {
+            localVarHeaders = localVarHeaders.set('Accept', localVarHttpHeaderAcceptSelected);
+        }
+
+        let localVarHttpContext: HttpContext | undefined = options && options.context;
+        if (localVarHttpContext === undefined) {
+            localVarHttpContext = new HttpContext();
+        }
+
+
+        let responseType_: 'text' | 'json' | 'blob' = 'json';
+        if (localVarHttpHeaderAcceptSelected) {
+            if (localVarHttpHeaderAcceptSelected.startsWith('text')) {
+                responseType_ = 'text';
+            } else if (this.configuration.isJsonMime(localVarHttpHeaderAcceptSelected)) {
+                responseType_ = 'json';
+            } else {
+                responseType_ = 'blob';
+            }
+        }
+
+        let localVarPath = `/budget/${this.configuration.encodeParam({name: "source", value: source, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}/${this.configuration.encodeParam({name: "id", value: id, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`;
+        return this.httpClient.request<EnrichedFlattenFinancialLinesSchema>('get', `${this.configuration.basePath}${localVarPath}`,
+            {
+                context: localVarHttpContext,
+                responseType: <any>responseType_,
+                withCredentials: this.configuration.withCredentials,
+                headers: localVarHeaders,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public getGetPlageAnnees(observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<Array<number>>;
+    public getGetPlageAnnees(observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<Array<number>>>;
+    public getGetPlageAnnees(observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<Array<number>>>;
+    public getGetPlageAnnees(observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<any> {
+
+        let localVarHeaders = this.defaultHeaders;
+
+        let localVarCredential: string | undefined;
+        // authentication (Bearer) required
+        localVarCredential = this.configuration.lookupCredential('Bearer');
+        if (localVarCredential) {
+            localVarHeaders = localVarHeaders.set('Authorization', localVarCredential);
+        }
+
+        let localVarHttpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (localVarHttpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+                'application/json'
+            ];
+            localVarHttpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
+        if (localVarHttpHeaderAcceptSelected !== undefined) {
+            localVarHeaders = localVarHeaders.set('Accept', localVarHttpHeaderAcceptSelected);
+        }
+
+        let localVarHttpContext: HttpContext | undefined = options && options.context;
+        if (localVarHttpContext === undefined) {
+            localVarHttpContext = new HttpContext();
+        }
+
+
+        let responseType_: 'text' | 'json' | 'blob' = 'json';
+        if (localVarHttpHeaderAcceptSelected) {
+            if (localVarHttpHeaderAcceptSelected.startsWith('text')) {
+                responseType_ = 'text';
+            } else if (this.configuration.isJsonMime(localVarHttpHeaderAcceptSelected)) {
+                responseType_ = 'json';
+            } else {
+                responseType_ = 'blob';
+            }
+        }
+
+        let localVarPath = `/budget/annees`;
+        return this.httpClient.request<Array<number>>('get', `${this.configuration.basePath}${localVarPath}`,
+            {
+                context: localVarHttpContext,
                 responseType: <any>responseType_,
                 withCredentials: this.configuration.withCredentials,
                 headers: localVarHeaders,

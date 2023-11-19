@@ -11,10 +11,9 @@
  */
 
 
-export interface TagsSchema { 
-    description?: string;
-    display_name: string;
-    type: string;
-    value?: string;
+export interface Pagination { 
+    page: number;
+    pageSize: number;
+    totalRows: number;
 }
 

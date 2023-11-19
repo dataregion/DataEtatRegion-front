@@ -17,9 +17,9 @@ export class DemarchesSimplifieesViewService {
         has_more_info: boolean;
         title?: string;
     }> {
-        const code_depart = this._financial.commune.code.substring(0, 2);
+        const code_depart = this._financial.commune?.code?.substring(0, 2);
         const annee = this._financial.annee;
-        const code_ref = this._financial.referentiel_programmation.code;
+        const code_ref = this._financial.referentiel_programmation?.code;
 
         // FIXME - POC API DEMARCHE_SIMPLIFIE
         // DEMARCHE 49721 pour le 29, Annee 2022 sur programmation DTER
@@ -44,8 +44,8 @@ export class DemarchesSimplifieesViewService {
             throwError(() => err);
         }
 
-        const montant = this._financial.montant_ae;
-        const siret = this._financial.siret.code;
+        const montant = this._financial.montant_ae!;
+        const siret = this._financial.siret?.code!;
 
         // FIXME - POC API DEMARCHE_SIMPLIFIE
         // DEMARCHE 49721 pour le 29, Annee 2022 sur programmation DTER

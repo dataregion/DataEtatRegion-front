@@ -48,16 +48,28 @@ import { InMemoryCache } from '@apollo/client';
 import { DATA_HTTP_SERVICE } from '@services/budget.service';
 
 import {
-  budgetApiModule,
+  budgetApiModule, budgetConfiguration,
 } from 'apps/clients/budget';
 import { BudgetDataHttpService } from '@services/http/budget-lines-http.service';
 
-export function apiConfigFactory(
+export function apiExternesConfigFactory(
   settingsService: SettingsService
 ): aeConfiguration {
   const params: aeConfigurationParameters = {
     withCredentials: false,
     basePath: settingsService.apiExternes,
+  };
+
+  return new aeConfiguration(params);
+}
+
+export function apiBudgetConfigFactory(
+  settingsService: SettingsService
+): aeConfiguration {
+  settingsService
+  const params: aeConfigurationParameters = {
+    withCredentials: false,
+    basePath: settingsService.apiFinancialDataV2
   };
 
   return new aeConfiguration(params);
@@ -77,18 +89,6 @@ registerLocaleData(localeFr);
       provide: SETTINGS,
       useClass: SettingsService,
     },
-    // TODO: here
-    // {
-    //   provide: DATA_HTTP_SERVICE,
-    //   useClass: FinancialDataHttpService,
-    //   multi: true,
-    // },
-    //
-    // {
-    //   provide: DATA_HTTP_SERVICE,
-    //   useClass: AdemeDataHttpService,
-    //   multi: true,
-    // },
     {
       provide: DATA_HTTP_SERVICE,
       useClass: BudgetDataHttpService,
@@ -140,7 +140,13 @@ registerLocaleData(localeFr);
     },
     {
       provide: aeConfiguration,
-      useFactory: apiConfigFactory,
+      useFactory: apiExternesConfigFactory,
+      deps: [SETTINGS],
+      multi: false,
+    },
+    {
+      provide: budgetConfiguration,
+      useFactory: apiBudgetConfigFactory,
       deps: [SETTINGS],
       multi: false,
     },

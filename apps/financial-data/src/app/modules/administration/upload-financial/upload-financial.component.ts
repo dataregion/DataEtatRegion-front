@@ -12,7 +12,6 @@ import {
   DataType,
 } from '@models/audit/audit-update-data.models';
 import { AuditHttpService } from '@services/http/audit.service';
-import { FinancialDataHttpService } from '@services/http/financial-data-http.service';
 import { AlertService, SessionService } from 'apps/common-lib/src/public-api';
 import {
   BehaviorSubject,
@@ -23,6 +22,7 @@ import {
   of,
 } from 'rxjs';
 import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
+import { BudgetDataHttpService } from '@services/http/budget-lines-http.service';
 
 @Component({
   selector: 'financial-upload-financial-component',
@@ -62,7 +62,7 @@ export class UploadFinancialComponent implements OnInit {
   public typeSelected: DataType | null = null;
 
   constructor(
-    private _service: FinancialDataHttpService,
+    private _service: BudgetDataHttpService,
     private _session: SessionService,
     private _auditService: AuditHttpService,
     private _alertService: AlertService

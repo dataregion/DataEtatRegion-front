@@ -5,7 +5,7 @@ import {
 import { DataHttpService, SearchParameters } from 'apps/common-lib/src/public-api';
 import { RefSiret } from '@models/refs/RefSiret';
 import { BopModel } from '@models/refs/bop.models';
-import { Observable, forkJoin, map, of } from 'rxjs';
+import { Observable, forkJoin, map } from 'rxjs';
 import { SettingsService } from '../../environments/settings.service';
 import { SETTINGS } from 'apps/common-lib/src/lib/environments/settings.http.service';
 import { HttpClient } from '@angular/common/http';
@@ -157,28 +157,28 @@ export class BudgetService {
         item.n_poste_ej,
         item.montant_ae,
         item.montant_cp,
-        item.programme.theme ?? '',
-        item.programme.code ?? '',
-        item.programme.label ?? '',
+        item.programme?.theme ?? '',
+        item.programme?.code ?? '',
+        item.programme?.label ?? '',
         item.domaine_fonctionnel?.code ?? '',
         item.domaine_fonctionnel?.label ?? '',
-        item.referentiel_programmation.label ?? '',
-        item.commune.label ?? '',
-        item.commune.label_crte ?? '',
-        item.commune.label_epci ?? '',
-        item.commune.arrondissement?.label ?? '',
-        item.commune.label_departement ?? '',
-        item.commune.label_region ?? '',
+        item.referentiel_programmation?.label ?? '',
+        item.commune?.label ?? '',
+        item.commune?.label_crte ?? '',
+        item.commune?.label_epci ?? '',
+        item.commune?.arrondissement?.label ?? '',
+        item.commune?.label_departement ?? '',
+        item.commune?.label_region ?? '',
         item.localisation_interministerielle?.code ?? '',
         item.localisation_interministerielle?.label ?? '',
         item.compte_budgetaire ?? '',
         item.contrat_etat_region && item.contrat_etat_region !== '#' ? item.contrat_etat_region : '',
         item.groupe_marchandise?.code ?? '',
         item.groupe_marchandise?.label ?? '',
-        item.siret.code,
-        item.siret.nom_beneficiare ?? '',
-        item.siret.categorie_juridique ?? '',
-        item.siret.code_qpv ?? '',
+        item.siret?.code,
+        item.siret?.nom_beneficiaire ?? '',
+        item.siret?.categorie_juridique ?? '',
+        item.siret?.code_qpv ?? '',
         item.date_cp,
         item.date_replication,
         item.annee,
@@ -195,10 +195,12 @@ export class BudgetService {
   }
 
   public getById(source: SourceFinancialData, id: number): Observable<FinancialDataModel> {
-    const service = this._services.find(s => s.getSource() === source);
-    if (service === undefined) return of()
 
-    return service.getById(id).pipe(
+    const service = this._services.find(s => s.getSources().includes(source));
+
+    if (service === undefined) throw new Error(`Aucun provider pour la source ${source}`);
+
+    return service.getById(source, id).pipe(
       map(data => service.mapToGeneric(data))
     );
   }

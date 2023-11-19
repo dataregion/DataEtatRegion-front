@@ -1,6 +1,6 @@
 /**
  * API Data transform
- * API de gestion des données financières
+ * Api de d\'accès aux données financières de l\'état <br /><strong>C\'est une API dediée à l\'outil interne de consultation budget. utilisez pas cette API pour intégrer nos données à votre système.</strong>
  *
  * The version of the OpenAPI document: 2.0
  * 
@@ -34,7 +34,8 @@ export interface EnrichedFlattenFinancialLinesSchema {
     compte_budgetaire?: string;
     contrat_etat_region?: string;
     created_at?: string;
-    date_dernier_paiement?: string;
+    dateDeCreation?: string;
+    dateDeDernierPaiement?: string;
     domaineFonctionnel_code?: string;
     domaineFonctionnel_label?: string;
     groupeMarchandise_code?: string;
@@ -64,9 +65,21 @@ export interface EnrichedFlattenFinancialLinesSchema {
     programme_theme?: string;
     referentielProgrammation_code?: string;
     referentielProgrammation_label?: string;
-    source?: string;
+    source?: EnrichedFlattenFinancialLinesSchema.SourceEnum;
     source_region?: string;
     tags?: Array<TagsSchema>;
     updated_at?: string;
 }
+export namespace EnrichedFlattenFinancialLinesSchema {
+    export type SourceEnum = 'FINANCIAL_DATA_AE' | 'FINANCIAL_DATA_CP' | 'FRANCE_RELANCE' | 'FRANCE_2030' | 'ADEME' | 'REFERENTIEL';
+    export const SourceEnum = {
+        FinancialDataAe: 'FINANCIAL_DATA_AE' as SourceEnum,
+        FinancialDataCp: 'FINANCIAL_DATA_CP' as SourceEnum,
+        FranceRelance: 'FRANCE_RELANCE' as SourceEnum,
+        France2030: 'FRANCE_2030' as SourceEnum,
+        Ademe: 'ADEME' as SourceEnum,
+        Referentiel: 'REFERENTIEL' as SourceEnum
+    };
+}
+
 

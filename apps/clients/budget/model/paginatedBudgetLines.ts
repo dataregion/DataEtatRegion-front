@@ -9,12 +9,12 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { Pagination } from './pagination';
+import { EnrichedFlattenFinancialLinesSchema } from './enrichedFlattenFinancialLinesSchema';
 
 
-export interface TagsSchema { 
-    description?: string;
-    display_name: string;
-    type: string;
-    value?: string;
+export interface PaginatedBudgetLines { 
+    items?: Array<EnrichedFlattenFinancialLinesSchema>;
+    pageInfo?: Pagination;
 }
 
