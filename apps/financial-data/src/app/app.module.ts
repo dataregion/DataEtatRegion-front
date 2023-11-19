@@ -46,8 +46,11 @@ import {
 } from 'apps/clients/apis-externes';
 import { InMemoryCache } from '@apollo/client';
 import { DATA_HTTP_SERVICE } from '@services/budget.service';
-import { FinancialDataHttpService } from '@services/http/financial-data-http.service';
-import { AdemeDataHttpService } from '@services/http/ademe-data-http.service';
+
+import {
+  budgetApiModule,
+} from 'apps/clients/budget';
+import { BudgetDataHttpService } from '@services/http/budget-lines-http.service';
 
 export function apiConfigFactory(
   settingsService: SettingsService
@@ -74,14 +77,21 @@ registerLocaleData(localeFr);
       provide: SETTINGS,
       useClass: SettingsService,
     },
+    // TODO: here
+    // {
+    //   provide: DATA_HTTP_SERVICE,
+    //   useClass: FinancialDataHttpService,
+    //   multi: true,
+    // },
+    //
+    // {
+    //   provide: DATA_HTTP_SERVICE,
+    //   useClass: AdemeDataHttpService,
+    //   multi: true,
+    // },
     {
       provide: DATA_HTTP_SERVICE,
-      useClass: FinancialDataHttpService,
-      multi: true,
-    },
-    {
-      provide: DATA_HTTP_SERVICE,
-      useClass: AdemeDataHttpService,
+      useClass: BudgetDataHttpService,
       multi: true,
     },
     {
@@ -166,6 +176,7 @@ registerLocaleData(localeFr);
     CommonLibModule,
     ManagementModule,
     aeApiModule,
+    budgetApiModule,
     ApolloModule,
   ],
 })

@@ -83,14 +83,9 @@ confirm() {
 }
 
 #
-# "corrige" un fichier json swagger
-# en retirant toutes les clefs "additionalProperties"
-# 
 # XXX: En effet, le generator n'aime pas cette proprieté et ignore la generation du modele si cette proprieté est à false.
 #
 fix_swagger_json_remove_additionalProperties() {
-  
-
   json_f="$1"
   temp_f=$(mktemp)
 
@@ -98,6 +93,23 @@ fix_swagger_json_remove_additionalProperties() {
 
   cp -a "$json_f" "$temp_f"
   jq 'walk(if type == "object" then del(.additionalProperties) else . end)' "$temp_f" > "$json_f"
+}
+
+#
+# XXX: Fix des types, sinon le generateur ne produit pas les champs dans le model
+#
+fix_swagger_json_take_firstof_type() {
+  json_f="$1"
+  temp_f=$(mktemp)
+
+  echo >&2 "Corrige le fichier swagger en simplifiant les types. tous les types de forme 'type': ['type1', 'type2'] => 'type': 'type1'"
+  echo >&2 "(Oui, c'est nécessaire pour que le générateur s'y retrouve....)"
+
+  cp -a "$json_f" "$temp_f"
+  # jq 'walk(if type == "object" and .type then .type |= .[0] else . end)' "$temp_f" > "$json_f"
+  jq 'walk(if type == "object" and has("type") and (.type | type) == "array" then .type |= .[0] else . end)' "$temp_f" > "$json_f"
+  
+  echo >&2 "Fichier sauvegardé ici: '$json_f'"
 }
 
 #
@@ -132,7 +144,10 @@ fi
 # Applique les fixes si nécessaire
 #
 fix_swagger_json_remove_additionalProperties "$temp_swagger"
+fix_swagger_json_take_firstof_type "$temp_swagger"
 
+# /tmp/tmp.43nywMtczG/swagger.json
+# temp_swagger="/home/rog/DEV_SGAR/front-data/tmp-swagger.json"
 #
 # Génère l'api
 #
