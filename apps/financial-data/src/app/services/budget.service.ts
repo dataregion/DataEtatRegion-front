@@ -57,8 +57,30 @@ export class BudgetService {
 
   public filterRefSiret$(nomOuSiret: string): Observable<RefSiret[]> {
 
-    const encodedNomOuSiret = encodeURIComponent(nomOuSiret);
-    const params = `limit=10&query=${encodedNomOuSiret}`;
+    const req$ = forkJoin(
+      {
+        byCode: this._filterByCode(nomOuSiret),
+        byDenomination: this._filterByDenomination(nomOuSiret),
+      }
+    )
+    .pipe(
+      map((full) => [...full.byCode, ...full.byDenomination]),
+    );
+
+    return req$
+  }
+
+  private _filterByCode(nomOuSiret: string): Observable<RefSiret[]> {
+    return this._filter_by("query", nomOuSiret)
+  }
+
+  private _filterByDenomination(nomOuSiret: string): Observable<RefSiret[]> {
+    return this._filter_by("denomination", nomOuSiret)
+  }
+  
+  private _filter_by(nomChamp: string, term: string) {
+    const encodedNomOuSiret = encodeURIComponent(term);
+    const params = `limit=10&${nomChamp}=${encodedNomOuSiret}`;
     const url = `${this._apiRef}/beneficiaire?${params}`;
     return this.http
       .get<DataPagination<RefSiret>>(url)
