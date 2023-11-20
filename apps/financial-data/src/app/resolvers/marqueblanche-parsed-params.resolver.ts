@@ -2,6 +2,7 @@ import { inject } from '@angular/core';
 import { ActivatedRouteSnapshot, ResolveFn } from '@angular/router';
 import { PreFilters } from '@models/search/prefilters.model';
 import { GeoHttpService, SearchByCodeParamsBuilder } from 'apps/common-lib/src/lib/services/geo-http.service';
+import { ReferentielsHttpService } from 'apps/common-lib/src/lib/services/referentiels.service';
 import { GeoModel, TypeLocalisation } from 'apps/common-lib/src/public-api';
 import { JSONObject } from 'apps/preference-users/src/lib/models/preference.models';
 import { NGXLogger } from 'ngx-logger';
@@ -23,6 +24,7 @@ import { groupby_mapping } from '@models/marqueblanche/groupby-mapping.model';
 import { synonymes_from_types_localisation, to_type_localisation } from '@models/marqueblanche/niveau-localisation.model';
 import { Beneficiaire } from '@models/search/beneficiaire.model';
 import { to_types_categories_juridiques } from '@models/marqueblanche/type-etablissement.model';
+import { ReferentielProgrammation } from '@models/refs/referentiel_programmation.model';
 
 export interface MarqueBlancheParsedParams extends Params {
   preFilters: PreFilters,
@@ -45,12 +47,14 @@ interface _HandlerContext extends HandlerContext {
   route: ActivatedRouteSnapshot,
   logger: NGXLogger,
   api_geo: GeoHttpService,
+  api_ref: ReferentielsHttpService,
 }
 
 function _resolver(route: ActivatedRouteSnapshot): Observable<{ data: MarqueBlancheParsedParams }> {
 
   const logger = inject(NGXLogger);
   const api_geo = inject(GeoHttpService)
+  const api_ref = inject(ReferentielsHttpService)
 
   const empty: MarqueBlancheParsedParams = { preFilters: {}, p_group_by: [], group_by: [], has_marqueblanche_params: false, fullscreen: false }
 
@@ -68,7 +72,7 @@ function _resolver(route: ActivatedRouteSnapshot): Observable<{ data: MarqueBlan
     has_marqueblanche_params = has_marqueblanche_params || route.queryParamMap.has(p_name);
   }
 
-  const handlerCtx = { api_geo, route, logger };
+  const handlerCtx = { api_geo, api_ref, route, logger };
   const model = of({ ...empty, has_marqueblanche_params })
     .pipe(
       mergeMap(previous => programmes(previous, handlerCtx)),
@@ -177,12 +181,33 @@ function referentiels_programmation(
   if (!codes)
     return of(previous);
 
-  const preFilters = {
-    ...previous.preFilters,
-    referentiels_programmation: codes
+  const referentiels = codes.map(x => { return { code: x } as ReferentielProgrammation })
+
+  const programmes = _extract_multiple_queryparams(previous, ctx, FinancialQueryParam.Programmes);
+  if (referentiels && programmes) {
+    referentiels.forEach(ref => {
+      if (!programmes.includes(ref.code.substring(0, 4).substring(1)))
+        throw Error("Vous devez utiliser des `programmes` et des `referentiels_programmation` associés.")
+    });
+  }
+  
+
+  function handle_refs(refs: ReferentielProgrammation[]) {
+    return {
+      ...previous,
+      preFilters: {
+        ...previous.preFilters,
+        referentiels_programmation: refs
+      }
+    };
   }
 
-  return of({...previous, preFilters})
+  const result = ctx.api_ref.search(codes.join(','), null)
+    .pipe(
+      map(refs => handle_refs(refs))
+    );
+
+  return result;
 }
 
 /** Renseigne les {@link GroupingColumn} suivant {@link MarqueBlancheParsedParams.p_group_by}*/

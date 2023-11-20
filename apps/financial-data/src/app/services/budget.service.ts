@@ -13,6 +13,7 @@ import { DataPagination } from 'apps/common-lib/src/lib/models/pagination/pagina
 import { SourceFinancialData } from '@models/financial/common.models';
 import { unparse } from 'papaparse';
 import { Tag, tag_fullname } from '@models/refs/tag.model';
+import { ReferentielProgrammation } from '@models/refs/referentiel_programmation.model';
 
 export const DATA_HTTP_SERVICE = new InjectionToken<DataHttpService<any, FinancialDataModel>>(
   'DataHttpService'
@@ -105,6 +106,19 @@ export class BudgetService {
     return this.http
       .get<DataPagination<BopModel>>(`${this._apiRef}/programme?${params}`)
       .pipe(map((response) => response.items));
+  }
+
+  public getReferentielsProgrammation(query: string | null): Observable<ReferentielProgrammation[]> {
+    let params = 'limit=500';
+    if (query)
+      params += '&code=' + query
+    return this.http
+      .get<DataPagination<ReferentielProgrammation>>(`${this._apiRef}/ref-programmation?${params}`)
+      .pipe(
+        map((response) => {
+          return response.items
+        })
+      );
   }
 
 

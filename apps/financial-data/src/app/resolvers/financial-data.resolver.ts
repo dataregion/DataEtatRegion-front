@@ -14,11 +14,12 @@ export const resolveFinancialData: ResolveFn<FinancialDataResolverModel> =
 
     return forkJoin([
       budgetService.getBop(),
+      budgetService.getReferentielsProgrammation(null),
       financialService.getAnnees()
     ]).pipe(
-      map(([fetchedBop, fetchedAnnees]) => {
+      map(([fetchedBop, fetchedRefs, fetchedAnnees]) => {
         const themes = Array.from(new Set(fetchedBop.map(bop => bop.label_theme))).sort();
-        const result = {themes: themes, bop: fetchedBop, annees: fetchedAnnees } as FinancialData;
+        const result = {themes: themes, bop: fetchedBop, referentiels_programmation: fetchedRefs, annees: fetchedAnnees } as FinancialData;
         return {data: result};
       })
     );

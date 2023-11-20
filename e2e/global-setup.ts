@@ -10,17 +10,17 @@ async function globalSetup(config: FullConfig): Promise<void> {
   await _login_profile(
     browser,
     'simple',
-    config.projects[0].use.baseURL,
-    process.env.TEST_USERNAME ?? '',
-    process.env.TEST_PASSWORD ?? ''
+    config.projects[0].use.baseURL ?? '',
+    process.env['TEST_USERNAME'] ?? '',
+    process.env['TEST_PASSWORD'] ?? ''
   );
 
   await _login_profile(
     browser,
     'admin',
-    config.projects[0].use.baseURL,
-    process.env.TEST_USERNAME_ADMIN ?? '',
-    process.env.TEST_PASSWORD_ADMIN ?? ''
+    config.projects[0].use.baseURL ?? '',
+    process.env['TEST_USERNAME_ADMIN'] ?? '',
+    process.env['TEST_PASSWORD_ADMIN'] ?? ''
   );
 
   await browser.close();

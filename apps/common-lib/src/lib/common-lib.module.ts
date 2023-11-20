@@ -11,6 +11,7 @@ import { TermOfUseComponent } from './components/term-of-use/term-of-use.compone
 import { DisplayDateComponent } from './components/display-date/display-date.component';
 import { AdvancedChipsMultiselectComponent } from './components/advanced-chips-multiselect/advanced-chips-multiselect.component';
 import { SelectMultipleComponent } from './components/select-multiple/select-multiple.component';
+import { BopsReferentielsComponent } from './components/bops-referentiels/bops-referentiels.component';
 
 @NgModule({
   declarations: [
@@ -21,6 +22,7 @@ import { SelectMultipleComponent } from './components/select-multiple/select-mul
   ],
   imports: [
     CommonModule,
+    BopsReferentielsComponent,
     LocalisationComponent,
     ReactiveFormsModule,
     FormsModule,
@@ -31,6 +33,7 @@ import { SelectMultipleComponent } from './components/select-multiple/select-mul
   ],
   exports: [
     AlertSnackBarComponent,
+    BopsReferentielsComponent,
     LocalisationComponent,
     HeaderComponent,
     DisplayDateComponent,

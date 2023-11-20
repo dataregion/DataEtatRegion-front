@@ -1,14 +1,14 @@
 {
   "name": "e2e",
   "version": "1.0.0",
-  "description": "Test end 2 end for le frontend",
+  "description": "Tests e2e pour le frontend",
   "main": "index.js",
   "scripts": {},
   "keywords": [],
   "author": "SIB",
   "license": "ISC",
   "devDependencies": {
-    "@playwright/test": "^1.35.0"
+    "@playwright/test": "^1.39.0"
   },
   "dependencies": {
     "dotenv": "^16.0.3"

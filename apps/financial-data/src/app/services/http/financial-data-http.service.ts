@@ -51,8 +51,9 @@ export class FinancialDataHttpService implements DataHttpService<FinancialDataMo
    */
   public search(search_params: SearchParameters): Observable<DataPagination<FinancialDataModel>> {
     if (
-      search_params?.bops == null &&
       search_params?.themes == null &&
+      search_params?.bops == null &&
+      search_params?.referentiels_programmation == null &&
       search_params?.niveau == null &&
       search_params?.locations == null &&
       search_params?.years == null &&
@@ -60,7 +61,6 @@ export class FinancialDataHttpService implements DataHttpService<FinancialDataMo
       search_params?.types_beneficiaires == null &&
       search_params?.tags == null &&
       search_params?.domaines_fonctionnels == null &&
-      search_params?.referentiels_programmation == null &&
       search_params?.source_region == null
     )
       return of();
@@ -103,7 +103,7 @@ export class FinancialDataHttpService implements DataHttpService<FinancialDataMo
       params += `&domaine_fonctionnel=${domaines_fonctionnels.join(',')}`;
 
     if (referentiels_programmation && referentiels_programmation.length > 0)
-      params += `&referentiel_programmation=${referentiels_programmation.join(',')}`;
+      params += `&referentiel_programmation=${referentiels_programmation.map(ref => ref.code).join(',')}`;
 
     if (source_region && source_region.length > 0)
       params += `&source_region=${source_region.join(',')}`;

@@ -144,16 +144,14 @@ test.describe("Lorsque l'on spécifie des domaines fonctionnels", () => {
   })
 })
 
-
 test.describe("Lorsque l'on spécifie des referentiels de programmation", () => {
-  const urlparam = "?referentiels_programmation=0119010101A9,010101040101&annee_min=2019&annee_max=2019";
+  const urlparam = "?referentiels_programmation=010101040101&annee_min=2019&annee_max=2019";
 
-  test("Un message notifie que l'on recherche également sur le referentiel de programmation", async({ page }) => {
-    await page.goto(urlparam);
-
-    await expect(page.getByTestId("notif-additionnal-search-on-referentiels-programmation"))
-      .toContainText("filtre sur le réferentiel de programmation")
-  })
+  test("Les filtres sont pré remplis", async ({ page }) => {
+    await _navigate(page, `/${urlparam}`);
+    let refProgrammation = page.getByTestId('ref-programmation-form-field')
+    await expect(refProgrammation).toContainText("010101040101");
+  });
 })
 
 test.describe("Lorsque l'on spécifie des regions source", () => {

@@ -10,6 +10,7 @@ export * from './lib/services/geo-http.service';
 export * from './lib/services/interface-data.service';
 export * from './lib/services/alert-service';
 export * from './lib/services/session.service';
+export * from './lib/services/referentiels.service';
 export * from './lib/services/loader.service';
 export * from './lib/environments/settings';
 export * from './lib/shared/material.module';
