@@ -105,7 +105,8 @@ export class BudgetDataHttpService implements DataHttpService<EnrichedFlattenFin
 
         const req$ = this._budgetApi.getBudgetCtrl(
             "0", "5000",
-            ...query_params) as unknown as Observable<DataPagination<EnrichedFlattenFinancialLinesSchema> | null>;
+            ...query_params
+        ) as unknown as Observable<DataPagination<EnrichedFlattenFinancialLinesSchema> | null>;
 
         return req$
     }
