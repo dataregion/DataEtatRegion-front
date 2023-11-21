@@ -1,7 +1,9 @@
+import { Optional } from "apps/common-lib/src/lib/utilities/optional.type"
+
 export interface Tag {
     type: string
-    value?: string
-    description?: string
+    value: Optional<string>
+    description: Optional<string>
     display_name: string
 }
 
