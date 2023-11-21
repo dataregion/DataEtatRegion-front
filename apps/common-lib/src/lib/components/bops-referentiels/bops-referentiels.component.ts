@@ -145,6 +145,7 @@ export class BopsReferentielsComponent {
   @Input()
   set selectedBops(data: BopModel[] | null) {
     this._selectedBops = data ?? null;
+    this.selectedBopsChange.emit(this._selectedBops);
 
     // Mise en place des options du select selon le niveau géographique sélectionné
     if (this.selectedBops != null) {
