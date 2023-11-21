@@ -61,8 +61,8 @@ export class BudgetLineHttpMapper {
 
     }
     private _map_beneficiaire_siret(object: EnrichedFlattenFinancialLinesSchema): Optional<Siret> {
-        
-        if (! object.beneficiaire_code)
+
+        if (!object.beneficiaire_code)
             return null
 
         return {
@@ -73,7 +73,7 @@ export class BudgetLineHttpMapper {
         };
     }
     private _map_loc_interministerielle(object: EnrichedFlattenFinancialLinesSchema): Optional<LocalisationInterministerielle> {
-        if (! object.localisationInterministerielle_code)
+        if (!object.localisationInterministerielle_code)
             return null
         return {
             code: object.localisationInterministerielle_code,
@@ -81,7 +81,7 @@ export class BudgetLineHttpMapper {
         }
     }
     private _map_groupe_marchandise(object: EnrichedFlattenFinancialLinesSchema): Optional<GroupeMarchandise> {
-        if (! object.groupeMarchandise_code)
+        if (!object.groupeMarchandise_code)
             return null;
         return {
             code: object.groupeMarchandise_code,
@@ -111,7 +111,7 @@ export class BudgetLineHttpMapper {
     private _map_domaine_fonctionnel(object: EnrichedFlattenFinancialLinesSchema): Optional<DomaineFonctionnel> {
 
         if (!object.domaineFonctionnel_code)
-            return undefined
+            return null
         return {
             code: object.domaineFonctionnel_code,
             label: object.domaineFonctionnel_label!,
@@ -143,9 +143,9 @@ export class BudgetLineHttpMapper {
         return tags;
     }
 
-    _map_beneficiaire_commune(object: EnrichedFlattenFinancialLinesSchema): Commune | undefined {
+    _map_beneficiaire_commune(object: EnrichedFlattenFinancialLinesSchema): Optional<Commune> {
         if (!object.beneficiaire_commune_code)
-            return undefined;
+            return null
 
         let arrondissement = null;
         if (object.beneficiaire_commune_arrondissement_code) {
