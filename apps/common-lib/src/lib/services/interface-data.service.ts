@@ -13,17 +13,17 @@ export type SearchTypeCategorieJuridique = TypeCategorieJuridique | OtherTypeCat
 
 export interface SearchParameters {
   themes: string[] | null;
-    bops: BopModel[] | null;
-    referentiels_programmation: ReferentielProgrammation[] | null;
-    niveau: TypeLocalisation | null;
-    locations: GeoModel[] | null,
-    years: number[] | null;
-    beneficiaires: RefSiret[] | null;
-    types_beneficiaires: SearchTypeCategorieJuridique[] | null;
-    tags: string[] | null;
+  bops: BopModel[] | null;
+  referentiels_programmation: ReferentielProgrammation[] | null;
+  niveau: TypeLocalisation | null;
+  locations: GeoModel[] | null,
+  years: number[] | null;
+  beneficiaires: RefSiret[] | null;
+  types_beneficiaires: SearchTypeCategorieJuridique[] | null;
+  tags: string[] | null;
 
-    domaines_fonctionnels: string[] | null;
-    source_region: string[] | null;
+  domaines_fonctionnels: string[] | null;
+  source_region: string[] | null;
 }
 
 export const SearchParameters_empty: SearchParameters = {
@@ -47,7 +47,7 @@ export const SearchParameters_empty: SearchParameters = {
  * T étant le type métier
  * M le modèle générique
  */
-export interface DataHttpService<T,M> {
+export interface DataHttpService<T, M> {
 
   search(search_parameters: SearchParameters): Observable<DataPagination<T> | null>;
 
