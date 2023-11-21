@@ -3,7 +3,7 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatDialogModule } from '@angular/material/dialog';
 import { RowData } from 'apps/grouping-table/src/lib/components/grouping-table/group-utils';
 import { InformationsSupplementairesComponent } from '../informations-supplementaires.component';
-import { FinancialDataModel, FinancialCp } from '@models/financial/financial-data.models';
+import { FinancialDataModel } from '@models/financial/financial-data.models';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { BudgetDataHttpService } from '@services/http/budget-lines-http.service';
 
