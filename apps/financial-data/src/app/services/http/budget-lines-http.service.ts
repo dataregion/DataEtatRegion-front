@@ -38,7 +38,8 @@ export class BudgetDataHttpService implements DataHttpService<EnrichedFlattenFin
     }
 
     _map(object: EnrichedFlattenFinancialLinesSchema): FinancialDataModel {
-        return this._mapper.map(object)
+        const mapped = this._mapper.map(object)
+        return mapped
     }
 
     getSources(): string[] {
