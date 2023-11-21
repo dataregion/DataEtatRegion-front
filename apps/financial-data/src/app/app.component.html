@@ -1,17 +1,26 @@
 <lib-header [ngClass]="{'hidden': grid_fullscreen }" [title]="'Budget Data État Bretagne'" [logo]="'BudgetEtat.svg'">
 
-  <li administration>
-    <button mat-icon-button [matMenuTriggerFor]="administration" matTooltip="Administration" class="fr-btn"
-      id="administration">
-      <mat-icon aria-hidden="false" aria-label="Administration" fontIcon="settings"/>
-    </button>
+  <li ressources *ngIf="showUpdateTagsPage">
+    <button [matMenuTriggerFor]="ressources" matTooltip="Ressources"
+      class="fr-btn fr-btn--tertiary-no-outline fr-icon-book-2-line"
+      id="ressources">Ressources</button>
+    <mat-menu #ressources="matMenu">
+      <a mat-menu-item href="https://geobretagne.fr/mviewer/?config=/apps/visuterritoire/config.xml" target="_blank">VisuTerritoire</a>
+      <a mat-menu-item href="https://superset.databretagne.fr/superset/welcome/" target="_blank">Tableaux de bord</a>
+      <a mat-menu-item href="https://api.databretagne.fr/budget/doc" target="_blank">Swagger</a>
+    </mat-menu>
+  </li>
 
+  <li administration>
+    <button [matMenuTriggerFor]="administration" matTooltip="Administration"
+      class="fr-btn fr-btn--tertiary-no-outline fr-icon-settings-5-fill"
+      id="administration">Admin</button>
     <mat-menu #administration="matMenu">
       <button mat-menu-item routerLink='administration/management' *ngIf="showManageUsersPage">Gestion des utilisateurs</button>
       <button mat-menu-item routerLink='administration/upload' *ngIf="showUploadFinancialDataPage">Charger des données</button>
-      <button mat-menu-item routerLink='administration/update-tags' *ngIf="showUpdateTagsPage">Modifier les tags</button>
     </mat-menu>
   </li>
+
 </lib-header>
 
 <div *ngIf="progressBarVisible === true">
@@ -20,7 +29,7 @@
 
 <router-outlet class="page-content-outlet"/>
 
-<lib-footer *ngIf="isAuthenticated" [ngClass]="{'hidden': grid_fullscreen }">
+<lib-footer *ngIf="isAuthenticated" [ngClass]="{'hidden': grid_fullscreen }" [logo]="'DataEtat.svg'">
   <li class="fr-footer__bottom-item" *ngIf="help">
     <a class="fr-footer__bottom-link" href="{{help}}" target="_blank">Aide en
       ligne</a>

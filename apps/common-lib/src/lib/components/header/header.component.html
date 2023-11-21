@@ -29,13 +29,21 @@
           <div class="fr-header__tools-links">
             <ul class="fr-btns-group" *ngIf="isLoggedIn && user !== null">
 
-              <ng-content select="[administration]"></ng-content>
-
               <li>
                 <button 
                   routerLink="preference" matTooltip="Mes recherches"
                   class="fr-btn fr-btn--tertiary-no-outline fr-icon-bookmark-line">Mes recherches</button>
               </li>
+
+              <li>
+                <button 
+                  routerLink="administration/update-tags" matTooltip="Tags"
+                  class="fr-btn fr-btn--tertiary-no-outline fr-icon-hashtag">Tags</button>
+              </li>
+
+              <ng-content select="[ressources]"></ng-content>
+
+              <ng-content select="[administration]"></ng-content>
 
               <li>
                 <button 
