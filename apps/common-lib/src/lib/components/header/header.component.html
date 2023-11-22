@@ -35,11 +35,7 @@
                   class="fr-btn fr-btn--tertiary-no-outline fr-icon-bookmark-line">Mes recherches</button>
               </li>
 
-              <li>
-                <button 
-                  routerLink="administration/update-tags" matTooltip="Tags"
-                  class="fr-btn fr-btn--tertiary-no-outline fr-icon-hashtag">Tags</button>
-              </li>
+              <ng-content select="[tags]"></ng-content>
 
               <ng-content select="[ressources]"></ng-content>
 

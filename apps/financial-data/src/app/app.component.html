@@ -1,6 +1,12 @@
 <lib-header [ngClass]="{'hidden': grid_fullscreen }" [title]="'Budget Data État Bretagne'" [logo]="'BudgetEtat.svg'">
 
-  <li ressources *ngIf="showUpdateTagsPage">
+  <li tags *ngIf="showUpdateTagsPage">
+    <button 
+      routerLink="administration/update-tags" matTooltip="Tags"
+      class="fr-btn fr-btn--tertiary-no-outline fr-icon-hashtag">Tags</button>
+  </li>
+
+  <li ressources>
     <button [matMenuTriggerFor]="ressources" matTooltip="Ressources"
       class="fr-btn fr-btn--tertiary-no-outline fr-icon-book-2-line"
       id="ressources">Ressources</button>
@@ -13,7 +19,7 @@
     </mat-menu>
   </li>
 
-  <li administration>
+  <li administration *ngIf="showManageUsersPage || showUploadFinancialDataPage">
     <button [matMenuTriggerFor]="administration" matTooltip="Administration"
       class="fr-btn fr-btn--tertiary-no-outline fr-icon-settings-5-fill"
       id="administration">Admin</button>
