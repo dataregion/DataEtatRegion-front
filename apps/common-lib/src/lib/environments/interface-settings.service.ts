@@ -1,4 +1,4 @@
-import { Keycloak, Settings } from 'apps/common-lib/src/public-api';
+import { Keycloak, Ressources, Settings } from 'apps/common-lib/src/public-api';
 /* eslint no-unused-vars: 0 */  // --> OFF
 
 
@@ -7,4 +7,5 @@ export interface ISettingsService {
   getSetting(): Settings;
 
   getKeycloakSettings(): Keycloak;
+  getRessources(): Ressources;
 }

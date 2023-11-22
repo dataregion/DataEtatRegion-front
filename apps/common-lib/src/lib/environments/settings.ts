@@ -12,6 +12,14 @@ export class Keycloak {
   hostname_client_id_mappings: HostnameClientIdMappings = {}
 }
 
+export class Ressources {
+  visuterritoire = '';
+  graphiques = '';
+  api_swagger = '';
+  documentation = '';
+  suivi_usage = '';
+}
+
 export interface NocodbViews {
   [k: string]: string;
 }
@@ -37,6 +45,7 @@ export class Settings {
   production = false;
   apis: IApi | undefined = undefined;
   keycloak: Keycloak = new Keycloak();
+  ressources: Ressources = new Ressources();
   contact: string | undefined = undefined;
   url_github: string | undefined = undefined;
 }
