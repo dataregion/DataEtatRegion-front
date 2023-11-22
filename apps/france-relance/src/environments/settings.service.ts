@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ISettingsService } from 'apps/common-lib/src/lib/environments/interface-settings.service';
-import { IApi, Settings, Keycloak } from 'apps/common-lib/src/public-api';
+import { IApi, Settings, Keycloak, Ressources } from 'apps/common-lib/src/public-api';
 
 class Api implements IApi {
   franceRelance = '';
@@ -22,6 +22,9 @@ export class SettingsService implements ISettingsService {
   }
   getKeycloakSettings(): Keycloak {
     return this.settings.keycloak;
+  }
+  getRessources(): Ressources {
+    return this.settings.ressources;
   }
 
   getSetting(): Settings {
