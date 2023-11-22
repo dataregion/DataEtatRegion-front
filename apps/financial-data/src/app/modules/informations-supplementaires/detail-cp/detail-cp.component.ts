@@ -36,7 +36,7 @@ export class DetailCpComponent {
   }
   @Input() set financial(financial) {
     this._financial = financial;
-    this.hasCp = this._financial.financial_cp !== undefined ? this._financial.financial_cp?.length > 0 : false;
+    this.hasCp = this._financial.financial_cp != null ? this._financial.financial_cp?.length > 0 : false;
   }
 
   format_date(date: string) {

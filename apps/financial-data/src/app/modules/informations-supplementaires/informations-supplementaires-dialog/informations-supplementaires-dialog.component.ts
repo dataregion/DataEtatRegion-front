@@ -3,9 +3,9 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatDialogModule } from '@angular/material/dialog';
 import { RowData } from 'apps/grouping-table/src/lib/components/grouping-table/group-utils';
 import { InformationsSupplementairesComponent } from '../informations-supplementaires.component';
-import { FinancialDataModel, FinancialCp } from '@models/financial/financial-data.models';
-import { FinancialDataHttpService } from '@services/http/financial-data-http.service';
+import { FinancialDataModel } from '@models/financial/financial-data.models';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { BudgetDataHttpService } from '@services/http/budget-lines-http.service';
 
 export interface InformationsSupplementairesDialogData {
   row: RowData
@@ -27,7 +27,7 @@ export class InformationsSupplementairesDialogComponent {
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: InformationsSupplementairesDialogData,
-    private _httpService: FinancialDataHttpService
+    private _httpService: BudgetDataHttpService
     ) {
     this.financial_data = data.row as FinancialDataModel;
 
@@ -37,7 +37,7 @@ export class InformationsSupplementairesDialogComponent {
       .pipe(takeUntilDestroyed())
       .subscribe({
         next: result => {
-          this.financial_data = {...this.financial_data, financial_cp: result as unknown as FinancialCp[]}
+          this.financial_data = {...this.financial_data, financial_cp: result }
         },
         error: err => console.error(err)
       })

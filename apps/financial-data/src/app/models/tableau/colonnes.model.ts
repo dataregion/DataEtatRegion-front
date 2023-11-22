@@ -1,3 +1,4 @@
+import { FinancialDataModel } from "@models/financial/financial-data.models";
 import { Tag } from "@models/refs/tag.model";
 import { AggregatorFns, ColumnMetaDataDef } from "apps/grouping-table/src/lib/components/grouping-table/group-utils";
 
@@ -19,8 +20,10 @@ export const colonnes: ColumnMetaDataDef[] = [
     {
         name: 'beneficiaire',
         label: 'Bénéficiaire',
-        renderFn: (row) =>
-            row['siret'] ? row['siret']['nom_beneficiare'] : ''
+        renderFn: (row) => {
+            const fd = row as FinancialDataModel;
+            return fd.siret?.nom_beneficiaire ?? ''
+        }
     },
     {
         name: 'montant_ae',
