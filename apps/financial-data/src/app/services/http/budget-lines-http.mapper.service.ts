@@ -70,14 +70,44 @@ export class BudgetLineHttpMapper {
             nom_beneficiaire: object.beneficiaire_denomination,
             categorie_juridique: this._map_beneficiaire_categorie_juridique(object),
             code_qpv: object.beneficiaire_qpv_code,
+            label_qpv: object.beneficiaire_qpv_label,
         };
     }
     private _map_loc_interministerielle(object: EnrichedFlattenFinancialLinesSchema): Optional<LocalisationInterministerielle> {
         if (!object.localisationInterministerielle_code)
             return null
+        
+        let commune: Optional<Commune> = null;
+        if (object.localisationInterministerielle_commune_code) {
+
+            let arrondissement = null;
+            if (object.localisationInterministerielle_commune_arrondissement_code) {
+                arrondissement = {
+                    code: object.localisationInterministerielle_commune_arrondissement_code,
+                    label: object.localisationInterministerielle_commune_arrondissement_label!,
+                }
+            }
+
+            commune = {
+                code: object.localisationInterministerielle_commune_code,
+                label: object.localisationInterministerielle_commune_label!,
+                code_crte: object.localisationInterministerielle_commune_codeCrte,
+                label_crte: object.localisationInterministerielle_commune_labelCrte,
+                code_departement: object.localisationInterministerielle_commune_codeDepartement,
+                label_departement: object.localisationInterministerielle_commune_labelDepartement,
+                code_epci: object.localisationInterministerielle_commune_codeEpci,
+                label_epci: object.localisationInterministerielle_commune_labelEpci,
+                code_region: object.localisationInterministerielle_commune_codeRegion,
+                label_region: object.localisationInterministerielle_commune_labelRegion,
+                arrondissement: arrondissement,
+            }
+        }
+
         return {
             code: object.localisationInterministerielle_code,
             label: object.localisationInterministerielle_label!,
+            code_departement: object.localisationInterministerielle_codeDepartement,
+            commune: commune,
         }
     }
     private _map_groupe_marchandise(object: EnrichedFlattenFinancialLinesSchema): Optional<GroupeMarchandise> {

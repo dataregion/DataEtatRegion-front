@@ -12,12 +12,12 @@ import { ActivatedRoute, Data } from '@angular/router';
 import { AlertService } from 'apps/common-lib/src/public-api';
 import { GridInFullscreenStateService } from 'apps/common-lib/src/lib/services/grid-in-fullscreen-state.service';
 import {
-  ColumnsMetaData,
-  ColumnMetaDataDef,
   DisplayedOrderedColumn,
   GroupingColumn,
   RowData,
   TableData,
+  ParameterizedColumnsMetaData,
+  ColumnsMetaData,
 } from 'apps/grouping-table/src/lib/components/grouping-table/group-utils';
 import { GroupingConfigDialogComponent } from 'apps/grouping-table/src/lib/components/grouping-config-dialog/grouping-config-dialog.component';
 import { StructureColumnsDialogComponent } from 'apps/grouping-table/src/lib/components/structure-columns-dialog/structure-columns-dialog.component';
@@ -27,7 +27,7 @@ import { MarqueBlancheParsedParamsResolverModel } from '../../resolvers/marquebl
 import { NGXLogger } from 'ngx-logger';
 import { delay } from 'rxjs';
 import { PreFilters } from '@models/search/prefilters.model';
-import { colonnes } from '@models/tableau/colonnes.model';
+import { colonnes, FinancialColumnMetaDataDef } from '@models/tableau/colonnes.model';
 import { QueryParam } from 'apps/common-lib/src/lib/models/marqueblanche/query-params.enum';
 import { Tag } from '@models/refs/tag.model';
 
@@ -39,7 +39,10 @@ import { Tag } from '@models/refs/tag.model';
 export class HomeComponent implements OnInit {
   private dialog = inject(MatDialog);
 
-  columnsMetaData: ColumnsMetaData;
+  columnsMetaData: ParameterizedColumnsMetaData<FinancialColumnMetaDataDef>;
+  get genericColumnsMetadata(): ColumnsMetaData {
+    return this.columnsMetaData as ColumnsMetaData;
+  }
 
   tableData?: TableData;
 
@@ -92,7 +95,7 @@ export class HomeComponent implements OnInit {
     this.displayedOrderedColumns = this._getDefaultOrder();
     this.groupingColumns = this._getDefaultOrderGrouping();
 
-    this.columnsMetaData = new ColumnsMetaData(colonnes);
+    this.columnsMetaData = new ParameterizedColumnsMetaData<FinancialColumnMetaDataDef>(colonnes);
     this.preFilter = undefined;
   }
 
@@ -223,7 +226,7 @@ export class HomeComponent implements OnInit {
    * Changement de l'ordre des colonnes et de leur statut displayed
    */
   private _applyOrderAndFilter(): void {
-    let newColumns: ColumnMetaDataDef[] = this.columnsMetaData.data
+    let newColumns: FinancialColumnMetaDataDef[] = this.columnsMetaData.data
     // On ordonne les colonnes
     newColumns = newColumns.sort((col1, col2) => {
       const index1 = this.displayedOrderedColumns.findIndex((col) => col.columnLabel === col1.label)
@@ -239,7 +242,7 @@ export class HomeComponent implements OnInit {
         delete col.displayed;
     });
     // On réinstancie la variable pour la détection du ngOnChanges
-    this.columnsMetaData = new ColumnsMetaData(newColumns);
+    this.columnsMetaData = new ParameterizedColumnsMetaData<FinancialColumnMetaDataDef>(newColumns);
   }
 
   private _getDefaultOrder(): DisplayedOrderedColumn[] {

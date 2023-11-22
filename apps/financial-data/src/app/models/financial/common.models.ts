@@ -27,6 +27,7 @@ export interface Siret extends Code {
   nom_beneficiaire: Optional<string>,
   categorie_juridique: Optional<TypeCategorieJuridique>
   code_qpv: Optional<string>
+  label_qpv: Optional<string>
 }
 
 export interface Commune extends CodeLabel {
@@ -43,7 +44,10 @@ export interface Commune extends CodeLabel {
 
 export interface Arrondissement extends CodeLabel {}
 export interface GroupeMarchandise extends CodeLabel {}
-export interface LocalisationInterministerielle extends CodeLabel {}
+export interface LocalisationInterministerielle extends CodeLabel {
+  code_departement: Optional<string>
+  commune: Optional<Commune>
+}
 export interface DomaineFonctionnel extends CodeLabel {}
 
 export enum SourceFinancialData {
