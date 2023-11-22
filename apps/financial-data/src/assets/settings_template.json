@@ -17,6 +17,13 @@
     "referentiel": "url api referentiel",
     "apis_externes": "url api externes"
   },
+  "ressources": {
+    "visuterritoire": "<url visuterritoire>",
+    "graphiques": "<url superset>",
+    "api_swagger": "<url swagger referentiel>",
+    "documentation": "<url doc utilisateur>",
+    "suivi_usage": "<url superset suivi>"
+  },
   "contact": "http://contact.fr",
   "help_pdf": "https://www.africau.edu/images/default/sample.pdf"
 }

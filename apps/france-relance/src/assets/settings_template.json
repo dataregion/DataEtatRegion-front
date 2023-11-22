@@ -13,5 +13,7 @@
   "apis": {
     "franceRelance": "<url api franceRelance>",
     "administration": ""
+  },
+  "ressources": {
   }
 }
