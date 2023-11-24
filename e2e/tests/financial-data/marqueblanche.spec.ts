@@ -169,5 +169,4 @@ test.describe("Lorsque l'on spécifie des regions source", () => {
 async function _navigate(page: Page, url: string) {
     await mockRefApi(page);
     await page.goto(url);
-    await page.waitForResponse('**/api/v1/ae**', {timeout: 60000});
 }
