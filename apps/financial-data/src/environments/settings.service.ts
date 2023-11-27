@@ -4,12 +4,14 @@ import {
   IApi,
   Settings,
   Keycloak,
+  Ressources,
 } from 'apps/common-lib/src/public-api';
 
 
 
 class Api implements IApi {
   financial_data = '';
+  financial_data_v2 = '';
   administration = '';
   geo = '';
   referentiel = '';
@@ -28,6 +30,7 @@ export class SettingsService implements ISettingsService {
     this.settings = new FinancialSettings();
     this.settings.apis = new Api();
     this.settings.keycloak = new Keycloak();
+    this.settings.ressources = new Ressources();
   }
 
   setSettings(settings: Settings): void {
@@ -36,6 +39,10 @@ export class SettingsService implements ISettingsService {
 
   getKeycloakSettings(): Keycloak {
     return this.settings.keycloak;
+  }
+
+  getRessources(): Ressources {
+    return this.settings.ressources;
   }
 
   getSetting(): FinancialSettings {
@@ -56,6 +63,10 @@ export class SettingsService implements ISettingsService {
 
   public get apiFinancialData(): string {
     return (this.settings.apis as Api).financial_data;
+  }
+
+  public get apiFinancialDataV2(): string {
+    return (this.settings.apis as Api).financial_data_v2;
   }
 
   public get apiAdministration(): string {

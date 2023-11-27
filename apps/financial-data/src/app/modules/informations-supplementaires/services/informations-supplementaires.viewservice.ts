@@ -87,8 +87,8 @@ export class InformationSupplementairesViewService {
 
   entreprise_light(): EtablissementLight {
     return {
-      siret: this._financial.siret.code,
-      nom: this._financial.siret.nom_beneficiare,
+      siret: this._financial?.siret?.code,
+      nom: this._financial?.siret?.nom_beneficiaire,
     } as EtablissementLight;
   }
 
@@ -122,7 +122,7 @@ export class InformationSupplementairesViewService {
   api_subvention_full_error: ModelError | null = null;
   api_subvention_full$(): Observable<SubventionFull> {
     const full = forkJoin({
-      siret: this._financial.siret.code,
+      siret: this._financial.siret?.code!,
       subvention: this.api_subvention_subvention$,
       contact: this.api_subvention_president$,
     }).pipe(
@@ -156,7 +156,7 @@ export class InformationSupplementairesViewService {
   private get api_entreprise_info$() {
     if (this._api_entreprise_info$ == undefined) {
       this._api_entreprise_info$ = this._ae.getInfoEntrepriseCtrl(
-        this._financial.siret.code,
+        this._financial.siret?.code!,
         'body',
         false,
         this._options
@@ -195,7 +195,7 @@ export class InformationSupplementairesViewService {
 
   private get api_subvention$() {
     if (this._api_subvention$ === undefined) {
-      const siret = this._financial.siret.code;
+      const siret = this._financial.siret?.code!;
       return this._ae
         .getInfoSubventionCtrl(siret!, 'body', false, this._options)
         .pipe(shareReplay(1));

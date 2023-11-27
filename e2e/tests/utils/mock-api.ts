@@ -4,15 +4,15 @@ import { default as financial } from '../../mock-data/financial-data/financial.j
 import { Page } from '@playwright/test';
 
 function is_url_ae_annees(url: URL) {
-  return url.pathname == '/financial-data/api/v1/ae/annees'
+  return url.pathname == '/financial-data/api/v2/budget/annees'
 }
 
 function is_url_budget_programmes(url: URL) {
   return url.pathname == '/budget/api/v1/programme'
 }
 
-function is_url_ae(url: URL) {
-  return url.pathname == '/financial-data/api/v1/ae'
+function is_url_lignes_budgetaires(url: URL) {
+  return url.pathname == '/financial-data/api/v2/budget'
 }
 
 async function mockRefApi(page: Page) {
@@ -33,7 +33,7 @@ async function mockRefApi(page: Page) {
   )
 
   await page.route(
-    is_url_ae,
+    is_url_lignes_budgetaires,
     async (route: any) => {
       const json = financial;
       await route.fulfill({ json });

@@ -1,17 +1,34 @@
 <lib-header [ngClass]="{'hidden': grid_fullscreen }" [title]="'Budget Data État Bretagne'" [logo]="'BudgetEtat.svg'">
 
-  <li administration>
-    <button mat-icon-button [matMenuTriggerFor]="administration" matTooltip="Administration" class="fr-btn"
-      id="administration">
-      <mat-icon aria-hidden="false" aria-label="Administration" fontIcon="settings"/>
-    </button>
+  <li tags *ngIf="showUpdateTagsPage">
+    <button 
+      routerLink="administration/update-tags" matTooltip="Tags"
+      class="fr-btn fr-btn--tertiary-no-outline fr-icon-hashtag">Tags</button>
+  </li>
 
+  <li ressources>
+    <button [matMenuTriggerFor]="ressources" matTooltip="Ressources"
+      class="fr-btn fr-btn--tertiary-no-outline fr-icon-book-2-line"
+      id="ressources">Ressources</button>
+    <mat-menu #ressources="matMenu">
+      <a mat-menu-item *ngIf="getRessource('visuterritoire')" href="{{ getRessource('visuterritoire') }}" target="_blank">VisuTerritoire</a>
+      <a mat-menu-item *ngIf="getRessource('graphiques')" href="{{ getRessource('graphiques') }}" target="_blank">Graphiques</a>
+      <a mat-menu-item *ngIf="getRessource('api_swagger')" href="{{ getRessource('api_swagger') }}" target="_blank">API Swagger</a>
+      <a mat-menu-item *ngIf="getRessource('documentation')" href="{{ getRessource('documentation') }}" target="_blank">Documentation</a>
+      <a mat-menu-item *ngIf="getRessource('suivi_usage')" href="{{ getRessource('suivi_usage') }}" target="_blank">Suivi usage</a>
+    </mat-menu>
+  </li>
+
+  <li administration *ngIf="showManageUsersPage || showUploadFinancialDataPage">
+    <button [matMenuTriggerFor]="administration" matTooltip="Administration"
+      class="fr-btn fr-btn--tertiary-no-outline fr-icon-settings-5-fill"
+      id="administration">Admin</button>
     <mat-menu #administration="matMenu">
       <button mat-menu-item routerLink='administration/management' *ngIf="showManageUsersPage">Gestion des utilisateurs</button>
       <button mat-menu-item routerLink='administration/upload' *ngIf="showUploadFinancialDataPage">Charger des données</button>
-      <button mat-menu-item routerLink='administration/update-tags' *ngIf="showUpdateTagsPage">Modifier les tags</button>
     </mat-menu>
   </li>
+
 </lib-header>
 
 <div *ngIf="progressBarVisible === true">
@@ -20,7 +37,7 @@
 
 <router-outlet class="page-content-outlet"/>
 
-<lib-footer *ngIf="isAuthenticated" [ngClass]="{'hidden': grid_fullscreen }">
+<lib-footer *ngIf="isAuthenticated" [ngClass]="{'hidden': grid_fullscreen }" [logo]="'DataEtat.svg'">
   <li class="fr-footer__bottom-item" *ngIf="help">
     <a class="fr-footer__bottom-link" href="{{help}}" target="_blank">Aide en
       ligne</a>

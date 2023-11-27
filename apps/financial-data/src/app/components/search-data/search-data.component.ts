@@ -42,6 +42,7 @@ import {
   TypeLocalisation,
 } from 'apps/common-lib/src/public-api';
 import { Bop } from '@models/search/bop.model';
+import { ReferentielProgrammation } from '@models/refs/referentiel_programmation.model';
 import { BudgetService } from '@services/budget.service';
 import { NGXLogger } from 'ngx-logger';
 import { PreFilters } from '@models/search/prefilters.model';
@@ -56,6 +57,7 @@ import { TagFieldData } from './tags-field-data.model';
 import { AutocompleteTagsService } from './autocomplete-tags.service';
 import { TypeCategorieJuridique } from '@models/financial/common.models';
 import { tag_fullname } from '@models/refs/tag.model';
+import { AutocompleteRefProgrammationService } from './autocomplete-ref-programmation.service';
 
 
 @Component({
@@ -75,93 +77,36 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
 
   public additional_searchparams: AdditionalSearchParameters = empty_additional_searchparams;
 
-  public bop: BopModel[] = [];
+  public bops: BopModel[] = [];
   public themes: string[] = [];
   public annees: number[] = [];
-
-  public filteredBop: BopModel[] | null = null;
+  public filteredBops: BopModel[] | null = null;
+  public filteredReferentiels: ReferentielProgrammation[] | null = null;
 
   /**
-   * Themes
+   * Thèmes, Programmes, Référentiels programmation
    */
-  get selectedTheme() : string[] | null {
+  get selectedThemes() : string[] | null {
     return this.searchForm.get('theme')?.value ?? null;
   }
-  set selectedTheme(data: string[] | null) {
+  set selectedThemes(data: string[] | null) {
     this.searchForm.get('theme')?.setValue(data ?? null);
-    // Filtrage des bops en fonction des thèmes sélectionnés
-    this.filteredBop = [];
-    if (this.selectedTheme && this.selectedTheme.length > 0)
-      this.selectedTheme?.forEach((theme) => {
-        const filtered = this.bop.filter(bop => theme !== null && theme.includes(bop.label_theme));
-        if (this.filteredBop)
-          this.filteredBop = this.filteredBop?.concat(filtered);
-      });
-    else {
-      this.filteredBop = this.bop;
-    }
-    this.selectedBops = null
   }
-
-  /**
-   * Bops
-   */
   get selectedBops() : BopModel[] | null {
     return this.searchForm.get('bops')?.value ?? null;
   }
   set selectedBops(data: BopModel[] | null) {
     this.searchForm.get('bops')?.setValue(data ?? null);
   }
-  // Les fonctions injectées au component DOIVENT être lambdas pour garder le contexte initial
-  public renderBopOption = (bop: BopModel): string => {
-    return bop.code + (bop.label === null ?  '' : ' - ' + bop.label)
+  get selectedReferentiels() : ReferentielProgrammation[] | null {
+    return this.searchForm.get('referentiels_programmation')?.value ?? null;
   }
-  public filterBop = (value: string): BopModel[] => {
-    const filterValue = value ? value.toLowerCase() : '';
-    const themes = this.searchForm.controls['theme'].value;
-
-    const filterGeo = this.bop.filter((option) => {
-      if (themes) {
-        return (
-          option.label_theme != null &&
-          themes.includes(option.label_theme) &&
-          option.label?.toLowerCase().includes(filterValue)
-        );
-      }
-      return (
-        option.label?.toLowerCase().includes(filterValue) ||
-        option.code.startsWith(filterValue)
-      );
-    });
-
-    const controlBop = this.searchForm.controls['bops'].value;
-
-    if (controlBop) {
-      // si des BOPs sont déjà sélectionné
-      return [
-        ...controlBop,
-        ...filterGeo.filter(
-          (element) =>
-            controlBop.findIndex(
-              (valueSelected: BopModel) => valueSelected.code === element.code
-            ) === -1 // on retire les doublons éventuels
-        ),
-      ];
-    } else {
-      return filterGeo;
-    }
-  }
-  public renderTriggerLabel = (bops: BopModel[]) => {
-    let label: string = ''
-    if (bops)
-      bops.forEach((bop, i) => {
-        label += (bop.code + ' - ' + bop.label) + (i !== bops.length - 1 ? ', ' : '')
-      })
-    return label
+  set selectedReferentiels(data: ReferentielProgrammation[] | null) {
+    this.searchForm.get('referentiels_programmation')?.setValue(data ?? null);
   }
 
   /**
-   * Locations
+   * Localisations
    */
   get selectedNiveau() : TypeLocalisation | null {
     return this.searchForm.get('niveau')?.value ?? null;
@@ -177,10 +122,11 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
   }
 
   /**
-   * Year
+   * Années
    */
   get selectedYear() : number[] | null {
-    return this.searchForm.get('year')?.value ?? null;
+    const annees = this.searchForm.get('year')?.value;
+    return annees && annees.length != 0 ? annees : null;
   }
   set selectedYear(data: number[] | null) {
     this.searchForm.get('year')?.setValue(data ?? null);
@@ -201,17 +147,17 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
     [OtherTypeCategorieJuridique.AUTRES, "Autres"]
   ]);
   get selectedTypesBenef() : SearchTypeCategorieJuridique[] | null {
-    return this.additional_searchparams.types_beneficiaires ?? null;
+    return this.searchForm.get('types_beneficiaires')?.value ?? null;
   }
   set selectedTypesBenef(data: SearchTypeCategorieJuridique[] | null) {
-    this.additional_searchparams.types_beneficiaires = data ?? [];
+    this.searchForm.get('types_beneficiaires')?.setValue(data ?? null);
   }
   public renderTypesBenefOption = (t: SearchTypeCategorieJuridique): string => {
     const type: string | undefined = this._prettyTypes.has(t) ? this._prettyTypes.get(t) : t;
     return type ? type.charAt(0).toUpperCase() + type.slice(1) : ""
   }
   public renderTypesBenefLabel = (types: SearchTypeCategorieJuridique[]) => {
-    return types.map(t => this._prettyTypes.has(t) ? this._prettyTypes.get(t) : t).join(', ')
+    return types?.map(t => this._prettyTypes.has(t) ? this._prettyTypes.get(t) : t).join(', ')
   }
 
   /**
@@ -298,11 +244,13 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
     private _logger: NGXLogger,
     private _autocompleteBeneficiaires: AutocompleteBeneficiaireService,
     private _autocompleteTags: AutocompleteTagsService,
+    private _autocompleteReferentiels: AutocompleteRefProgrammationService,
   ) {
     // Formulaire avc champs déclarés dans l'ordre
     this.searchForm = new FormGroup<SearchForm>({
       theme: new FormControl<string[] | null>(null),
       bops: new FormControl<Bop[] | null>(null),
+      referentiels_programmation: new FormControl<ReferentielProgrammation[] | null>(null),
       niveau: new FormControl<TypeLocalisation | null>(null),
       location: new FormControl({ value: null, disabled: false }, []),
       year: new FormControl<number[]>([], {
@@ -334,10 +282,11 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
 
     this.displayError = false;
     this.themes = financial.themes;
-    this.bop = financial.bop;
+    this.bops = financial.bop;
+    this.filteredReferentiels = financial.referentiels_programmation;
     this.annees = financial.annees;
 
-    this.filteredBop = this.bop;
+    this.filteredBops = this.bops;
 
     if (!mb_has_params)
       return
@@ -382,18 +331,16 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
 
     const search_parameters: SearchParameters = {
       ...SearchParameters_empty,
-      beneficiaires: this.selectedBeneficiaires || null,
-      types_beneficiaires: this.additional_searchparams.types_beneficiaires,
-      bops: formValue.bops || null,
       themes: formValue.theme || null,
-      years: formValue.year || null,
+      bops: formValue.bops || null,
+      referentiels_programmation: this.selectedReferentiels || null,//this.additional_searchparams?.referentiels_programmation || null,
       niveau:  formValue.niveau || null,
       locations:  formValue.location,
-
+      years: this.selectedYear,
+      beneficiaires: this.selectedBeneficiaires || null,
+      types_beneficiaires: this.selectedTypesBenef || null,//this.additional_searchparams.types_beneficiaires,
       tags: formValue.tags?.map(tag => tag_fullname(tag)) ?? null,
-
       domaines_fonctionnels: this.additional_searchparams?.domaines_fonctionnels || null,
-      referentiels_programmation: this.additional_searchparams?.referentiels_programmation || null,
       source_region: this.additional_searchparams?.sources_region || null,
     }
 
@@ -428,7 +375,6 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
    */
   private _buildPreference(object: JSONObject): Preference {
     const preference: Preference = { filters: {} };
-
     Object.keys(object).forEach((key) => {
       if (
         object[key] !== null &&
@@ -556,9 +502,13 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
             (themeFilter) =>  themeFilter  === theme
           ) !== -1
       );
-      this.selectedTheme = themeSelected
+      this.selectedThemes = themeSelected
     }
 
+    if (preFilter.referentiels_programmation) {
+      this.filteredReferentiels = preFilter.referentiels_programmation as ReferentielProgrammation[];
+      this.selectedReferentiels = this.filteredReferentiels;
+    }
 
     if (preFilter.beneficiaires || preFilter.beneficiaire) {
 
@@ -584,7 +534,7 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
     // Il faut rechercher dans les filtres "this.filteredBop"
     if (preFilter.bops) {
       const prefilterBops = preFilter.bops as unknown as BopModel[];
-      const bopSelect = this.filteredBop?.filter(
+      const bopSelect = this.filteredBops?.filter(
         (bop) =>
           prefilterBops.findIndex(
             (bopFilter) => bop.code === bopFilter.code
@@ -593,20 +543,16 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
       this.selectedBops = bopSelect ?? null;
     }
 
+    if (preFilter.types_beneficiaires) {
+      this.selectedTypesBenef = preFilter.types_beneficiaires || null;
+    }
+
     /* Paramètres additionnels qui n'apparaissent pas dans le formulaire de recherche */
     let additional_searchparams: AdditionalSearchParameters = empty_additional_searchparams;
-
-    const types_beneficiaires = preFilter?.types_beneficiaires;
-    if (types_beneficiaires)
-      additional_searchparams = { ...additional_searchparams, types_beneficiaires }
 
     const domaines_fonctionnels = preFilter?.domaines_fonctionnels
     if (domaines_fonctionnels)
       additional_searchparams = { ...additional_searchparams, domaines_fonctionnels }
-
-    const referentiels_programmation = preFilter?.referentiels_programmation
-    if (referentiels_programmation)
-      additional_searchparams = { ...additional_searchparams, referentiels_programmation }
 
     const sources_region = preFilter?.sources_region;
     if (sources_region)

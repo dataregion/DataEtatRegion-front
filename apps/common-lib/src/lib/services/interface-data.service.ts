@@ -3,7 +3,8 @@ import { DataPagination } from '../models/pagination/pagination.models';
 import { RefSiret } from '@models/refs/RefSiret';
 import { BopModel } from '@models/refs/bop.models';
 import { GeoModel, TypeLocalisation } from '../models/geo.models';
-import { TypeCategorieJuridique } from '@models/financial/common.models';
+import { SourceFinancialData, TypeCategorieJuridique } from '@models/financial/common.models';
+import { ReferentielProgrammation } from '@models/refs/referentiel_programmation.model';
 
 export enum OtherTypeCategorieJuridique {
   AUTRES = 'autres'
@@ -11,23 +12,24 @@ export enum OtherTypeCategorieJuridique {
 export type SearchTypeCategorieJuridique = TypeCategorieJuridique | OtherTypeCategorieJuridique;
 
 export interface SearchParameters {
-    bops: BopModel[] | null;
-    themes: string[] | null;
-    niveau: TypeLocalisation | null;
-    locations: GeoModel[] | null,
-    years: number[] | null;
-    beneficiaires: RefSiret[] | null;
-    types_beneficiaires: SearchTypeCategorieJuridique[] | null;
-    tags: string[] | null;
+  themes: string[] | null;
+  bops: BopModel[] | null;
+  referentiels_programmation: ReferentielProgrammation[] | null;
+  niveau: TypeLocalisation | null;
+  locations: GeoModel[] | null,
+  years: number[] | null;
+  beneficiaires: RefSiret[] | null;
+  types_beneficiaires: SearchTypeCategorieJuridique[] | null;
+  tags: string[] | null;
 
-    domaines_fonctionnels: string[] | null;
-    referentiels_programmation: string[] | null;
-    source_region: string[] | null;
+  domaines_fonctionnels: string[] | null;
+  source_region: string[] | null;
 }
 
 export const SearchParameters_empty: SearchParameters = {
   themes: null,
   bops: null,
+  referentiels_programmation: null,
   niveau: null,
   locations: null,
   years: null,
@@ -36,7 +38,6 @@ export const SearchParameters_empty: SearchParameters = {
   tags: null,
 
   domaines_fonctionnels: null,
-  referentiels_programmation: null,
   source_region: null,
 }
 
@@ -46,13 +47,13 @@ export const SearchParameters_empty: SearchParameters = {
  * T étant le type métier
  * M le modèle générique
  */
-export interface DataHttpService<T,M> {
+export interface DataHttpService<T, M> {
 
   search(search_parameters: SearchParameters): Observable<DataPagination<T> | null>;
 
-  getById(id: any, ...options: any[]): Observable<T>;
+  getById(source: SourceFinancialData, id: any, ...options: any[]): Observable<T>;
 
   mapToGeneric(object: T): M;
 
-  getSource(): string;
+  getSources(): string[];
 }

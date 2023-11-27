@@ -27,7 +27,7 @@
         <th mat-header-cell *matHeaderCellDef>Critères</th>
         <td mat-cell *matCellDef="let element">
 
-          <ul class="fr-badge-group">
+          <ul *ngIf="objectKeys(element.filters).length !== 0; else noFilters" class="fr-badge-group">
             <li class="fr-mr-3v" *ngFor="let field of objectKeys(element.filters)">
 
               <p class="fr-mr-1v fr-badge fr-badge--blue-ecume" *ngIf="mappingMetadata[field]">
@@ -38,6 +38,7 @@
                 [ngTemplateOutletContext]="{value: element.filters[field], metadata: mappingMetadata[field]}"/>
             </li>
           </ul>
+          <ng-template #noFilters>Aucun critère renseigné</ng-template>
         </td>
       </ng-container>
 

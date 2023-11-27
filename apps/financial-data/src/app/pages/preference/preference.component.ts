@@ -14,15 +14,25 @@ export class PreferenceComponent {
   constructor(private _router: Router) {}
 
   public mappingValueFilter: MapPreferenceFilterMetadata = {
+    theme: {
+      label: 'Thème'
+    },
     bops: {
       label: 'Programmes',
       renderFn: (row: JSONObject) => row['code'] + ' - ' + row['label'],
     },
+    referentiels_programmation: {
+      label: 'Référentiels',
+      renderFn: (row: JSONObject) => row['code'],
+    },
+    location: {
+      label: 'Territoire',
+      renderFn: (row: JSONObject) => {
+        return `${row['type']} : ${row['nom']} (${row['code']})`;
+      },
+    },
     year: {
       label: 'Année'
-    },
-    theme: {
-      label: 'Thème'
     },
     beneficiaire: {
       label: 'Bénéficiare',
@@ -36,11 +46,8 @@ export class PreferenceComponent {
         return this._ppBeneficiaire(row);
       },
     },
-    location: {
-      label: 'Territoire',
-      renderFn: (row: JSONObject) => {
-        return `${row['type']} : ${row['nom']} (${row['code']})`;
-      },
+    types_beneficiaires: {
+      label: "Types de bénéficiaires"
     },
     tags: {
       label: "Tags",

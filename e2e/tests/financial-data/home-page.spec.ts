@@ -76,6 +76,7 @@ test.describe('Page de Management', () => {
     await page.goto('./management');
     await page.waitForURL('./');
     expect(page.url()).not.toContain('/management');
+    // Le menu est invisible (les tags de sont plus dans ce menu)
     await expect(page.locator('id=administration')).toHaveCount(0);
   });
 });

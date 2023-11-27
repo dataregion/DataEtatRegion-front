@@ -1,5 +1,7 @@
-import { Commune, Programme, Siret, GroupeMarchandise, LocalisationInterministerielle, SourceFinancialData } from "./common.models";
+import { Commune, Programme, Siret, GroupeMarchandise, LocalisationInterministerielle, SourceFinancialData, DomaineFonctionnel } from "./common.models";
 import { Tag } from "../refs/tag.model";
+import { ReferentielProgrammation } from "@models/refs/referentiel_programmation.model";
+import { Optional } from "apps/common-lib/src/lib/utilities/optional.type";
 
 
 export const HEADERS_CSV_FINANCIAL = [
@@ -41,30 +43,35 @@ export interface FinancialDataModel {
   id: number;
   source: SourceFinancialData;
 
-  n_ej: string;
-  n_poste_ej: number;
+  n_ej: Optional<string>;
+  n_poste_ej: Optional<number>;
 
-  montant_ae: number;
-  montant_cp: number;
-  commune: Commune;
+  montant_ae: Optional<number>;
+  montant_cp: Optional<number>;
+  
+  // Commune du bénérficiaire
+  commune: Optional<Commune>;
 
-  domaine_fonctionnel?: any;
-  programme: Programme;
-  referentiel_programmation: any
+  domaine_fonctionnel: Optional<DomaineFonctionnel>;
+  programme: Optional<Programme>;
+  referentiel_programmation: Optional<ReferentielProgrammation>;
 
-  compte_budgetaire?: string;
-  contrat_etat_region?: string;
-  groupe_marchandise?: GroupeMarchandise;
-  localisation_interministerielle?: LocalisationInterministerielle;
+  compte_budgetaire: Optional<string>;
+  contrat_etat_region: Optional<string>;
+  groupe_marchandise: Optional<GroupeMarchandise>;
+  localisation_interministerielle: Optional<LocalisationInterministerielle>;
 
   annee: number;
 
-  siret: Siret;
-  date_cp: string;
-  date_replication: string;
+  siret: Optional<Siret>;
+  date_cp: Optional<string>;
+  date_replication: Optional<string>;
 
   tags: Tag[];
-  financial_cp?: FinancialCp[]
+
+  // Les CP associées à la donnée financière.
+  // XXX: Présente uniquement si requêtée
+  financial_cp?: Optional<FinancialCp[]>
 }
 
 export interface FinancialCp {

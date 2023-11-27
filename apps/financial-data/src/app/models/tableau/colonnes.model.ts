@@ -1,5 +1,8 @@
+import { LocalisationInterministerielle } from "@models/financial/common.models";
+import { FinancialDataModel } from "@models/financial/financial-data.models";
 import { Tag } from "@models/refs/tag.model";
-import { AggregatorFns, ColumnMetaDataDef } from "apps/grouping-table/src/lib/components/grouping-table/group-utils";
+import { Optional } from "apps/common-lib/src/lib/utilities/optional.type";
+import { AggregatorFns, ParameterizedColumnMetaDataDef, RowData } from "apps/grouping-table/src/lib/components/grouping-table/group-utils";
 
 const moneyFormat = new Intl.NumberFormat('fr-FR', {
     style: 'currency',
@@ -15,12 +18,15 @@ export const groupingOrder: string[] = [
     'tags',
 ]
 
-export const colonnes: ColumnMetaDataDef[] = [
+export type FinancialColumnMetaDataDef = ParameterizedColumnMetaDataDef<FinancialDataModel & RowData>
+
+export const colonnes: FinancialColumnMetaDataDef[] = [
     {
         name: 'beneficiaire',
         label: 'Bénéficiaire',
-        renderFn: (row) =>
-            row['siret'] ? row['siret']['nom_beneficiare'] : ''
+        renderFn: (row) => {
+            return row.siret?.nom_beneficiaire ?? ''
+        }
     },
     {
         name: 'montant_ae',
@@ -60,47 +66,53 @@ export const colonnes: ColumnMetaDataDef[] = [
     {
         name: 'domaine',
         label: 'Domaine fonctionnel',
-        renderFn: (row, _col) => row['domaine_fonctionnel'] ? _print_code_label(row['domaine_fonctionnel']['code'], row['domaine_fonctionnel']['label']) : '',
+        renderFn: (row, _col) => {
+            if (row.domaine_fonctionnel)
+                return _print_code_label(row.domaine_fonctionnel.code, row.domaine_fonctionnel.label)
+            return '';
+        },
     },
     {
         name: 'label_commune',
         label: 'Commune du SIRET',
-        renderFn: (row, _col) => row['commune']['label'],
+        renderFn: (row, _col) => {
+            return row.commune?.label;
+        },
     },
     {
         name: 'label_crte',
         label: 'CRTE du SIRET',
         displayed: false,
-        renderFn: (row, _col) => row['commune']['label_crte'],
+        renderFn: (row, _col) => row.commune?.label_crte,
     },
     {
         name: 'label_epci',
         label: 'EPCI du SIRET',
         displayed: false,
-        renderFn: (row, _col) => row['commune']['label_epci'],
+        renderFn: (row, _col) => row.commune?.label_epci,
     },
     {
         name: 'label_arrondissement',
         label: 'Arrondissement du SIRET',
         displayed: false,
-        renderFn: (row, _col) => row['commune']['arrondissement'] !== null ? row['commune']['arrondissement']['label'] : '',
+        renderFn: (row, _col) => row.commune?.arrondissement?.label,
     },
     {
         name: 'label_departement',
         label: 'Département du SIRET',
         displayed: false,
-        renderFn: (row, _col) => row['commune']['label_departement'],
+        renderFn: (row, _col) => row.commune?.label_departement,
     },
     {
         name: 'label_region',
         label: 'Région du SIRET',
         displayed: false,
-        renderFn: (row, _col) => row['commune']['label_region'],
+        renderFn: (row, _col) => row.commune?.label_region,
     },
     {
         name: 'localisation_interministerielle',
         label: 'Localisation interministérielle',
-        renderFn: (row, _col) => _print_localisation_interministerielle(row['localisation_interministerielle']),
+        renderFn: (row, _col) => _print_localisation_interministerielle(row.localisation_interministerielle),
     },
     {
         name: 'n_ej',
@@ -122,19 +134,19 @@ export const colonnes: ColumnMetaDataDef[] = [
         name: 'theme',
         label: 'Thème',
         displayed: false,
-        renderFn: (row, _col) => row['programme']['theme'] ?? '',
+        renderFn: (row, _col) => row.programme?.theme ?? '',
     },
     {
         name: 'nom_programme',
         label: 'Programme',
         displayed: false,
-        renderFn: (row, _col) => _print_code_label(row['programme']['code'], row['programme']['label']),
+        renderFn: (row, _col) => _print_code_label(row.programme?.code, row.programme?.label),
     },
     {
         name: 'ref_programmation',
         label: 'Ref Programmation',
         displayed: false,
-        renderFn: (row, _col) => _print_code_label(row['referentiel_programmation']['code'], row['referentiel_programmation']['label']),
+        renderFn: (row, _col) => _print_code_label(row.referentiel_programmation?.code, row.referentiel_programmation?.label),
     },
     {
         name: 'siret',
@@ -150,14 +162,17 @@ export const colonnes: ColumnMetaDataDef[] = [
         name: 'qpv',
         label: 'QPV',
         displayed: false,
-        renderFn: (row, _col) => row['siret']['qpv'] != null ?  _print_code_label(row['siret']['qpv']['code'], row['siret']['qpv']['label']) : '',
+        renderFn: (row, _col) => _print_code_label(row.siret?.code_qpv, row.siret?.label_qpv)
     },
     {
         name: 'type_etablissement',
         label: `Type d'établissement`,
         displayed: false,
-        renderFn: (row, _col) =>
-            row['siret']['categorie_juridique'] !== null ? row['siret']['categorie_juridique'] : 'Non renseigné',
+        renderFn: (row, _col) => {
+            if (! row.siret?.categorie_juridique)
+                return "Non renseigné"
+            return row.siret.categorie_juridique
+        }
     },
     {
         name: 'compte_budgetaire',
@@ -175,7 +190,7 @@ export const colonnes: ColumnMetaDataDef[] = [
         name: 'groupe_marchandise',
         label: 'Groupe marchandise',
         displayed: false,
-        renderFn: (row, _col) => _print_code_label(row['groupe_marchandise']['code'], row['groupe_marchandise']['label']),
+        renderFn: (row) => _print_code_label(row.groupe_marchandise?.code, row.groupe_marchandise?.label),
     },
     {
         name: 'date_cp',
@@ -194,18 +209,18 @@ export const colonnes: ColumnMetaDataDef[] = [
 ]
 
 
-function _print_code_label(c: string | undefined, l : string | undefined): string {
+function _print_code_label(c: Optional<string>, l : Optional<string>): string {
   const code = c ?? '';
   const label = l ?? '';
   return  code !== '' ? `${code} - ${label}` : label;
 }
 
-function _print_localisation_interministerielle(loc:any): string {
+function _print_localisation_interministerielle(loc: Optional<LocalisationInterministerielle>): string {
   let text = '';
   if (loc) {
-    const code = ('code' in loc && loc['code'] !== undefined && loc['code'] !== null) ? loc['code'] : '';
-    const label = ('label' in loc && loc['label'] !== undefined && loc['label'] !== null) ? loc['label'] : '';
-    const commune = ('commune' in loc && loc['commune'] !== undefined) ? `${loc['commune']['code']} - ${loc['commune']['label']}` : '';
+    const code = loc.code;
+    const label = loc.label;
+    const commune = loc.commune && `${loc.commune.code} - ${loc.commune.label}` || '';
     const codeLabel = label !== '' ? `${code} - ${label}` : code;
     text = commune !== '' ? `${codeLabel} (${commune})` : codeLabel;
   }

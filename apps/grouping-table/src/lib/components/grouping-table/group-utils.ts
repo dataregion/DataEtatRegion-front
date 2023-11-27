@@ -14,7 +14,7 @@ type AggregateReducer<T> = (
 /**
  * Méta-données d'une colonne. Contient les informations pour l'affichage de la colonne.
  */
-export type ColumnMetaDataDef = {
+export type ParameterizedColumnMetaDataDef<T> = {
   /** Nom technique de la colonne. */
   name: string;
 
@@ -36,7 +36,7 @@ export type ColumnMetaDataDef = {
    * @param row ligne de données
    * @param col colonne de la cellule
    */
-  renderFn?: (row: RowData, col: ColumnMetaDataDef) => string | undefined;
+  renderFn?: (row: T, col: ColumnMetaDataDef) => string | undefined;
 
   /**
    * Fonction permettant d'effectuer le grouping.
@@ -44,7 +44,7 @@ export type ColumnMetaDataDef = {
    * @param row ligne de données
    * @param col colonne de la cellule
    */
-  groupingKeyFn?: (row: RowData, col: ColumnMetaDataDef) => string | undefined;
+  groupingKeyFn?: (row: T, col: ColumnMetaDataDef) => string | undefined;
 
   /**
    * Fonction d'aggrégation permettant de calculer la valeur à afficher en en-tête de colonne d'un groupe.
@@ -75,6 +75,8 @@ export type ColumnMetaDataDef = {
    */
   columnStyle?: Record<string, string>;
 };
+
+export type ColumnMetaDataDef = ParameterizedColumnMetaDataDef<RowData>
 
 export class AggregatorFns {
   static sum(
@@ -112,16 +114,16 @@ export class AggregatorFns {
 /**
  * Méta-données pour l'ensemble des colonnes.
  */
-export class ColumnsMetaData {
-  private metaDataMap = new Map<string, ColumnMetaDataDef>();
+export class ParameterizedColumnsMetaData<T extends ParameterizedColumnMetaDataDef<any>> {
+  private metaDataMap = new Map<string, T>();
 
-  constructor(public readonly data: ColumnMetaDataDef[]) {
+  constructor(public readonly data: T[]) {
     for (const def of data) {
       this.metaDataMap.set(def.name, def);
     }
   }
 
-  getByColumnName(name: string): ColumnMetaDataDef {
+  getByColumnName(name: string): T {
     const metaDataDef = this.metaDataMap.get(name);
     if (!metaDataDef) {
       throw new Error(`Pas de meta-données pour la colonne "${name}"`);
@@ -129,6 +131,8 @@ export class ColumnsMetaData {
     return metaDataDef;
   }
 }
+
+export class ColumnsMetaData extends ParameterizedColumnsMetaData<ColumnMetaDataDef> { }
 
 export type ColumnSizes = number[];
 
@@ -189,7 +193,7 @@ export class Group {
     public readonly columnValue?: any,
     public readonly parent?: Group,
     private _columnsAggregateFns?: Record<string, AggregateReducer<any>>
-  ) {}
+  ) { }
 
   getOrCreateGroup(column: ColumnMetaDataDef, groupColumnGroupingKey: any, groupColumnValue: any): Group {
     if (!this.groupsMap) {
@@ -286,11 +290,11 @@ export const groupByColumns = (
       // tant qu'on n'a pas trouvé le niveau le plus profond où ranger la ligne, on descend
       for (const grouping of groupings) {
         const column = columnsMetaData.getByColumnName(grouping.columnName);
-  
+
         const defaultRenderFn = ((row: RowData, col: ColumnMetaDataDef) => row[col.name]);
         const groupValueFn = column.renderFn || defaultRenderFn;
         const groupKeyFn = column.groupingKeyFn || groupValueFn;
-  
+
         const groupKey = groupKeyFn(row, column);
         const groupValue = groupValueFn(row, column);
         currentGroup = currentGroup.getOrCreateGroup(column, groupKey, groupValue);
@@ -304,7 +308,7 @@ export const groupByColumns = (
 /**
  * Fonction récursive qui compare la nouvelle structure de grouping avec l'ancienne
  */
-const _check_grouping_structure = (newGroupings: GroupingColumn[], group: Group):boolean => {
+const _check_grouping_structure = (newGroupings: GroupingColumn[], group: Group): boolean => {
   // Si on a parcouru tous les nouveaux ou anciens groupes : dernière vérification
   if (newGroupings.length === 0 || group.groups.length === 0) {
     // S'il ne reste plus aucun groupe dans la nouvelle ET dans l'ancienne structure : on dépile true
@@ -315,7 +319,7 @@ const _check_grouping_structure = (newGroupings: GroupingColumn[], group: Group)
   if (newGroupings[0].columnName !== group.groups[0].column?.name) {
     return false;
   }
-  
+
   // On continue de plonger avec des nouveaux paramètres : pop sur le nouveau grouping & récupération du groupe enfant de l'ancienne structure 
   newGroupings.shift()
   return _check_grouping_structure(newGroupings ?? [], group.groups[0]);
