@@ -31,7 +31,7 @@ export enum ColonneLibelles {
   CPER = "CPER",
   CODE_GROUPE_MARCHANDISE = "Code groupe marchandise",
   GROUPE_MARCHANDISE = "Groupe marchandise",
-  SIRET = "SIRET",
+  SIRET = "Siret",
   BENEFICIAIRE = "Bénéficiaire",
   TYPE_ETABLISSEMENT = "Type d'établissement",
   CODE_QPV = "Code QPV",
