@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, ViewChild } from '@angular/core';
 
 import { MatDialog } from '@angular/material/dialog';
 import {
@@ -9,7 +9,7 @@ import {
   Preference,
 } from 'apps/preference-users/src/lib/models/preference.models';
 import { ActivatedRoute, Data } from '@angular/router';
-import { AlertService } from 'apps/common-lib/src/public-api';
+import { AlertService, GeoModel } from 'apps/common-lib/src/public-api';
 import { GridInFullscreenStateService } from 'apps/common-lib/src/lib/services/grid-in-fullscreen-state.service';
 import {
   DisplayedOrderedColumn,
@@ -30,6 +30,9 @@ import { PreFilters } from '@models/search/prefilters.model';
 import { colonnes, FinancialColumnMetaDataDef } from '@models/tableau/colonnes.model';
 import { QueryParam } from 'apps/common-lib/src/lib/models/marqueblanche/query-params.enum';
 import { Tag } from '@models/refs/tag.model';
+import { SearchDataComponent } from 'apps/financial-data/src/app/components/search-data/search-data.component';
+import { BudgetService } from '@services/budget.service';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'financial-home',
@@ -45,6 +48,8 @@ export class HomeComponent implements OnInit {
   }
 
   tableData?: TableData;
+
+  @ViewChild(SearchDataComponent) searchData!: SearchDataComponent;
 
   /**
    * Filtre retourner par le formulaire de recherche
@@ -88,6 +93,8 @@ export class HomeComponent implements OnInit {
     private _auditService: AuditHttpService,
     private _gridFullscreen: GridInFullscreenStateService,
     private _logger: NGXLogger,
+    private _budgetService: BudgetService,
+    private _datePipe: DatePipe,
   ) {
     // Récupération de l'ordre des colonnes par défaut
     this.defaultOrder = this._getDefaultOrder();
@@ -208,6 +215,48 @@ export class HomeComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe((_) => { });
+  }
+
+  public downloadData(extension: string, allColumns: boolean): void {
+    this.searchData.searchForm.markAllAsTouched(); // pour notifier les erreurs sur le formulaire
+    if (this.searchData.searchForm.valid && !this.searchData.searchInProgress.value) {
+      this.searchData.searchInProgress.next(true);
+      const blob = this._budgetService.getBlob(this.searchData.searchResult() ?? [], extension,!allColumns ? this.displayedOrderedColumns : null);
+      if (blob) {
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = this._filename(extension);
+        document.body.appendChild(a);
+        a.click();
+        this.searchData.searchInProgress.next(false);
+      }
+    }
+  }
+
+  private _filename(extension: string): string {
+    const formValue = this.searchData.searchForm.value;
+    let filename = `${this._datePipe.transform(new Date(), 'yyyyMMdd')}_export`;
+    if (formValue.location ) {
+      const locations = formValue.location as GeoModel[];
+      filename += '_' + locations[0].type + '-';
+      filename += locations
+        .filter((loc) => loc.code)
+        .map((loc) => loc.code)
+        .join('-');
+    }
+
+    if (formValue.bops) {
+      const bops = formValue.bops;
+      filename +=
+        '_bops-' +
+        bops
+          .filter((bop) => bop.code)
+          .map((bop) => bop.code)
+          .join('-');
+    }
+
+    return filename + "." + extension;
   }
 
   onRowClick(row: RowData) {

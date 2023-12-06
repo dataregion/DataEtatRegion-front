@@ -59,6 +59,38 @@
               Sauvegarder la recherche
             </button>
           </li>
+
+          <li>
+            <button *ngIf="!grid_fullscreen && searchData.searchFinish === true" 
+              class="fr-btn fr-btn--sm fr-btn--secondary fr-btn--icon-left fr-icon-download-fill" 
+              aria-label="Bouton de téléchargement de données."
+              [disabled]="searchData.searchInProgress.value === true"
+              [matMenuTriggerFor]="downloadOptions">
+              Télécharger les données
+            </button>
+            <mat-menu #downloadOptions="matMenu">
+              
+              <button mat-menu-item [matMenuTriggerFor]="allColumnsFormats">
+                Toutes les colonnes
+              </button>
+              <mat-menu #allColumnsFormats="matMenu">
+                <button mat-menu-item (click)="downloadData('csv', true)">Format CSV</button>
+                <button mat-menu-item (click)="downloadData('xlsx', true)">Format Excel</button>
+                <button mat-menu-item (click)="downloadData('ods', true)">Format Libre Office</button>
+              </mat-menu>
+              
+              <button mat-menu-item [matMenuTriggerFor]="displayedColumnsFormats">
+                Les colonnes affichées
+              </button>
+              <mat-menu #displayedColumnsFormats="matMenu">
+                <button mat-menu-item (click)="downloadData('csv', false)">Format CSV</button>
+                <button mat-menu-item (click)="downloadData('xlsx', false)">Format Excel</button>
+                <button mat-menu-item (click)="downloadData('ods', false)">Format Libre Office</button>
+              </mat-menu>
+
+            </mat-menu>
+          </li>
+          
           <li>
 
             <button

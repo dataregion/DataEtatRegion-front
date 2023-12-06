@@ -1,9 +1,10 @@
 import { Commune, DomaineFonctionnel, GroupeMarchandise, LocalisationInterministerielle, Programme, Siret, SourceFinancialData, TypeCategorieJuridique } from "@models/financial/common.models";
-import { FinancialDataModel } from "@models/financial/financial-data.models";
+import { ColonneLibelles, FinancialDataModel } from "@models/financial/financial-data.models";
 import { ReferentielProgrammation } from "@models/refs/referentiel_programmation.model";
-import { Tag } from "@models/refs/tag.model";
+import { Tag, tag_fullname } from "@models/refs/tag.model";
 import { EnrichedFlattenFinancialLinesSchema, TagsSchema } from "apps/clients/budget";
 import { Optional } from "apps/common-lib/src/lib/utilities/optional.type";
+import { JSONObject } from "apps/preference-users/src/lib/models/preference.models";
 
 export class BudgetLineHttpMapper {
 
@@ -57,6 +58,42 @@ export class BudgetLineHttpMapper {
             tags: this._map_tags(object),
 
             financial_cp: null, // XXX: On ne résoud pas les CPs ici. C'est fait dans un appel séparé. 
+
+            toJsonObject(): JSONObject {
+                return {
+                    [ColonneLibelles.SOURCE]: this.source,
+                    [ColonneLibelles.N_EJ]: this.n_ej ?? "",
+                    [ColonneLibelles.POSTE_EJ]: this.n_poste_ej ?? "",
+                    [ColonneLibelles.MONTANT_AE]: this.montant_ae ?? "",
+                    [ColonneLibelles.MONTANT_CP]: this.montant_cp ?? "",
+                    [ColonneLibelles.THEME]: this.programme?.theme ?? "",
+                    [ColonneLibelles.CODE_PROGRAMME]: this.programme?.code ?? "",
+                    [ColonneLibelles.PROGRAMME]: this.programme?.label ?? "",
+                    [ColonneLibelles.CODE_DOMAINE]: this.domaine_fonctionnel?.code ?? "",
+                    [ColonneLibelles.DOMAINE]: this.domaine_fonctionnel?.label ?? "",
+                    [ColonneLibelles.REFERENTIEL_PROGRAMMATION]: this.referentiel_programmation?.label ?? "",
+                    [ColonneLibelles.COMMUNE]: this.commune?.label ?? "",
+                    [ColonneLibelles.CRTE]: this.commune?.label_crte ?? "",
+                    [ColonneLibelles.EPCI]: this.commune?.label_epci ?? "",
+                    [ColonneLibelles.ARRONDISSEMENT]: this.commune?.arrondissement?.label ?? "",
+                    [ColonneLibelles.DEPARTEMENT]: this.commune?.label_departement ?? "",
+                    [ColonneLibelles.REGION]: this.commune?.label_region ?? "",
+                    [ColonneLibelles.CODE_LOC_INTER]: this.localisation_interministerielle?.code ?? "",
+                    [ColonneLibelles.LOC_INTER]: this.localisation_interministerielle?.label ?? "",
+                    [ColonneLibelles.COMPTE_BUDGETAIRE]: this.compte_budgetaire ?? "",
+                    [ColonneLibelles.CPER]: this.contrat_etat_region && this.contrat_etat_region !== '#' ? this.contrat_etat_region : "",
+                    [ColonneLibelles.CODE_GROUPE_MARCHANDISE]: this.groupe_marchandise?.code ?? "",
+                    [ColonneLibelles.GROUPE_MARCHANDISE]: this.groupe_marchandise?.label ?? "",
+                    [ColonneLibelles.SIRET]: this.siret?.code ?? "",
+                    [ColonneLibelles.BENEFICIAIRE]: this.siret?.nom_beneficiaire ?? "",
+                    [ColonneLibelles.TYPE_ETABLISSEMENT]: this.siret?.categorie_juridique ?? "",
+                    [ColonneLibelles.CODE_QPV]: this.siret?.code_qpv ?? "",
+                    [ColonneLibelles.DATE_DERNIER_PAIEMENT]: this.date_cp ?? "",
+                    [ColonneLibelles.DATE_CREATION_EJ]: this.date_replication ?? "",
+                    [ColonneLibelles.ANNEE_ENGAGEMENT]: this.annee,
+                    [ColonneLibelles.TAGS]: this.tags?.map(tag => tag_fullname(tag)).join(" "),
+                }
+            }
         }
 
     }

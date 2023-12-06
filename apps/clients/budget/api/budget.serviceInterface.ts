@@ -52,6 +52,12 @@ export interface BudgetServiceInterface {
     getGetBudgetCtrl(source: string, id: string, extraHttpRequestParams?: any): Observable<EnrichedFlattenFinancialLinesSchema>;
 
     /**
+     * Effectue un GET pour vérifier la disponibilité de l\&#39;API des lignes budgetaires
+     * 
+     */
+    getGetHealthcheck(extraHttpRequestParams?: any): Observable<{}>;
+
+    /**
      * 
      * 
      */
