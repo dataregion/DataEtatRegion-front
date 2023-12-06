@@ -29,7 +29,7 @@ import { delay } from 'rxjs';
 import { PreFilters } from '@models/search/prefilters.model';
 import { colonnes, FinancialColumnMetaDataDef } from '@models/tableau/colonnes.model';
 import { QueryParam } from 'apps/common-lib/src/lib/models/marqueblanche/query-params.enum';
-import { Tag, tag_str } from '@models/refs/tag.model';
+import { Tag } from '@models/refs/tag.model';
 import { SearchDataComponent } from 'apps/financial-data/src/app/components/search-data/search-data.component';
 import { BudgetService } from '@services/budget.service';
 import { DatePipe } from '@angular/common';
@@ -217,22 +217,24 @@ export class HomeComponent implements OnInit {
     dialogRef.afterClosed().subscribe((_) => { });
   }
 
-  public downloadCsv(): void {
+  public downloadData(extension: string, allColumns: boolean): void {
     this.searchData.searchForm.markAllAsTouched(); // pour notifier les erreurs sur le formulaire
     if (this.searchData.searchForm.valid && !this.searchData.searchInProgress.value) {
       this.searchData.searchInProgress.next(true);
-      const csvdata = this._budgetService.getCsv(this.searchData.searchResult() ?? []);
-      const url = URL.createObjectURL(csvdata);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = this._filenameCsv();
-      document.body.appendChild(a);
-      a.click();
-      this.searchData.searchInProgress.next(false);
+      const blob = this._budgetService.getData(this.searchData.searchResult() ?? [], extension,!allColumns ? this.displayedOrderedColumns : null);
+      if (blob) {
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = this._filename(extension) + '.' + extension;
+        document.body.appendChild(a);
+        a.click();
+        this.searchData.searchInProgress.next(false);
+      }
     }
   }
 
-  private _filenameCsv(): string {
+  private _filename(extension: string): string {
     const formValue = this.searchData.searchForm.value;
     let filename = `${this._datePipe.transform(new Date(), 'yyyyMMdd')}_export`;
     if (formValue.location ) {
@@ -254,7 +256,7 @@ export class HomeComponent implements OnInit {
           .join('-');
     }
 
-    return filename + '.csv';
+    return filename + "." + extension;
   }
 
   onRowClick(row: RowData) {

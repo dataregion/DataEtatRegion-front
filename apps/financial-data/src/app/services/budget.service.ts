@@ -1,7 +1,5 @@
 import { Inject, Injectable, InjectionToken } from '@angular/core';
-import {
-  FinancialDataModel, HEADERS_CSV_FINANCIAL,
-} from '@models/financial/financial-data.models';
+import { FinancialDataModel } from '@models/financial/financial-data.models';
 import { DataHttpService, SearchParameters } from 'apps/common-lib/src/public-api';
 import { RefSiret } from '@models/refs/RefSiret';
 import { BopModel } from '@models/refs/bop.models';
@@ -11,9 +9,12 @@ import { SETTINGS } from 'apps/common-lib/src/lib/environments/settings.http.ser
 import { HttpClient } from '@angular/common/http';
 import { DataPagination } from 'apps/common-lib/src/lib/models/pagination/pagination.models';
 import { SourceFinancialData } from '@models/financial/common.models';
-import { unparse } from 'papaparse';
-import { Tag, tag_fullname } from '@models/refs/tag.model';
+import { Tag } from '@models/refs/tag.model';
 import { ReferentielProgrammation } from '@models/refs/referentiel_programmation.model';
+
+import * as XLSX from 'xlsx';
+import { DisplayedOrderedColumn } from 'apps/grouping-table/src/lib/components/grouping-table/group-utils';
+import { JSONObject } from 'apps/preference-users/src/lib/models/preference.models';
 
 export const DATA_HTTP_SERVICE = new InjectionToken<DataHttpService<any, FinancialDataModel>>(
   'DataHttpService'
@@ -143,55 +144,49 @@ export class BudgetService {
       );
   }
 
-
-  public getCsv(financialData: FinancialDataModel[]): Blob {
-
-    const fields = HEADERS_CSV_FINANCIAL;
-    const data = [];
-
-    for (const item of financialData) {
-
-      const values = [
-        item.source,
-        item.n_ej,
-        item.n_poste_ej,
-        item.montant_ae,
-        item.montant_cp,
-        item.programme?.theme ?? '',
-        item.programme?.code ?? '',
-        item.programme?.label ?? '',
-        item.domaine_fonctionnel?.code ?? '',
-        item.domaine_fonctionnel?.label ?? '',
-        item.referentiel_programmation?.label ?? '',
-        item.commune?.label ?? '',
-        item.commune?.label_crte ?? '',
-        item.commune?.label_epci ?? '',
-        item.commune?.arrondissement?.label ?? '',
-        item.commune?.label_departement ?? '',
-        item.commune?.label_region ?? '',
-        item.localisation_interministerielle?.code ?? '',
-        item.localisation_interministerielle?.label ?? '',
-        item.compte_budgetaire ?? '',
-        item.contrat_etat_region && item.contrat_etat_region !== '#' ? item.contrat_etat_region : '',
-        item.groupe_marchandise?.code ?? '',
-        item.groupe_marchandise?.label ?? '',
-        item.siret?.code,
-        item.siret?.nom_beneficiaire ?? '',
-        item.siret?.categorie_juridique ?? '',
-        item.siret?.code_qpv ?? '',
-        item.date_cp,
-        item.date_replication,
-        item.annee,
-        item.tags?.map(tag => tag_fullname(tag)).join(" "),
-      ];
-      data.push(values);
+  public getData(data: FinancialDataModel[], ext: string, columns: DisplayedOrderedColumn[] | null): Blob | null {
+    const jsonData = [];
+    for (const item of data) {
+      let object = item.toJsonObject();
+      if (columns) {
+        // Suppression des colonnes non-affichées
+        Object.keys(object).forEach(c => {
+          if (!columns.map(c => c.columnLabel).includes(c)) {
+            delete object[c];
+          }
+        });
+        columns.filter(c => 'displayed' in c && !c.displayed).map(c => c.columnLabel).forEach(c => {
+          delete object[c];
+        });
+        // Ordre des colonnes
+        object = Object.keys(object).sort((col1, col2) => {
+          const index1 = columns.findIndex((col) => col.columnLabel === col1)
+          const index2 = columns.findIndex((col) => col.columnLabel === col2)
+          return index1 - index2;
+        }).reduce((obj:JSONObject, key: string) => { 
+          obj[key] = object[key]; 
+          return obj;
+        }, {});
+      }
+      jsonData.push(object);
     }
 
-    const csv = unparse({
-      fields,
-      data
-    });
-    return new Blob(csv.split('\n'), { type: 'text/csv;charset=utf-8;' });
+    let buffer: any = null;
+    let mimetype: string = "";
+    const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(jsonData);
+    if (ext == "csv") {
+      buffer = XLSX.utils.sheet_to_csv(worksheet);
+      mimetype = "text/csv"
+    } else if (ext == "xlsx") {
+      const workbook: XLSX.WorkBook = { Sheets: { 'data': worksheet }, SheetNames: ['data'] };
+      buffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+      mimetype = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+    } else if (ext == "ods") {
+      const workbook: XLSX.WorkBook = { Sheets: { 'data': worksheet }, SheetNames: ['data'] };
+      buffer = XLSX.write(workbook, { bookType: 'ods', type: 'array' });
+      mimetype = "application/vnd.oasis.opendocument.spreadsheet";
+    }
+    return buffer && mimetype ? new Blob([buffer], { type: "{{mimetype}};charset=utf-8;" }) : null;
   }
 
   public getById(source: SourceFinancialData, id: number): Observable<FinancialDataModel> {

@@ -1,42 +1,46 @@
+/* eslint-disable no-unused-vars */
+
 import { Commune, Programme, Siret, GroupeMarchandise, LocalisationInterministerielle, SourceFinancialData, DomaineFonctionnel } from "./common.models";
 import { Tag } from "../refs/tag.model";
 import { ReferentielProgrammation } from "@models/refs/referentiel_programmation.model";
 import { Optional } from "apps/common-lib/src/lib/utilities/optional.type";
+import { JSONObject } from "apps/preference-users/src/lib/models/preference.models";
 
 
-export const HEADERS_CSV_FINANCIAL = [
-  'source',
-  'n_ej',
-  'poste_ej',
-  'montant engagement',
-  'montant payé',
-  'theme',
-  'code programme',
-  'programme',
-  'code domaine fonctionnel',
-  'domaine fonctionnel',
-  'referentiel_programmation',
-  'commune',
-  'crte',
-  'epci',
-  'arrondissement',
-  'département',
-  'région',
-  'code localisation interministérielle',
-  'localisation interministérielle',
-  'compte budgétaire',
-  'cper',
-  'code groupe marchandise',
-  'groupe marchandise',
-  'siret',
-  'nom beneficiaire',
-  "type d'établissement",
-  "code qpv",
-  'date de dernier paiement',
-  'date création ej',
-  'année engagement',
-  'tags',
-];
+export enum ColonneLibelles {
+  SOURCE = "Source de données",
+  N_EJ = "N° EJ",
+  POSTE_EJ = "N° Poste EJ",
+  MONTANT_AE = "Montant engagé",
+  MONTANT_CP = "Montant payé",
+  THEME = "Thème",
+  CODE_PROGRAMME = "Code programme",
+  PROGRAMME = "Programme",
+  CODE_DOMAINE = "Code domaine fonctionnel",
+  DOMAINE = "Domaine fonctionnel",
+  REFERENTIEL_PROGRAMMATION = "Ref Programmation",
+  COMMUNE = "Commune du SIRET",
+  CRTE = "CRTE du SIRET",
+  EPCI = "EPCI du SIRET",
+  ARRONDISSEMENT = "Arrondissement du SIRET",
+  DEPARTEMENT = "Département du SIRET",
+  REGION = "Région du SIRET",
+  CODE_LOC_INTER = "Code localisation interministérielle",
+  LOC_INTER = "Localisation interministérielle",
+  COMPTE_BUDGETAIRE = "Compte budgétaire",
+  CPER = "CPER",
+  CODE_GROUPE_MARCHANDISE = "Code groupe marchandise",
+  GROUPE_MARCHANDISE = "Groupe marchandise",
+  SIRET = "SIRET",
+  BENEFICIAIRE = "Bénéficiaire",
+  TYPE_ETABLISSEMENT = "Type d'établissement",
+  CODE_QPV = "Code QPV",
+  QPV = "QPV",
+  DATE_DERNIER_PAIEMENT = "Date dernier paiement",
+  DATE_CREATION_EJ = "Date création EJ",
+  ANNEE_ENGAGEMENT = "Année d'engagement",
+  TAGS = "Tags",
+}
 
 export interface FinancialDataModel {
 
@@ -72,6 +76,9 @@ export interface FinancialDataModel {
   // Les CP associées à la donnée financière.
   // XXX: Présente uniquement si requêtée
   financial_cp?: Optional<FinancialCp[]>
+
+  toJsonObject(): JSONObject;
+
 }
 
 export interface FinancialCp {
