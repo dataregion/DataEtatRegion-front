@@ -12,6 +12,7 @@
   },
   "apis": {
     "financial_data": "<url api financial pour import>",
+    "financial_data_v2": "<url api financial pour import>",
     "administration": "<url api administration>",
     "geo": "url api geo",
     "referentiel": "url api referentiel",
