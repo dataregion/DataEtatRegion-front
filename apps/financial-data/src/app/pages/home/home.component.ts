@@ -221,7 +221,7 @@ export class HomeComponent implements OnInit {
     this.searchData.searchForm.markAllAsTouched(); // pour notifier les erreurs sur le formulaire
     if (this.searchData.searchForm.valid && !this.searchData.searchInProgress.value) {
       this.searchData.searchInProgress.next(true);
-      const blob = this._budgetService.getData(this.searchData.searchResult() ?? [], extension,!allColumns ? this.displayedOrderedColumns : null);
+      const blob = this._budgetService.getBlob(this.searchData.searchResult() ?? [], extension,!allColumns ? this.displayedOrderedColumns : null);
       if (blob) {
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');

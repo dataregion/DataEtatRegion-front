@@ -144,12 +144,21 @@ export class BudgetService {
       );
   }
 
-  public getData(data: FinancialDataModel[], ext: string, columns: DisplayedOrderedColumn[] | null): Blob | null {
+  /**
+   * Création d'un Blob à partir de données financières
+   * @param data Données financières
+   * @param ext Extension désirée pour le fichier qui contiendra le Blob
+   * @param columns Colonnes des données à insérer dans le Blob
+   * @returns 
+   */
+  public getBlob(data: FinancialDataModel[], ext: string, columns: DisplayedOrderedColumn[] | null): Blob | null {
+    // Transformation des données financières en JSON
     const jsonData = [];
     for (const item of data) {
       let object = item.toJsonObject();
+      // Si des colonnes ont été précisées
       if (columns) {
-        // Suppression des colonnes non-affichées
+        // Suppression des colonnes non-affichées de l'objet JSON
         Object.keys(object).forEach(c => {
           if (!columns.map(c => c.columnLabel).includes(c)) {
             delete object[c];
@@ -158,7 +167,7 @@ export class BudgetService {
         columns.filter(c => 'displayed' in c && !c.displayed).map(c => c.columnLabel).forEach(c => {
           delete object[c];
         });
-        // Ordre des colonnes
+        // Ordre des données du JSON en fonction de l'ordre des colonnes
         object = Object.keys(object).sort((col1, col2) => {
           const index1 = columns.findIndex((col) => col.columnLabel === col1)
           const index2 = columns.findIndex((col) => col.columnLabel === col2)
@@ -171,6 +180,7 @@ export class BudgetService {
       jsonData.push(object);
     }
 
+    // Construction du Blob
     let buffer: any = null;
     let mimetype: string = "";
     const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(jsonData);
