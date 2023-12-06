@@ -226,7 +226,7 @@ export class HomeComponent implements OnInit {
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = this._filename(extension) + '.' + extension;
+        a.download = this._filename(extension);
         document.body.appendChild(a);
         a.click();
         this.searchData.searchInProgress.next(false);
