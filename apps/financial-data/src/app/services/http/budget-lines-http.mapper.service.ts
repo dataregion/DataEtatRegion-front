@@ -1,7 +1,8 @@
 import { Commune, DomaineFonctionnel, GroupeMarchandise, LocalisationInterministerielle, Programme, Siret, SourceFinancialData, TypeCategorieJuridique } from "@models/financial/common.models";
-import { ColonneLibelles, FinancialDataModel } from "@models/financial/financial-data.models";
+import { FinancialDataModel } from "@models/financial/financial-data.models";
 import { ReferentielProgrammation } from "@models/refs/referentiel_programmation.model";
 import { Tag, tag_fullname } from "@models/refs/tag.model";
+import { ColonneLibelles } from "@services/colonnes.service";
 import { EnrichedFlattenFinancialLinesSchema, TagsSchema } from "apps/clients/budget";
 import { Optional } from "apps/common-lib/src/lib/utilities/optional.type";
 import { JSONObject } from "apps/preference-users/src/lib/models/preference.models";

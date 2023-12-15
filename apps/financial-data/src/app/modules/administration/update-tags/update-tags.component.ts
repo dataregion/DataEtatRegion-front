@@ -7,6 +7,7 @@ import { AlertService } from "apps/common-lib/src/public-api";
 import { BehaviorSubject, finalize } from "rxjs";
 import { Clipboard } from "@angular/cdk/clipboard";
 import { BudgetDataHttpService } from "@services/http/budget-lines-http.service";
+import { ColonnesService } from "@services/colonnes.service";
 
 
 @Component({
@@ -28,6 +29,7 @@ export class UpdateTagsComponent {
     constructor(
         private _service: BudgetDataHttpService,
         private _budgetService: BudgetService,
+        private _colonnesService: ColonnesService,
         private _alertService: AlertService,
         private _clipboard: Clipboard,
     ) {
@@ -39,26 +41,48 @@ export class UpdateTagsComponent {
     uploadFileMajTag() {
 
         if (this.fileMajTag !== null) {
-            this.uploadInProgress.next(true);
-            this._service
-                .loadMajTagsFile(this.fileMajTag)
-                .pipe(
-                    finalize(() => {
-                        this.fileMajTag = null;
-                        this.uploadInProgress.next(false);
-                    })
-                )
-                .subscribe({
-                    next: () => {
-                        this._alertService.openAlertSuccess(
-                            'Le fichier a bien été récupéré. Il sera traité dans les prochaines minutes.'
-                        );
-                    },
-                    error: (err: HttpErrorResponse) => {
-                        if (err.error['message']) {
-                            this._alertService.openAlertError(err.error['message']);
-                        }
-                    },
+            // Fichier qui sera envoyé au back
+            let fileToUpload: File | null = null;
+            this.fileMajTag.text()
+                // Remplacement des pretty headers par les clés correspondantes
+                .then(contentFile => {
+                    // Récupération des clés
+                    const headers:string[] = contentFile.split('\n')[0].split(',')
+                    const newHeaders:string[] = [] 
+                    headers.forEach((header) => {
+                        const code = this._colonnesService.getCodeByLibelle(header);
+                        if (code)
+                            newHeaders.push(code);
+                    });
+                    // Création du fichier avec les nouveaux headers
+                    const table = contentFile.split('\n')
+                    table.shift();
+                    table.unshift(newHeaders.join(','));
+                    fileToUpload = new File([table.join('\n') as BlobPart], this.fileMajTag?.name ?? "")
+                })
+                // Envoi du fichier modifié au back
+                .finally(() => {
+                    this.uploadInProgress.next(true);
+                    this._service
+                        .loadMajTagsFile(fileToUpload)
+                        .pipe(
+                            finalize(() => {
+                                this.fileMajTag = null;
+                                this.uploadInProgress.next(false);
+                            })
+                        )
+                        .subscribe({
+                            next: () => {
+                                this._alertService.openAlertSuccess(
+                                    'Le fichier a bien été récupéré. Il sera traité dans les prochaines minutes.'
+                                );
+                            },
+                            error: (err: HttpErrorResponse) => {
+                                if (err.error['message']) {
+                                    this._alertService.openAlertError(err.error['message']);
+                                }
+                            },
+                        });
                 });
 
         }
