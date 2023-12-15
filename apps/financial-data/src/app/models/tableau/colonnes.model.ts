@@ -11,12 +11,12 @@ const moneyFormat = new Intl.NumberFormat('fr-FR', {
 });
 
 export const groupingOrder: string[] = [
-    'annee',
-    'label_region', 'label_departement', 'label_crte', 'label_epci', 'label_arrondissement', 'label_commune', 'qpv',
-    'theme', 'nom_programme', 'domaine', 'ref_programmation',
-    'beneficiaire', 'type_etablissement',
-    'n_ej', 'compte_budgetaire', 'groupe_marchandise',
-    'tags',
+    ColonneCodes.ANNEE_ENGAGEMENT,
+    ColonneCodes.REGION, ColonneCodes.DEPARTEMENT, ColonneCodes.CRTE, ColonneCodes.EPCI, ColonneCodes.EPCI, ColonneCodes.COMMUNE, ColonneCodes.QPV,
+    ColonneCodes.THEME,  ColonneCodes.PROGRAMME,  ColonneCodes.DOMAINE,  ColonneCodes.REFERENTIEL_PROGRAMMATION,
+    ColonneCodes.BENEFICIAIRE,  ColonneCodes.TYPE_ETABLISSEMENT,
+    ColonneCodes.N_EJ, ColonneCodes.COMPTE_BUDGETAIRE, ColonneCodes.GROUPE_MARCHANDISE,
+    ColonneCodes.TAGS,
 ]
 
 export type FinancialColumnMetaDataDef = ParameterizedColumnMetaDataDef<FinancialDataModel & RowData>
