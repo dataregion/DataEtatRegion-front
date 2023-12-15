@@ -1,3 +1,5 @@
+import { Injectable } from "@angular/core";
+
 /* eslint-disable no-unused-vars */
 
 export enum ColonneCodes {
@@ -70,6 +72,7 @@ export enum ColonneLibelles {
   TAGS = "Tags",
 }
 
+@Injectable({ providedIn: 'root' })
 export class ColonnesService {
 
   private _codesLibelles: { [key: string]: ColonneLibelles[] } = {
