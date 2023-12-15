@@ -7,7 +7,7 @@ import { AlertService } from "apps/common-lib/src/public-api";
 import { BehaviorSubject, finalize } from "rxjs";
 import { Clipboard } from "@angular/cdk/clipboard";
 import { BudgetDataHttpService } from "@services/http/budget-lines-http.service";
-import { ColonnesService } from "@services/colonnes.service";
+import { ColonneLibelles, ColonnesService } from "@services/colonnes.service";
 
 
 @Component({
@@ -50,7 +50,7 @@ export class UpdateTagsComponent {
                     const headers:string[] = contentFile.split('\n')[0].split(',')
                     const newHeaders:string[] = [] 
                     headers.forEach((header) => {
-                        const code = this._colonnesService.getCodeByLibelle(header);
+                        const code = this._colonnesService.getCodeByLibelle(header as ColonneLibelles);
                         if (code)
                             newHeaders.push(code);
                     });
