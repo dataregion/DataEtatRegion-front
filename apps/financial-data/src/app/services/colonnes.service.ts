@@ -75,7 +75,7 @@ export enum ColonneLibelles {
 @Injectable({ providedIn: 'root' })
 export class ColonnesService {
 
-  private _codesLibelles: { [key: string]: ColonneLibelles[] } = {
+  private _codesLibelles: { [key in ColonneCodes]: ColonneLibelles[] } = {
     [ColonneCodes.SOURCE]: [ColonneLibelles.SOURCE],
     [ColonneCodes.N_EJ]: [ColonneLibelles.N_EJ],
     [ColonneCodes.POSTE_EJ]: [ColonneLibelles.POSTE_EJ],
@@ -110,13 +110,15 @@ export class ColonnesService {
     [ColonneCodes.TAGS]: [ColonneLibelles.TAGS],
   }
 
-  public getLibellesByCode(code:string): ColonneLibelles[] {
+  public getLibellesByCode(code: ColonneCodes): ColonneLibelles[] {
     return this._codesLibelles[code];
   }
-  public getCodeByLibelle(libelle: string): string | null {
+  public getCodeByLibelle(libelle: ColonneLibelles): ColonneCodes | null {
     let result: string|null = null;
     Object.keys(this._codesLibelles).forEach(key => {
-      if (key in this._codesLibelles && this._codesLibelles[key].includes(libelle as ColonneLibelles)) {
+      const k = key as ColonneCodes
+      const libelles = this._codesLibelles[k]
+      if (key in this._codesLibelles && libelles.includes(libelle as ColonneLibelles)) {
           result = key;
       }
     })
