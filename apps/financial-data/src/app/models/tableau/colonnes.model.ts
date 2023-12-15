@@ -1,6 +1,7 @@
 import { LocalisationInterministerielle } from "@models/financial/common.models";
-import { ColonneLibelles, FinancialDataModel } from "@models/financial/financial-data.models";
+import { FinancialDataModel } from "@models/financial/financial-data.models";
 import { Tag } from "@models/refs/tag.model";
+import { ColonneCodes, ColonneLibelles } from "@services/colonnes.service";
 import { Optional } from "apps/common-lib/src/lib/utilities/optional.type";
 import { AggregatorFns, ParameterizedColumnMetaDataDef, RowData } from "apps/grouping-table/src/lib/components/grouping-table/group-utils";
 
@@ -22,14 +23,14 @@ export type FinancialColumnMetaDataDef = ParameterizedColumnMetaDataDef<Financia
 
 export const colonnes: FinancialColumnMetaDataDef[] = [
     {
-        name: 'beneficiaire',
+        name: ColonneCodes.BENEFICIAIRE,
         label: ColonneLibelles.BENEFICIAIRE, 
         renderFn: (row) => {
             return row.siret?.nom_beneficiaire ?? ''
         }
     },
     {
-        name: 'montant_ae',
+        name: ColonneCodes.MONTANT_AE,
         label: ColonneLibelles.MONTANT_AE,
         renderFn: (row, col) =>
             row[col.name] ? moneyFormat.format(row[col.name]) : row[col.name],
@@ -42,7 +43,7 @@ export const colonnes: FinancialColumnMetaDataDef[] = [
         },
     },
     {
-        name: 'annee',
+        name: ColonneCodes.ANNEE_ENGAGEMENT,
         label: ColonneLibelles.ANNEE_ENGAGEMENT,
         grouping: true,
         columnStyle: {
@@ -51,7 +52,7 @@ export const colonnes: FinancialColumnMetaDataDef[] = [
         },
     },
     {
-        name: 'montant_cp',
+        name: ColonneCodes.MONTANT_CP,
         label: ColonneLibelles.MONTANT_CP,
         renderFn: (row, col) =>
             row[col.name] > 0 ? moneyFormat.format(row[col.name]) : "",
@@ -64,7 +65,7 @@ export const colonnes: FinancialColumnMetaDataDef[] = [
         },
     },
     {
-        name: 'domaine',
+        name: ColonneCodes.DOMAINE,
         label: ColonneLibelles.DOMAINE,
         renderFn: (row, _col) => {
             if (row.domaine_fonctionnel)
@@ -73,53 +74,53 @@ export const colonnes: FinancialColumnMetaDataDef[] = [
         },
     },
     {
-        name: 'label_commune',
+        name: ColonneCodes.COMMUNE,
         label: ColonneLibelles.COMMUNE,
         renderFn: (row, _col) => {
             return row.commune?.label;
         },
     },
     {
-        name: 'label_crte',
+        name: ColonneCodes.CRTE,
         label: ColonneLibelles.CRTE,
         displayed: false,
         renderFn: (row, _col) => row.commune?.label_crte,
     },
     {
-        name: 'label_epci',
+        name: ColonneCodes.EPCI,
         label: ColonneLibelles.EPCI,
         displayed: false,
         renderFn: (row, _col) => row.commune?.label_epci,
     },
     {
-        name: 'label_arrondissement',
+        name: ColonneCodes.ARRONDISSEMENT,
         label: ColonneLibelles.ARRONDISSEMENT,
         displayed: false,
         renderFn: (row, _col) => row.commune?.arrondissement?.label,
     },
     {
-        name: 'label_departement',
+        name: ColonneCodes.DEPARTEMENT,
         label: ColonneLibelles.DEPARTEMENT,
         displayed: false,
         renderFn: (row, _col) => row.commune?.label_departement,
     },
     {
-        name: 'label_region',
+        name: ColonneCodes.REGION,
         label: ColonneLibelles.REGION,
         displayed: false,
         renderFn: (row, _col) => row.commune?.label_region,
     },
     {
-        name: 'localisation_interministerielle',
+        name: ColonneCodes.LOC_INTER,
         label: ColonneLibelles.LOC_INTER,
         renderFn: (row, _col) => _print_localisation_interministerielle(row.localisation_interministerielle),
     },
     {
-        name: 'n_ej',
+        name: ColonneCodes.N_EJ,
         label: ColonneLibelles.N_EJ,
     },
     {
-        name: 'tags',
+        name: ColonneCodes.TAGS,
         label: ColonneLibelles.TAGS,
         groupingKeyFn: (row, col) => {
             const tags: Tag[] = row[col.name] || []
@@ -131,25 +132,25 @@ export const colonnes: FinancialColumnMetaDataDef[] = [
         }
     },
     {
-        name: 'theme',
+        name: ColonneCodes.THEME,
         label: ColonneLibelles.THEME,
         displayed: false,
         renderFn: (row, _col) => row.programme?.theme ?? '',
     },
     {
-        name: 'nom_programme',
+        name: ColonneCodes.PROGRAMME,
         label: ColonneLibelles.PROGRAMME,
         displayed: false,
         renderFn: (row, _col) => _print_code_label(row.programme?.code, row.programme?.label),
     },
     {
-        name: 'ref_programmation',
+        name: ColonneCodes.REFERENTIEL_PROGRAMMATION,
         label: ColonneLibelles.REFERENTIEL_PROGRAMMATION,
         displayed: false,
         renderFn: (row, _col) => _print_code_label(row.referentiel_programmation?.code, row.referentiel_programmation?.label),
     },
     {
-        name: 'siret',
+        name: ColonneCodes.SIRET,
         label: ColonneLibelles.SIRET,
         displayed: false,
         renderFn: (row, col) => row[col.name] ? row[col.name]['code'] : '',
@@ -159,13 +160,13 @@ export const colonnes: FinancialColumnMetaDataDef[] = [
         },
     },
     {
-        name: 'qpv',
+        name: ColonneCodes.QPV,
         label: ColonneLibelles.QPV,
         displayed: false,
         renderFn: (row, _col) => _print_code_label(row.siret?.code_qpv, row.siret?.label_qpv)
     },
     {
-        name: 'type_etablissement',
+        name: ColonneCodes.TYPE_ETABLISSEMENT,
         label: ColonneLibelles.TYPE_ETABLISSEMENT,
         displayed: false,
         renderFn: (row, _col) => {
@@ -175,32 +176,32 @@ export const colonnes: FinancialColumnMetaDataDef[] = [
         }
     },
     {
-        name: 'compte_budgetaire',
+        name: ColonneCodes.COMPTE_BUDGETAIRE,
         label: ColonneLibelles.COMPTE_BUDGETAIRE,
         displayed: false,
         renderFn: (row, col) => row[col.name] ? row[col.name] : '',
     },
     {
-        name: 'contrat_etat_region',
+        name: ColonneCodes.CPER,
         label: ColonneLibelles.CPER,
         displayed: false,
         renderFn: (row, col) => row[col.name] && row[col.name] !== "#" ? row[col.name] : '',
     },
     {
-        name: 'groupe_marchandise',
+        name: ColonneCodes.GROUPE_MARCHANDISE,
         label: ColonneLibelles.GROUPE_MARCHANDISE,
         displayed: false,
         renderFn: (row) => _print_code_label(row.groupe_marchandise?.code, row.groupe_marchandise?.label),
     },
     {
-        name: 'date_cp',
+        name: ColonneCodes.DATE_DERNIER_PAIEMENT,
         label: ColonneLibelles.DATE_DERNIER_PAIEMENT,
         displayed: false,
         renderFn: (row, col) =>
             row[col.name] ? new Date(row[col.name]).toLocaleString([], { year: 'numeric', month: 'numeric', day: 'numeric' }) : '',
     },
     {
-        name: 'date_replication',
+        name: ColonneCodes.DATE_CREATION_EJ,
         label: ColonneLibelles.DATE_CREATION_EJ,
         displayed: false,
         renderFn: (row, col) =>
