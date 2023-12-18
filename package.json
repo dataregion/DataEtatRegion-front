@@ -38,9 +38,9 @@
     "keycloak-angular": "^14.1.0",
     "keycloak-js": "^22.0.1",
     "ngx-logger": "^5.0.12",
-    "papaparse": "^5.4.1",
     "rxjs": "~7.5.0",
     "tslib": "^2.3.0",
+    "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.1/xlsx-0.20.1.tgz",
     "zone.js": "~0.13.1"
   },
   "devDependencies": {
@@ -63,10 +63,9 @@
     "@storybook/addon-links": "^7.4.3",
     "@storybook/angular": "^7.4.3",
     "@storybook/blocks": "^7.4.3",
-    "@storybook/test-runner": "^0.13.0",
+    "@storybook/test-runner": "^0.16.0",
     "@storybook/testing-library": "^0.2.1",
     "@types/jasmine": "~4.0.0",
-    "@types/papaparse": "^5.3.7",
     "@typescript-eslint/eslint-plugin": "^5.59.2",
     "@typescript-eslint/parser": "^5.59.2",
     "eslint": "^8.39.0",

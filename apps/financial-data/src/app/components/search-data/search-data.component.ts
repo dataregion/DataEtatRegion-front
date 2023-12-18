@@ -27,7 +27,6 @@ import {
 import { BopModel } from '@models/refs/bop.models';
 import { FinancialData, FinancialDataResolverModel } from '@models/financial/financial-data-resolvers.models';
 import { FinancialDataModel } from '@models/financial/financial-data.models';
-import { DatePipe } from '@angular/common';
 import {
   JSONObject,
   Preference,
@@ -221,6 +220,9 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
    * Les donnees de la recherche
    */
   private _searchResult: FinancialDataModel[] | null = null;
+  searchResult(): FinancialDataModel[] | null {
+    return this._searchResult;
+  }
 
   /**
    * Resultats de la recherche.
@@ -238,7 +240,6 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
 
   constructor(
     private _route: ActivatedRoute,
-    private _datePipe: DatePipe,
     private _alertService: AlertService,
     private _budgetService: BudgetService,
     private _logger: NGXLogger,
@@ -387,51 +388,9 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
     return preference;
   }
 
-  public downloadCsv(): void {
-    this.searchForm.markAllAsTouched(); // pour notifier les erreurs sur le formulaire
-    if (this.searchForm.valid && !this.searchInProgress.value ) {
-      this.searchInProgress.next(true);
-      const csvdata = this._budgetService.getCsv(this._searchResult ?? []);
-
-       const url = URL.createObjectURL(csvdata);
-          const a = document.createElement('a');
-          a.href = url;
-          a.download = this._filenameCsv();
-          document.body.appendChild(a);
-          a.click();
-
-          this.searchInProgress.next(false);
-    }
-  }
-
   public reset(): void {
     this.searchFinish = false;
     this.searchForm.reset();
-  }
-
-  private _filenameCsv(): string {
-    const formValue = this.searchForm.value;
-    let filename = `${this._datePipe.transform(new Date(), 'yyyyMMdd')}_export`;
-    if (formValue.location ) {
-      const locations = formValue.location as GeoModel[];
-      filename += '_' + locations[0].type + '-';
-      filename += locations
-        .filter((loc) => loc.code)
-        .map((loc) => loc.code)
-        .join('-');
-    }
-
-    if (formValue.bops) {
-      const bops = formValue.bops;
-      filename +=
-        '_bops-' +
-        bops
-          .filter((bop) => bop.code)
-          .map((bop) => bop.code)
-          .join('-');
-    }
-
-    return filename + '.csv';
   }
 
   /**

@@ -2,41 +2,8 @@ import { Commune, Programme, Siret, GroupeMarchandise, LocalisationInterminister
 import { Tag } from "../refs/tag.model";
 import { ReferentielProgrammation } from "@models/refs/referentiel_programmation.model";
 import { Optional } from "apps/common-lib/src/lib/utilities/optional.type";
+import { JSONObject } from "apps/preference-users/src/lib/models/preference.models";
 
-
-export const HEADERS_CSV_FINANCIAL = [
-  'source',
-  'n_ej',
-  'poste_ej',
-  'montant engagement',
-  'montant payé',
-  'theme',
-  'code programme',
-  'programme',
-  'code domaine fonctionnel',
-  'domaine fonctionnel',
-  'referentiel_programmation',
-  'commune',
-  'crte',
-  'epci',
-  'arrondissement',
-  'département',
-  'région',
-  'code localisation interministérielle',
-  'localisation interministérielle',
-  'compte budgétaire',
-  'cper',
-  'code groupe marchandise',
-  'groupe marchandise',
-  'siret',
-  'nom beneficiaire',
-  "type d'établissement",
-  "code qpv",
-  'date de dernier paiement',
-  'date création ej',
-  'année engagement',
-  'tags',
-];
 
 export interface FinancialDataModel {
 
@@ -72,6 +39,9 @@ export interface FinancialDataModel {
   // Les CP associées à la donnée financière.
   // XXX: Présente uniquement si requêtée
   financial_cp?: Optional<FinancialCp[]>
+
+  toJsonObject(): JSONObject;
+
 }
 
 export interface FinancialCp {
