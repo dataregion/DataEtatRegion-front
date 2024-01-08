@@ -19,6 +19,8 @@ export const groupingOrder: string[] = [
     ColonneCodes.TAGS,
 ]
 
+export const NON_RENSEIGNE: string = 'Non renseigné'
+
 export type FinancialColumnMetaDataDef = ParameterizedColumnMetaDataDef<FinancialDataModel & RowData>
 
 export const colonnes: FinancialColumnMetaDataDef[] = [
@@ -26,7 +28,7 @@ export const colonnes: FinancialColumnMetaDataDef[] = [
         name: ColonneCodes.BENEFICIAIRE,
         label: ColonneLibelles.BENEFICIAIRE, 
         renderFn: (row) => {
-            return row.siret?.nom_beneficiaire ?? ''
+            return row.siret?.nom_beneficiaire ?? NON_RENSEIGNE
         }
     },
     {
@@ -77,38 +79,38 @@ export const colonnes: FinancialColumnMetaDataDef[] = [
         name: ColonneCodes.COMMUNE,
         label: ColonneLibelles.COMMUNE,
         renderFn: (row, _col) => {
-            return row.commune?.label;
+            return row.commune?.label ?? NON_RENSEIGNE;
         },
     },
     {
         name: ColonneCodes.CRTE,
         label: ColonneLibelles.CRTE,
         displayed: false,
-        renderFn: (row, _col) => row.commune?.label_crte,
+        renderFn: (row, _col) => row.commune?.label_crte ?? NON_RENSEIGNE,
     },
     {
         name: ColonneCodes.EPCI,
         label: ColonneLibelles.EPCI,
         displayed: false,
-        renderFn: (row, _col) => row.commune?.label_epci,
+        renderFn: (row, _col) => row.commune?.label_epci ?? NON_RENSEIGNE,
     },
     {
         name: ColonneCodes.ARRONDISSEMENT,
         label: ColonneLibelles.ARRONDISSEMENT,
         displayed: false,
-        renderFn: (row, _col) => row.commune?.arrondissement?.label,
+        renderFn: (row, _col) => row.commune?.arrondissement?.label ?? NON_RENSEIGNE,
     },
     {
         name: ColonneCodes.DEPARTEMENT,
         label: ColonneLibelles.DEPARTEMENT,
         displayed: false,
-        renderFn: (row, _col) => row.commune?.label_departement,
+        renderFn: (row, _col) => row.commune?.label_departement ?? NON_RENSEIGNE,
     },
     {
         name: ColonneCodes.REGION,
         label: ColonneLibelles.REGION,
         displayed: false,
-        renderFn: (row, _col) => row.commune?.label_region,
+        renderFn: (row, _col) => row.commune?.label_region ?? NON_RENSEIGNE,
     },
     {
         name: ColonneCodes.LOC_INTER,
@@ -153,7 +155,7 @@ export const colonnes: FinancialColumnMetaDataDef[] = [
         name: ColonneCodes.SIRET,
         label: ColonneLibelles.SIRET,
         displayed: false,
-        renderFn: (row, col) => row[col.name] ? row[col.name]['code'] : '',
+        renderFn: (row, col) => row[col.name] ? row[col.name]['code'] : NON_RENSEIGNE,
         columnStyle: {
             'min-width': '16ex',
             'flex-grow': '0',
