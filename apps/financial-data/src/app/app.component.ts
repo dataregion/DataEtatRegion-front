@@ -1,9 +1,15 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, Inject, InjectionToken } from '@angular/core';
+import { MultiregionsService } from '@services/multiregions.service';
 import { SETTINGS } from 'apps/common-lib/src/lib/environments/settings.http.service';
 import { GridInFullscreenStateService } from 'apps/common-lib/src/lib/services/grid-in-fullscreen-state.service';
 import { LoaderService, SessionService } from 'apps/common-lib/src/public-api';
 import { SettingsService } from '../environments/settings.service';
 import { profiles_required_for_managment_page, profiles_required_for_tags_page, profiles_required_for_upload_page } from './modules/administration/administration-routing.module';
+
+
+export const MULTIREGIONS_SERVICE = new InjectionToken<MultiregionsService>(
+  'MultiregionsService'
+);
 
 @Component({
   selector: 'financial-root',
@@ -17,6 +23,7 @@ export class AppComponent implements OnInit {
   public showManageUsersPage = false;
   public showUploadFinancialDataPage: boolean = false;
   public showUpdateTagsPage: boolean = false;
+  public region: string = "";
 
   get grid_fullscreen() {
     return this._gridFullscreen.fullscreen;
@@ -26,6 +33,7 @@ export class AppComponent implements OnInit {
     private _loaderService: LoaderService,
     private _sessionService: SessionService,
     private _gridFullscreen: GridInFullscreenStateService,
+    private _multiregions: MultiregionsService,
     @Inject(SETTINGS) public readonly settings: SettingsService
   ) {}
 
@@ -41,6 +49,8 @@ export class AppComponent implements OnInit {
       this.showUploadFinancialDataPage = this._sessionService.hasOneRole(profiles_required_for_upload_page);
       this.showUpdateTagsPage = this._sessionService.hasOneRole(profiles_required_for_tags_page);
     });
+    
+    this.region = this._multiregions.getRegionByHostname();
   }
 
   public get contact(): string | undefined {

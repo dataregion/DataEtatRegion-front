@@ -51,6 +51,7 @@ import {
   budgetApiModule, budgetConfiguration,
 } from 'apps/clients/budget';
 import { BudgetDataHttpService } from '@services/http/budget-lines-http.service';
+import { MultiregionsService } from '@services/multiregions.service';
 
 export function apiExternesConfigFactory(
   settingsService: SettingsService
@@ -98,7 +99,7 @@ registerLocaleData(localeFr);
       provide: APP_INITIALIZER,
       useFactory: app_Init,
       multi: true,
-      deps: [SettingsHttpService, KeycloakService, SettingsService],
+      deps: [SettingsHttpService, KeycloakService, SettingsService, MultiregionsService],
     },
     {
       provide: HTTP_INTERCEPTORS,
