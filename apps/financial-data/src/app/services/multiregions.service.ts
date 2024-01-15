@@ -14,9 +14,23 @@ export enum Region {
 export class MultiregionsService {
 
   private _synonymes: { [key in Region]: string[] } = {
-    [Region.BRETAGNE]: ['bretagne'],
-    [Region.PDL]: ['pdl', 'paysdelaloire', 'pays-de-la-loire'],
-    [Region.HDF]: ['hdf', 'hautsdefrance', 'hauts-de-france']
+    [Region.BRETAGNE]: [
+      "bretagne.nocode.csm.ovh",
+      "budget.bretagne.preprod.dataregion.fr",
+      "budget.bretagne.dataregion.fr",
+      "budget.preprod.databretagne.fr",
+      "budget.databretagne.fr",
+    ],
+    [Region.PDL]: [
+      "pdl.nocode.csm.ovh",
+      "budget.paysdelaloire.dataregion.fr",
+      "budget.paysdelaloire.preprod.dataregion.fr",
+    ],
+    [Region.HDF]: [
+      "hdf.nocode.csm.ovh",
+      "budget.hautsdefrance.dataregion.fr",
+      "budget.hautsdefrance.preprod.dataregion.fr",
+    ]
   };
 
   public getRegionByHostname(): string {
@@ -24,7 +38,7 @@ export class MultiregionsService {
     if (hostname.includes('localhost'))
       return "Localhost";
     for (const [key, value] of Object.entries(this._synonymes)) {
-      if (value.includes(hostname.split(".")[0]))
+      if (value.includes(hostname))
         return key;
     }
     return "Error";
