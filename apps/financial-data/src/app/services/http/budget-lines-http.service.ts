@@ -136,6 +136,8 @@ export class BudgetDataHttpService implements DataHttpService<EnrichedFlattenFin
             return this.http.post(`${this._financialApiUrl}/ae`, formData);
         } else if (type === DataType.FINANCIAL_DATA_CP) {
             return this.http.post(`${this._financialApiUrl}/cp`, formData);
+        } else if (type == DataType.FRANCE_2030) {
+            return this.http.post(`${this._financialApiUrl}/france-2030`, formData);
         }
         return of();
     }

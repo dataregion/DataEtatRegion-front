@@ -12,7 +12,9 @@
   },
   "apis": {
     "franceRelance": "<url api franceRelance>",
-    "administration": ""
+    "administration": "",
+
+    "financial_data": "<url api financial>"
   },
   "ressources": {
   }
