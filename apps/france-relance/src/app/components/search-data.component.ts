@@ -31,7 +31,7 @@ import { SousAxePlanRelance } from '../models/axe.models';
 import { Laureats } from '../models/laureat.models';
 import { Structure } from '../models/structure.models';
 import { Territoire } from '../models/territoire.models';
-import { FranceRelanceHttpService } from '../services/france-relance.http.service';
+import { LaureatHttpService } from '../services/laureat.http.service';
 
 @Component({
   selector: 'france-relance-search-data',
@@ -78,7 +78,7 @@ export class SearchDataComponent implements OnInit, OnChanges {
   public constructor(
     private _route: ActivatedRoute,
     private _alertService: AlertService,
-    private _service: FranceRelanceHttpService
+    private _service: LaureatHttpService,
   ) {}
 
   /**
