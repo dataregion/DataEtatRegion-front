@@ -7,7 +7,7 @@ export abstract class NocodbHttpService {
    * @param data Observable of type NocoDbResponse<T> to map
    * @returns Observable of type T[] with error handling for result limit reached
    */
-  protected mapNocoDbReponse<T>(data: Observable<NocoDbResponse<T>>) {
+  protected mapNocoDbReponse<T>(data: Observable<NocoDbResponse<T>>): Observable<T[]> {
     return data.pipe(
       map((response: NocoDbResponse<T>) => {
         if (response.pageInfo.isLastPage === false) {
