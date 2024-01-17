@@ -11,6 +11,7 @@ import {
 
 class Api implements IApi {
   financial_data = '';
+  laureats_data = '';
   financial_data_v2 = '';
   administration = '';
   geo = '';
@@ -22,6 +23,7 @@ class FinancialSettings extends Settings {
   help_pdf: string | undefined = undefined;
 }
 
+// TODO: verrue, décliner le service settings pour francerelance également.
 @Injectable({ providedIn: 'root' })
 export class SettingsService implements ISettingsService {
   public settings: Settings;
@@ -59,6 +61,10 @@ export class SettingsService implements ISettingsService {
 
   public get apiExternes(): string {
     return (this.settings.apis as Api).apis_externes;
+  }
+  
+  public get apiLaureatsData(): string {
+    return (this.settings.apis as Api).laureats_data;
   }
 
   public get apiFinancialData(): string {

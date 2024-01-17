@@ -20,6 +20,7 @@ export class BudgetDataHttpService implements DataHttpService<EnrichedFlattenFin
 
     private _apiAdministration!: string;
     private _financialApiUrl!: string;
+    private _laureatsApiUrl!: string;
     private _budgetApi: GeneratedBudgetApiService = inject(GeneratedBudgetApiService);
     private _mapper: BudgetLineHttpMapper;
 
@@ -29,6 +30,7 @@ export class BudgetDataHttpService implements DataHttpService<EnrichedFlattenFin
     ) {
         this._apiAdministration = this.settings.apiAdministration;
         this._financialApiUrl = settings.apiFinancialData;
+        this._laureatsApiUrl = settings.apiLaureatsData;
         this._mapper = new BudgetLineHttpMapper();
     }
 
@@ -137,7 +139,7 @@ export class BudgetDataHttpService implements DataHttpService<EnrichedFlattenFin
         } else if (type === DataType.FINANCIAL_DATA_CP) {
             return this.http.post(`${this._financialApiUrl}/cp`, formData);
         } else if (type == DataType.FRANCE_2030) {
-            return this.http.post(`${this._financialApiUrl}/france-2030`, formData);
+            return this.http.post(`${this._laureatsApiUrl}/france-2030`, formData);
         }
         return of();
     }

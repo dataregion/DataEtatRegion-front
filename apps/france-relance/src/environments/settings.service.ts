@@ -6,7 +6,7 @@ class Api implements IApi {
   franceRelance = '';
   administration = '';
   
-  financial_data = '';
+  laureats_data = '';
 }
 
 @Injectable({ providedIn: 'root' })
@@ -37,8 +37,8 @@ export class SettingsService implements ISettingsService {
     return (this.settings.apis as Api).administration;
   }
   
-  public get apiFinancialData(): string {
-    return (this.settings.apis as Api).financial_data;
+  public get apiLaureatsData(): string {
+    return (this.settings.apis as Api).laureats_data;
   }
 
   public get apiFranceRelance(): string {
