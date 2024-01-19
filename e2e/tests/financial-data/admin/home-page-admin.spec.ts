@@ -1,5 +1,6 @@
 import { test, expect } from '@playwright/test';
 import mockRefApi from '../../utils/mock-api';
+import { financial_url_helper } from 'e2e/tests/utils/urls.conf';
 
 test.describe("Page d'accueil", () => {
   test.beforeEach(async ({ page }) => {
@@ -8,8 +9,10 @@ test.describe("Page d'accueil", () => {
   });
 
   test("L'utilisateur a accès à la page de liste des utilisateurs", async ({
-    page,
+    page, baseURL
   }) => {
+    const management = financial_url_helper(baseURL).management
+
     await expect(page.locator('id=administration')).toBeVisible();
     await page.locator('id=administration').click();
 
@@ -29,13 +32,15 @@ test.describe("Page d'accueil", () => {
       'Liste des utilisateurs'
     );
 
-    expect(page.url()).toContain('/administration/management');
+    expect(page.url()).toContain(management.pathname);
   });
 
   test("L'utilisateur a  accès à la page de management via le lien", async ({
-    page,
+    page, baseURL
   }) => {
-    await page.goto('./administration/management');
-    expect(page.url()).toContain('/administration/management');
+    const management = financial_url_helper(baseURL).management
+
+    await page.goto(management.pathname);
+    expect(page.url()).toContain(management.pathname);
   });
 });
