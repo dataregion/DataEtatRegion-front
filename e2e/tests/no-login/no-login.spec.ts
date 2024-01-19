@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+import { financial_url_helper } from '../utils/urls.conf';
 
 test.describe("Page d'authentification", () => {
   test.beforeEach(async ({ page }) => {
@@ -34,6 +35,7 @@ test.describe("Page d'authentification", () => {
 
 // attente de redirection vers keycloak
 async function waitingRedirectKeycloak(page: any) {
-  await page.goto('./');
+  const root = financial_url_helper().root
+  await page.goto(root.pathname);
   await page.waitForURL(/^https:\/\/auth.*/)
 }

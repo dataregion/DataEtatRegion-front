@@ -1,12 +1,14 @@
 import { test, expect } from '@playwright/test';
 import mockRefApi from '../utils/mock-api';
+import { financial_url_helper } from '../utils/urls.conf';
 
 test.describe("Page d'accueil", () => {
-  test.beforeEach(async ({ page }) => {
+  test.beforeEach(async ({ page, baseURL }) => {
+    const root = financial_url_helper(baseURL).root
 
     await mockRefApi(page);
-    await page.goto('./');
-    await page.waitForURL('./')
+    await page.goto(root.pathname);
+    await page.waitForURL(root.urlHavingSamePathname)
   });
 
   test("L'utilisateur est connecté", async ({ page }) => {
@@ -71,11 +73,15 @@ test.describe("Page d'accueil", () => {
 
 test.describe('Page de Management', () => {
   test("L'utilisateur n'a pas accès à la page de management", async ({
-    page,
+    page, baseURL
   }) => {
-    await page.goto('./management');
-    await page.waitForURL('./');
-    expect(page.url()).not.toContain('/management');
+    const root = financial_url_helper(baseURL).root
+    const management = financial_url_helper(baseURL).management
+
+    await page.goto(management.pathname);
+    await page.waitForURL(root.urlHavingSamePathname);
+
+    expect(page.url()).not.toContain(management.pathname);
     // Le menu est invisible (les tags de sont plus dans ce menu)
     await expect(page.locator('id=administration')).toHaveCount(0);
   });
