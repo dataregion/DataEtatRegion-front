@@ -9,7 +9,7 @@ test.describe("Lorsque l'on définit le paramètre `grouper_par`", () => {
 
     await page.getByTestId("group-by-btn").click();
 
-    let group_choices = page.getByTestId('group-choice-dialog')
+    const group_choices = page.getByTestId('group-choice-dialog')
 
     await expect(group_choices).toContainText("Thème")
     await expect(group_choices).toContainText("Siret")
@@ -23,7 +23,7 @@ test.describe("Lorsque l'on définit le paramètre `grouper_par` invalide", () =
   test("Une erreur s'affiche avec un message compréhensible", async ({ page }) => {
     await page.goto(urlparam);
 
-    let error_message = page.getByTestId('search-cmp-error-msg')
+    const error_message = page.getByTestId('search-cmp-error-msg')
 
     await expect(error_message).toContainText("inexistant n'est pas un membre de")
   })
@@ -34,8 +34,8 @@ test.describe("Lorsque l'on spécifie deux programmes", () => {
   test("Les filtres sont pré remplis", async ({ page }) => {
     await _navigate(page, `/${urlparam}`);
 
-    let programmes = page.getByTestId("programmes-form-field")
-    let annees = page.getByTestId("annees-form-field")
+    const programmes = page.getByTestId("programmes-form-field")
+    const annees = page.getByTestId("annees-form-field")
 
     await expect(programmes).toContainText('101')
     await expect(programmes).toContainText('Accès au droit et à la justice')
@@ -45,7 +45,7 @@ test.describe("Lorsque l'on spécifie deux programmes", () => {
     await expect(programmes).not.toContainText("Accompagnement des mutations")
 
     // Puisque, par défaut, on choisit l'année courante
-    let curr = `${new Date().getFullYear()}`;
+    const curr = `${new Date().getFullYear()}`;
     await expect(annees).toContainText(curr);
   });
 });
@@ -56,7 +56,7 @@ test.describe("Lorsque l'on spécifie une localisation", () => {
   test("Les filtres sont pré remplis", async ({ page }) => {
     await _navigate(page, `/${urlparam}`);
 
-    let localisation = page.getByTestId('localisation-select')
+    const localisation = page.getByTestId('localisation-select')
 
     await expect(localisation).toContainText("Ille-et-Vilaine");
   });
@@ -68,7 +68,7 @@ test.describe("Lorsque l'on spécifie une commune qui n'est pas dans les 100 pre
   test("Les filtres sont pré remplis", async ({ page }) => {
     await _navigate(page, `/${urlparam}`);
 
-    let localisation = page.getByTestId('localisation-select')
+    const localisation = page.getByTestId('localisation-select')
 
     await expect(localisation).toContainText("Rennes");
   });
@@ -80,7 +80,7 @@ test.describe("Lorsque l'on spécifie une localisation QPV", () => {
   test("Les filtres sont pré remplis", async ({ page }) => {
     await _navigate(page, `/${urlparam}`);
 
-    let localisation = page.getByTestId('localisation-select')
+    const localisation = page.getByTestId('localisation-select')
 
     await expect(localisation).toContainText("QP001001");
   });
@@ -92,7 +92,7 @@ test.describe("Lorsque l'on spécifie une année min/max", () => {
   test("Les filtres sont pré remplis", async ({ page }) => {
     await _navigate(page, `/${urlparam}`);
 
-    let annees = page.getByTestId('annees-form-field');
+    const annees = page.getByTestId('annees-form-field');
 
     await expect(annees).toContainText("2019");
     await expect(annees).toContainText("2020");
@@ -149,7 +149,7 @@ test.describe("Lorsque l'on spécifie des referentiels de programmation", () => 
 
   test("Les filtres sont pré remplis", async ({ page }) => {
     await _navigate(page, `/${urlparam}`);
-    let refProgrammation = page.getByTestId('ref-programmation-form-field')
+    const refProgrammation = page.getByTestId('ref-programmation-form-field')
     await expect(refProgrammation).toContainText("010101040101");
   });
 })

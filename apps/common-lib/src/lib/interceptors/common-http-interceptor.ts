@@ -11,6 +11,7 @@ import { Observable, finalize, tap } from 'rxjs';
 import { AlertService, LoaderService } from 'apps/common-lib/src/public-api';
 
 export const BYPASS_ALERT_INTERCEPTOR = new HttpContextToken<boolean>(() => false)
+export const DO_NOT_ALERT_ON_NON_IMPLEMTENTED = new HttpContextToken<boolean>(() => false)
 
 @Injectable()
 export class CommonHttpInterceptor implements HttpInterceptor {
@@ -38,11 +39,15 @@ export class CommonHttpInterceptor implements HttpInterceptor {
     if (bypass)
       return handler;
 
+    const doNotalertOnNonImplemented = req.context.get(DO_NOT_ALERT_ON_NON_IMPLEMTENTED)
     return handler.pipe(
       tap({
         error: (_error: HttpErrorResponse) => {
-          if (_error?.status >= 500)
-            this._alertService.openAlertError('Une erreur est survenue');
+          if (_error?.status >= 500) {
+            const bypassAlert = (doNotalertOnNonImplemented && _error?.status === 501)
+            if (!bypassAlert)
+              this._alertService.openAlertError('Une erreur est survenue');
+          }
         },
       })
     );

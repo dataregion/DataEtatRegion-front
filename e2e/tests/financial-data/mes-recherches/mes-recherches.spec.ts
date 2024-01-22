@@ -1,13 +1,16 @@
 import { test, expect } from '@playwright/test';
 import mockPreferencesApi from './mock-preferences';
+import { financial_url_helper } from 'e2e/tests/utils/urls.conf';
 
 test.describe("Mes recherches", () => {
 
   test.beforeEach(
-    async ({ page }) => {
+    async ({ page, baseURL }) => {
+      const preference = financial_url_helper(baseURL).preference
+
       await mockPreferencesApi(page);
-      await page.goto('./preference')
-      await page.waitForURL('./preference')
+      await page.goto(preference.pathname)
+      await page.waitForURL(preference.urlHavingSamePathname)
     }
   )
 

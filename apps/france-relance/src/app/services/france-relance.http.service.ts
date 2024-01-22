@@ -2,7 +2,6 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, Inject } from '@angular/core';
 import { SETTINGS } from 'apps/common-lib/src/lib/environments/settings.http.service';
 import {
-  NocodbHttpService,
   NocoDbResponse,
 } from 'apps/common-lib/src/public-api';
 import { map, Observable } from 'rxjs';
@@ -10,11 +9,12 @@ import { SettingsService } from '../../environments/settings.service';
 import { SousAxePlanRelance } from '../models/axe.models';
 import { Structure } from '../models/structure.models';
 import { Territoire } from '../models/territoire.models';
+import { AbstractRelanceHttpService } from './abstract-relance.http.service';
 
 @Injectable({
   providedIn: 'root',
 })
-export class FranceRelanceHttpService extends NocodbHttpService {
+export class FranceRelanceHttpService extends AbstractRelanceHttpService {
   constructor(
     private http: HttpClient,
     @Inject(SETTINGS) readonly _settings: SettingsService

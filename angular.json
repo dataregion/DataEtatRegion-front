@@ -83,10 +83,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "financial-data:build:production"
+              "buildTarget": "financial-data:build:production"
             },
             "development": {
-              "browserTarget": "financial-data:build:development"
+              "buildTarget": "financial-data:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -94,7 +94,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "financial-data:build"
+            "buildTarget": "financial-data:build"
           }
         },
         "test": {
@@ -307,10 +307,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "france-relance:build:production"
+              "buildTarget": "france-relance:build:production"
             },
             "development": {
-              "browserTarget": "france-relance:build:development"
+              "buildTarget": "france-relance:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -318,7 +318,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "france-relance:build"
+            "buildTarget": "france-relance:build"
           }
         },
         "test": {
