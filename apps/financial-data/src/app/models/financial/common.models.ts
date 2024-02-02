@@ -1,5 +1,6 @@
 /* eslint-disable no-unused-vars */
 
+import { DataType } from "@models/audit/audit-update-data.models";
 import { Optional } from "apps/common-lib/src/lib/utilities/optional.type";
 
 
@@ -50,8 +51,15 @@ export interface LocalisationInterministerielle extends CodeLabel {
 }
 export interface DomaineFonctionnel extends CodeLabel {}
 
+// XXX: sous ensemble de DataType
 export enum SourceFinancialData {
-  ADEME = 'ADEME',
-  CHORUS = 'CHORUS'
+  ADEME = DataType.ADEME,
+  FINANCIAL_AE = DataType.FINANCIAL_DATA_AE,
+  FINANCIAL_CP = DataType.FINANCIAL_DATA_CP,
+}
+
+/** Vrai pour les CP et AE */
+export function sourceIsFromChorus(source: SourceFinancialData) {
+  return source == SourceFinancialData.FINANCIAL_AE || source == SourceFinancialData.FINANCIAL_CP;
 }
 

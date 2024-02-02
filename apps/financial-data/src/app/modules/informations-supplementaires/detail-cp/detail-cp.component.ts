@@ -20,7 +20,8 @@ export class DetailCpComponent {
   hasCp: boolean = true;
 
   private _messagesErreurs = {
-    "CHORUS" : "Aucun crédit de paiement",
+    "FINANCIAL_DATA_AE" : "Aucun crédit de paiement",
+    "FINANCIAL_DATA_CP" : "Détails paiement : cette ligne est un crédit de paiement non rattaché à une ligne d'engagement.",
     "ADEME" : "Détails paiement : information indisponible",
   }
   messageErreur(): string {
