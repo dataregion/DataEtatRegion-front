@@ -2,30 +2,36 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, Inject } from '@angular/core';
 import { SETTINGS } from 'apps/common-lib/src/lib/environments/settings.http.service';
 import {
+  GeoModel,
   NocoDbResponse,
+  TypeLocalisation,
 } from 'apps/common-lib/src/public-api';
-import { map, Observable } from 'rxjs';
+import { map, Observable, of } from 'rxjs';
 import { SettingsService } from '../../environments/settings.service';
 import { SousAxePlanRelance } from '../models/axe.models';
 import { Structure } from '../models/structure.models';
 import { Territoire } from '../models/territoire.models';
-import { AbstractRelanceHttpService } from './abstract-relance.http.service';
-import { FrontLaureat, Laureat } from '../models/laureat.models';
+import { AbstractLaureatsHttpService, SearchParameters, SearchResults } from './abstract-laureats.http.service';
 import { SourceLaureatsData } from '../models/common.model';
 
-function _enrichitAvecSource(xs: Laureat[]): FrontLaureat[] {
-    return xs.map(x => {
-        return{
-            source: SourceLaureatsData.RELANCE,
-            ...x,
-        }
-    })
+class UnsupportedNiveauLocalisation extends Error {
+  /**
+   *
+   */
+  constructor(niveau: string) {
+    super(UnsupportedNiveauLocalisation._message_utilisateur(niveau))
+    Object.setPrototypeOf(this, UnsupportedNiveauLocalisation.prototype);
+  }
+
+  static _message_utilisateur(niveau: string) {
+    return `Impossible de rechercher au niveau ${niveau} au sein de la base France Relance. Nous n'afficherons pas les résultats France Relance.`
+  }
 }
 
 @Injectable({
   providedIn: 'root',
 })
-export class FranceRelanceHttpService extends AbstractRelanceHttpService {
+export class FranceRelanceHttpService extends AbstractLaureatsHttpService {
   constructor(
     private http: HttpClient,
     @Inject(SETTINGS) readonly _settings: SettingsService
@@ -125,51 +131,56 @@ export class FranceRelanceHttpService extends AbstractRelanceHttpService {
    * @param axe
    * @returns
    */
-  public searchFranceRelance(
-    axes: SousAxePlanRelance[],
-    structure: Structure,
-    territoires: Territoire[]
-  ): Observable<FrontLaureat[]> {
+  public searchLaureats(
+    sp: SearchParameters
+  ): Observable<SearchResults> {
+    try {
+      return this._searchLaureats(sp);
+    } catch (error) {
+      if (error instanceof UnsupportedNiveauLocalisation) {
+        return of({
+          messages_utilisateur: [error.message],
+          resultats: [],
+        } as SearchResults)
+      }
+      throw error;
+    }
+  }
+
+  private _searchLaureats(
+    { axes, structure, territoires }: SearchParameters
+  ): Observable<SearchResults> {
     const apiFr = this._settings.apiFranceRelance;
 
     const fields =
-      'Structure,NuméroDeSiretSiConnu,SubventionAccordée,Synthèse,axe,sous-axe,dispositif,territoire,code_insee';
-    const params = `fields=${fields}&${this._buildparams(
-      axes,
-      structure,
-      territoires
-    )}`;
+      'Structure,NuméroDeSiretSiConnu,SubventionAccordée,Synthèse,axe,sous-axe,dispositif,territoire,territoire_insee,code_insee';
+    const rest_params = this._buildparams(axes, structure, territoires)
+    const params = `fields=${fields}&${rest_params}`;
 
     return this.mapNocoDbReponse(
       this.http.get<NocoDbResponse<any>>(
         `${apiFr}/Laureats/Laureats-front?${params}`
       )
-    ).pipe(map(_enrichitAvecSource));
+    ).pipe(
+      map(this._enrichitAvecSource(SourceLaureatsData.RELANCE)),
+      map(this._wrap_in_searchresult)
+    );
   }
 
-  public getCsv(
-    axes: SousAxePlanRelance[],
-    structure: Structure,
-    territoires: Territoire[]
-  ): Observable<Blob> {
-    const apiFr = this._settings.apiFranceRelance;
 
-    const fields =
-      'Structure,NuméroDeSiretSiConnu,SubventionAccordée,Synthèse,axe,sous-axe,dispositif,territoire,code_insee';
-    const params = `fields=${fields}&${this._buildparams(
-      axes,
-      structure,
-      territoires
-    )}`;
-    return this.http.get(`${apiFr}/Laureats/Laureats-front/csv?${params}`, {
-      responseType: 'blob',
-    });
+  // TODO: here, repair csv - lorsqu'on migrera 
+  public getCsv(
+    _1: SousAxePlanRelance[],
+    _2: Structure,
+    _3: Territoire[]
+  ): Observable<Blob> {
+    throw new Error("Method not implemented.");
   }
 
   private _buildparams(
     axes: SousAxePlanRelance[] | null,
     structure: Structure | null,
-    territoires: Territoire[] | null
+    territoires: GeoModel[] | null
   ): string {
     let params =
       'sort=Structure,axe,dispositif&limit=5000&where=(Montant,gt,0)';
@@ -182,9 +193,15 @@ export class FranceRelanceHttpService extends AbstractRelanceHttpService {
     }
 
     if (territoires && territoires.length > 0) {
+
+      const filtre_territoire_non_commune = territoires.find(x => x.type != TypeLocalisation.COMMUNE)
+      if (filtre_territoire_non_commune) {
+        throw new UnsupportedNiveauLocalisation(filtre_territoire_non_commune.type!)
+      }
+
       // on est toujours sur le même type
-      params += `~and(territoire,in,${territoires
-        .map((t) => t.Commune)
+      params += `~and(territoire_insee,in,${territoires
+        .map((t) => t.code)
         .join(',')})`;
     }
 

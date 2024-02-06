@@ -6,6 +6,9 @@ class Api implements IApi {
   franceRelance = '';
   administration = '';
   
+  geo = '';
+  referentiel = '';
+  
   laureats_data = '';
 }
 
@@ -22,15 +25,25 @@ export class SettingsService implements ISettingsService {
   setSettings(settings: Settings): void {
     this.settings = settings;
   }
+
   getKeycloakSettings(): Keycloak {
     return this.settings.keycloak;
   }
+
   getRessources(): Ressources {
     return this.settings.ressources;
   }
 
   getSetting(): Settings {
     return this.settings;
+  }
+
+  public get apiGeo(): string {
+    return (this.settings.apis as Api).geo;
+  }
+  
+  public get apiReferentiel(): string {
+    return (this.settings.apis as Api).referentiel;
   }
 
   public get apiAdministration(): string {
