@@ -1,7 +1,5 @@
 import { Inject, Injectable, InjectionToken } from '@angular/core';
 import { FinancialDataModel } from '@models/financial/financial-data.models';
-import { DataHttpService, SearchParameters } from 'apps/common-lib/src/public-api';
-import { RefSiret } from '@models/refs/RefSiret';
 import { BopModel } from '@models/refs/bop.models';
 import { Observable, forkJoin, map } from 'rxjs';
 import { SettingsService } from '../../environments/settings.service';
@@ -15,6 +13,8 @@ import { ReferentielProgrammation } from '@models/refs/referentiel_programmation
 import * as XLSX from 'xlsx';
 import { DisplayedOrderedColumn } from 'apps/grouping-table/src/lib/components/grouping-table/group-utils';
 import { JSONObject } from 'apps/preference-users/src/lib/models/preference.models';
+import { RefSiret } from 'apps/common-lib/src/lib/models/refs/RefSiret';
+import { DataHttpService, SearchParameters } from './interface-data.service';
 
 export const DATA_HTTP_SERVICE = new InjectionToken<DataHttpService<any, FinancialDataModel>>(
   'DataHttpService'

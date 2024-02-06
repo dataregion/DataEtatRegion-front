@@ -23,7 +23,6 @@ class FinancialSettings extends Settings {
   help_pdf: string | undefined = undefined;
 }
 
-// TODO: verrue, décliner le service settings pour francerelance également.
 @Injectable({ providedIn: 'root' })
 export class SettingsService implements ISettingsService {
   public settings: Settings;

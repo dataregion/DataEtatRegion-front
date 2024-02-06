@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 
 import { TypeCategorieJuridique } from "@models/financial/common.models";
-import { OtherTypeCategorieJuridique, SearchTypeCategorieJuridique } from "apps/common-lib/src/public-api";
+import { OtherTypeCategorieJuridique, SearchTypeCategorieJuridique } from "@services/interface-data.service";
 
 const synonymes: { [key in SearchTypeCategorieJuridique]: string[] } = {
    [TypeCategorieJuridique.ASSOCIATION]: ["Association", "association"], 

@@ -7,11 +7,11 @@ import { BudgetService as GeneratedBudgetApiService } from "apps/clients/budget"
 import { EnrichedFlattenFinancialLinesSchema } from "apps/clients/budget/model/enrichedFlattenFinancialLinesSchema";
 import { SETTINGS } from "apps/common-lib/src/lib/environments/settings.http.service";
 import { DataPagination } from "apps/common-lib/src/lib/models/pagination/pagination.models";
-import { DataHttpService, SearchParameters } from "apps/common-lib/src/public-api";
 import { SettingsService } from "apps/financial-data/src/environments/settings.service";
 import { Observable, of } from "rxjs";
 import { BudgetLineHttpMapper } from "./budget-lines-http.mapper.service";
 import { Optional } from "apps/common-lib/src/lib/utilities/optional.type";
+import { DataHttpService, SearchParameters } from "@services/interface-data.service";
 
 @Injectable({
     providedIn: 'root',
