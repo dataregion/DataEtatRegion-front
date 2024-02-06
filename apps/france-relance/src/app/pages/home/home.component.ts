@@ -29,7 +29,10 @@ import { colonnes, LaureatColumnMetaDataDef } from '../../models/tableau/colonne
 export class HomeComponent implements OnInit {
   private dialog = inject(MatDialog);
 
-  columnsMetaData: ColumnsMetaData;
+  columnsMetaData: ParameterizedColumnsMetaData<LaureatColumnMetaDataDef>;
+  get genericColumnsMetadata(): ColumnsMetaData {
+    return this.columnsMetaData as ColumnsMetaData;
+  }
 
   tableData?: TableData;
 

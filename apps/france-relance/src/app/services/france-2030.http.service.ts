@@ -9,6 +9,7 @@ import { SettingsService } from "apps/financial-data/src/environments/settings.s
 import { SETTINGS } from "apps/common-lib/src/lib/environments/settings.http.service";
 import { DataPagination } from "apps/common-lib/src/lib/models/pagination/pagination.models";
 import { DO_NOT_ALERT_ON_NON_IMPLEMTENTED } from "apps/common-lib/src/public-api";
+import { Laureats } from "../models/laureat.models";
 
 function returnEmptyArrayOn501(error: HttpErrorResponse) {
     if (error.status === 501) {
@@ -50,7 +51,7 @@ export class France2030HttpService extends AbstractRelanceHttpService {
             )
             .pipe(catchError(returnEmptyArrayOn501))
     }
-    override searchFranceRelance(_axes: SousAxePlanRelance[], _structure: Structure, _territoires: Territoire[]): Observable<any> {
+    override searchFranceRelance(_axes: SousAxePlanRelance[], _structure: Structure, _territoires: Territoire[]): Observable<Laureats[]> {
 
         const params_structures = _structure?.label
         const params_axes = _axes?.map(x => x.label)?.join(",")

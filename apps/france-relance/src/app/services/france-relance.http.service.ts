@@ -10,6 +10,7 @@ import { SousAxePlanRelance } from '../models/axe.models';
 import { Structure } from '../models/structure.models';
 import { Territoire } from '../models/territoire.models';
 import { AbstractRelanceHttpService } from './abstract-relance.http.service';
+import { Laureats } from '../models/laureat.models';
 
 @Injectable({
   providedIn: 'root',
@@ -118,7 +119,7 @@ export class FranceRelanceHttpService extends AbstractRelanceHttpService {
     axes: SousAxePlanRelance[],
     structure: Structure,
     territoires: Territoire[]
-  ): Observable<any> {
+  ): Observable<Laureats[]> {
     const apiFr = this._settings.apiFranceRelance;
 
     const fields =

@@ -1,11 +1,12 @@
 import { AggregatorFns, ParameterizedColumnMetaDataDef, RowData } from "apps/grouping-table/src/lib/components/grouping-table/group-utils";
+import { Laureats } from "../laureat.models";
 
 const moneyFormat = new Intl.NumberFormat('fr-FR', {
   style: 'currency',
   currency: 'EUR',
 });
 
-export type LaureatColumnMetaDataDef = ParameterizedColumnMetaDataDef<RowData>
+export type LaureatColumnMetaDataDef = ParameterizedColumnMetaDataDef<Laureats & RowData>
 
 export const colonnes: LaureatColumnMetaDataDef[] = [
       { name: 'Structure', label: 'Lauréat' },
