@@ -167,7 +167,7 @@ export class InformationSupplementairesViewService {
   }
 
   private get api_subvention_subvention$() {
-    if (this._financial.source === SourceFinancialData.CHORUS) {
+    if (this._financial.source === SourceFinancialData.FINANCIAL_AE) {
       return this.api_subvention$.pipe(
         map((subvention) => {
           const ej = this._financial.n_ej;
@@ -183,7 +183,7 @@ export class InformationSupplementairesViewService {
   }
 
   private get api_subvention_representants_legaux$() {
-    if (this._financial.source === SourceFinancialData.CHORUS) {
+    if (this._financial.source === SourceFinancialData.FINANCIAL_AE) {
       this.api_subvention$.pipe(
         map((subvention) => {
           return subvention?.contacts || [];

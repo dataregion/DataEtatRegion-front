@@ -35,7 +35,7 @@ export class DemarchesSimplifieesViewService {
 
     api_demarche_error: ModelError | null = null;
     api_find_dossier_demarche_simplifie$() {
-        if (this._financial.source !== SourceFinancialData.CHORUS) {
+        if (this._financial.source !== SourceFinancialData.FINANCIAL_AE) {
             const err = {
                 code: 'NOT_FOUND',
                 message: "Aucun dossier correspondant n'a été trouvé dans la démarche",

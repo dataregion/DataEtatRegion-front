@@ -45,7 +45,7 @@ export class BudgetDataHttpService implements DataHttpService<EnrichedFlattenFin
     }
 
     getSources(): string[] {
-        return [SourceFinancialData.CHORUS, SourceFinancialData.ADEME];
+        return [SourceFinancialData.FINANCIAL_AE, SourceFinancialData.FINANCIAL_CP, SourceFinancialData.ADEME];
     }
 
     public getById(source: SourceFinancialData, id: any, ..._: any[]): Observable<EnrichedFlattenFinancialLinesSchema> {

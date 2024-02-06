@@ -12,7 +12,9 @@ export class BudgetLineHttpMapper {
     _sourceFinancialDataFromEnrichedFlattenBudgetSource(source?: EnrichedFlattenFinancialLinesSchema.SourceEnum): SourceFinancialData {
         switch (source) {
             case "FINANCIAL_DATA_AE":
-                return SourceFinancialData.CHORUS;
+                return SourceFinancialData.FINANCIAL_AE;
+            case "FINANCIAL_DATA_CP":
+                return SourceFinancialData.FINANCIAL_CP;
             case "ADEME":
                 return SourceFinancialData.ADEME;
 
