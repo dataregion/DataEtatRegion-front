@@ -6,7 +6,7 @@ import { Observable, forkJoin, map } from "rxjs";
 import { SousAxePlanRelance } from "../models/axe.models";
 import { Structure } from "../models/structure.models";
 import { Territoire } from "../models/territoire.models";
-import { Laureats } from "../models/laureat.models";
+import { FrontLaureat } from "../models/laureat.models";
 
 /**
  * Service HTTP pour les lauréats. Composition de deux services
@@ -75,7 +75,7 @@ export class LaureatHttpService extends AbstractRelanceHttpService {
         return territoires$;
     }
 
-    override searchFranceRelance(axes: SousAxePlanRelance[], structure: Structure, territoires: Territoire[]): Observable<Laureats[]> {
+    override searchFranceRelance(axes: SousAxePlanRelance[], structure: Structure, territoires: Territoire[]): Observable<FrontLaureat[]> {
         
         const franceRelance$ = forkJoin(
             {

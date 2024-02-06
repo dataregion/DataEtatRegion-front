@@ -9,13 +9,23 @@ import { SettingsService } from "apps/financial-data/src/environments/settings.s
 import { SETTINGS } from "apps/common-lib/src/lib/environments/settings.http.service";
 import { DataPagination } from "apps/common-lib/src/lib/models/pagination/pagination.models";
 import { DO_NOT_ALERT_ON_NON_IMPLEMTENTED } from "apps/common-lib/src/public-api";
-import { Laureats } from "../models/laureat.models";
+import { FrontLaureat, Laureat } from "../models/laureat.models";
+import { SourceLaureatsData } from "../models/common.model";
 
-function returnEmptyArrayOn501(error: HttpErrorResponse) {
+function _returnEmptyArrayOn501(error: HttpErrorResponse) {
     if (error.status === 501) {
         return of([])
     }
     return throwError(() => error)
+}
+
+function _enrichitAvecSource(xs: Laureat[]): FrontLaureat[] {
+    return xs.map(x => {
+        return{
+            source: SourceLaureatsData.FRANCE2030,
+            ...x,
+        }
+    })
 }
 
 @Injectable({
@@ -49,9 +59,9 @@ export class France2030HttpService extends AbstractRelanceHttpService {
                 `${this.apiLaureats}/france-2030-territoires?term=${term}`,
                 { context: new HttpContext().set(DO_NOT_ALERT_ON_NON_IMPLEMTENTED, true) },
             )
-            .pipe(catchError(returnEmptyArrayOn501))
+            .pipe(catchError(_returnEmptyArrayOn501))
     }
-    override searchFranceRelance(_axes: SousAxePlanRelance[], _structure: Structure, _territoires: Territoire[]): Observable<Laureats[]> {
+    override searchFranceRelance(_axes: SousAxePlanRelance[], _structure: Structure, _territoires: Territoire[]): Observable<FrontLaureat[]> {
 
         const params_structures = _structure?.label
         const params_axes = _axes?.map(x => x.label)?.join(",")
@@ -73,7 +83,8 @@ export class France2030HttpService extends AbstractRelanceHttpService {
             )
                 .pipe(
                     map(x => x?.items ?? []),
-                    catchError(returnEmptyArrayOn501),
+                    map(_enrichitAvecSource),
+                    catchError(_returnEmptyArrayOn501),
                 )
         return answer$
     }

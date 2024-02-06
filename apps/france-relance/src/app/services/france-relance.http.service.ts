@@ -10,7 +10,17 @@ import { SousAxePlanRelance } from '../models/axe.models';
 import { Structure } from '../models/structure.models';
 import { Territoire } from '../models/territoire.models';
 import { AbstractRelanceHttpService } from './abstract-relance.http.service';
-import { Laureats } from '../models/laureat.models';
+import { FrontLaureat, Laureat } from '../models/laureat.models';
+import { SourceLaureatsData } from '../models/common.model';
+
+function _enrichitAvecSource(xs: Laureat[]): FrontLaureat[] {
+    return xs.map(x => {
+        return{
+            source: SourceLaureatsData.RELANCE,
+            ...x,
+        }
+    })
+}
 
 @Injectable({
   providedIn: 'root',
@@ -119,7 +129,7 @@ export class FranceRelanceHttpService extends AbstractRelanceHttpService {
     axes: SousAxePlanRelance[],
     structure: Structure,
     territoires: Territoire[]
-  ): Observable<Laureats[]> {
+  ): Observable<FrontLaureat[]> {
     const apiFr = this._settings.apiFranceRelance;
 
     const fields =
@@ -134,7 +144,7 @@ export class FranceRelanceHttpService extends AbstractRelanceHttpService {
       this.http.get<NocoDbResponse<any>>(
         `${apiFr}/Laureats/Laureats-front?${params}`
       )
-    );
+    ).pipe(map(_enrichitAvecSource));
   }
 
   public getCsv(

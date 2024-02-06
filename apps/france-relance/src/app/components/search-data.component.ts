@@ -28,7 +28,7 @@ import {
   switchMap,
 } from 'rxjs';
 import { SousAxePlanRelance } from '../models/axe.models';
-import { Laureats } from '../models/laureat.models';
+import { Laureat } from '../models/laureat.models';
 import { Structure } from '../models/structure.models';
 import { Territoire } from '../models/territoire.models';
 import { LaureatHttpService } from '../services/laureat.http.service';
@@ -157,7 +157,7 @@ export class SearchDataComponent implements OnInit, OnChanges {
           })
         )
         .subscribe({
-          next: (response: Laureats[] | Error) => {
+          next: (response: Laureat[] | Error) => {
             this.searchFinish = true;
             this.currentFilter.next(this._buildPreference(formValue));
             this.searchResults.next(response);

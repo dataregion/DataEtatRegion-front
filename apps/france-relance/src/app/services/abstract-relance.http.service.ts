@@ -3,7 +3,7 @@ import { Observable } from "rxjs";
 import { SousAxePlanRelance } from "../models/axe.models";
 import { Structure } from "../models/structure.models";
 import { Territoire } from "../models/territoire.models";
-import { Laureats } from "../models/laureat.models";
+import { FrontLaureat } from "../models/laureat.models";
 
 export abstract class AbstractRelanceHttpService extends NocodbHttpService {
 
@@ -14,7 +14,7 @@ export abstract class AbstractRelanceHttpService extends NocodbHttpService {
         _axes: SousAxePlanRelance[],
         _structure: Structure,
         _territoires: Territoire[]
-    ): Observable<Laureats[]>
+    ): Observable<FrontLaureat[]>
     abstract getCsv(
         _axes: SousAxePlanRelance[],
         _structure: Structure,

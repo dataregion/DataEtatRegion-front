@@ -1,14 +1,30 @@
 import { AggregatorFns, ParameterizedColumnMetaDataDef, RowData } from "apps/grouping-table/src/lib/components/grouping-table/group-utils";
-import { Laureats } from "../laureat.models";
+import { FrontLaureat } from "../laureat.models";
+import { SourceLaureatsData } from "../common.model";
 
 const moneyFormat = new Intl.NumberFormat('fr-FR', {
   style: 'currency',
   currency: 'EUR',
 });
 
-export type LaureatColumnMetaDataDef = ParameterizedColumnMetaDataDef<Laureats & RowData>
+function _prettyPrintSource(source: SourceLaureatsData) {
+    if (source == SourceLaureatsData.RELANCE) {
+        return "France Relance"
+    } else if (source == SourceLaureatsData.FRANCE2030) {
+        return "France 2030"
+    } else {
+        return source ?? 'Inconnue'
+    }
+}
+
+export type LaureatColumnMetaDataDef = ParameterizedColumnMetaDataDef<FrontLaureat & RowData>
 
 export const colonnes: LaureatColumnMetaDataDef[] = [
+      { 
+        name: 'source', 
+        label: 'Source',
+        renderFn: (row, _) => _prettyPrintSource(row?.source)
+      },
       { name: 'Structure', label: 'Lauréat' },
       {
         name: 'SubventionAccordée',
