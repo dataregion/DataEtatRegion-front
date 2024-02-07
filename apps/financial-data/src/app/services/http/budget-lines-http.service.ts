@@ -12,6 +12,7 @@ import { Observable, of } from "rxjs";
 import { BudgetLineHttpMapper } from "./budget-lines-http.mapper.service";
 import { Optional } from "apps/common-lib/src/lib/utilities/optional.type";
 import { DataHttpService, SearchParameters } from "@services/interface-data.service";
+import { SearchUtilsService } from "apps/common-lib/src/lib/services/search-utils.service";
 
 @Injectable({
     providedIn: 'root',
@@ -22,6 +23,7 @@ export class BudgetDataHttpService implements DataHttpService<EnrichedFlattenFin
     private _financialApiUrl!: string;
     private _laureatsApiUrl!: string;
     private _budgetApi: GeneratedBudgetApiService = inject(GeneratedBudgetApiService);
+    private _searchUtils: SearchUtilsService = inject(SearchUtilsService)
     private _mapper: BudgetLineHttpMapper;
 
     constructor(
@@ -82,7 +84,7 @@ export class BudgetDataHttpService implements DataHttpService<EnrichedFlattenFin
             return of();
 
         const codes_programme = bops?.filter((bop) => bop.code).map((bop) => bop.code);
-        const niveau_geo = niveau?.normalize('NFD').replace(/\p{Diacritic}/gu, '');
+        const niveau_geo = this._searchUtils.normalize_type_geo(niveau)
         const listCode = locations?.map((l) => l.code) ?? undefined;
         const p_themes = themes ?? undefined;
         const siret_beneficiaire: string[] | undefined = beneficiaires?.map(x => x.siret) ?? [];

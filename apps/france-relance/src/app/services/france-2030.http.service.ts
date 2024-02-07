@@ -1,4 +1,4 @@
-import { Inject, Injectable } from "@angular/core";
+import { Inject, Injectable, inject } from "@angular/core";
 import { AbstractLaureatsHttpService, SearchParameters, SearchResults } from "./abstract-laureats.http.service";
 import { Observable, catchError, map } from "rxjs";
 import { SousAxePlanRelance } from "../models/axe.models";
@@ -10,12 +10,15 @@ import { SETTINGS } from "apps/common-lib/src/lib/environments/settings.http.ser
 import { DataPagination } from "apps/common-lib/src/lib/models/pagination/pagination.models";
 import { DO_NOT_ALERT_ON_NON_IMPLEMTENTED } from "apps/common-lib/src/public-api";
 import { SourceLaureatsData } from "../models/common.model";
+import { SearchUtilsService } from "apps/common-lib/src/lib/services/search-utils.service";
 
 
 @Injectable({
     providedIn: 'root',
 })
 export class France2030HttpService extends AbstractLaureatsHttpService {
+    
+    private _searchUtils = inject(SearchUtilsService)
 
     constructor(private http: HttpClient, @Inject(SETTINGS) readonly _settings: SettingsService) {
         super()
@@ -50,6 +53,7 @@ export class France2030HttpService extends AbstractLaureatsHttpService {
 
         const params_structures = structure?.label
         const params_axes = axes?.map(x => x.label)?.join(",")
+        const params_niveau = this._searchUtils.normalize_type_geo(niveau)
         const params_code_geo = territoires?.map(x => x.code)?.join(",")
 
         let url = `${this.apiLaureats}/france-2030?page_number=1`
@@ -59,8 +63,8 @@ export class France2030HttpService extends AbstractLaureatsHttpService {
         if (params_axes)
             url += `&axes=${encodeURIComponent(params_axes)}`
 
-        if (niveau)
-            url += `&niveau_geo=${encodeURIComponent(niveau)}`
+        if (params_niveau)
+            url += `&niveau_geo=${encodeURIComponent(params_niveau)}`
 
         if (params_code_geo)
             url += `&code_geo=${encodeURIComponent(params_code_geo)}`
