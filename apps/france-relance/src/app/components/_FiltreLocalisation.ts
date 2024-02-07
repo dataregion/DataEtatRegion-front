@@ -55,6 +55,11 @@ export class _FiltreLocalisation {
     sp.niveau = this.niveau
     sp.territoires = this.location
   }
+  
+  public reset() {
+    this.niveau = null;
+    this.location = null;
+  }
 
   private _synchronizeFormGroup() {
     this._formGroup?.get(this._niveau_k)?.setValue(this.niveau);

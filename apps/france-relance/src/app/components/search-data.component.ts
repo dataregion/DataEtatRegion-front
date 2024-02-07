@@ -155,9 +155,6 @@ export class SearchDataComponent implements OnInit, OnChanges {
       }
       this.filteredLocalisation.updateSearchParams(sp)
 
-      //TODO: comment
-      console.log(`Search parameters ${JSON.stringify(sp)}`)
-
       this._service
         .searchLaureats(sp)
         .pipe(
@@ -234,6 +231,7 @@ export class SearchDataComponent implements OnInit, OnChanges {
   public reset(): void {
     this.searchFinish = false;
     this.searchForm.reset();
+    this.filteredLocalisation.reset();
   }
 
   public onSelectLaureat(_event: Structure): void { }
