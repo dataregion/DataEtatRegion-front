@@ -1,10 +1,10 @@
 import { Injectable } from "@angular/core";
-import { RefSiret } from "@models/refs/RefSiret";
 import { BudgetService } from "@services/budget.service";
 import { Observable, of } from "rxjs";
 import { catchError, map } from "rxjs/operators";
 import { BeneficiaireFieldData } from "./beneficiaire-field-data.model";
 import { Beneficiaire } from "@models/search/beneficiaire.model";
+import { RefSiret } from "apps/common-lib/src/lib/models/refs/RefSiret";
 
 @Injectable()
 export class AutocompleteBeneficiaireService {

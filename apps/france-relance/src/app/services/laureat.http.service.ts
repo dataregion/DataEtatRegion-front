@@ -1,5 +1,5 @@
 import { Injectable, inject } from "@angular/core";
-import { AbstractRelanceHttpService } from "./abstract-relance.http.service";
+import { AbstractLaureatsHttpService, SearchParameters, SearchResults } from "./abstract-laureats.http.service";
 import { FranceRelanceHttpService } from "./france-relance.http.service";
 import { France2030HttpService } from "./france-2030.http.service";
 import { Observable, forkJoin, map } from "rxjs";
@@ -13,28 +13,28 @@ import { Territoire } from "../models/territoire.models";
 @Injectable({
     providedIn: 'root'
 })
-export class LaureatHttpService extends AbstractRelanceHttpService {
+export class LaureatHttpService extends AbstractLaureatsHttpService {
 
     private relance: FranceRelanceHttpService = inject(FranceRelanceHttpService)
     private france2030: France2030HttpService = inject(France2030HttpService)
 
     override getSousAxePlanRelance(): Observable<SousAxePlanRelance[]> {
-        
+
         const sousAxe$ = forkJoin(
             {
                 relance: this.relance.getSousAxePlanRelance(),
                 france2030: this.france2030.getSousAxePlanRelance(),
             }
         )
-        .pipe(
-            map(response => {
-                return [ 
-                    ...response.relance,
-                    ...response.france2030,
-                ]
-            })
-        )
-        
+            .pipe(
+                map(response => {
+                    return [
+                        ...response.relance,
+                        ...response.france2030,
+                    ]
+                })
+            )
+
         return sousAxe$;
     }
 
@@ -56,7 +56,7 @@ export class LaureatHttpService extends AbstractRelanceHttpService {
     }
 
     override searchTerritoire(territoire: string): Observable<Territoire[]> {
-        
+
         const territoires$ = forkJoin(
             {
                 relance: this.relance.searchTerritoire(territoire),
@@ -74,27 +74,33 @@ export class LaureatHttpService extends AbstractRelanceHttpService {
         return territoires$;
     }
 
-    override searchFranceRelance(axes: SousAxePlanRelance[], structure: Structure, territoires: Territoire[]): Observable<any> {
-        
+    override searchLaureats(sp: SearchParameters): Observable<SearchResults> {
+
         const franceRelance$ = forkJoin(
             {
-                relance: this.relance.searchFranceRelance(axes, structure, territoires),
-                france2030: this.france2030.searchFranceRelance(axes, structure, territoires),
+                relance: this.relance.searchLaureats(sp),
+                france2030: this.france2030.searchLaureats(sp),
             }
         ).pipe(
             map(response => {
-                return [
-                    ...response.relance,
-                    ...response.france2030,
-                ]
+                return {
+                    messages_utilisateur: [
+                        ...response.relance.messages_utilisateur,
+                        ...response.france2030.messages_utilisateur,
+                    ],
+                    resultats: [
+                        ...response.relance.resultats,
+                        ...response.france2030.resultats
+                    ]
+                } as SearchResults
             })
         )
-        
+
         return franceRelance$
     }
-    
+
     override getCsv(_axes: SousAxePlanRelance[], _structure: Structure, _territoires: Territoire[]): Observable<Blob> {
         throw new Error("Method not implemented.");
     }
-    
+
 }

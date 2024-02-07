@@ -2,8 +2,8 @@ import { JSONObject } from "apps/preference-users/src/lib/models/preference.mode
 import { Bop, BopCode } from "./bop.model"
 import { Beneficiaire } from "./beneficiaire.model"
 import { TagFieldData } from "../../components/search-data/tags-field-data.model"
-import { SearchTypeCategorieJuridique } from "apps/common-lib/src/public-api"
 import { ReferentielProgrammation } from "@models/refs/referentiel_programmation.model"
+import { SearchTypeCategorieJuridique } from "@services/interface-data.service"
 
 export type ThemePreFilter =  string | null
 export type BopsPreFilter = Bop | BopCode | null

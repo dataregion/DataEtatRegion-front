@@ -10,8 +10,7 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import { FormArray, FormControl, FormGroup } from '@angular/forms';
-import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { AlertService } from 'apps/common-lib/src/public-api';
 import {
@@ -28,10 +27,11 @@ import {
   switchMap,
 } from 'rxjs';
 import { SousAxePlanRelance } from '../models/axe.models';
-import { Laureats } from '../models/laureat.models';
 import { Structure } from '../models/structure.models';
 import { Territoire } from '../models/territoire.models';
 import { LaureatHttpService } from '../services/laureat.http.service';
+import { SearchParameters, SearchResults } from '../services/abstract-laureats.http.service';
+import { _FiltreLocalisation } from './_FiltreLocalisation';
 
 @Component({
   selector: 'france-relance-search-data',
@@ -40,6 +40,8 @@ import { LaureatHttpService } from '../services/laureat.http.service';
 })
 export class SearchDataComponent implements OnInit, OnChanges {
   public separatorKeysCodes: number[] = [ENTER, COMMA];
+  
+  warningMessage?: string
 
   /**
    * Resultats de la recherche.
@@ -60,6 +62,8 @@ export class SearchDataComponent implements OnInit, OnChanges {
 
   public filteredLaureat: Observable<Structure[]> | null | undefined;
 
+  public filteredLocalisation: _FiltreLocalisation = new _FiltreLocalisation();
+
   /**
    * Indique si la recherche est en cours
    */
@@ -79,7 +83,8 @@ export class SearchDataComponent implements OnInit, OnChanges {
     private _route: ActivatedRoute,
     private _alertService: AlertService,
     private _service: LaureatHttpService,
-  ) {}
+  ) {
+  }
 
   /**
    * Applique le filtre par défaut
@@ -87,13 +92,6 @@ export class SearchDataComponent implements OnInit, OnChanges {
    */
   ngOnChanges(_changes: SimpleChanges): void {
     if (this.preFilter !== null) {
-      if (this.preFilter['territoire']) {
-        (this.preFilter['territoire'] as Array<unknown>).forEach(
-          (territoire) => {
-            this.territoireControls.push(new FormControl(territoire));
-          }
-        );
-      }
 
       if (this.preFilter['axe_plan_relance']) {
         const preFilterAxe = Array.isArray(this.preFilter['axe_plan_relance'])
@@ -116,6 +114,8 @@ export class SearchDataComponent implements OnInit, OnChanges {
       this.searchForm.controls['structure'].setValue(
         this.preFilter['structure'] ?? null
       );
+
+      this.filteredLocalisation.fromPreFilter(this.preFilter)
 
       // lance la recherche pour afficher les resultats
       this.doSearch();
@@ -145,22 +145,30 @@ export class SearchDataComponent implements OnInit, OnChanges {
     if (this.searchForm.valid && !this.searchInProgress.value) {
       const formValue = this.searchForm.value;
       this.searchInProgress.next(true);
+
+      const sp: SearchParameters = {
+        axes: formValue.axe_plan_relance,
+        structure: formValue.structure,
+
+        niveau: null,
+        territoires: null
+      }
+      this.filteredLocalisation.updateSearchParams(sp)
+
       this._service
-        .searchFranceRelance(
-          formValue.axe_plan_relance,
-          formValue.structure,
-          formValue.territoire
-        )
+        .searchLaureats(sp)
         .pipe(
           finalize(() => {
             this.searchInProgress.next(false);
           })
         )
         .subscribe({
-          next: (response: Laureats[] | Error) => {
+          next: (payload: SearchResults) => {
+            const laureats = payload.resultats;
+            this.warningMessage = payload.messages_utilisateur.join('\n');
             this.searchFinish = true;
             this.currentFilter.next(this._buildPreference(formValue));
-            this.searchResults.next(response);
+            this.searchResults.next(laureats);
           },
           error: (err: Error) => {
             this.searchFinish = true;
@@ -223,27 +231,10 @@ export class SearchDataComponent implements OnInit, OnChanges {
   public reset(): void {
     this.searchFinish = false;
     this.searchForm.reset();
+    this.filteredLocalisation.reset();
   }
 
-  public addTerritoire(event: MatAutocompleteSelectedEvent): void {
-    this.territoireControls.push(new FormControl(event.option.value));
-    this.filterTerritoireInput.nativeElement.value = '';
-
-    this.searchForm.controls['filterTerritoire'].setValue('');
-  }
-
-  get territoireControls(): FormArray {
-    return this.searchForm.controls['territoire'] as FormArray;
-  }
-
-  public removeTerritoire(event: any): void {
-    const index = this.territoireControls.value.indexOf(event);
-    if (index >= 0) {
-      this.territoireControls.removeAt(index);
-    }
-  }
-
-  public onSelectLaureat(_event: Structure): void {}
+  public onSelectLaureat(_event: Structure): void { }
 
   public displayLaureat(laureat: Structure): string {
     if (laureat) return laureat.label + ' - ' + laureat.siret;
@@ -252,11 +243,13 @@ export class SearchDataComponent implements OnInit, OnChanges {
 
   private _initForm(): void {
     this.searchForm = new FormGroup({
-      territoire: new FormArray([]),
+      // XXX d'autres controles pour la localisation initialisés plus bas
+
       axe_plan_relance: new FormControl(null),
       structure: new FormControl(null),
       filterTerritoire: new FormControl(null), // pour le filtre des territoires
     });
+    this.filteredLocalisation.initAndSynchonizeFormGroup(this.searchForm)
 
     // filtre beneficiaire
     this.filteredTerritoire = this.searchForm.controls[
