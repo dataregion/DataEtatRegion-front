@@ -125,27 +125,20 @@ export class BudgetDataHttpService implements DataHttpService<EnrichedFlattenFin
         return arg
     }
 
-    public loadFinancialFile(
-        file: any,
-        annee: string,
-        type: DataType,
-        code_region = '53'
-    ): Observable<any> {
+    public loadFinancialBudget(fileAe: any, fileCp: any, annee: string): Observable<any> {
+        const formData = new FormData();
+        formData.append('fichierAe', fileAe);
+        formData.append('fichierCp', fileCp);
+        formData.append('annee', annee);
+        return this.http.post(`${this._financialApiUrl}/ae-cp`, formData);
+    }
+
+    public loadFinancialFrance2030(file: any, annee: string): Observable<any> {
         const formData = new FormData();
         formData.append('fichier', file);
         formData.append('annee', annee);
-        formData.append('code_region', code_region);
-
-        if (type === DataType.FINANCIAL_DATA_AE) {
-            return this.http.post(`${this._financialApiUrl}/ae`, formData);
-        } else if (type === DataType.FINANCIAL_DATA_CP) {
-            return this.http.post(`${this._financialApiUrl}/cp`, formData);
-        } else if (type == DataType.FRANCE_2030) {
-            return this.http.post(`${this._laureatsApiUrl}/france-2030`, formData);
-        }
-        return of();
+        return this.http.post(`${this._laureatsApiUrl}/france-2030`, formData);
     }
-
 
     public loadReferentielFile(file: any): Observable<any> {
         const formData = new FormData();
