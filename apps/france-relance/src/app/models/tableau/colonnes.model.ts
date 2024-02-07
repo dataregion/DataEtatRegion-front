@@ -20,12 +20,12 @@ function _prettyPrintSource(source: SourceLaureatsData) {
 export type LaureatColumnMetaDataDef = ParameterizedColumnMetaDataDef<FrontLaureat & RowData>
 
 export const colonnes: LaureatColumnMetaDataDef[] = [
+      { name: 'Structure', label: 'Lauréat' },
       { 
         name: 'source', 
         label: 'Source',
         renderFn: (row, _) => _prettyPrintSource(row?.source)
       },
-      { name: 'Structure', label: 'Lauréat' },
       {
         name: 'SubventionAccordée',
         label: 'Montant',
