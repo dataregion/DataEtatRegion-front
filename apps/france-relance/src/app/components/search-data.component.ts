@@ -26,7 +26,7 @@ import {
   startWith,
   switchMap,
 } from 'rxjs';
-import { SousAxePlanRelance } from '../models/axe.models';
+import { SousAxePlanRelance, SousAxePlanRelanceForFilter } from '../models/axe.models';
 import { Structure } from '../models/structure.models';
 import { Territoire } from '../models/territoire.models';
 import { LaureatHttpService } from '../services/laureat.http.service';
@@ -74,7 +74,7 @@ export class SearchDataComponent implements OnInit, OnChanges {
    */
   public searchFinish = false;
 
-  public axe_plan_relance: SousAxePlanRelance[] = [];
+  public axe_plan_relance: SousAxePlanRelanceForFilter[] = [];
 
   @ViewChild('filterTerritoireInput')
   filterTerritoireInput!: ElementRef<HTMLInputElement>;
@@ -125,7 +125,7 @@ export class SearchDataComponent implements OnInit, OnChanges {
   ngOnInit(): void {
     // récupération des themes dans le resolver
     this._route.data.subscribe(
-      (response: { axes: SousAxePlanRelance[] | Error } | any) => {
+      (response: { axes: SousAxePlanRelanceForFilter[] | Error } | any) => {
         this.axe_plan_relance = response.axes;
       }
     );

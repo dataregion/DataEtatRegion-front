@@ -8,7 +8,7 @@ import {
 } from 'apps/common-lib/src/public-api';
 import { map, Observable, of } from 'rxjs';
 import { SettingsService } from '../../environments/settings.service';
-import { SousAxePlanRelance } from '../models/axe.models';
+import { SousAxePlanRelance, SousAxePlanRelanceForFilter } from '../models/axe.models';
 import { Structure } from '../models/structure.models';
 import { Territoire } from '../models/territoire.models';
 import { AbstractLaureatsHttpService, SearchParameters, SearchResults } from './abstract-laureats.http.service';
@@ -43,14 +43,16 @@ export class FranceRelanceHttpService extends AbstractLaureatsHttpService {
    * Récupère les Axe du plan de relance
    * @returns
    */
-  public getSousAxePlanRelance(): Observable<SousAxePlanRelance[]> {
+  public getSousAxePlanRelance(): Observable<SousAxePlanRelanceForFilter[]> {
     const apiFr = this._settings.apiFranceRelance;
     const field_sous_axe = 'SousaxeDuPlanDeRelance';
     const field_axe = 'AxeDuPlanDeRelance';
 
     const params = `fields=${field_sous_axe},${field_axe}&limit=5000&sort=${field_axe},${field_sous_axe}`;
 
-    return this.http
+
+
+    const answer$ = this.http
       .get<NocoDbResponse<any>>(`${apiFr}/Dispositifs/Dispositifs?${params}`)
       .pipe(
         map((response: NocoDbResponse<any>) =>
@@ -65,9 +67,20 @@ export class FranceRelanceHttpService extends AbstractLaureatsHttpService {
               });
             }
             return uniqueArray;
-          }, [])
+          }, []) as SousAxePlanRelance[]
+        ),
+        map(axes => {
+          return axes.map(axe => {
+            const annotated = {
+              ...axe,
+              annotation: "REL",
+            } as SousAxePlanRelanceForFilter
+            return annotated;
+          })
+        }
         )
       );
+    return answer$;
   }
 
   /**

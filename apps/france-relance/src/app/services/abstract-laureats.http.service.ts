@@ -1,6 +1,6 @@
 import { GeoModel, NocodbHttpService, TypeLocalisation } from "apps/common-lib/src/public-api";
 import { Observable, of, throwError } from "rxjs";
-import { SousAxePlanRelance } from "../models/axe.models";
+import { SousAxePlanRelanceForFilter, SousAxePlanRelance } from "../models/axe.models";
 import { Structure } from "../models/structure.models";
 import { Territoire } from "../models/territoire.models";
 import { FrontLaureat, Laureat } from "../models/laureat.models";
@@ -23,7 +23,7 @@ export interface SearchResults {
 
 export abstract class AbstractLaureatsHttpService extends NocodbHttpService {
 
-    abstract getSousAxePlanRelance(): Observable<SousAxePlanRelance[]>
+    abstract getSousAxePlanRelance(): Observable<SousAxePlanRelanceForFilter[]>
     abstract searchStructure(_name: string): Observable<Structure[]>
     abstract searchTerritoire(_name: string): Observable<Territoire[]>
     abstract searchLaureats(_search_parameters: SearchParameters): Observable<SearchResults>

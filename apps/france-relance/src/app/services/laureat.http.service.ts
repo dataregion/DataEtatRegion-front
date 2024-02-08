@@ -3,7 +3,7 @@ import { AbstractLaureatsHttpService, SearchParameters, SearchResults } from "./
 import { FranceRelanceHttpService } from "./france-relance.http.service";
 import { France2030HttpService } from "./france-2030.http.service";
 import { Observable, forkJoin, map } from "rxjs";
-import { SousAxePlanRelance } from "../models/axe.models";
+import { SousAxePlanRelance, SousAxePlanRelanceForFilter } from "../models/axe.models";
 import { Structure } from "../models/structure.models";
 import { Territoire } from "../models/territoire.models";
 
@@ -18,7 +18,7 @@ export class LaureatHttpService extends AbstractLaureatsHttpService {
     private relance: FranceRelanceHttpService = inject(FranceRelanceHttpService)
     private france2030: France2030HttpService = inject(France2030HttpService)
 
-    override getSousAxePlanRelance(): Observable<SousAxePlanRelance[]> {
+    override getSousAxePlanRelance(): Observable<SousAxePlanRelanceForFilter[]> {
 
         const sousAxe$ = forkJoin(
             {
