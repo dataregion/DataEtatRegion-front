@@ -161,10 +161,8 @@ export class BudgetLineHttpMapper {
 
     private _map_ref_prog(object: EnrichedFlattenFinancialLinesSchema): Optional<ReferentielProgrammation> {
 
-        if (!object.referentielProgrammation_code)
-            return null
         return {
-            code: object.referentielProgrammation_code,
+            code: object.referentielProgrammation_code || '',
             label: object.referentielProgrammation_label!
         }
     }
@@ -180,10 +178,8 @@ export class BudgetLineHttpMapper {
     }
     private _map_domaine_fonctionnel(object: EnrichedFlattenFinancialLinesSchema): Optional<DomaineFonctionnel> {
 
-        if (!object.domaineFonctionnel_code)
-            return null
         return {
-            code: object.domaineFonctionnel_code,
+            code: object.domaineFonctionnel_code || '',
             label: object.domaineFonctionnel_label!,
         }
     }
