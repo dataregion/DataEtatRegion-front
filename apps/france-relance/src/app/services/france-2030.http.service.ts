@@ -1,7 +1,7 @@
 import { Inject, Injectable, inject } from "@angular/core";
 import { AbstractLaureatsHttpService, SearchParameters, SearchResults } from "./abstract-laureats.http.service";
 import { Observable, catchError, map } from "rxjs";
-import { SousAxePlanRelance } from "../models/axe.models";
+import { SousAxePlanRelance, SousAxePlanRelanceForFilter } from "../models/axe.models";
 import { Structure } from "../models/structure.models";
 import { Territoire } from "../models/territoire.models";
 import { HttpClient, HttpContext } from "@angular/common/http";
@@ -26,11 +26,22 @@ export class France2030HttpService extends AbstractLaureatsHttpService {
 
     get apiLaureats() { return this._settings.apiLaureatsData }
 
-    override getSousAxePlanRelance(): Observable<SousAxePlanRelance[]> {
+    override getSousAxePlanRelance(): Observable<SousAxePlanRelanceForFilter[]> {
 
         // XXX: ici, pas de notion de sous axes. on mappe aux axes france2030
         return this.http
             .get<SousAxePlanRelance[]>(`${this.apiLaureats}/france-2030-axes`)
+            .pipe(
+                map(axes => {
+                    return axes.map(axe => {
+                        const annotated = {
+                            ...axe,
+                            annotation: "FR30",
+                        } as SousAxePlanRelanceForFilter
+                        return annotated;
+                    })
+                })
+            )
     }
     override searchStructure(structure: string): Observable<Structure[]> {
 
