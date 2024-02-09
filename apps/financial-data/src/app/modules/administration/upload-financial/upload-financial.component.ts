@@ -149,7 +149,7 @@ export class UploadFinancialComponent implements OnInit {
         .subscribe({
           next: () => {
             this._alertService.openAlertSuccess(
-              'Les fichiers ont bien été récupérés. Il seront traités dans les prochaines minutes.'
+              'Les fichiers ont bien été récupérés. Les données seront disponibles dans l\'outil à partir de demain.'
             );
             this._fetchAudit();
           },
