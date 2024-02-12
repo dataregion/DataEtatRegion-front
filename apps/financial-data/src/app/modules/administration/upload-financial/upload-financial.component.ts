@@ -36,13 +36,16 @@ export class UploadFinancialComponent implements OnInit {
 
   uploadSub: Subscription | null = new Subscription();
 
-  @ViewChild('fileUpload')
-  fileUpload!: ElementRef<HTMLInputElement>;
+  @ViewChild('fileUploadAe')
+  fileUploadAe!: ElementRef<HTMLInputElement>;
+  @ViewChild('fileUploadCp')
+  fileUploadCp!: ElementRef<HTMLInputElement>;
 
   @ViewChild('fileUploadReferentiel')
   fileUploadReferentiel!: ElementRef<HTMLInputElement>;
 
-  public fileFinancial: File | null = null;
+  public fileFinancialAe: File | null = null;
+  public fileFinancialCp: File | null = null;
   public fileReferentiel: File | null = null;
 
   public years;
@@ -59,7 +62,7 @@ export class UploadFinancialComponent implements OnInit {
 
   public yearSelected = new Date().getFullYear();
 
-  public typeSelected: DataType | null = null;
+  // public typeSelected: DataType | null = null;
 
   constructor(
     private _service: BudgetDataHttpService,
@@ -86,23 +89,21 @@ export class UploadFinancialComponent implements OnInit {
   }
 
 
-  uploadFinancialFile() {
-    if (this.fileFinancial !== null && this.yearSelected && this.typeSelected) {
-      if (this.typeSelected === DataType.FINANCIAL_DATA_CP) {
-        const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-          data: this.yearSelected,
-          width: '40rem',
-          autoFocus: 'input',
-        });
+  uploadFinancialFiles() {
+    if (this.fileFinancialAe !== null && this.fileFinancialCp !== null && this.yearSelected) {
+      const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+        data: this.yearSelected,
+        width: '40rem',
+        autoFocus: 'input',
+      });
 
-        dialogRef.afterClosed().subscribe((result: boolean) => {
-          if (result) {
-            this._doLoadFile();
-          }
-        });
-      } else {
-        this._doLoadFile();
-      }
+      dialogRef.afterClosed().subscribe((result: boolean) => {
+        if (result) {
+          this._doLoadFiles();
+        }
+      });
+    } else {
+      this._doLoadFiles();
     }
   }
 
@@ -133,21 +134,22 @@ export class UploadFinancialComponent implements OnInit {
     }
   }
 
-  private _doLoadFile() {
-    if (this.fileFinancial !== null && this.yearSelected && this.typeSelected) {
+  private _doLoadFiles() {
+    if (this.fileFinancialAe !== null && this.fileFinancialCp !== null && this.yearSelected) {
       this.uploadInProgress.next(true);
       this._service
-        .loadFinancialFile(this.fileFinancial, '' + this.yearSelected, this.typeSelected)
+        .loadFinancialBudget(this.fileFinancialAe, this.fileFinancialCp, this.yearSelected.toString())
         .pipe(
           finalize(() => {
-            this.fileFinancial = null;
+            this.fileFinancialAe = null;
+            this.fileFinancialCp = null;
             this.uploadInProgress.next(false);
           })
         )
         .subscribe({
           next: () => {
             this._alertService.openAlertSuccess(
-              'Le fichier a bien été récupéré. Il sera traité dans les prochaines minutes.'
+              'Les fichiers ont bien été récupérés. Les données seront disponibles dans l\'outil à partir de demain.'
             );
             this._fetchAudit();
           },
