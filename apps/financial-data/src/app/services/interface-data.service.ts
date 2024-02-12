@@ -1,10 +1,10 @@
 import { Observable } from 'rxjs';
-import { DataPagination } from '../models/pagination/pagination.models';
-import { RefSiret } from '@models/refs/RefSiret';
+import { DataPagination } from '../../../../common-lib/src/lib/models/pagination/pagination.models';
 import { BopModel } from '@models/refs/bop.models';
-import { GeoModel, TypeLocalisation } from '../models/geo.models';
+import { GeoModel, TypeLocalisation } from '../../../../common-lib/src/lib/models/geo.models';
 import { SourceFinancialData, TypeCategorieJuridique } from '@models/financial/common.models';
 import { ReferentielProgrammation } from '@models/refs/referentiel_programmation.model';
+import { RefSiret } from 'apps/common-lib/src/lib/models/refs/RefSiret';
 
 export enum OtherTypeCategorieJuridique {
   AUTRES = 'autres'

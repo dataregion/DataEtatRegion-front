@@ -1,4 +1,9 @@
-export interface Laureats {
+import { SourceLaureatsData } from "./common.model";
+
+/** 
+ * Représente un payload de laureat 
+ */
+export interface Laureat {
   Structure: string;
   NuméroDeSiretSiConnu: string;
   SubventionAccordée: string;
@@ -8,4 +13,9 @@ export interface Laureats {
   dispositif: string;
   territoire: string;
   code_insee: string;
+}
+
+/** Représente un lauréat enrichit d'informations pour le frontend */
+export interface FrontLaureat extends Laureat {
+  source: SourceLaureatsData
 }

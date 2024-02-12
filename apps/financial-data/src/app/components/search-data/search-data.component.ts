@@ -34,10 +34,6 @@ import {
 import {
   AlertService,
   GeoModel,
-  OtherTypeCategorieJuridique,
-  SearchParameters,
-  SearchParameters_empty,
-  SearchTypeCategorieJuridique,
   TypeLocalisation,
 } from 'apps/common-lib/src/public-api';
 import { Bop } from '@models/search/bop.model';
@@ -57,6 +53,7 @@ import { AutocompleteTagsService } from './autocomplete-tags.service';
 import { TypeCategorieJuridique } from '@models/financial/common.models';
 import { tag_fullname } from '@models/refs/tag.model';
 import { AutocompleteRefProgrammationService } from './autocomplete-ref-programmation.service';
+import { OtherTypeCategorieJuridique, SearchParameters, SearchParameters_empty, SearchTypeCategorieJuridique } from '@services/interface-data.service';
 
 
 @Component({

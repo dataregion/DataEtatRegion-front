@@ -30,6 +30,7 @@ export class MultiregionsService {
       "hdf.nocode.csm.ovh",
       "budget.hautsdefrance.dataregion.fr",
       "budget.hautsdefrance.preprod.dataregion.fr",
+      "budget-hautsdefrance.preprod.dataregion.fr",
     ]
   };
 

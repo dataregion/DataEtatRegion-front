@@ -7,7 +7,14 @@
         <mat-label>Axe du plan de relance</mat-label>
         <mat-select formControlName="axe_plan_relance" multiple>
           <mat-option *ngFor="let axe of axe_plan_relance" [value]="axe">
-            {{axe.axe}} - {{axe.label}}
+            <span>
+              <span class="fr-tag fr-tag--sm">
+              {{axe.annotation}} 
+              </span>
+            </span>
+            <span>
+              {{axe.axe}} - {{axe.label}}
+            </span>
           </mat-option>
           <mat-select-trigger>
             {{axePlanDeRelanceControls.value ? axePlanDeRelanceControls.value[0].label : ''}}
@@ -24,27 +31,9 @@
     </div>
 
     <div class="element field-30-width">
-      <mat-form-field appearance="fill">
-        <mat-label>Territoire</mat-label>
-        <div class="box">
-          <mat-chip-grid #chipGrid aria-label="Sélection des territoire" formArrayName="territoire">
-            <mat-chip-row *ngFor="let loc of territoireControls.value" (removed)="removeTerritoire(loc)">
-              {{loc.Commune}}
-              <button matChipRemove>
-                <mat-icon>cancel</mat-icon>
-              </button>
-            </mat-chip-row>
-          </mat-chip-grid>
-          <input placeholder="Territoire ..." #filterTerritoireInput formControlName="filterTerritoire"
-            [matChipInputFor]="chipGrid" [matAutocomplete]="auto"
-            [matChipInputSeparatorKeyCodes]="separatorKeysCodes" />
-        </div>
-        <mat-autocomplete #auto="matAutocomplete" (optionSelected)="addTerritoire($event)">
-          <mat-option *ngFor="let territoire of filteredTerritoire | async" [value]="territoire">
-            {{territoire.Commune}}
-          </mat-option>
-        </mat-autocomplete>
-      </mat-form-field>
+      <lib-localisation
+          [(selectedNiveau)]="filteredLocalisation.niveau"
+          [(selectedLocalisation)]="filteredLocalisation.location" />
     </div>
 
     <div class="element field-30-width">
@@ -63,7 +52,7 @@
         </mat-autocomplete>
       </mat-form-field>
     </div>
-
+    
     <div class="spacer"></div>
 
     <button mat-fab color="primary" (click)="doSearch()">
@@ -81,3 +70,8 @@
 
   </div>
 </form>
+
+<div *ngIf="warningMessage" class="fr-alert fr-alert--info">
+  {{warningMessage}}
+</div>
+
