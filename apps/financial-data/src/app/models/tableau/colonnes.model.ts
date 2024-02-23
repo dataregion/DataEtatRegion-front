@@ -152,6 +152,12 @@ export const colonnes: FinancialColumnMetaDataDef[] = [
         renderFn: (row, _col) => _print_code_label(row.referentiel_programmation?.code, row.referentiel_programmation?.label),
     },
     {
+        name: ColonneCodes.CENTRE_COUTS,
+        label: ColonneLibelles.CENTRE_COUTS,
+        displayed: false,
+        renderFn: (row, _col) => _print_code_label(row.centre_couts?.code, row.centre_couts?.label),
+    },
+    {
         name: ColonneCodes.SIRET,
         label: ColonneLibelles.SIRET,
         displayed: false,

@@ -1,4 +1,4 @@
-import { Commune, DomaineFonctionnel, GroupeMarchandise, LocalisationInterministerielle, Programme, Siret, SourceFinancialData, TypeCategorieJuridique } from "@models/financial/common.models";
+import { CentreCouts, Commune, DomaineFonctionnel, GroupeMarchandise, LocalisationInterministerielle, Programme, Siret, SourceFinancialData, TypeCategorieJuridique } from "@models/financial/common.models";
 import { FinancialDataModel } from "@models/financial/financial-data.models";
 import { ReferentielProgrammation } from "@models/refs/referentiel_programmation.model";
 import { Tag, tag_fullname } from "@models/refs/tag.model";
@@ -38,6 +38,8 @@ export class BudgetLineHttpMapper {
             commune: this._map_beneficiaire_commune(object),
 
             domaine_fonctionnel: this._map_domaine_fonctionnel(object),
+            
+            centre_couts: this._map_centre_couts(object),
 
             programme: this._map_programme(object),
 
@@ -75,6 +77,8 @@ export class BudgetLineHttpMapper {
                     [ColonneLibelles.CODE_DOMAINE]: this.domaine_fonctionnel?.code ?? "",
                     [ColonneLibelles.DOMAINE]: this.domaine_fonctionnel?.label ?? "",
                     [ColonneLibelles.REFERENTIEL_PROGRAMMATION]: this.referentiel_programmation?.label ?? "",
+                    [ColonneLibelles.CODE_CENTRE_COUTS]: this.centre_couts?.code ?? "",
+                    [ColonneLibelles.CENTRE_COUTS]: this.centre_couts?.label ?? "",
                     [ColonneLibelles.COMMUNE]: this.commune?.label ?? "",
                     [ColonneLibelles.CRTE]: this.commune?.label_crte ?? "",
                     [ColonneLibelles.EPCI]: this.commune?.label_epci ?? "",
@@ -150,6 +154,16 @@ export class BudgetLineHttpMapper {
             commune: commune,
         }
     }
+
+    private _map_centre_couts(object: EnrichedFlattenFinancialLinesSchema): Optional<CentreCouts> {
+        if (!object.centreCouts_code)
+            return null
+        return {
+            code: object.centreCouts_code,
+            label: object.centreCouts_label!,
+        }
+    }
+
     private _map_groupe_marchandise(object: EnrichedFlattenFinancialLinesSchema): Optional<GroupeMarchandise> {
         if (!object.groupeMarchandise_code)
             return null;
