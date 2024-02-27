@@ -1,4 +1,4 @@
-import { JSONObject } from "apps/preference-users/src/lib/models/preference.models"
+import { JSONObject } from "apps/common-lib/src/lib/models/jsonobject"
 import { Bop, BopCode } from "./bop.model"
 import { Beneficiaire } from "./beneficiaire.model"
 import { TagFieldData } from "../../components/search-data/tags-field-data.model"

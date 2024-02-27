@@ -6,6 +6,7 @@ import { Territoire } from "../models/territoire.models";
 import { FrontLaureat, Laureat } from "../models/laureat.models";
 import { HttpErrorResponse } from "@angular/common/http";
 import { SourceLaureatsData } from "../models/common.model";
+import { JSONObject } from "apps/common-lib/src/lib/models/jsonobject";
 
 export interface SearchParameters {
     axes: SousAxePlanRelance[] | null,
@@ -32,7 +33,7 @@ export abstract class AbstractLaureatsHttpService extends NocodbHttpService {
         _structure: Structure,
         _territoires: Territoire[]
     ): Observable<Blob>
-
+    
     protected _wrap_in_searchresult(xs: FrontLaureat[]): SearchResults {
         return {
             messages_utilisateur: [],
@@ -49,12 +50,15 @@ export abstract class AbstractLaureatsHttpService extends NocodbHttpService {
         }
     }
     
-    protected _enrichitAvecSource(source: SourceLaureatsData) {
+    protected _mapToSourceLaureatsData(source: SourceLaureatsData) {
        return (xs: Laureat[]) => {
             return xs.map(x => {
                 return {
                     source,
                     ...x,
+                    exportAsJson: () => {
+                        return x as unknown as JSONObject
+                    },
                 }
             })
        } 

@@ -14,9 +14,9 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { AlertService } from 'apps/common-lib/src/public-api';
 import {
-  JSONObject,
   Preference,
 } from 'apps/preference-users/src/lib/models/preference.models';
+import { JSONObject } from "apps/common-lib/src/lib/models/jsonobject";
 import {
   BehaviorSubject,
   debounceTime,

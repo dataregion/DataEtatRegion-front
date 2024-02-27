@@ -175,7 +175,7 @@ export class FranceRelanceHttpService extends AbstractLaureatsHttpService {
         `${apiFr}/Laureats/Laureats-front?${params}`
       )
     ).pipe(
-      map(this._enrichitAvecSource(SourceLaureatsData.RELANCE)),
+      map(this._mapToSourceLaureatsData(SourceLaureatsData.RELANCE)),
       map(this._wrap_in_searchresult)
     );
   }

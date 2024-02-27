@@ -12,7 +12,7 @@ import { ReferentielProgrammation } from '@models/refs/referentiel_programmation
 
 import * as XLSX from 'xlsx';
 import { DisplayedOrderedColumn } from 'apps/grouping-table/src/lib/components/grouping-table/group-utils';
-import { JSONObject } from 'apps/preference-users/src/lib/models/preference.models';
+import { JSONObject } from "apps/common-lib/src/lib/models/jsonobject";
 import { RefSiret } from 'apps/common-lib/src/lib/models/refs/RefSiret';
 import { DataHttpService, SearchParameters } from './interface-data.service';
 
@@ -155,7 +155,7 @@ export class BudgetService {
     // Transformation des données financières en JSON
     const jsonData = [];
     for (const item of data) {
-      let object = item.toJsonObject();
+      let object = item.exportAsJson();
       // Si des colonnes ont été précisées
       if (columns) {
         // Suppression des colonnes non-affichées de l'objet JSON

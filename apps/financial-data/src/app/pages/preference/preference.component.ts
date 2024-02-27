@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import {
-  JSONObject,
   MapPreferenceFilterMetadata,
   Preference,
 } from 'apps/preference-users/src/lib/models/preference.models';
+import { JSONObject } from "apps/common-lib/src/lib/models/jsonobject";
 
 @Component({
   selector: 'financial-preference',

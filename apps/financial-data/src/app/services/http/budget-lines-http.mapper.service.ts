@@ -5,7 +5,7 @@ import { Tag, tag_fullname } from "@models/refs/tag.model";
 import { ColonneLibelles } from "@services/colonnes.service";
 import { EnrichedFlattenFinancialLinesSchema, TagsSchema } from "apps/clients/budget";
 import { Optional } from "apps/common-lib/src/lib/utilities/optional.type";
-import { JSONObject } from "apps/preference-users/src/lib/models/preference.models";
+import { JSONObject } from "apps/common-lib/src/lib/models/jsonobject";
 
 export class BudgetLineHttpMapper {
 
@@ -63,8 +63,8 @@ export class BudgetLineHttpMapper {
             tags: this._map_tags(object),
 
             financial_cp: null, // XXX: On ne résoud pas les CPs ici. C'est fait dans un appel séparé. 
-
-            toJsonObject(): JSONObject {
+            
+            exportAsJson(): JSONObject {
                 return {
                     [ColonneLibelles.SOURCE]: this.source,
                     [ColonneLibelles.N_EJ]: this.n_ej ?? "",
