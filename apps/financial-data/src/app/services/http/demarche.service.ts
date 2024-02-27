@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 
 import { Observable, concatMap, map, of } from 'rxjs';
 
@@ -9,12 +9,23 @@ import {
   PersonneMorale,
 } from '@models/demarche_simplifie/demarche-graphql';
 import { ApolloQueryResult } from '@apollo/client';
+import { HttpClient } from '@angular/common/http';
+import { SettingsService } from 'apps/financial-data/src/environments/settings.service';
+import { SETTINGS } from 'apps/common-lib/src/lib/environments/settings.http.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class DemarcheHttpService {
-  constructor(private _apollo: Apollo) {}
+  private _apiDemarches: string;
+  
+  constructor(
+    private _apollo: Apollo,
+    private _http: HttpClient,
+    @Inject(SETTINGS) readonly settings: SettingsService //eslint-disable-line
+  ) {
+    this._apiDemarches = settings.apiDemarches;
+  }
 
   public getDemarcheLight(id: number): Observable<Demarche | null> {
     const demarche = gql`
@@ -42,6 +53,14 @@ export class DemarcheHttpService {
       );
   }
 
+  public saveDemarche(id: number): Observable<any> {
+    const formData = new FormData();
+    formData.append('id', id.toString());
+    console.log(id)
+    console.log(this._apiDemarches)
+    return this._http.post(`${this._apiDemarches}/save`, formData);
+  }
+  
   /**
    * Avec un numéro de démarche, recherche le dossier
    * @param id id de la démarche

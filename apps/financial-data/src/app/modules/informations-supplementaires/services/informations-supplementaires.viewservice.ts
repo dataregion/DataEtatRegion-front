@@ -43,7 +43,7 @@ export class InformationSupplementairesViewService {
 
   open_in_newtab() {
     const id = '' + this._financial.id;
-    window.open(_path_full(this._financial.source, id));
+    window.open(_path_full(this._financial.source.toString(), id));
   }
 
   _map_subvention_light(

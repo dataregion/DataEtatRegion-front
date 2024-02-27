@@ -12,9 +12,10 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { FormsModule } from '@angular/forms';
 import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
 import { UpdateTagsComponent } from './update-tags/update-tags.component';
+import { IntegrationDemarcheComponent } from './integration-demarche/integration-demarche.component';
 
 @NgModule({
-  declarations: [UploadFinancialComponent, UpdateTagsComponent, ConfirmDialogComponent],
+  declarations: [UploadFinancialComponent, UpdateTagsComponent, ConfirmDialogComponent, IntegrationDemarcheComponent],
   imports: [
     CommonModule,
     CommonLibModule,
