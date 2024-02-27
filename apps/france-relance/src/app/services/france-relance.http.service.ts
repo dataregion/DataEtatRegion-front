@@ -180,16 +180,6 @@ export class FranceRelanceHttpService extends AbstractLaureatsHttpService {
     );
   }
 
-
-  // TODO: here, repair csv - lorsqu'on migrera 
-  public getCsv(
-    _1: SousAxePlanRelance[],
-    _2: Structure,
-    _3: Territoire[]
-  ): Observable<Blob> {
-    throw new Error("Method not implemented.");
-  }
-
   private _buildparams(
     axes: SousAxePlanRelance[] | null,
     structure: Structure | null,

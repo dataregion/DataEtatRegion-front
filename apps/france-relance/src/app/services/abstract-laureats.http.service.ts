@@ -28,11 +28,6 @@ export abstract class AbstractLaureatsHttpService extends NocodbHttpService {
     abstract searchStructure(_name: string): Observable<Structure[]>
     abstract searchTerritoire(_name: string): Observable<Territoire[]>
     abstract searchLaureats(_search_parameters: SearchParameters): Observable<SearchResults>
-    abstract getCsv(
-        _axes: SousAxePlanRelance[],
-        _structure: Structure,
-        _territoires: Territoire[]
-    ): Observable<Blob>
     
     protected _wrap_in_searchresult(xs: FrontLaureat[]): SearchResults {
         return {

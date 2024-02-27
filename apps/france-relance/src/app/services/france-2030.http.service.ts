@@ -93,10 +93,4 @@ export class France2030HttpService extends AbstractLaureatsHttpService {
                 )
         return answer$
     }
-
-    // TODO: here, repair csv - lorsqu'on migrera 
-    override getCsv(_axes: SousAxePlanRelance[], _structure: Structure, _territoires: Territoire[]): Observable<Blob> {
-        throw new Error("Method not implemented.");
-    }
-
 }
