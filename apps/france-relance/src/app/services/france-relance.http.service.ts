@@ -175,19 +175,9 @@ export class FranceRelanceHttpService extends AbstractLaureatsHttpService {
         `${apiFr}/Laureats/Laureats-front?${params}`
       )
     ).pipe(
-      map(this._enrichitAvecSource(SourceLaureatsData.RELANCE)),
+      map(this._mapToSourceLaureatsData(SourceLaureatsData.RELANCE)),
       map(this._wrap_in_searchresult)
     );
-  }
-
-
-  // TODO: here, repair csv - lorsqu'on migrera 
-  public getCsv(
-    _1: SousAxePlanRelance[],
-    _2: Structure,
-    _3: Territoire[]
-  ): Observable<Blob> {
-    throw new Error("Method not implemented.");
   }
 
   private _buildparams(

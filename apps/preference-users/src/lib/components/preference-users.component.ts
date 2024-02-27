@@ -1,10 +1,10 @@
 import { Component, Input, OnInit, inject } from '@angular/core';
 import {
-  JSONValue,
   Preference,
   MapPreferenceFilterMetadata,
   PreferenceWithShared,
 } from '../models/preference.models';
+import { JSONValue } from "apps/common-lib/src/lib/models/jsonobject";
 import { MatDialog } from '@angular/material/dialog';
 import { PreferenceUsersHttpService } from '../services/preference-users-http.service';
 import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';

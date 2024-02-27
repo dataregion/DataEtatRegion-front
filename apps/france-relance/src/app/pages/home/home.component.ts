@@ -6,7 +6,6 @@ import {
   SavePreferenceDialogComponent,
 } from 'apps/preference-users/src/public-api';
 import {
-  JSONObject,
   Preference,
 } from 'apps/preference-users/src/lib/models/preference.models';
 import { ActivatedRoute } from '@angular/router';
@@ -20,6 +19,7 @@ import {
 } from 'apps/grouping-table/src/lib/components/grouping-table/group-utils';
 import { GroupingConfigDialogComponent } from 'apps/grouping-table/src/lib/components/grouping-config-dialog/grouping-config-dialog.component';
 import { colonnes, LaureatColumnMetaDataDef } from '../../models/tableau/colonnes.model';
+import { JSONObject } from 'apps/common-lib/src/lib/models/jsonobject';
 
 @Component({
   selector: 'france-relance-home',

@@ -28,9 +28,9 @@ import { BopModel } from '@models/refs/bop.models';
 import { FinancialData, FinancialDataResolverModel } from '@models/financial/financial-data-resolvers.models';
 import { FinancialDataModel } from '@models/financial/financial-data.models';
 import {
-  JSONObject,
   Preference,
 } from 'apps/preference-users/src/lib/models/preference.models';
+import { JSONObject } from "apps/common-lib/src/lib/models/jsonobject";
 import {
   AlertService,
   GeoModel,

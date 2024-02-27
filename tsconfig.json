@@ -35,6 +35,9 @@
       "@preference-users/*": [
         "dist/preference-users/*"
       ],
+      "appcommon": [
+        "./dist/appcommon"
+      ],
       "common-lib": [
         "dist/common-lib"
       ],
