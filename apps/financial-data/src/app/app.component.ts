@@ -67,6 +67,9 @@ export class AppComponent implements OnInit {
       case "visuterritoire":
         ressource = this.settings.getRessources().visuterritoire;
         break;
+      case "relance":
+        ressource = this.settings.getRessources().relance;
+        break;
       case "graphiques":
         ressource = this.settings.getRessources().graphiques;
         break;
