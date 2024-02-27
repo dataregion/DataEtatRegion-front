@@ -20,6 +20,7 @@
   },
   "ressources": {
     "visuterritoire": "<url visuterritoire>",
+    "relance": "<url france relance>",
     "graphiques": "<url superset>",
     "api_swagger": "<url swagger referentiel>",
     "documentation": "<url doc utilisateur>",

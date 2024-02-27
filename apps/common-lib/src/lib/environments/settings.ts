@@ -15,6 +15,7 @@ export class Keycloak {
 export class Ressources {
   visuterritoire = '';
   graphiques = '';
+  relance = '';
   api_swagger = '';
   documentation = '';
   suivi_usage = '';
