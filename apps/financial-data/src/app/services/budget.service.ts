@@ -10,12 +10,8 @@ import { SourceFinancialData } from '@models/financial/common.models';
 import { Tag } from '@models/refs/tag.model';
 import { ReferentielProgrammation } from '@models/refs/referentiel_programmation.model';
 
-import * as XLSX from 'xlsx';
-import { DisplayedOrderedColumn } from 'apps/grouping-table/src/lib/components/grouping-table/group-utils';
-import { JSONObject } from "apps/common-lib/src/lib/models/jsonobject";
 import { RefSiret } from 'apps/common-lib/src/lib/models/refs/RefSiret';
 import { DataHttpService, SearchParameters } from './interface-data.service';
-import { ExportableAsJson } from 'apps/common-lib/src/lib/models/exportable-as-json.model';
 
 export const DATA_HTTP_SERVICE = new InjectionToken<DataHttpService<any, FinancialDataModel>>(
   'DataHttpService'
