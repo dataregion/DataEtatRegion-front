@@ -56,8 +56,6 @@ export class DemarcheHttpService {
   public saveDemarche(id: number): Observable<any> {
     const formData = new FormData();
     formData.append('id', id.toString());
-    console.log(id)
-    console.log(this._apiDemarches)
     return this._http.post(`${this._apiDemarches}/save`, formData);
   }
   

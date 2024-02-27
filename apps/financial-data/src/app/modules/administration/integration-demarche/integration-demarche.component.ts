@@ -1,13 +1,7 @@
 import { HttpErrorResponse } from "@angular/common/http";
 import { Component, DestroyRef, inject } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { Tag, tag_fullname } from "@models/refs/tag.model";
-import { BudgetService } from "@services/budget.service";
 import { AlertService } from "apps/common-lib/src/public-api";
-import { BehaviorSubject, finalize } from "rxjs";
-import { Clipboard } from "@angular/cdk/clipboard";
-import { BudgetDataHttpService } from "@services/http/budget-lines-http.service";
-import { ColonneLibelles, ColonnesService } from "@services/colonnes.service";
 import { DemarcheHttpService } from "@services/http/demarche.service";
 
 
