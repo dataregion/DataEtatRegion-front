@@ -27,6 +27,7 @@
     <mat-menu #administration="matMenu">
       <button mat-menu-item routerLink='administration/management' *ngIf="showManageUsersPage">Gestion des utilisateurs</button>
       <button mat-menu-item routerLink='administration/upload' *ngIf="showUploadFinancialDataPage">Charger des données</button>
+      <button mat-menu-item routerLink='administration/demarches' *ngIf="showIntegrationDemarchePage">Intégrer ma démarche simplifiée</button>
     </mat-menu>
   </li>
 

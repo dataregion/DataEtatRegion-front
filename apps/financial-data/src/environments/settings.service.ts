@@ -17,6 +17,7 @@ class Api implements IApi {
   geo = '';
   referentiel = '';
   apis_externes = '';
+  demarches = '';
 }
 
 class FinancialSettings extends Settings {
@@ -77,4 +78,9 @@ export class SettingsService implements ISettingsService {
   public get apiAdministration(): string {
     return (this.settings.apis as Api).administration;
   }
+
+  public get apiDemarches(): string {
+    return (this.settings.apis as Api).demarches;
+  }
+
 }
