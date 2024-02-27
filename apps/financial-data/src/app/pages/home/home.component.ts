@@ -295,13 +295,14 @@ export class HomeComponent implements OnInit {
   }
 
   private _getDefaultOrder(): DisplayedOrderedColumn[] {
-    return colonnes.map(c => { 
+    const displayed = colonnes.map(c => { 
       const col: DisplayedOrderedColumn = {columnLabel: c.label}
       if ('displayed' in c && !c.displayed) {
         col['displayed'] = false;
       }
       return col;
     });
+    return displayed;
   }
 
   private _getDefaultOrderGrouping(): GroupingColumn[] {

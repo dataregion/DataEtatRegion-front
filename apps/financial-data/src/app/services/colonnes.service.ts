@@ -34,6 +34,8 @@ export enum ColonneCodes {
   DATE_DERNIER_PAIEMENT = "date_cp",
   DATE_CREATION_EJ = "date_replication",
   ANNEE_ENGAGEMENT = "annee",
+  CODE_CENTRE_COUTS = "code_centre_couts",
+  CENTRE_COUTS = "centre_couts",
   TAGS = "tags",
 }
 
@@ -69,6 +71,8 @@ export enum ColonneLibelles {
   DATE_DERNIER_PAIEMENT = "Date dernier paiement",
   DATE_CREATION_EJ = "Date création EJ",
   ANNEE_ENGAGEMENT = "Année d'engagement",
+  CODE_CENTRE_COUTS = "Code centre coûts",
+  CENTRE_COUTS = "Centre coûts",
   TAGS = "Tags",
 }
 
@@ -107,6 +111,8 @@ export class ColonnesService {
     [ColonneCodes.DATE_DERNIER_PAIEMENT]: [ColonneLibelles.DATE_DERNIER_PAIEMENT],
     [ColonneCodes.DATE_CREATION_EJ]: [ColonneLibelles.DATE_CREATION_EJ],
     [ColonneCodes.ANNEE_ENGAGEMENT]: [ColonneLibelles.ANNEE_ENGAGEMENT],
+    [ColonneCodes.CODE_CENTRE_COUTS]: [ColonneLibelles.CODE_CENTRE_COUTS],
+    [ColonneCodes.CENTRE_COUTS]: [ColonneLibelles.CENTRE_COUTS],
     [ColonneCodes.TAGS]: [ColonneLibelles.TAGS],
   }
 

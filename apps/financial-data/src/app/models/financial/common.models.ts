@@ -51,6 +51,8 @@ export interface LocalisationInterministerielle extends CodeLabel {
 }
 export interface DomaineFonctionnel extends CodeLabel {}
 
+export interface CentreCouts extends CodeLabel {}
+
 // XXX: sous ensemble de DataType
 export enum SourceFinancialData {
   ADEME = DataType.ADEME,
