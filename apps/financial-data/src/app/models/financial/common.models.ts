@@ -51,7 +51,9 @@ export interface LocalisationInterministerielle extends CodeLabel {
 }
 export interface DomaineFonctionnel extends CodeLabel {}
 
-export interface CentreCouts extends CodeLabel {}
+export interface CentreCouts extends CodeLabel {
+  description: string;
+}
 
 // XXX: sous ensemble de DataType
 export enum SourceFinancialData {

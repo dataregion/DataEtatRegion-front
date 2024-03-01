@@ -78,7 +78,8 @@ export class BudgetLineHttpMapper {
                     [ColonneLibelles.DOMAINE]: this.domaine_fonctionnel?.label ?? "",
                     [ColonneLibelles.REFERENTIEL_PROGRAMMATION]: this.referentiel_programmation?.label ?? "",
                     [ColonneLibelles.CODE_CENTRE_COUTS]: this.centre_couts?.code ?? "",
-                    [ColonneLibelles.CENTRE_COUTS]: this.centre_couts?.label ?? "",
+                    [ColonneLibelles.LABEL_CENTRE_COUTS]: this.centre_couts?.label ?? "",
+                    [ColonneLibelles.CENTRE_COUTS]: this.centre_couts?.description ?? "",
                     [ColonneLibelles.COMMUNE]: this.commune?.label ?? "",
                     [ColonneLibelles.CRTE]: this.commune?.label_crte ?? "",
                     [ColonneLibelles.EPCI]: this.commune?.label_epci ?? "",
@@ -161,6 +162,7 @@ export class BudgetLineHttpMapper {
         return {
             code: object.centreCouts_code,
             label: object.centreCouts_label!,
+            description: object.centreCouts_description!,
         }
     }
 
