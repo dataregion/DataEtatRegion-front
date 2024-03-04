@@ -278,6 +278,11 @@ export class HomeComponent implements OnInit {
    */
   private _applyOrderAndFilter(): void {
     let newColumns: FinancialColumnMetaDataDef[] = this.columnsMetaData.data
+    // Récupération des colonnes non présentes dans le filtre pour les gérer correctement
+    const columnsToAdd = newColumns.map(c1 => c1.label).filter(l => !this.displayedOrderedColumns.map(c2 => c2.columnLabel).includes(l));
+    columnsToAdd.forEach((col) => {
+      this.displayedOrderedColumns.push({"columnLabel": col, "displayed": false})
+    });
     // On ordonne les colonnes
     newColumns = newColumns.sort((col1, col2) => {
       const index1 = this.displayedOrderedColumns.findIndex((col) => col.columnLabel === col1.label)
