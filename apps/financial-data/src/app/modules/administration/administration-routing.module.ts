@@ -6,10 +6,12 @@ import { ManagementUserComponent } from 'apps/management/src/lib/components/mana
 import { resolveUsers } from '../../resolvers/management/users.resolver';
 import { UploadFinancialComponent } from './upload-financial/upload-financial.component';
 import { UpdateTagsComponent } from './update-tags/update-tags.component';
+import { IntegrationDemarcheComponent } from './integration-demarche/integration-demarche.component';
 
 export const profiles_required_for_managment_page = [Profil.ADMIN]
 export const profiles_required_for_upload_page = [Profil.ADMIN, Profil.COMPTABLE]
 export const profiles_required_for_tags_page = [Profil.USERS]
+export const profiles_required_for_demarche_integration = [Profil.USERS]
 
 const routes: Routes = [
   {
@@ -37,6 +39,14 @@ const routes: Routes = [
     canActivate: [keycloakAuthGuardCanActivate],
     data: {
       roles: profiles_required_for_tags_page,
+    },
+  },
+  {
+    path: 'demarches',
+    component: IntegrationDemarcheComponent,
+    canActivate: [keycloakAuthGuardCanActivate],
+    data: {
+      roles: profiles_required_for_demarche_integration,
     },
   }
 ];

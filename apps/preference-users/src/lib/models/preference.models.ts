@@ -1,3 +1,5 @@
+import { JSONValue, JSONObject } from "apps/common-lib/src/lib/models/jsonobject";
+
 /* eslint-disable no-unused-vars */
 export interface Shared {
   shared_username_email: string;
@@ -15,14 +17,6 @@ export interface PreferenceWithShared {
   create_by_user: Preference[];
   shared_with_user: Preference[];
 }
-
-export type JSONValue = string | number | boolean | JSONObject | JSONArray;
-
-export interface JSONObject {
-  [k: string]: JSONValue;
-}
-
-export interface JSONArray extends Array<JSONValue> {}
 
 /**
  * Méta-données sous forme de hasMap d'un filtre.

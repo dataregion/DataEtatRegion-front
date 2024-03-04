@@ -14,9 +14,9 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { AlertService } from 'apps/common-lib/src/public-api';
 import {
-  JSONObject,
   Preference,
 } from 'apps/preference-users/src/lib/models/preference.models';
+import { JSONObject } from "apps/common-lib/src/lib/models/jsonobject";
 import {
   BehaviorSubject,
   debounceTime,
@@ -32,6 +32,9 @@ import { Territoire } from '../models/territoire.models';
 import { LaureatHttpService } from '../services/laureat.http.service';
 import { SearchParameters, SearchResults } from '../services/abstract-laureats.http.service';
 import { _FiltreLocalisation } from './_FiltreLocalisation';
+import { FrontLaureat } from '../models/laureat.models';
+import { Optional } from 'apps/common-lib/src/lib/utilities/optional.type';
+import { ExportDataService } from 'apps/appcommon/src/lib/export-data.service';
 
 @Component({
   selector: 'france-relance-search-data',
@@ -46,6 +49,7 @@ export class SearchDataComponent implements OnInit, OnChanges {
   /**
    * Resultats de la recherche.
    */
+  _searchResults: Optional<FrontLaureat[]> = null;
   @Output() searchResults = new EventEmitter<any>();
 
   /**
@@ -83,6 +87,7 @@ export class SearchDataComponent implements OnInit, OnChanges {
     private _route: ActivatedRoute,
     private _alertService: AlertService,
     private _service: LaureatHttpService,
+    private _exportService: ExportDataService,
   ) {
   }
 
@@ -168,6 +173,7 @@ export class SearchDataComponent implements OnInit, OnChanges {
             this.warningMessage = payload.messages_utilisateur.join('\n');
             this.searchFinish = true;
             this.currentFilter.next(this._buildPreference(formValue));
+            this._searchResults = laureats;
             this.searchResults.next(laureats);
           },
           error: (err: Error) => {
@@ -204,27 +210,28 @@ export class SearchDataComponent implements OnInit, OnChanges {
   }
 
   public downloadCsv(): void {
+    
+    if (!this._searchResults)
+      throw Error("Pas de résultats à exporter")
+
     if (this.searchForm.valid && !this.searchInProgress.value) {
-      const formValue = this.searchForm.value;
       this.searchInProgress.next(true);
-      this._service
-        .getCsv(
-          formValue.axe_plan_relance,
-          formValue.structure,
-          formValue.territoire
-        )
-        .pipe(
-          finalize(() => {
-            this.searchInProgress.next(false);
-          })
-        )
-        .subscribe((response: Blob) => {
-          const a = document.createElement('a');
-          a.href = URL.createObjectURL(response);
-          a.download = 'export_csv.csv';
-          document.body.appendChild(a);
-          a.click();
-        });
+
+      const blob = this._exportService.getBlob(
+        this._searchResults,
+        'csv',
+        null
+      )
+
+      if (blob) {
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'export_csv.csv';
+        document.body.appendChild(a);
+        a.click();
+      this.searchInProgress.next(false);
+      }
     }
   }
 

@@ -90,7 +90,7 @@ export class UploadLaureatsComponent implements OnInit {
       // TODO: utiliser un autre service, non lié aux données financières.
       this._service
         // XXX: ici, on charge le fichier france 2030
-        .loadFinancialFile(this.fileFrance2030, '' + this.yearSelected, this.typeSelected)
+        .loadFinancialFrance2030(this.fileFrance2030, this.yearSelected.toString())
         .pipe(
           finalize(() => {
             this.fileFrance2030 = null;

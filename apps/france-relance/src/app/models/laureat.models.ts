@@ -1,3 +1,4 @@
+import { ExportableAsJson } from "apps/common-lib/src/lib/models/exportable-as-json.model";
 import { SourceLaureatsData } from "./common.model";
 
 /** 
@@ -16,6 +17,6 @@ export interface Laureat {
 }
 
 /** Représente un lauréat enrichit d'informations pour le frontend */
-export interface FrontLaureat extends Laureat {
+export interface FrontLaureat extends Laureat, ExportableAsJson {
   source: SourceLaureatsData
 }

@@ -1,0 +1,34 @@
+<mat-card class="mat-card">
+
+  <mat-card-header>
+    <mat-card-title>
+      Rechercher ma démarche simplifiée
+    </mat-card-title>
+    <mat-card-subtitle style="margin-top:15px;">
+      <span>
+        Une fois que vous aurez cliqué sur "Valider et intégrer la démarche", les données DS seront stockées dans la plateforme Data-Etat
+      </span>
+    </mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content>
+    <mat-form-field appearance="fill" style="width:70%">
+      <mat-label>N° démarche</mat-label>
+      <input matInput placeholder="Saisir le numéro de votre démarche DS" [(ngModel)]="inputDemarche">
+    </mat-form-field>
+    <div style="display:inline-block;width:30%">
+      <button mat-raised-button color="primary" type="button" (click)="searchDemarche()" style="height:40px;margin-top:-20px;margin-left:30px;">Vérifier la démarche</button>
+    </div>
+  </mat-card-content>
+
+</mat-card>
+
+<mat-card class="mat-card" *ngIf="nomDemarche">
+  <mat-card-header>
+    <mat-card-title>
+      {{nomDemarche}}
+    </mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <button mat-raised-button color="primary" type="button" (click)="saveDemarche()">Valider et intégrer la démarche</button>
+  </mat-card-content>
+</mat-card>

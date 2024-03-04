@@ -13,7 +13,7 @@ const moneyFormat = new Intl.NumberFormat('fr-FR', {
 export const groupingOrder: string[] = [
     ColonneCodes.ANNEE_ENGAGEMENT,
     ColonneCodes.REGION, ColonneCodes.DEPARTEMENT, ColonneCodes.CRTE, ColonneCodes.EPCI, ColonneCodes.EPCI, ColonneCodes.COMMUNE, ColonneCodes.QPV,
-    ColonneCodes.THEME,  ColonneCodes.PROGRAMME,  ColonneCodes.DOMAINE,  ColonneCodes.REFERENTIEL_PROGRAMMATION,
+    ColonneCodes.THEME,  ColonneCodes.PROGRAMME,  ColonneCodes.DOMAINE, ColonneCodes.REFERENTIEL_PROGRAMMATION, ColonneCodes.CENTRE_COUTS,
     ColonneCodes.BENEFICIAIRE,  ColonneCodes.TYPE_ETABLISSEMENT,
     ColonneCodes.N_EJ, ColonneCodes.COMPTE_BUDGETAIRE, ColonneCodes.GROUPE_MARCHANDISE,
     ColonneCodes.TAGS,
@@ -150,6 +150,12 @@ export const colonnes: FinancialColumnMetaDataDef[] = [
         label: ColonneLibelles.REFERENTIEL_PROGRAMMATION,
         displayed: false,
         renderFn: (row, _col) => _print_code_label(row.referentiel_programmation?.code, row.referentiel_programmation?.label),
+    },
+    {
+        name: ColonneCodes.CENTRE_COUTS,
+        label: ColonneLibelles.CENTRE_COUTS,
+        displayed: false,
+        renderFn: (row, _col) => _print_code_label(row.centre_couts?.code, row.centre_couts?.description),
     },
     {
         name: ColonneCodes.SIRET,

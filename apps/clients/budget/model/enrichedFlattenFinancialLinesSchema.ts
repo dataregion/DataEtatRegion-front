@@ -31,6 +31,9 @@ export interface EnrichedFlattenFinancialLinesSchema {
     beneficiaire_denomination?: string;
     beneficiaire_qpv_code?: string;
     beneficiaire_qpv_label?: string;
+    centreCouts_code?: string;
+    centreCouts_label?: string;
+    centreCouts_description?: string;
     compte_budgetaire?: string;
     contrat_etat_region?: string;
     created_at?: string;

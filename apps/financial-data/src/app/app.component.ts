@@ -4,7 +4,7 @@ import { SETTINGS } from 'apps/common-lib/src/lib/environments/settings.http.ser
 import { GridInFullscreenStateService } from 'apps/common-lib/src/lib/services/grid-in-fullscreen-state.service';
 import { LoaderService, SessionService } from 'apps/common-lib/src/public-api';
 import { SettingsService } from '../environments/settings.service';
-import { profiles_required_for_managment_page, profiles_required_for_tags_page, profiles_required_for_upload_page } from './modules/administration/administration-routing.module';
+import { profiles_required_for_managment_page, profiles_required_for_tags_page, profiles_required_for_upload_page, profiles_required_for_demarche_integration } from './modules/administration/administration-routing.module';
 
 
 export const MULTIREGIONS_SERVICE = new InjectionToken<MultiregionsService>(
@@ -20,9 +20,10 @@ export class AppComponent implements OnInit {
   public progressBarVisible: boolean = false;
   public isAuthenticated: boolean = false;
 
-  public showManageUsersPage = false;
+  public showManageUsersPage: boolean = false;
   public showUploadFinancialDataPage: boolean = false;
   public showUpdateTagsPage: boolean = false;
+  public showIntegrationDemarchePage: boolean = false;
   public region: string = "";
 
   get grid_fullscreen() {
@@ -48,6 +49,7 @@ export class AppComponent implements OnInit {
       this.showManageUsersPage = this._sessionService.hasOneRole(profiles_required_for_managment_page);
       this.showUploadFinancialDataPage = this._sessionService.hasOneRole(profiles_required_for_upload_page);
       this.showUpdateTagsPage = this._sessionService.hasOneRole(profiles_required_for_tags_page);
+      this.showIntegrationDemarchePage = this._sessionService.hasOneRole(profiles_required_for_demarche_integration) && this.settings.getFeatures().integration_ds;
     });
     
     this.region = this._multiregions.getRegionByHostname();
@@ -66,6 +68,9 @@ export class AppComponent implements OnInit {
     switch (key) {
       case "visuterritoire":
         ressource = this.settings.getRessources().visuterritoire;
+        break;
+      case "relance":
+        ressource = this.settings.getRessources().relance;
         break;
       case "graphiques":
         ressource = this.settings.getRessources().graphiques;

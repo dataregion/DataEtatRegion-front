@@ -4,7 +4,7 @@ import { PreFilters } from '@models/search/prefilters.model';
 import { GeoHttpService, SearchByCodeParamsBuilder } from 'apps/common-lib/src/lib/services/geo-http.service';
 import { ReferentielsHttpService } from 'apps/common-lib/src/lib/services/referentiels.service';
 import { GeoModel, TypeLocalisation } from 'apps/common-lib/src/public-api';
-import { JSONObject } from 'apps/preference-users/src/lib/models/preference.models';
+import { JSONObject } from "apps/common-lib/src/lib/models/jsonobject";
 import { NGXLogger } from 'ngx-logger';
 import { Observable, of } from 'rxjs';
 import { mergeMap, map } from 'rxjs/operators';

@@ -5,6 +5,7 @@ import {
   Settings,
   Keycloak,
   Ressources,
+  Features,
 } from 'apps/common-lib/src/public-api';
 
 
@@ -17,6 +18,7 @@ class Api implements IApi {
   geo = '';
   referentiel = '';
   apis_externes = '';
+  demarches = '';
 }
 
 class FinancialSettings extends Settings {
@@ -32,6 +34,7 @@ export class SettingsService implements ISettingsService {
     this.settings.apis = new Api();
     this.settings.keycloak = new Keycloak();
     this.settings.ressources = new Ressources();
+    this.settings.features = new Features();
   }
 
   setSettings(settings: Settings): void {
@@ -44,6 +47,10 @@ export class SettingsService implements ISettingsService {
 
   getRessources(): Ressources {
     return this.settings.ressources;
+  }
+
+  getFeatures(): Features {
+    return this.settings.features;
   }
 
   getSetting(): FinancialSettings {
@@ -77,4 +84,9 @@ export class SettingsService implements ISettingsService {
   public get apiAdministration(): string {
     return (this.settings.apis as Api).administration;
   }
+
+  public get apiDemarches(): string {
+    return (this.settings.apis as Api).demarches;
+  }
+
 }

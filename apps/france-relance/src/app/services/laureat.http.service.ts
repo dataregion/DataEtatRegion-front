@@ -3,7 +3,7 @@ import { AbstractLaureatsHttpService, SearchParameters, SearchResults } from "./
 import { FranceRelanceHttpService } from "./france-relance.http.service";
 import { France2030HttpService } from "./france-2030.http.service";
 import { Observable, forkJoin, map } from "rxjs";
-import { SousAxePlanRelance, SousAxePlanRelanceForFilter } from "../models/axe.models";
+import { SousAxePlanRelanceForFilter } from "../models/axe.models";
 import { Structure } from "../models/structure.models";
 import { Territoire } from "../models/territoire.models";
 
@@ -98,9 +98,4 @@ export class LaureatHttpService extends AbstractLaureatsHttpService {
 
         return franceRelance$
     }
-
-    override getCsv(_axes: SousAxePlanRelance[], _structure: Structure, _territoires: Territoire[]): Observable<Blob> {
-        throw new Error("Method not implemented.");
-    }
-
 }

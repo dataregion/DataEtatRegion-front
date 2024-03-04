@@ -33,6 +33,7 @@ import { Tag } from '@models/refs/tag.model';
 import { SearchDataComponent } from 'apps/financial-data/src/app/components/search-data/search-data.component';
 import { BudgetService } from '@services/budget.service';
 import { DatePipe } from '@angular/common';
+import { ExportDataService } from 'apps/appcommon/src/lib/export-data.service';
 
 @Component({
   selector: 'financial-home',
@@ -94,6 +95,7 @@ export class HomeComponent implements OnInit {
     private _gridFullscreen: GridInFullscreenStateService,
     private _logger: NGXLogger,
     private _budgetService: BudgetService,
+    private _exportDataService: ExportDataService,
     private _datePipe: DatePipe,
   ) {
     // Récupération de l'ordre des colonnes par défaut
@@ -221,7 +223,7 @@ export class HomeComponent implements OnInit {
     this.searchData.searchForm.markAllAsTouched(); // pour notifier les erreurs sur le formulaire
     if (this.searchData.searchForm.valid && !this.searchData.searchInProgress.value) {
       this.searchData.searchInProgress.next(true);
-      const blob = this._budgetService.getBlob(this.searchData.searchResult() ?? [], extension,!allColumns ? this.displayedOrderedColumns : null);
+      const blob = this._exportDataService.getBlob(this.searchData.searchResult() ?? [], extension,!allColumns ? this.displayedOrderedColumns : null);
       if (blob) {
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
@@ -295,13 +297,14 @@ export class HomeComponent implements OnInit {
   }
 
   private _getDefaultOrder(): DisplayedOrderedColumn[] {
-    return colonnes.map(c => { 
+    const displayed = colonnes.map(c => { 
       const col: DisplayedOrderedColumn = {columnLabel: c.label}
       if ('displayed' in c && !c.displayed) {
         col['displayed'] = false;
       }
       return col;
     });
+    return displayed;
   }
 
   private _getDefaultOrderGrouping(): GroupingColumn[] {

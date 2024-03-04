@@ -15,9 +15,14 @@ export class Keycloak {
 export class Ressources {
   visuterritoire = '';
   graphiques = '';
+  relance = '';
   api_swagger = '';
   documentation = '';
   suivi_usage = '';
+}
+
+export class Features {
+  integration_ds = true;
 }
 
 export interface NocodbViews {
@@ -46,6 +51,7 @@ export class Settings {
   apis: IApi | undefined = undefined;
   keycloak: Keycloak = new Keycloak();
   ressources: Ressources = new Ressources();
+  features: Features = new Features();
   contact: string | undefined = undefined;
   url_github: string | undefined = undefined;
 }

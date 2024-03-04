@@ -87,16 +87,10 @@ export class France2030HttpService extends AbstractLaureatsHttpService {
             )
                 .pipe(
                     map(x => x?.items ?? []),
-                    map(this._enrichitAvecSource(SourceLaureatsData.FRANCE2030)),
+                    map(this._mapToSourceLaureatsData(SourceLaureatsData.FRANCE2030)),
                     map(this._wrap_in_searchresult),
                     catchError(this._returnValueOn501(emptySearchResult)),
                 )
         return answer$
     }
-
-    // TODO: here, repair csv - lorsqu'on migrera 
-    override getCsv(_axes: SousAxePlanRelance[], _structure: Structure, _territoires: Territoire[]): Observable<Blob> {
-        throw new Error("Method not implemented.");
-    }
-
 }

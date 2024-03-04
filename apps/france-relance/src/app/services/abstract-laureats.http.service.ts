@@ -27,12 +27,7 @@ export abstract class AbstractLaureatsHttpService extends NocodbHttpService {
     abstract searchStructure(_name: string): Observable<Structure[]>
     abstract searchTerritoire(_name: string): Observable<Territoire[]>
     abstract searchLaureats(_search_parameters: SearchParameters): Observable<SearchResults>
-    abstract getCsv(
-        _axes: SousAxePlanRelance[],
-        _structure: Structure,
-        _territoires: Territoire[]
-    ): Observable<Blob>
-
+    
     protected _wrap_in_searchresult(xs: FrontLaureat[]): SearchResults {
         return {
             messages_utilisateur: [],
@@ -49,12 +44,18 @@ export abstract class AbstractLaureatsHttpService extends NocodbHttpService {
         }
     }
     
-    protected _enrichitAvecSource(source: SourceLaureatsData) {
+    protected _mapToSourceLaureatsData(source: SourceLaureatsData) {
        return (xs: Laureat[]) => {
             return xs.map(x => {
-                return {
+                const line = {
                     source,
-                    ...x,
+                    ...x
+                }
+                return {
+                    ...line,
+                    exportAsJson: () => {
+                        return line
+                    },
                 }
             })
        } 

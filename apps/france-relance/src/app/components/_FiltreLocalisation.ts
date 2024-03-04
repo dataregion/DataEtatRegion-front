@@ -1,6 +1,6 @@
 import { FormArray, FormControl, FormGroup } from '@angular/forms';
 import { GeoModel, TypeLocalisation } from 'apps/common-lib/src/public-api';
-import { JSONObject } from 'apps/preference-users/src/lib/models/preference.models';
+import { JSONObject } from "apps/common-lib/src/lib/models/jsonobject";
 import { Nullable } from 'apps/common-lib/src/lib/utilities/optional.type';
 import { SearchParameters } from '../services/abstract-laureats.http.service';
 
