@@ -21,6 +21,10 @@ export class Ressources {
   suivi_usage = '';
 }
 
+export class Features {
+  integration_ds = true;
+}
+
 export interface NocodbViews {
   [k: string]: string;
 }
@@ -47,6 +51,7 @@ export class Settings {
   apis: IApi | undefined = undefined;
   keycloak: Keycloak = new Keycloak();
   ressources: Ressources = new Ressources();
+  features: Features = new Features();
   contact: string | undefined = undefined;
   url_github: string | undefined = undefined;
 }
