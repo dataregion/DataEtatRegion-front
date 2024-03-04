@@ -5,6 +5,7 @@ import {
   Settings,
   Keycloak,
   Ressources,
+  Features,
 } from 'apps/common-lib/src/public-api';
 
 
@@ -33,6 +34,7 @@ export class SettingsService implements ISettingsService {
     this.settings.apis = new Api();
     this.settings.keycloak = new Keycloak();
     this.settings.ressources = new Ressources();
+    this.settings.features = new Features();
   }
 
   setSettings(settings: Settings): void {
@@ -45,6 +47,10 @@ export class SettingsService implements ISettingsService {
 
   getRessources(): Ressources {
     return this.settings.ressources;
+  }
+
+  getFeatures(): Features {
+    return this.settings.features;
   }
 
   getSetting(): FinancialSettings {
