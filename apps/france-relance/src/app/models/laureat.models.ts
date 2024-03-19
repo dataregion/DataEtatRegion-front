@@ -14,6 +14,10 @@ export interface Laureat {
   dispositif: string;
   territoire: string;
   code_insee: string;
+  code_region: string;
+  code_departement: string;
+  code_epci: string;
+  code_arrondissement: string;
 }
 
 /** Représente un lauréat enrichit d'informations pour le frontend */
