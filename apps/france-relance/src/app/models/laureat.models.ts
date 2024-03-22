@@ -12,12 +12,16 @@ export interface Laureat {
   axe: string;
   'sous-axe': string;
   dispositif: string;
-  territoire: string;
-  code_insee: string;
+  label_commune: string;
+  code_commune: string;
   code_region: string;
+  label_region: string;
   code_departement: string;
+  label_departement: string;
   code_epci: string;
+  label_epci: string;
   code_arrondissement: string;
+  label_arrondissement: string;
 }
 
 /** Représente un lauréat enrichit d'informations pour le frontend */
