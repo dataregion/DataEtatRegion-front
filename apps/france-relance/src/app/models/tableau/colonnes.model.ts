@@ -17,6 +17,12 @@ function _prettyPrintSource(source: SourceLaureatsData) {
     }
 }
 
+function _print_code_label_if_code(c: string, l : string): string {
+  const code = c ?? '';
+  const label = l ?? '';
+  return  code !== '' ? `${code} - ${label}` : '';
+}
+
 export type LaureatColumnMetaDataDef = ParameterizedColumnMetaDataDef<FrontLaureat & RowData>
 
 export const colonnes: LaureatColumnMetaDataDef[] = [
@@ -53,11 +59,32 @@ export const colonnes: LaureatColumnMetaDataDef[] = [
         label: 'Dispositif',
       },
       {
-        name: 'territoire',
-        label: 'Territoire',
-      },
-      {
         name: 'Synthèse',
         label: 'Synthèse',
+      },
+      {
+        name: 'region',
+        label: 'Région du SIRET',
+        renderFn: (row, _) => _print_code_label_if_code(row.code_region, row.label_region)
+      },
+      {
+        name: 'departement',
+        label: 'Département du SIRET',
+        renderFn: (row, _) => _print_code_label_if_code(row.code_departement, row.label_departement)
+      },
+      {
+        name: 'epci',
+        label: 'EPCI du SIRET',
+        renderFn: (row, _) => _print_code_label_if_code(row.code_epci, row.label_epci)
+      },
+      {
+        name: 'commune',
+        label: 'Commune du SIRET',
+        renderFn: (row, _) => _print_code_label_if_code(row.code_commune, row.label_commune)
+      },
+      {
+        name: 'arrondissement',
+        label: 'Arrondissement du SIRET',
+        renderFn: (row, _) => _print_code_label_if_code(row.code_arrondissement, row.label_arrondissement)
       },
 ]

@@ -165,8 +165,15 @@ export class FranceRelanceHttpService extends AbstractLaureatsHttpService {
   ): Observable<SearchResults> {
     const apiFr = this._settings.apiFranceRelance;
 
-    const fields =
-      'Structure,NuméroDeSiretSiConnu,SubventionAccordée,Synthèse,axe,sous-axe,dispositif,territoire,territoire_insee,code_insee';
+    const fields_list = [
+      'Structure','NuméroDeSiretSiConnu','SubventionAccordée','Synthèse','axe','sous-axe','dispositif',
+      'code_region','label_region',
+      'code_departement','label_departement',
+      'code_epci','label_epci',
+      'code_commune','label_commune',
+      'code_arrondissement','label_arrondissement'
+    ]
+    const fields = fields_list.join(',')
     const rest_params = this._buildparams(axes, structure, territoires)
     const params = `fields=${fields}&${rest_params}`;
 
@@ -196,16 +203,23 @@ export class FranceRelanceHttpService extends AbstractLaureatsHttpService {
     }
 
     if (territoires && territoires.length > 0) {
-
-      const filtre_territoire_non_commune = territoires.find(x => x.type != TypeLocalisation.COMMUNE)
-      if (filtre_territoire_non_commune) {
-        throw new UnsupportedNiveauLocalisation(filtre_territoire_non_commune.type!)
+      const territoire = territoires[0]
+      const territoires_supportes = {
+        [TypeLocalisation.REGION]: "code_region",
+        [TypeLocalisation.DEPARTEMENT]: "code_departement",
+        [TypeLocalisation.EPCI]: "code_epci",
+        [TypeLocalisation.COMMUNE]: "code_commune",
+        [TypeLocalisation.CRTE]: null,
+        [TypeLocalisation.ARRONDISSEMENT]: "code_arrondissement",
+        [TypeLocalisation.QPV]: null
+      }
+      if (territoires_supportes[territoire.type!] == null) {
+        throw new UnsupportedNiveauLocalisation(territoire.type!)
       }
 
       // on est toujours sur le même type
-      params += `~and(territoire_insee,in,${territoires
-        .map((t) => t.code)
-        .join(',')})`;
+      const codes_joined = territoires.map((t) => t.code).join(',')
+      params += `~and(${territoires_supportes[territoire.type!]},in,${codes_joined})`;
     }
 
     return params;
