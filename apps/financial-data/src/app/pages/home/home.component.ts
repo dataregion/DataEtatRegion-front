@@ -27,7 +27,7 @@ import { MarqueBlancheParsedParamsResolverModel } from '../../resolvers/marquebl
 import { NGXLogger } from 'ngx-logger';
 import { delay } from 'rxjs';
 import { PreFilters } from '@models/search/prefilters.model';
-import { colonnes, FinancialColumnMetaDataDef } from '@models/tableau/colonnes.model';
+import { colonnes, FinancialColumnMetaDataDef, groupingOrder } from '@models/tableau/colonnes.model';
 import { QueryParam } from 'apps/common-lib/src/lib/models/marqueblanche/query-params.enum';
 import { Tag } from '@models/refs/tag.model';
 import { SearchDataComponent } from 'apps/financial-data/src/app/components/search-data/search-data.component';
@@ -168,6 +168,7 @@ export class HomeComponent implements OnInit {
       data: {
         columns: this.columnsMetaData.data,
         groupingColumns: this.groupingColumns,
+        groupingOrder: groupingOrder
       },
       width: '40rem',
       autoFocus: 'input',

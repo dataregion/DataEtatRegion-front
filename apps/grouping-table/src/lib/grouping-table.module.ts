@@ -9,9 +9,10 @@ import { TableGroupComponent } from './components/grouping-table/table-group.com
 import { TableRowsComponent } from './components/grouping-table/table-rows.component';
 import { ProjectCellDirective } from './components/grouping-table/project-cell.directive';
 import { ProjectGroupingDirective } from './components/grouping-table/project-grouping.directive';
+import { MatMenuModule } from '@angular/material/menu';
 
 @NgModule({
-  imports: [CommonModule],
+  imports: [CommonModule, MatMenuModule],
   declarations: [
     ProjectCellDirective,
     ProjectGroupingDirective,

@@ -49,8 +49,11 @@ export class SearchDataComponent implements OnInit, OnChanges {
   /**
    * Resultats de la recherche.
    */
-  _searchResults: Optional<FrontLaureat[]> = null;
-  @Output() searchResults = new EventEmitter<any>();
+  _searchResults: FrontLaureat[] | null = null;;
+  searchResult(): FrontLaureat[] | null {
+    return this._searchResults;
+  }
+  @Output() searchResults = new EventEmitter<FrontLaureat[]>();
 
   /**
    * Resultats de la recherche.
