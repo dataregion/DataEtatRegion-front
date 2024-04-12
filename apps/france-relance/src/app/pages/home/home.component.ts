@@ -25,6 +25,8 @@ import { StructureColumnsDialogComponent } from 'apps/grouping-table/src/lib/com
 import { ExportDataService } from 'apps/appcommon/src/lib/export-data.service';
 import { DatePipe } from '@angular/common';
 import { SearchDataComponent } from '../../components/search-data.component';
+import { SousAxePlanRelance } from '../../models/axe.models';
+import { SlugifyPipe } from 'apps/common-lib/src/lib/pipes/slugify.pipe';
 
 @Component({
   selector: 'france-relance-home',
@@ -86,6 +88,7 @@ export class HomeComponent implements OnInit {
     private _gridFullscreen: GridInFullscreenStateService,
     private _exportDataService: ExportDataService,
     private _datePipe: DatePipe,
+    private _slugifyPipe: SlugifyPipe,
   ) {
     // Récupération de l'ordre des colonnes par défaut
     this.defaultOrder = this._getDefaultOrder();
@@ -199,26 +202,24 @@ export class HomeComponent implements OnInit {
   private _filename(extension: string): string {
     const formValue = this.searchData.searchForm.value;
     let filename = `${this._datePipe.transform(new Date(), 'yyyyMMdd')}_export`;
-    console.log(formValue.location)
-    console.log(formValue.locations)
+    
     if (formValue.location && formValue.location.length) {
       const locations = formValue.location as GeoModel[];
       filename += '_' + locations[0].type + '-';
       filename += locations
         .filter((loc) => loc.code)
-        .map((loc) => loc.code)
+        .map((loc) => this._slugifyPipe.transform(loc.code))
         .join('-');
     }
 
-    // if (formValue.bops) {
-    //   const bops = formValue.bops;
-    //   filename +=
-    //     '_bops-' +
-    //     bops
-    //       .filter((bop) => bop.code)
-    //       .map((bop) => bop.code)
-    //       .join('-');
-    // }
+    if (formValue.axe_plan_relance) {
+      const axes = formValue.axe_plan_relance as SousAxePlanRelance[];
+      filename += '_axes-'
+      filename += axes
+        .filter((a) => a.label)
+        .map((a) => this._slugifyPipe.transform(a.label))
+        .join('-');
+    }
 
     return filename + "." + extension;
   }
