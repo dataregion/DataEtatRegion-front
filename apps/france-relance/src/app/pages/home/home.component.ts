@@ -169,6 +169,10 @@ export class HomeComponent implements OnInit {
   public openSaveFilterDialog(): void {
     if (this.newFilter) {
       this.newFilter.options = { grouping: this.groupingColumns };
+      if (this.displayedOrderedColumns.length) {
+        this.newFilter.options['displayOrder'] = this.displayedOrderedColumns;
+      }
+      this.newFilter.name = '';
     }
 
     const dialogRef = this.dialog.open(SavePreferenceDialogComponent, {
