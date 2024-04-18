@@ -209,7 +209,7 @@ export class HomeComponent implements OnInit {
     
     if (formValue.location && formValue.location.length) {
       const locations = formValue.location as GeoModel[];
-      filename += '_' + locations[0].type + '-';
+      filename += '_' + locations[0].type?.toLowerCase() + '-';
       filename += locations
         .filter((loc) => loc.code)
         .map((loc) => this._slugifyPipe.transform(loc.code))

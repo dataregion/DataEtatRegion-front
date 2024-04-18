@@ -242,7 +242,7 @@ export class HomeComponent implements OnInit {
     let filename = `${this._datePipe.transform(new Date(), 'yyyyMMdd')}_export`;
     if (formValue.location ) {
       const locations = formValue.location as GeoModel[];
-      filename += '_' + locations[0].type + '-';
+      filename += '_' + locations[0].type?.toLowerCase() + '-';
       filename += locations
         .filter((loc) => loc.code)
         .map((loc) => loc.code)

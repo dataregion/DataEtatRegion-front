@@ -33,7 +33,6 @@ import { LaureatHttpService } from '../services/laureat.http.service';
 import { SearchParameters, SearchResults } from '../services/abstract-laureats.http.service';
 import { _FiltreLocalisation } from './_FiltreLocalisation';
 import { FrontLaureat } from '../models/laureat.models';
-import { Optional } from 'apps/common-lib/src/lib/utilities/optional.type';
 import { ExportDataService } from 'apps/appcommon/src/lib/export-data.service';
 
 @Component({
@@ -49,7 +48,7 @@ export class SearchDataComponent implements OnInit, OnChanges {
   /**
    * Resultats de la recherche.
    */
-  _searchResults: FrontLaureat[] | null = null;;
+  _searchResults: FrontLaureat[] | null = null;
   searchResult(): FrontLaureat[] | null {
     return this._searchResults;
   }
