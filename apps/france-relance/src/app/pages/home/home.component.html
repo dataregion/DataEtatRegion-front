@@ -17,24 +17,86 @@
 
 <ng-template #groupingTable>
   <ng-container *ngIf="tableData">
-    <mat-toolbar class="grid-buttons">
-      <div *ngIf="!grid_fullscreen">
-        <button mat-button (click)="openGroupConfigDialog()" aria-label="Choisir les groupes">
-          Choisir les groupes
-        </button>
-        <button *ngIf="newFilter" mat-icon-button color="primary" matTooltip="Enregistrer le filtre"
-          (click)="openSaveFilterDialog()">
-          <mat-icon fontIcon="save"/>
-        </button>
+    <div class="table-toolbar">
+      <div>
+        <ul class="fr-btns-group--inline">
+          <li>
+            <button *ngIf="!grid_fullscreen"
+              data-test-id="group-by-btn"
+              class="fr-btn fr-btn--sm fr-btn--secondary fr-btn--icon-left fr-icon-menu-2-fill"
+              (click)="openGroupConfigDialog()" aria-label="Grouper les lignes par">
+              Grouper les lignes par
+            </button>
+          </li>
+          <li>
+            <button *ngIf="!grid_fullscreen"
+              data-test-id="chose-columns-btn"
+              class="fr-btn fr-btn--sm fr-btn--secondary fr-btn--icon-left fr-icon-table-line"
+              (click)="openSortColumnsDialog()" aria-label="Choisir les colonnes">
+              Choisir les colonnes
+            </button>
+          </li>
+        </ul>
       </div>
 
       <div class="spacer"></div>
-      <button mat-button (click)="toggle_grid_fullscreen()">
-        <mat-icon matSuffix *ngIf="grid_fullscreen">close_fullscreen</mat-icon>
-        <mat-icon matSuffix *ngIf="!grid_fullscreen">fullscreen</mat-icon>
-        {{fullscreen_label}}
-      </button>
-    </mat-toolbar>
+
+      <div>
+        <ul class="fr-btns-group--inline">
+          <li>
+            <button *ngIf="!grid_fullscreen"
+              class="fr-btn fr-btn--sm fr-btn--secondary fr-btn--icon-left fr-icon-save-fill"
+              (click)="openSaveFilterDialog()" aria-label="Sauvegarder la recherche">
+              Sauvegarder la recherche
+            </button>
+          </li>
+
+          <li>
+            <button *ngIf="!grid_fullscreen && searchData.searchFinish === true" 
+              class="fr-btn fr-btn--sm fr-btn--secondary fr-btn--icon-left fr-icon-download-fill" 
+              aria-label="Bouton de téléchargement de données."
+              [disabled]="searchData.searchInProgress.value === true"
+              [matMenuTriggerFor]="downloadOptions">
+              Télécharger les données
+            </button>
+            <mat-menu #downloadOptions="matMenu">
+              
+              <button mat-menu-item [matMenuTriggerFor]="allColumnsFormats">
+                Toutes les colonnes
+              </button>
+              <mat-menu #allColumnsFormats="matMenu">
+                <button mat-menu-item (click)="downloadData('csv', true)">Format CSV</button>
+                <button mat-menu-item (click)="downloadData('xlsx', true)">Format Excel</button>
+                <button mat-menu-item (click)="downloadData('ods', true)">Format Libre Office</button>
+              </mat-menu>
+              
+              <button mat-menu-item [matMenuTriggerFor]="displayedColumnsFormats">
+                Les colonnes affichées
+              </button>
+              <mat-menu #displayedColumnsFormats="matMenu">
+                <button mat-menu-item (click)="downloadData('csv', false)">Format CSV</button>
+                <button mat-menu-item (click)="downloadData('xlsx', false)">Format Excel</button>
+                <button mat-menu-item (click)="downloadData('ods', false)">Format Libre Office</button>
+              </mat-menu>
+
+            </mat-menu>
+          </li>
+          
+          <li>
+
+            <button
+              data-test-id="toggle-grid-fullscreen-btn"
+              class="fr-btn fr-btn--sm fr-btn--secondary fr-btn--icon-left"
+              [ngClass]="{ 'fr-icon-subtract-line': grid_fullscreen, 'fr-icon-fullscreen-line': !grid_fullscreen }"
+              (click)="toggle_grid_fullscreen()" aria-label="Bouton de contrôle du plein écran">
+              {{fullscreen_label}}
+            </button>
+
+          </li>
+        </ul>
+      </div>
+    </div>
+
     <lib-grouping-table class="h-100" [tableData]="tableData" [columnsMetaData]="genericColumnsMetadata"
       [groupingColumns]="groupingColumns"/>
   </ng-container>

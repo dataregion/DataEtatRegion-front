@@ -18,9 +18,9 @@ import {
   DragDropModule,
   moveItemInArray,
 } from '@angular/cdk/drag-drop';
-import { groupingOrder } from '@models/tableau/colonnes.model';
 
 export type GroupingConfigDialogData = {
+  groupingOrder: string[];
   columns: ColumnMetaDataDef[];
   groupingColumns: GroupingColumn[];
 };
@@ -46,16 +46,18 @@ export class GroupingConfigDialogComponent {
   readonly allColumns: ColumnMetaDataDef[];
   groupingColumns: ColumnMetaDataDef[];
   remainingColumns: ColumnMetaDataDef[];
+  groupingOrder: string[];
 
   constructor(
     private _dialogRef: MatDialogRef<GroupingConfigDialogComponent>,
     @Inject(MAT_DIALOG_DATA) dialogData: GroupingConfigDialogData
   ) {
+    this.groupingOrder = dialogData.groupingOrder
     this.allColumns = dialogData.columns
-      .filter((col) => groupingOrder.includes(col.name) || dialogData.groupingColumns.map(col => col.columnName).includes(col.name))
+      .filter((col) => this.groupingOrder.includes(col.name) || dialogData.groupingColumns.map(col => col.columnName).includes(col.name))
       .sort((col1, col2) => {
-        const index1 = groupingOrder.findIndex((col) => col === col1.name)
-        const index2 = groupingOrder.findIndex((col) => col === col2.name)
+        const index1 = this.groupingOrder.findIndex((col) => col === col1.name)
+        const index2 = this.groupingOrder.findIndex((col) => col === col2.name)
         return index1 - index2;
       });
 

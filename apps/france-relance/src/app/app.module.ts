@@ -32,6 +32,7 @@ import { GroupingTableModule } from 'apps/grouping-table/src/public-api';
 import { HomeComponent } from './pages/home/home.component';
 import { PreferenceComponent } from './pages/preference/preference.component';
 import { SearchDataComponent } from './components/search-data.component';
+import { SlugifyPipe } from 'apps/common-lib/src/lib/pipes/slugify.pipe';
 
 registerLocaleData(localeFr);
 
@@ -48,6 +49,7 @@ registerLocaleData(localeFr);
       useClass: SettingsService,
     },
     DatePipe,
+    SlugifyPipe,
     {
       provide: APP_INITIALIZER,
       useFactory: app_Init,
