@@ -12,7 +12,7 @@ const moneyFormat = new Intl.NumberFormat('fr-FR', {
 
 export const groupingOrder: string[] = [
     ColonneCodes.ANNEE_ENGAGEMENT,
-    ColonneCodes.REGION, ColonneCodes.DEPARTEMENT, ColonneCodes.CRTE, ColonneCodes.EPCI, ColonneCodes.EPCI, ColonneCodes.COMMUNE, ColonneCodes.QPV,
+    ColonneCodes.REGION, ColonneCodes.DEPARTEMENT, ColonneCodes.CRTE, ColonneCodes.EPCI, ColonneCodes.EPCI, ColonneCodes.COMMUNE, ColonneCodes.QPV, ColonneCodes.LOC_INTER,
     ColonneCodes.THEME,  ColonneCodes.PROGRAMME,  ColonneCodes.DOMAINE, ColonneCodes.REFERENTIEL_PROGRAMMATION, ColonneCodes.CENTRE_COUTS,
     ColonneCodes.BENEFICIAIRE,  ColonneCodes.TYPE_ETABLISSEMENT,
     ColonneCodes.N_EJ, ColonneCodes.COMPTE_BUDGETAIRE, ColonneCodes.GROUPE_MARCHANDISE,

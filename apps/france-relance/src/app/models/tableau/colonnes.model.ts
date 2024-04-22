@@ -23,10 +23,17 @@ function _print_code_label_if_code(c: string, l : string): string {
   return  code !== '' ? `${code} - ${label}` : '';
 }
 
+export const groupingOrder: string[] = [
+  "Structure", "source", "axe", "sous-axe", "dispositif",
+  "region", "departement", "epci", "commune", "arrondissement",
+]
+
 export type LaureatColumnMetaDataDef = ParameterizedColumnMetaDataDef<FrontLaureat & RowData>
 
 export const colonnes: LaureatColumnMetaDataDef[] = [
-      { name: 'Structure', label: 'Lauréat' },
+      {
+        name: 'Structure', label: 'Lauréat'
+      },
       { 
         name: 'source', 
         label: 'Source',
@@ -49,10 +56,12 @@ export const colonnes: LaureatColumnMetaDataDef[] = [
       {
         name: 'axe',
         label: 'Axe',
+        grouping: true,
       },
       {
         name: 'sous-axe',
         label: 'Sous Axe',
+        grouping: true,
       },
       {
         name: 'dispositif',

@@ -54,7 +54,20 @@ export abstract class AbstractLaureatsHttpService extends NocodbHttpService {
                 return {
                     ...line,
                     exportAsJson: () => {
-                        return line
+                        return {
+                            "Lauréat": line.Structure ?? "",
+                            "Source": line.source ?? "",
+                            "Montant": line.SubventionAccordée ?? "",
+                            "Axe": line.axe ?? "",
+                            "Sous Axe": line["sous-axe"] ?? "",
+                            "Dispositif": line.dispositif ?? "",
+                            "Synthèse": line.Synthèse ?? "",
+                            "Région du SIRET": line.code_region ?? "",
+                            "Département du SIRET": line.code_departement ?? "",
+                            "EPCI du SIRET": line.code_epci ?? "",
+                            "Commune du SIRET": line.code_commune ?? "",
+                            "Arrondissement du SIRET": line.code_arrondissement ?? ""
+                        }
                     },
                 }
             })

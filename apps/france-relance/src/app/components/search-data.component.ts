@@ -33,8 +33,8 @@ import { LaureatHttpService } from '../services/laureat.http.service';
 import { SearchParameters, SearchResults } from '../services/abstract-laureats.http.service';
 import { _FiltreLocalisation } from './_FiltreLocalisation';
 import { FrontLaureat } from '../models/laureat.models';
-import { Optional } from 'apps/common-lib/src/lib/utilities/optional.type';
 import { ExportDataService } from 'apps/appcommon/src/lib/export-data.service';
+import { Optional } from 'apps/common-lib/src/lib/utilities/optional.type';
 
 @Component({
   selector: 'france-relance-search-data',
@@ -50,7 +50,7 @@ export class SearchDataComponent implements OnInit, OnChanges {
    * Resultats de la recherche.
    */
   _searchResults: Optional<FrontLaureat[]> = null;
-  @Output() searchResults = new EventEmitter<any>();
+  @Output() searchResults = new EventEmitter<FrontLaureat[]>();
 
   /**
    * Resultats de la recherche.
