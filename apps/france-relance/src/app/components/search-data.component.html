@@ -17,7 +17,7 @@
             </span>
           </mat-option>
           <mat-select-trigger>
-            {{axePlanDeRelanceControls.value ? axePlanDeRelanceControls.value[0].label : ''}}
+            {{axePlanDeRelanceControls.value && axePlanDeRelanceControls.value.length ? axePlanDeRelanceControls.value[0].label : ''}}
             <span *ngIf="axePlanDeRelanceControls.value?.length > 1" class="example-additional-selection">
               (+{{axePlanDeRelanceControls.value.length - 1}} {{axePlanDeRelanceControls.value?.length === 2 ? 'autre' :
               'autres'}})
@@ -57,11 +57,6 @@
 
     <button mat-fab color="primary" (click)="doSearch()">
       <mat-icon fontIcon="search"/>
-    </button>
-
-    <button mat-fab color="secondary" matTooltip="Télécharger les données" (click)="downloadCsv()"
-      *ngIf="searchFinish === true" (disabled)="searchInProgress.value === true">
-      <mat-icon fontIcon="download"/>
     </button>
 
     <button mat-fab color="warn" matTooltip="Reset le formulaire" (click)="reset()" *ngIf="searchFinish === true">
