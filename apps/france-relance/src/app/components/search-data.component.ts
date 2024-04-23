@@ -209,32 +209,6 @@ export class SearchDataComponent implements OnInit, OnChanges {
     return preference;
   }
 
-  public downloadCsv(): void {
-    
-    if (!this._searchResults)
-      throw Error("Pas de résultats à exporter")
-
-    if (this.searchForm.valid && !this.searchInProgress.value) {
-      this.searchInProgress.next(true);
-
-      const blob = this._exportService.getBlob(
-        this._searchResults,
-        'csv',
-        null
-      )
-
-      if (blob) {
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = 'export_csv.csv';
-        document.body.appendChild(a);
-        a.click();
-      this.searchInProgress.next(false);
-      }
-    }
-  }
-
   public reset(): void {
     this.searchFinish = false;
     this.searchForm.reset();

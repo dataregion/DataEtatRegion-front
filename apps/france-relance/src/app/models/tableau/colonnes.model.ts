@@ -37,7 +37,11 @@ export const colonnes: LaureatColumnMetaDataDef[] = [
       { 
         name: 'source', 
         label: 'Source',
-        renderFn: (row, _) => _prettyPrintSource(row?.source)
+        renderFn: (row, _) => _prettyPrintSource(row?.source),
+        columnStyle: {
+          'min-width': '16ex',
+          'flex-grow': '0',
+        },
       },
       {
         name: 'SubventionAccordée',
@@ -57,6 +61,10 @@ export const colonnes: LaureatColumnMetaDataDef[] = [
         name: 'axe',
         label: 'Axe',
         grouping: true,
+        columnStyle: {
+          'min-width': '20ex',
+          'flex-grow': '0',
+        },
       },
       {
         name: 'sous-axe',
