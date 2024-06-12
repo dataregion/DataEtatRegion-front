@@ -28,6 +28,8 @@ export class ManagementUserComponent implements OnInit {
 
   private dialog = inject(MatDialog);
 
+  public defaultPageSize: number = 100;
+
   @ViewChild(MatCheckbox, { static: true }) public checkbox:
     | MatCheckbox
     | undefined;
@@ -115,7 +117,7 @@ export class ManagementUserComponent implements OnInit {
   }
 
   public onlyDisableUser(event: MatCheckboxChange): void {
-    this._retrieve_users(event.checked).subscribe(
+    this._retrieve_users(event.checked, 1, this.defaultPageSize).subscribe(
       (userPagination: UsersPagination) => {
         this.dataSource = userPagination;
       }
