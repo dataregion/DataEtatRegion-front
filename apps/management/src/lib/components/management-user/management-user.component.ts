@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, Inject, inject } from '@angular/core';
-import { MatPaginatorIntl, PageEvent } from '@angular/material/paginator';
+import { MatPaginator, MatPaginatorIntl, PageEvent } from '@angular/material/paginator';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
@@ -15,6 +15,7 @@ import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dial
   templateUrl: './management-user.component.html',
   providers: [
     { provide: MatPaginatorIntl, useValue: getFrenchPaginatorIntl() },
+    MatPaginator
   ],
 })
 export class ManagementUserComponent implements OnInit {
@@ -39,6 +40,7 @@ export class ManagementUserComponent implements OnInit {
     private _userService: UserHttpService,
     private _route: ActivatedRoute,
     private _alertService: AlertService,
+    private _paginator: MatPaginator,
     protected session: SessionService // eslint-disable-line
   ) {}
 
@@ -117,7 +119,7 @@ export class ManagementUserComponent implements OnInit {
   }
 
   public onlyDisableUser(event: MatCheckboxChange): void {
-    this._retrieve_users(event.checked, 1, this.defaultPageSize).subscribe(
+    this._retrieve_users(event.checked, 1, this._paginator.pageSize).subscribe(
       (userPagination: UsersPagination) => {
         this.dataSource = userPagination;
       }
