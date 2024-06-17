@@ -45,3 +45,5 @@ Thumbs.db
 /storage-state/
 /e2e/storage-state
 /apps/france-relance/src/assets/settings.json*
+
+.tool-versions

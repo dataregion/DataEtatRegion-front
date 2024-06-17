@@ -5,14 +5,13 @@ const config: StorybookConfig = {
     "@storybook/addon-links",
     "@storybook/addon-essentials",
     "@storybook/addon-interactions",
+    "@chromatic-com/storybook"
   ],
   framework: {
     name: "@storybook/angular",
     options: {},
   },
-  docs: {
-    autodocs: "tag",
-  },
+  docs: {},
   core: {
     disableTelemetry: true,
   }
