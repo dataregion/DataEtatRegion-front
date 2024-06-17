@@ -157,10 +157,8 @@ export class BudgetLineHttpMapper {
     }
 
     private _map_centre_couts(object: EnrichedFlattenFinancialLinesSchema): Optional<CentreCouts> {
-        if (!object.centreCouts_code)
-            return null
         return {
-            code: object.centreCouts_code,
+            code: object.centreCouts_code ? object.centreCouts_code : "",
             label: object.centreCouts_label!,
             description: object.centreCouts_description!,
         }
