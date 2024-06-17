@@ -15,7 +15,7 @@
           [ngTemplateOutlet]="projection?.templateRef ?? null"
           [ngTemplateOutletContext]="{ 'column': group.column, 'row': null, 'cell': group.columnValue }" />
         <ng-template #defaultCellDisplay>
-          <div><strong>{{group.columnValue}}</strong></div>
+          <div><strong>{{ group.columnValue !== "" ? group.columnValue : "Non renseigné"}}</strong></div>
         </ng-template>
 
       </div>

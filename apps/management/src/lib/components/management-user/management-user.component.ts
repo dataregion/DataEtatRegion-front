@@ -14,7 +14,7 @@ import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dial
   selector: 'lib-management-user',
   templateUrl: './management-user.component.html',
   providers: [
-    { provide: MatPaginatorIntl, useValue: getFrenchPaginatorIntl() },
+    { provide: MatPaginatorIntl, useValue: getFrenchPaginatorIntl() }
   ],
 })
 export class ManagementUserComponent implements OnInit {
@@ -27,6 +27,8 @@ export class ManagementUserComponent implements OnInit {
   ];
 
   private dialog = inject(MatDialog);
+
+  public pageSize: number = 100;
 
   @ViewChild(MatCheckbox, { static: true }) public checkbox:
     | MatCheckbox
@@ -115,7 +117,7 @@ export class ManagementUserComponent implements OnInit {
   }
 
   public onlyDisableUser(event: MatCheckboxChange): void {
-    this._retrieve_users(event.checked).subscribe(
+    this._retrieve_users(event.checked, 1, this.pageSize).subscribe(
       (userPagination: UsersPagination) => {
         this.dataSource = userPagination;
       }
@@ -123,6 +125,7 @@ export class ManagementUserComponent implements OnInit {
   }
 
   public changePage(event: PageEvent): void {
+    this.pageSize = event.pageSize
     this._retrieve_users(
       this.checkbox?.checked ?? false,
       event.pageIndex + 1,

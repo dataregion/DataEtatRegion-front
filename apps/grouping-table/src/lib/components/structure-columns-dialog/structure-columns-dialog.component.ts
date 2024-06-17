@@ -140,21 +140,6 @@ export class StructureColumnsDialogComponent {
    * A la fermeture du dialog, retour de toutes les colonnes au HomeComponent
    */
   validate() {
-    let same: boolean = true;
-    // Comparaison avec l'ordre de base, si une différence trouvée : break et same = false
-    this.displayedOrderedColumns.every((col, index) => {
-      const ref: DisplayedOrderedColumn | undefined = this.defaultOrder.at(index);
-      if ((ref && col.columnLabel !== ref.columnLabel)
-      || (ref && !('displayed' in col) && 'displayed' in ref && !ref.displayed)
-      || (ref && !('displayed' in ref) && 'displayed' in col && !col.displayed)) {
-        same = false
-      }
-      return same
-    })
-    // Si aucune différence trouvée, on vide la sauvegarde
-    if (same) {
-      this.displayedOrderedColumns = []
-    }
     this._dialogRef.close(this.displayedOrderedColumns);
   }
 }
