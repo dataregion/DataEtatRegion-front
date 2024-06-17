@@ -31,7 +31,12 @@
 npx storybook@latest upgrade --config-dir=<DIRECTORY_STORYBOOK> # par ex. apps/common-lib/.storybook
 # Mettre à jour les composants angular
 npx ng update # suivre les instructions
+
 ```
+
+    Aussi, pour mettre à jour angular entre versions majeures, se fier à https://angular.dev/update-guide
+    !!!! Attention, vérifier que les différentes dépendences supportent bien les dernières versions d'angular
+    ex: storybook ne supporte pas forcement les versions fraiches d'angular (délai)
 
 # Test e2e
 
