@@ -72,8 +72,6 @@
     "eslint": "^8.53.0",
     "eslint-plugin-storybook": "^0.8.0",
     "ng-packagr": "^17.0.3",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
     "storybook": "^8.1.9",
     "typescript": "^5.2.2"
   }
