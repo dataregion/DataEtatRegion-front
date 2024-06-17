@@ -27,6 +27,9 @@
 # Comment mettre à jour les dépendances
 
 ```bash
+# Mettre à jour storybook
+npx storybook@latest upgrade --config-dir=<DIRECTORY_STORYBOOK> # par ex. apps/common-lib/.storybook
+# Mettre à jour les composants angular
 npx ng update # suivre les instructions
 ```
 
