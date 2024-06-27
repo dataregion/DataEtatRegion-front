@@ -54,6 +54,7 @@ import { TypeCategorieJuridique } from '@models/financial/common.models';
 import { tag_fullname } from '@models/refs/tag.model';
 import { AutocompleteRefProgrammationService } from './autocomplete-ref-programmation.service';
 import { OtherTypeCategorieJuridique, SearchParameters, SearchParameters_empty, SearchTypeCategorieJuridique } from '@services/interface-data.service';
+import { HttpErrorResponse } from '@angular/common/http';
 
 
 @Component({
@@ -361,7 +362,7 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
           this._searchResult = [];
           this.currentFilter.next(this._buildPreference(formValue as JSONObject));
           this.searchResultsEventEmitter.next(this._searchResult);
-          this._alertService.openAlertError(err.message, 8);
+          this._alertService.openAlert("error", err, 8);
         },
       });
   }
