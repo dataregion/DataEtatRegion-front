@@ -54,7 +54,6 @@ import { TypeCategorieJuridique } from '@models/financial/common.models';
 import { tag_fullname } from '@models/refs/tag.model';
 import { AutocompleteRefProgrammationService } from './autocomplete-ref-programmation.service';
 import { OtherTypeCategorieJuridique, SearchParameters, SearchParameters_empty, SearchTypeCategorieJuridique } from '@services/interface-data.service';
-import { HttpErrorResponse } from '@angular/common/http';
 
 
 @Component({
