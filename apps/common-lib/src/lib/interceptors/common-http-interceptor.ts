@@ -9,6 +9,7 @@ import {
 } from '@angular/common/http';
 import { Observable, finalize, tap } from 'rxjs';
 import { AlertService, LoaderService } from 'apps/common-lib/src/public-api';
+import { KeycloakService } from 'keycloak-angular';
 
 export const BYPASS_ALERT_INTERCEPTOR = new HttpContextToken<boolean>(() => false)
 export const DO_NOT_ALERT_ON_NON_IMPLEMTENTED = new HttpContextToken<boolean>(() => false)
@@ -16,6 +17,7 @@ export const DO_NOT_ALERT_ON_NON_IMPLEMTENTED = new HttpContextToken<boolean>(()
 @Injectable()
 export class CommonHttpInterceptor implements HttpInterceptor {
   constructor(
+    private _keycloak: KeycloakService,
     private _loader: LoaderService,
     private _alertService: AlertService
   ) { }
@@ -43,6 +45,14 @@ export class CommonHttpInterceptor implements HttpInterceptor {
     return handler.pipe(
       tap({
         error: (_error: HttpErrorResponse) => {
+          
+          if (_error?.status == 401) {
+            this._keycloak.logout().then(() => {
+              this._keycloak.clearToken();
+              this._alertService.openAlertError('Votre session a expiré.');
+            });
+          }
+          
           if (_error?.status >= 500) {
             const bypassAlert = (doNotalertOnNonImplemented && _error?.status === 501)
             if (!bypassAlert)

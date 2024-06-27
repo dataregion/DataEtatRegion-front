@@ -1,3 +1,4 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import {
@@ -15,9 +16,9 @@ export class AlertService {
     this.openAlertSuccess(`'${content}' copié dans le presse-papier.`)
   }
 
-  public openAlertSuccess(message: string): void {
+  public openAlertSuccess(message: string, duration = 5): void {
     this._snackBar.openFromComponent(AlertSnackBarComponent, {
-      duration: 5 * 1000,
+      duration: duration * 1000,
       panelClass: 'toaster',
       data: {
         type: AlertType.Success,
@@ -37,9 +38,9 @@ export class AlertService {
     });
   }
 
-  public openInfo(message: string): void {
+  public openInfo(message: string, duration = 5): void {
     this._snackBar.openFromComponent(AlertSnackBarComponent, {
-      duration: 5 * 1000,
+      duration: duration * 1000,
       panelClass: 'toaster',
       data: {
         type: AlertType.Info,
@@ -47,4 +48,29 @@ export class AlertService {
       },
     });
   }
+
+  public openAlert(status: string, err: Error, timing: number = 8): void {
+    // Récupération du bon message d'erreur
+    let message = ""
+    if ((err as HttpErrorResponse).error !== undefined) {
+      message = (err as HttpErrorResponse).error.message
+    } else {
+      message = err.message
+    }
+    // Alert avec le bon statut
+    switch (status) {
+      case "success":
+        this.openAlertSuccess(message, timing)
+        break;
+      case "info":
+        this.openInfo(message, timing)
+        break;
+      case "error":
+        this.openAlertError(message, timing)
+        break;
+      default:
+        break;
+    }
+  }
+
 }
