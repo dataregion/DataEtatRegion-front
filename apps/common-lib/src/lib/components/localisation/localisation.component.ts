@@ -99,6 +99,7 @@ export class LocalisationComponent {
 
     // Mise en place des options du select selon le niveau géographique sélectionné
     if (this._selectedNiveau != null) {
+      this.selectedLocalisation = null;
       if (this._subFilterGeo)
         this._subFilterGeo.unsubscribe();
 
