@@ -15,7 +15,7 @@ a[href]:active, a[href]:hover {
   }
 
   .fr-footer__content {
-    flex-basis: auto;
+    max-width: max-content;
   }
 
   .fr-footer__bottom {
