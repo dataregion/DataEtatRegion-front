@@ -98,10 +98,10 @@ export class LocalisationComponent {
     this.selectedNiveauString = this._selectedNiveau as string ?? '';
 
     // Mise en place des options du select selon le niveau géographique sélectionné
-    if (this._selectedNiveau != null) {
+    // On ne rentre pas si selectedLocalisation est sélectionné (compatibilité marque blanche)
+    if (this._selectedNiveau != null && this._selectedLocalisation == null) {
       if (this._subFilterGeo)
         this._subFilterGeo.unsubscribe();
-
       this._subFilterGeo = this._geo.filterGeo(null, this._selectedNiveau)
         .pipe(takeUntilDestroyed(this._destroyRef))
         .subscribe((response) => {
