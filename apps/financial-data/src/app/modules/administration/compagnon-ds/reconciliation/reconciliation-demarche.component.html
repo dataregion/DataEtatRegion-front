@@ -1,0 +1,141 @@
+<div class="fr-container">
+    <div class="fr-grid-row">
+        
+        <financial-nav-compagnon-ds [title]="'Réconcilier ma démarche'" [currentStep]="2" [totalStep]="3" class="fr-col-6" style="margin-top:30px;"/>
+
+        <div class="fr-col-12">
+            <fieldset class="fr-fieldset" id="reconciliation" aria-labelledby="radio-hint-legend radio-hint-messages">
+                <div class="fr-fieldset__element">
+                    <div class="fr-radio-group">
+                        <input checked type="radio" id="reconciliation-no" name="reconciliation" (change)="onRadioChecked($event)" [checked]="checkedId === 'reconciliation-no'">
+                        <label class="fr-label" for="reconciliation-no">
+                            Je souhaite seulement intégrer mes données sans les lier aux données Chorus (pour les utiliser dans Superset)
+                        </label>
+                    </div>
+                </div>
+                <div class="fr-fieldset__element">
+                    <div class="fr-radio-group">
+                        <input type="radio" id="reconciliation-ej" name="reconciliation" (change)="onRadioChecked($event)" [checked]="checkedId === 'reconciliation-ej'">
+                        <label class="fr-label" for="reconciliation-ej">
+                            Soit avec une réconciliation exacte sur le numéro EJ s'il est renseigné dans DS
+                        </label>
+                    </div>
+                </div>
+                <div class="fr-fieldset__element">
+                    <div class="fr-radio-group">
+                        <input type="radio" id="reconciliation-ds" name="reconciliation" (change)="onRadioChecked($event)" [checked]="checkedId === 'reconciliation-ds'">
+                        <label class="fr-label" for="reconciliation-ds">
+                            Soit avec une réconciliation exacte sur le numéro de dossier DS s'il est renseigné dans Chorus
+                        </label>
+                    </div>
+                </div>
+                <div class="fr-fieldset__element">
+                    <div class="fr-radio-group">
+                        <input type="radio" id="reconciliation-criteres" name="reconciliation" (change)="onRadioChecked($event)" [checked]="checkedId === 'reconciliation-criteres'">
+                        <label class="fr-label" for="reconciliation-criteres">
+                            Soit avec une réconciliation sur divers critères
+                        </label>
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+
+        <form [formGroup]="reconciliationForm" (submit)="saveReconciliation()" class="fr-col-12">
+            <div class="fr-grid-row">
+                <ng-container *ngIf="isInputChecked('reconciliation-ej')">
+                    <div class="fr-col-lg-6 fr-col-12" style="margin-bottom:30px; padding:0 30px;">
+                        <div class="fr-select-group">
+                            <label class="fr-label" for="champ-ej">Numéro EJ *</label>
+                            <select class="fr-select" id="champ-ej" formControlName="champEJ">
+                                <option value="" selected disabled hidden>Sélectionner le champ dans la démarche</option>
+                                <option *ngFor="let donnee of donnees" [value]="donnee.id">{{donnee.label}}</option>
+                            </select>
+                        </div>
+                    </div>
+                </ng-container>
+
+                <ng-container *ngIf="isInputChecked('reconciliation-ds')">
+                    <div class="fr-col-lg-6 fr-col-12" style="margin-bottom:30px; padding:0 30px;">
+                        <div class="fr-select-group">
+                            <label class="fr-label" for="champ-ds">Numéro de dossier DS *</label>
+                            <select class="fr-select" id="champ-ds" formControlName="champDS">
+                                <option value="" selected disabled hidden>Sélectionner le champ dans Chorus</option>
+                                <option *ngFor="let donnee of donnees" [value]="donnee.id">{{donnee.label}}</option>
+                            </select>
+                        </div>
+                    </div>
+                </ng-container>
+
+                <ng-container *ngIf="isInputChecked('reconciliation-criteres')">
+                    <div class="fr-col-12">
+                        <p><b>La démarche {{demarche?.number}} concerne uniquement les EJ qui vérifient les égalités suivantes :</b></p>
+                    </div>
+                    <div class="fr-col-lg-6 fr-col-12" style="padding:0 30px;">
+                        <div class="fr-input-group">
+                            <label class="fr-label" for="centre-couts">Centre de coûts</label>
+                            <input class="fr-input" type="text" id="centre-couts" formControlName="centreCouts">
+                        </div>
+                        <div class="fr-input-group">
+                            <label class="fr-label" for="domaine-fonctionnel">Domaine fonctionnel</label>
+                            <input class="fr-input" type="text" id="domaine-fonctionnel" formControlName="domaineFonctionnel">
+                        </div>
+                        <div class="fr-input-group">
+                            <label class="fr-label" for="ref-prog">Référentiel programmation</label>
+                            <input class="fr-input" type="text" id="ref-prog" formControlName="refProg">
+                        </div>
+                        <div class="fr-input-group">
+                            <label class="fr-label" for="annee">Année d'engagement</label>
+                            <input class="fr-input" type="text" id="annee" formControlName="annee">
+                        </div>
+                    </div>
+                    <div class="fr-col-lg-6 fr-col-12" style="padding:0 30px;">
+                        <div class="fr-input-group">
+                            <label class="fr-label" for="commune">Code commune</label>
+                            <input class="fr-input" type="text" id="commune" formControlName="commune">
+                        </div>
+                        <div class="fr-input-group">
+                            <label class="fr-label" for="epci">Code EPCI</label>
+                            <input class="fr-input" type="text" id="epci" formControlName="epci">
+                        </div>
+                        <div class="fr-input-group">
+                            <label class="fr-label" for="departement">Code département</label>
+                            <input class="fr-input" type="text" id="departement" formControlName="departement">
+                        </div>
+                        <div class="fr-input-group">
+                            <label class="fr-label" for="region">Code région</label>
+                            <input class="fr-input" type="text" id="region" formControlName="region">
+                        </div>
+                    </div>
+                    <div class="fr-col-12" style="margin-top:30px;">
+                        <p><b>Le dossier DS et l'EJ correspondent sur les champs suivants :</b></p>
+                    </div>
+                    <div class="fr-col-lg-6 fr-col-12" style="margin-bottom:30px; padding:0 30px;">
+                        <div class="fr-select-group">
+                            <label class="fr-label" for="champ-siret">SIRET du bénéficiaire *</label>
+                            <select class="fr-select" id="champ-siret" formControlName="champSiret">
+                                <option value="" selected disabled hidden>Sélectionner le champ dans Chorus</option>
+                                <option *ngFor="let donnee of donnees" [value]="donnee.id">{{donnee.label}}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="fr-col-lg-6 fr-col-12" style="margin-bottom:30px; padding:0 30px;">
+                        <div class="fr-select-group">
+                            <label class="fr-label" for="champ-montant">Montant AE</label>
+                            <select class="fr-select" id="champ-montant" formControlName="champMontant">
+                                <option value="" selected disabled hidden>Sélectionner le champ dans Chorus</option>
+                                <option *ngFor="let donnee of donnees" [value]="donnee.id">{{donnee.label}}</option>
+                            </select>
+                        </div>
+                    </div>
+                </ng-container>
+                <div class="fr-col-12">
+                    <hr>
+                </div>
+                <div class="fr-col-12" style="display: flex; justify-content: space-between; margin-bottom:30px;">
+                    <button class="fr-btn fr-btn--primary fr-btn--icon-left fr-icon-arrow-left-line" [routerLink]="['/administration/demarches/integration']" [queryParams]="{ 'number': demarche?.number}">Etape précédente</button>
+                    <button class="fr-btn fr-btn--primary fr-btn--icon-right fr-icon-arrow-right-line" type="submit">Etape suivante</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
