@@ -33,10 +33,8 @@ export class BudgetService {
 
   public search(search_params: SearchParameters): Observable<FinancialDataModel[]> {
     const search$: Observable<FinancialDataModel[]>[] = this._services.map(service => {
-      console.log(service)
       return service.search(search_params).pipe(
         map((resultPagination: DataPagination<any> | null) => {
-          console.log(resultPagination)
           if (resultPagination === null || resultPagination.pageInfo === undefined) return [];
           if (resultPagination.pageInfo.totalRows > resultPagination.pageInfo.pageSize) {
             throw new Error(`La limite de lignes de résultat est atteinte. Veuillez affiner vos filtres afin d'obtenir un résultat complet.`);

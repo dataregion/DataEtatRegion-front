@@ -15,7 +15,7 @@
                 </div>
                 <div class="fr-fieldset__element">
                     <div class="fr-radio-group">
-                        <input type="radio" id="reconciliation-ej" name="reconciliation" (change)="onRadioChecked($event)" [checked]="checkedId === 'reconciliation-ej'">
+                        <input type="radio" id="reconciliation-ej" data-test-id="checkboxEJ" name="reconciliation" (change)="onRadioChecked($event)" [checked]="checkedId === 'reconciliation-ej'">
                         <label class="fr-label" for="reconciliation-ej">
                             Soit avec une réconciliation exacte sur le numéro EJ s'il est renseigné dans DS
                         </label>
@@ -133,7 +133,7 @@
                 </div>
                 <div class="fr-col-12" style="display: flex; justify-content: space-between; margin-bottom:30px;">
                     <button class="fr-btn fr-btn--primary fr-btn--icon-left fr-icon-arrow-left-line" [routerLink]="['/administration/demarches/integration']" [queryParams]="{ 'number': demarche?.number}">Etape précédente</button>
-                    <button class="fr-btn fr-btn--primary fr-btn--icon-right fr-icon-arrow-right-line" type="submit">Etape suivante</button>
+                    <button data-test-id="btnSubmit" class="fr-btn fr-btn--primary fr-btn--icon-right fr-icon-arrow-right-line" type="submit">Etape suivante</button>
                 </div>
             </div>
         </form>

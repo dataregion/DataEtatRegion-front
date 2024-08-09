@@ -112,8 +112,6 @@ export class BudgetDataHttpService implements DataHttpService<EnrichedFlattenFin
             this._sanitize_req_arg(p_tags)
         ] as const;
 
-        console.log(query_params)
-
         const req$ = this._budgetApi.getBudgetCtrl(
             "0", "6500",
             ...query_params

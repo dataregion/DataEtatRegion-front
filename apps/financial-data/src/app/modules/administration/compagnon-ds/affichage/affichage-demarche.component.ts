@@ -85,7 +85,6 @@ export class AffichageDemarcheComponent implements OnInit {
         .pipe(takeUntilDestroyed(this._destroyRef))
         .subscribe((value) => {
             if (value !== null) {
-                console.log(value)
                 this.donnees = value
                 this._patchValues(demarche)
             } else {
@@ -128,12 +127,10 @@ export class AffichageDemarcheComponent implements OnInit {
         }
 
         // Récupération de la 
-        console.log(matchingData)
         this._compagnonDS.getValeurDonneeOfAccepted(demarche.number, matchingData)
         .pipe(takeUntilDestroyed(this._destroyRef))
         .subscribe({
             next: (valeurs: ValeurDonnee[] | null) => {
-                console.log(valeurs)
                 if (valeurs) {
                     this.nbDossiers = valeurs.length
                     const search_parameters: SearchParameters = {
