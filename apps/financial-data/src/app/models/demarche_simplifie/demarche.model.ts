@@ -1,8 +1,10 @@
+import { Nullable } from "apps/common-lib/src/lib/utilities/optional.type";
+
 export interface Demarche { 
     number: number;
     title: string;
-    reconciliation: Cadre | null;
-    affichage: Affichage | null;
+    reconciliation: Nullable<Cadre>;
+    affichage: Nullable<Affichage>;
     centre_couts: string;
     date_creation: Date;
     date_fermeture: Date;

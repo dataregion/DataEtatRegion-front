@@ -45,7 +45,7 @@ export class IntegrationDemarcheComponent implements OnInit {
         .subscribe((params) => {
             if (!("number" in params)) {
                 // Vérification si la démarche a déjà été récupérée et stockée dans le service
-                this._compagnonDS.demarche
+                this._compagnonDS.demarche$
                 .pipe(takeUntilDestroyed(this._destroyRef))
                 .subscribe((value) => {
                     this.demarche = value;

@@ -14,16 +14,16 @@ export class CompagnonDSService {
 
     private _apiDemarches: string;
 
-    private demarche$ = new BehaviorSubject<Demarche | null>(null);
-    public demarche: Observable<Demarche | null> = this.demarche$.asObservable();
+    private _demarche = new BehaviorSubject<Demarche | null>(null);
+    public demarche$: Observable<Demarche | null> = this._demarche.asObservable();
     public setDemarche(demarche: Demarche | null) {
-        this.demarche$.next(demarche)
+        this._demarche.next(demarche)
     }
 
-    private donnees$ = new BehaviorSubject<Donnee[] | null>(null);
-    public donnees: Observable<Donnee[] | null> = this.donnees$.asObservable();
+    private _donnees = new BehaviorSubject<Donnee[] | null>(null);
+    public donnees$: Observable<Donnee[] | null> = this._donnees.asObservable();
     public setDonnees(donnees: Donnee[] | null) {
-        this.donnees$.next(donnees)
+        this._donnees.next(donnees)
     }
 
     constructor(

@@ -81,28 +81,12 @@ export class AffichageDemarcheComponent implements OnInit {
     private _initWithDemarche(demarche: Demarche) {
         this.demarche = demarche;
         // Récupération des données
-        this._compagnonDS.donnees
+        this._compagnonDS.donnees$
         .pipe(takeUntilDestroyed(this._destroyRef))
         .subscribe((value) => {
             if (value !== null) {
                 this.donnees = value
                 this._patchValues(demarche)
-            } else {
-                // Récupération des données
-                this._compagnonDS.getDemarchesDonnees(demarche.number)
-                .pipe(takeUntilDestroyed(this._destroyRef))
-                .subscribe({
-                    next: (results) => {
-                        this.donnees = results
-                        this._compagnonDS.setDonnees(this.donnees)
-                        this._patchValues(demarche)
-                    },
-                    error: (err: HttpErrorResponse) => {
-                        if (err.error['message']) {
-                            this._alertService.openAlertError(err.error['message']);
-                        }
-                    }
-                })
             }
         })
             
@@ -126,7 +110,7 @@ export class AffichageDemarcheComponent implements OnInit {
             }
         }
 
-        // Récupération de la 
+        // Récupération des valeurs des données des dossiers acceptés
         this._compagnonDS.getValeurDonneeOfAccepted(demarche.number, matchingData)
         .pipe(takeUntilDestroyed(this._destroyRef))
         .subscribe({
@@ -184,7 +168,7 @@ export class AffichageDemarcheComponent implements OnInit {
         // Vérification des query params & de si la démarche est déjà présente en BDD
         combineLatest({
             params: this._route.queryParams,
-            demarche: this._compagnonDS.demarche
+            demarche: this._compagnonDS.demarche$
         })
         .pipe(takeUntilDestroyed(this._destroyRef))
         .subscribe((results) => {

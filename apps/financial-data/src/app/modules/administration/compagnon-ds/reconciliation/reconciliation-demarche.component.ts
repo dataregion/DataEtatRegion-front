@@ -64,7 +64,7 @@ export class ReconciliationDemarcheComponent implements OnInit {
         // Vérification des query params & de si la démarche est déjà présente en BDD
         combineLatest({
             params: this._route.queryParams,
-            demarche: this._compagnonDS.demarche
+            demarche: this._compagnonDS.demarche$
         })
         .pipe(takeUntilDestroyed(this._destroyRef))
         .subscribe((results) => {
