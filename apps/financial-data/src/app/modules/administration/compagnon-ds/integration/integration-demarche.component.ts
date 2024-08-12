@@ -71,7 +71,18 @@ export class IntegrationDemarcheComponent implements OnInit {
             return
         }
 
+        if (/^\d+$/.test(this.integrationForm.value.numeroDemarche) == false) {
+            this._alertService.openAlertError("Veuillez rentrer un numéro de démarche valide");
+            return
+        }
+
         this.numberDemarche = parseInt(this.integrationForm.value.numeroDemarche)
+
+        if (this.numberDemarche > Number.MAX_SAFE_INTEGER) {
+            this._alertService.openAlertError("Veuillez rentrer un numéro de démarche valide");
+            return
+        }
+
         forkJoin({
             graphFetch: this._demarcheService.getDemarcheLight(this.numberDemarche),
             dbFetch: this._compagnonDS.getDemarche(this.numberDemarche)
@@ -86,10 +97,16 @@ export class IntegrationDemarcheComponent implements OnInit {
                     this.dateIntegration = results.dbFetch.date_import
                 }
             },
-            error: (err: HttpErrorResponse) => {
-                if (err.error['message']) {
-                    this._alertService.openAlertError(err.error['message']);
-                }
+            error: (err: Error) => {
+                this.nomDemarche = ""
+                this.integree = false
+                this.dejaIntegree = false
+                if (err.message === "Demarche not found")
+                    this._alertService.openAlertError("Numéro de démarche inconnu");
+                else if (err.message === "An object of type Demarche was hidden due to permissions")
+                    this._alertService.openAlertError("Vous n'avez pas les droits pour récupérer les données de cette démarche");
+                else
+                    this._alertService.openAlertError(err.message);
             }
         })
     }
