@@ -9,20 +9,22 @@ import {
 } from 'apps/common-lib/src/public-api';
 import { MatDialogModule } from '@angular/material/dialog';
 
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
 import { UpdateTagsComponent } from './update-tags/update-tags.component';
-import { IntegrationDemarcheComponent } from './integration-demarche/integration-demarche.component';
+import { NavCompagnonDSComponent } from './compagnon-ds/nav/nav.component';
 
 @NgModule({
-  declarations: [UploadFinancialComponent, UpdateTagsComponent, ConfirmDialogComponent, IntegrationDemarcheComponent],
+  declarations: [UploadFinancialComponent, UpdateTagsComponent, ConfirmDialogComponent],
   imports: [
     CommonModule,
     CommonLibModule,
     AdministrationRoutingModule,
     MaterialModule,
     FormsModule,
-    MatDialogModule
+    ReactiveFormsModule,
+    MatDialogModule,
+    NavCompagnonDSComponent
   ],
 })
 export class AdministrationModule {}

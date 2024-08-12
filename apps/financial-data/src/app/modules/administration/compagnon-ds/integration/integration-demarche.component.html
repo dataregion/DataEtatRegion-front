@@ -1,0 +1,54 @@
+<div class="fr-container">
+    <div class="fr-grid-row">
+        
+        <financial-nav-compagnon-ds [title]="'Intégrer ma démarche'" [currentStep]="1" [totalStep]="3" class="fr-col-6" style="margin-top:30px;"/>
+
+        <form [formGroup]="integrationForm" (submit)="saveDemarche()" class="fr-col-12">
+            <div class="fr-grid-row">
+                <div class="fr-col-8">
+                    <div class="fr-input-group">
+                        <label class="fr-label" for="numeroDemarche">Saisir le numéro de votre démarche DS</label>
+                        <span class="fr-hint-text"></span>
+                        <input class="fr-input" type="text" data-test-id="numeroDemarche" formControlName="numeroDemarche">
+                    </div>
+                    <div class="fr-alert fr-alert--info" *ngIf="nomDemarche === ''">
+                        <h3 class="fr-alert__title">Informations supplémentaires</h3>
+                        <p>Assurez-vous d'avoir ajouter l'utilisateur "data-etat" (ou bien un profil ayant accès à l'API) en tant qu'administrateur afin que Data-État puisse récupérer les informations requises</p>
+                    </div>
+                </div>
+                <div class="fr-col-4" style="display:flex; align-items: flex-end; justify-content: flex-end;">
+                    <button data-test-id="searchDemarcheBtn" class="fr-btn fr-btn--secondary" type="button" (click)="searchDemarche()">Vérifier la démarche</button>
+                </div>
+            </div>
+            <ng-container *ngIf="nomDemarche !== ''">
+                <hr style="margin-top:30px;">
+                <div class="fr-grid-row">
+                    <div class="fr-col-8">
+                        <h6 data-test-id="nomDemarche">{{nomDemarche}}</h6>
+                        <div class="fr-alert fr-alert--info" *ngIf="!dejaIntegree && !integree">
+                            <h3 class="fr-alert__title">Informations supplémentaires</h3>
+                            <p>Cette opération peut prendre plus ou moins longtemps en fonction du nombre de dossier à intégrer.</p>
+                            <p>Une fois que vous aurez cliqué sur "Intégrer ma démarche", les données DS seront stockées dans la plateforme Data-État.</p>
+                        </div>
+                        <div class="fr-alert fr-alert--success" *ngIf="dejaIntegree">
+                            <h3 class="fr-alert__title" data-test-id="dateIntegration">Cette démarche a été intégrée le {{dateIntegration | date: 'dd/MM/yyyy'}}</h3>
+                            <p>Vous pouvez intégrer de potentiels nouveaux dossiers ou passer directement à l'étape suivante.</p>
+                        </div>
+                        <div class="fr-alert fr-alert--success" *ngIf="!dejaIntegree && integree">
+                            <h3 class="fr-alert__title">La démarche a été correctement intégrée</h3>
+                            <p>Vous pouvez passer à l'étape suivante.</p>
+                        </div>
+                    </div>
+                    <div class="fr-col-4" style="display:flex; align-items: flex-end; justify-content: flex-end;">
+                        <button class="fr-btn fr-btn--primary" type="submit">Intégrer ma démarche</button>
+                    </div>
+                </div>
+            </ng-container>
+            <hr style="margin-top:30px;">
+            <div style="display: flex; justify-content: right;">
+                <button data-test-id="btnSubmit" [disabled]="nomDemarche === '' || (!integree && !dejaIntegree)" class="fr-btn fr-btn--primary fr-btn--icon-right fr-icon-arrow-right-line" [routerLink]="['/administration/demarches/reconciliation']" [queryParams]="{ 'number': demarche?.number}">Etape suivante</button>
+            </div>
+        </form>
+
+    </div>
+</div>
