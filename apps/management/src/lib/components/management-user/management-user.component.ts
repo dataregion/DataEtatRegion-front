@@ -23,7 +23,7 @@ export class ManagementUserComponent implements OnInit {
     'lastName',
     'username',
     'administration',
-    'enabled',
+    'softEnabled',
   ];
 
   private dialog = inject(MatDialog);
@@ -50,7 +50,7 @@ export class ManagementUserComponent implements OnInit {
     );
   }
 
-  toggleEnabled(user: User, event: MatSlideToggleChange): void {
+  toggleSoftEnabled(user: User, event: MatSlideToggleChange): void {
     if (user.id === undefined) return;
     let request: Observable<string>;
 
@@ -68,12 +68,12 @@ export class ManagementUserComponent implements OnInit {
             }
           );
         } else {
-          user.enabled = !user.enabled;
+          user.softEnabled = !user.softEnabled;
         }
 
         this._alertService.openAlertSuccess(
           `Utilisateur ${user.email} ${
-            user.enabled ? 'activé' : 'désactivé'
+            user.softEnabled ? 'activé' : 'désactivé'
           } avec succès.`
         );
       },

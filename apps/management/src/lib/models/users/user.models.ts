@@ -3,6 +3,7 @@ import { KeycloakProfile } from 'keycloak-js';
 
 export type User = KeycloakProfile & {
   roles: string[];
+  softEnabled: boolean;
 };
 
 export interface UsersPagination {
