@@ -12,6 +12,11 @@ export enum OtherTypeCategorieJuridique {
 export type SearchTypeCategorieJuridique = TypeCategorieJuridique | OtherTypeCategorieJuridique;
 
 export interface SearchParameters {
+  n_ej: string[] | null;
+  n_ds: string[] | null;
+  siret: string[] | null;
+  montant: number[] | null;
+  source: string | null;
   themes: string[] | null;
   bops: BopModel[] | null;
   referentiels_programmation: ReferentielProgrammation[] | null;
@@ -27,6 +32,11 @@ export interface SearchParameters {
 }
 
 export const SearchParameters_empty: SearchParameters = {
+  n_ej: null,
+  source: null,
+  n_ds: null,
+  siret: null,
+  montant: null,
   themes: null,
   bops: null,
   referentiels_programmation: null,

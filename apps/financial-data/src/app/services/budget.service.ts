@@ -32,8 +32,8 @@ export class BudgetService {
   }
 
   public search(search_params: SearchParameters): Observable<FinancialDataModel[]> {
-    const search$: Observable<FinancialDataModel[]>[] = this._services.map(service =>
-      service.search(search_params).pipe(
+    const search$: Observable<FinancialDataModel[]>[] = this._services.map(service => {
+      return service.search(search_params).pipe(
         map((resultPagination: DataPagination<any> | null) => {
           if (resultPagination === null || resultPagination.pageInfo === undefined) return [];
           if (resultPagination.pageInfo.totalRows > resultPagination.pageInfo.pageSize) {
@@ -43,7 +43,7 @@ export class BudgetService {
         }),
         map(items => items.map(data => service.mapToGeneric(data)))
       )
-    );
+    });
 
 
     return forkJoin(search$).pipe(
@@ -143,7 +143,7 @@ export class BudgetService {
 
   public getById(source: SourceFinancialData, id: number): Observable<FinancialDataModel> {
 
-    const service = this._services.find(s => s.getSources().includes(source));
+    const service = this._services.find(s => s.getSources().includes(source.toString()));
 
     if (service === undefined) throw new Error(`Aucun provider pour la source ${source}`);
 
