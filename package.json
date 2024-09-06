@@ -59,12 +59,12 @@
     "@graphql-codegen/typescript-operations": "^3.0.4",
     "@graphql-codegen/typescript-resolvers": "^3.2.1",
     "@playwright/test": "^1.44.1",
-    "@storybook/addon-essentials": "^8.1.9",
-    "@storybook/addon-interactions": "^8.1.9",
-    "@storybook/addon-links": "^8.1.9",
-    "@storybook/angular": "^8.1.9",
-    "@storybook/blocks": "^8.1.9",
-    "@storybook/test": "^8.1.9",
+    "@storybook/addon-essentials": "^8.2.9",
+    "@storybook/addon-interactions": "^8.2.9",
+    "@storybook/addon-links": "^8.2.9",
+    "@storybook/angular": "^8.2.9",
+    "@storybook/blocks": "^8.2.9",
+    "@storybook/test": "^8.2.9",
     "@storybook/test-runner": "^0.18.2",
     "@types/jasmine": "~4.0.0",
     "@typescript-eslint/eslint-plugin": "^7.2.0",
@@ -72,7 +72,7 @@
     "eslint": "^8.57.0",
     "eslint-plugin-storybook": "^0.8.0",
     "ng-packagr": "^18.2.1",
-    "storybook": "^8.1.9",
+    "storybook": "^8.2.9",
     "typescript": "^5.5.4"
   }
 }
