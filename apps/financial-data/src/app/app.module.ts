@@ -1,10 +1,7 @@
 import { APP_INITIALIZER, LOCALE_ID, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { KeycloakAngularModule, KeycloakService } from 'keycloak-angular';
-import {
-  HttpClientModule,
-  HTTP_INTERCEPTORS,
-} from '@angular/common/http';
+import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { LoggerModule, NgxLoggerLevel } from 'ngx-logger';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -78,115 +75,109 @@ export function apiBudgetConfigFactory(
 
 registerLocaleData(localeFr);
 
-@NgModule({
-  declarations: [
-    AppComponent,
-    HomeComponent,
-    PreferenceComponent,
-    SearchDataComponent,
-  ],
-  providers: [
-    {
-      provide: SETTINGS,
-      useClass: SettingsService,
-    },
-    {
-      provide: DATA_HTTP_SERVICE,
-      useClass: BudgetDataHttpService,
-      multi: true,
-    },
-    {
-      provide: APP_INITIALIZER,
-      useFactory: app_Init,
-      multi: true,
-      deps: [SettingsHttpService, KeycloakService, SettingsService, MultiregionsService],
-    },
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: CommonHttpInterceptor,
-      multi: true,
-    },
-    DatePipe,
-    {
-      provide: LOCALE_ID,
-      useValue: 'fr-FR',
-    },
-    {
-      provide: API_PREFERENCE_PATH,
-      useFactory: (settings: SettingsService) => {
-        return settings.apiAdministration;
-      },
-      deps: [SETTINGS],
-    },
-    {
-      provide: API_GEO_PATH,
-      useFactory: (settings: SettingsService) => {
-        return settings.apiGeo;
-      },
-      deps: [SETTINGS],
-    },
-    {
-      provide: API_REF_PATH,
-      useFactory: (settings: SettingsService) => {
-        return settings.apiReferentiel;
-      },
-      deps: [SETTINGS],
-    },
-    {
-      provide: API_MANAGEMENT_PATH,
-      useFactory: (settings: SettingsService) => {
-        return settings.apiAdministration;
-      },
-      deps: [SETTINGS],
-    },
-    {
-      provide: aeConfiguration,
-      useFactory: apiExternesConfigFactory,
-      deps: [SETTINGS],
-      multi: false,
-    },
-    {
-      provide: budgetConfiguration,
-      useFactory: apiBudgetConfigFactory,
-      deps: [SETTINGS],
-      multi: false,
-    },
-    {
-      provide: APOLLO_OPTIONS,
-      useFactory(httpLink: HttpLink, settings: SettingsService) {
-        const apiDs = settings.apiExternes + '/demarche-simplifie';
-        return {
-          cache: new InMemoryCache(),
-          link: httpLink.create({
-            uri: apiDs,
-          }),
-        };
-      },
-      deps: [HttpLink, SETTINGS],
-    },
-  ],
-  bootstrap: [AppComponent],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    KeycloakAngularModule,
-    HttpClientModule,
-    BrowserAnimationsModule,
-    ReactiveFormsModule,
-    LoggerModule.forRoot({ level: NgxLoggerLevel.WARN }),
-    MaterialModule,
-    GroupingTableModule,
-    MatDialogModule,
-    MatButtonModule,
-    MatProgressSpinnerModule,
-    PreferenceUsersModule,
-    CommonLibModule,
-    ManagementModule,
-    aeApiModule,
-    budgetApiModule,
-    ApolloModule,
-  ],
-})
+@NgModule({ declarations: [
+        AppComponent,
+        HomeComponent,
+        PreferenceComponent,
+        SearchDataComponent,
+    ],
+    bootstrap: [AppComponent], imports: [BrowserModule,
+        AppRoutingModule,
+        KeycloakAngularModule,
+        BrowserAnimationsModule,
+        ReactiveFormsModule,
+        LoggerModule.forRoot({ level: NgxLoggerLevel.WARN }),
+        MaterialModule,
+        GroupingTableModule,
+        MatDialogModule,
+        MatButtonModule,
+        MatProgressSpinnerModule,
+        PreferenceUsersModule,
+        CommonLibModule,
+        ManagementModule,
+        aeApiModule,
+        budgetApiModule,
+        ApolloModule], providers: [
+        {
+            provide: SETTINGS,
+            useClass: SettingsService,
+        },
+        {
+            provide: DATA_HTTP_SERVICE,
+            useClass: BudgetDataHttpService,
+            multi: true,
+        },
+        {
+            provide: APP_INITIALIZER,
+            useFactory: app_Init,
+            multi: true,
+            deps: [SettingsHttpService, KeycloakService, SettingsService, MultiregionsService],
+        },
+        {
+            provide: HTTP_INTERCEPTORS,
+            useClass: CommonHttpInterceptor,
+            multi: true,
+        },
+        DatePipe,
+        {
+            provide: LOCALE_ID,
+            useValue: 'fr-FR',
+        },
+        {
+            provide: API_PREFERENCE_PATH,
+            useFactory: (settings: SettingsService) => {
+                return settings.apiAdministration;
+            },
+            deps: [SETTINGS],
+        },
+        {
+            provide: API_GEO_PATH,
+            useFactory: (settings: SettingsService) => {
+                return settings.apiGeo;
+            },
+            deps: [SETTINGS],
+        },
+        {
+            provide: API_REF_PATH,
+            useFactory: (settings: SettingsService) => {
+                return settings.apiReferentiel;
+            },
+            deps: [SETTINGS],
+        },
+        {
+            provide: API_MANAGEMENT_PATH,
+            useFactory: (settings: SettingsService) => {
+                return settings.apiAdministration;
+            },
+            deps: [SETTINGS],
+        },
+        {
+            provide: aeConfiguration,
+            useFactory: apiExternesConfigFactory,
+            deps: [SETTINGS],
+            multi: false,
+        },
+        {
+            provide: budgetConfiguration,
+            useFactory: apiBudgetConfigFactory,
+            deps: [SETTINGS],
+            multi: false,
+        },
+        {
+            provide: APOLLO_OPTIONS,
+            useFactory(httpLink: HttpLink, settings: SettingsService) {
+                const apiDs = settings.apiExternes + '/demarche-simplifie';
+                return {
+                    cache: new InMemoryCache(),
+                    link: httpLink.create({
+                        uri: apiDs,
+                    }),
+                };
+            },
+            deps: [HttpLink, SETTINGS],
+        },
+        provideHttpClient(withInterceptorsFromDi()),
+    ] })
 export class AppModule {}
 
 export function app_Init(
