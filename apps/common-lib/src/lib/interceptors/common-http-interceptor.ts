@@ -1,12 +1,5 @@
 import { Injectable } from '@angular/core';
-import {
-  HttpInterceptor,
-  HttpRequest,
-  HttpHandler,
-  HttpEvent,
-  HttpErrorResponse,
-  HttpContextToken,
-} from '@angular/common/http';
+import { HttpInterceptor, HttpRequest, HttpHandler, HttpEvent, HttpErrorResponse, HttpContextToken } from '@angular/common/http';
 import { Observable, finalize, tap } from 'rxjs';
 import { AlertService, LoaderService } from 'apps/common-lib/src/public-api';
 import { KeycloakService } from 'keycloak-angular';
