@@ -19,6 +19,7 @@ export class Ressources {
   api_swagger = '';
   documentation = '';
   suivi_usage = '';
+  grist = '';
 }
 
 export class Features {
