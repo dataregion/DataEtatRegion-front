@@ -193,7 +193,8 @@ $table-cell-min-width-default: 15rem;
     // Barre de séparation entre les groupes et les données.
     content: "";
     position: absolute;
-    left: calc(var(--scroll-length) + $group-width + var(--level-padding) + var(--level-borders) + 2rem);
+    //left: calc(var(--scroll-length) + $group-width + var(--level-padding) + var(--level-borders) + 2rem);
+    min-width: calc($group-width + 1rem + var(--level-padding) + var(--level-borders));
     top: 0;
     height: 100%;
     background-color: $group-separator-color;
