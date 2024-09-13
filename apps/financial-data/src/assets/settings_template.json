@@ -24,7 +24,8 @@
     "graphiques": "<url superset>",
     "api_swagger": "<url swagger referentiel>",
     "documentation": "<url doc utilisateur>",
-    "suivi_usage": "<url superset suivi>"
+    "suivi_usage": "<url superset suivi>",
+    "grist": "<url grist>"
   },
   "contact": "http://contact.fr",
   "help_pdf": "https://www.africau.edu/images/default/sample.pdf"

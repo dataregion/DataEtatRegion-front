@@ -84,6 +84,9 @@ export class AppComponent implements OnInit {
       case "suivi_usage": 
         ressource = this.settings.getRessources().suivi_usage;
         break;
+      case "grist": 
+        ressource = this.settings.getRessources().grist;
+        break;
       default: 
         ressource = undefined;
     }
