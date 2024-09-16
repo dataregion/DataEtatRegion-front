@@ -8,21 +8,26 @@ import { CompagnonDSRoutingModule } from './compagnon-ds-routing.module';
 //   MaterialModule,
 // } from 'apps/common-lib/src/public-api';
 // import { MatDialogModule } from '@angular/material/dialog';
-
 import { ReactiveFormsModule } from '@angular/forms';
 import { IntegrationDemarcheComponent } from './integration/integration-demarche.component';
 import { ReconciliationDemarcheComponent } from './reconciliation/reconciliation-demarche.component';
 import { AffichageDemarcheComponent } from './affichage/affichage-demarche.component';
 import { NavCompagnonDSComponent } from './nav/nav.component';
+import { SelectSimpleComponent } from '../../../../../../common-lib/src/lib/components/select-simple/select-simple.component';
 
 @NgModule({
-  declarations: [IntegrationDemarcheComponent, ReconciliationDemarcheComponent, AffichageDemarcheComponent],
+  declarations: [
+    IntegrationDemarcheComponent,
+    ReconciliationDemarcheComponent,
+    AffichageDemarcheComponent,
+  ],
   imports: [
     CommonModule,
     CompagnonDSRoutingModule,
     ReactiveFormsModule,
     NavCompagnonDSComponent,
-    RouterModule
-  ]
+    RouterModule,
+    SelectSimpleComponent,
+  ],
 })
 export class CompagnonDSModule {}

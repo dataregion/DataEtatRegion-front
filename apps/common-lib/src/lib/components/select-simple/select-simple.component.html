@@ -1,0 +1,24 @@
+<mat-form-field apperance="fill" class="select-single">
+  <mat-label>{{placeholder}}</mat-label>
+  <mat-select [(ngModel)]="selected" (selectionChange)="onChange($event.value)">
+
+    <mat-select-trigger>{{renderLabel()}}</mat-select-trigger>
+
+    <mat-form-field *ngIf="canFilter" class="field-100-width filter-input" appearance="fill">
+      <mat-label>Rechercher</mat-label>
+      <input type="text" class="fr-input" matInput [(ngModel)]="filterInput" (ngModelChange)="filter($event)" (keydown)="$event.stopPropagation()">
+    </mat-form-field>
+
+    <mat-option *ngIf="canFilter && (filteredOptions === null || filteredOptions?.length === 0)" class="no-result" disabled>Aucun résultat</mat-option>
+    <mat-option *ngFor="let opt of filteredOptions" [value]="opt">{{render(opt)}}</mat-option>
+
+  </mat-select>
+
+  <mat-icon *ngIf="icon" matSuffix>{{icon}}</mat-icon>
+  <button *ngIf="!icon && hasSelected()" (click)="emptySelected()" matSuffix mat-icon-button>
+    <mat-icon>close</mat-icon>
+  </button>
+
+  <mat-error *ngIf="error">{{error}}</mat-error>
+
+</mat-form-field>

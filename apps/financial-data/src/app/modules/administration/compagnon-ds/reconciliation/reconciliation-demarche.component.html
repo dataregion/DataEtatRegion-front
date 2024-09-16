@@ -1,6 +1,6 @@
 <div class="fr-container">
     <div class="fr-grid-row">
-        
+
         <financial-nav-compagnon-ds [title]="'Réconcilier ma démarche'" [currentStep]="2" [totalStep]="3" class="fr-col-6" style="margin-top:30px;"/>
 
         <div class="fr-col-12">
@@ -21,14 +21,14 @@
                         </label>
                     </div>
                 </div>
-                <div class="fr-fieldset__element">
-                    <div class="fr-radio-group">
-                        <input type="radio" id="reconciliation-ds" name="reconciliation" (change)="onRadioChecked($event)" [checked]="checkedId === 'reconciliation-ds'">
-                        <label class="fr-label" for="reconciliation-ds">
-                            Soit avec une réconciliation exacte sur le numéro de dossier DS s'il est renseigné dans Chorus
-                        </label>
-                    </div>
-                </div>
+<!--                <div class="fr-fieldset__element">-->
+<!--                    <div class="fr-radio-group">-->
+<!--                        <input type="radio" id="reconciliation-ds" name="reconciliation" (change)="onRadioChecked($event)" [checked]="checkedId === 'reconciliation-ds'">-->
+<!--                        <label class="fr-label" for="reconciliation-ds">-->
+<!--                            Soit avec une réconciliation exacte sur le numéro de dossier DS s'il est renseigné dans Chorus-->
+<!--                        </label>-->
+<!--                    </div>-->
+<!--                </div>-->
                 <div class="fr-fieldset__element">
                     <div class="fr-radio-group">
                         <input type="radio" id="reconciliation-criteres" name="reconciliation" (change)="onRadioChecked($event)" [checked]="checkedId === 'reconciliation-criteres'">
@@ -86,6 +86,11 @@
                         <div class="fr-input-group">
                             <label class="fr-label" for="annee">Année d'engagement</label>
                             <input class="fr-input" type="text" id="annee" formControlName="annee">
+<!--                            <lib-select-simple id="annee" [canFilter]="true"-->
+<!--                                                 [placeholder]="'Année'"-->
+<!--                                                 [options]="annees"-->
+<!--                                                 [selected]="annee"-->
+<!--                                                 icon="calendar_month"/>-->
                         </div>
                     </div>
                     <div class="fr-col-lg-6 fr-col-12" style="padding:0 30px;">
