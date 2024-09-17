@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnChanges, Output, SimpleChanges,} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges,} from '@angular/core';
 import {CommonModule, NgFor} from '@angular/common';
 import {FormsModule, ReactiveFormsModule, ValidationErrors,} from '@angular/forms';
 import {MatTooltipModule} from '@angular/material/tooltip';
@@ -9,6 +9,7 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatInputModule} from '@angular/material/input';
 import {MatButtonModule} from '@angular/material/button';
 import {MatCheckboxModule} from '@angular/material/checkbox';
+import {debounceTime, Observable} from 'rxjs';
 
 /**
  * Select simple paramétrable
@@ -33,7 +34,7 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
     MatCheckboxModule,
   ],
 })
-export class SelectSimpleComponent<T> implements OnChanges {
+export class SelectSimpleComponent<T> implements OnInit, OnChanges {
   // Filtre sur les options ?
   @Input() canFilter: boolean = true;
 
@@ -43,8 +44,7 @@ export class SelectSimpleComponent<T> implements OnChanges {
   @Input() error: ValidationErrors | null = null;
 
   // Options
-  @Input() options: T[] | null = [];
-  filteredOptions: T[] | null = [];
+  @Input() filteredOptions: T[] | null = [];
 
   // Options sélectionnées
   private _selected: T | null = null;
@@ -54,13 +54,12 @@ export class SelectSimpleComponent<T> implements OnChanges {
 
   @Input()
   public set selected(value: T | null) {
-    this._selected = value ?? null;
+    this._selected = value;
   }
 
-  @Output() selectedChange = new EventEmitter<T[] | null>();
+  @Output() selectedChange = new EventEmitter<T | null>();
 
   filterInput: string = '';
-  searching: boolean = false;
 
   // Icon prefix
   @Input() icon: string = '';
@@ -70,24 +69,17 @@ export class SelectSimpleComponent<T> implements OnChanges {
    * @param text input utilisateur utilisé pour filtrer
    */
   @Input()
-  filterFunction(text: string): T[] {
-    // Filtre par défaut : options considérées comme des string
-    this.filteredOptions = this.options
-      ? this.options?.filter((opt) => {
-          const optStr = opt ? opt.toString().toLowerCase() : '';
-          return optStr.includes(text.toLowerCase());
-        })
-      : [];
-    return this.filteredOptions;
-  }
-
-  /**
-   * Fonction de rendu d'une option par défaut, peut-être remplacée par injection
-   * @param option
-   */
-  @Input()
-  renderFunction(option: T): string {
-    return option as string;
+  getFilteredOptions(text: string): Observable<T[]> {
+    // Filtre par défaut
+    return new Observable((subscriber) => {
+      this.filteredOptions = this.filteredOptions
+        ? this.filteredOptions?.filter((opt) => {
+            const optStr = opt ? opt.toString().toLowerCase() : '';
+            return optStr.includes(text.toLowerCase());
+          })
+        : [];
+      subscriber.next(this.filteredOptions);
+    });
   }
 
   /**
@@ -96,8 +88,20 @@ export class SelectSimpleComponent<T> implements OnChanges {
    * @returns
    */
   @Input()
-  renderLabelFunction(selected: T | null): string {
+  renderLabelFunction(selected: any): string {
     return selected != null ? (selected as string) : '';
+  }
+
+  /**
+   * Affichage textuel des options sélectionnées en label
+   * @returns
+   */
+  renderLabel(): string {
+    return this.renderLabelFunction(this.selected);
+  }
+
+  ngOnInit() {
+    this.filter('');
   }
 
   /**
@@ -106,9 +110,8 @@ export class SelectSimpleComponent<T> implements OnChanges {
    */
   ngOnChanges(changes: SimpleChanges) {
     // Mise à jour des options
-    if ('options' in changes) {
-      this.options = changes['options'].currentValue;
-      this.filteredOptions = this.options;
+    if ('filteredOptions' in changes) {
+      this.filteredOptions = changes['filteredOptions'].currentValue;
     }
     if ('selected' in changes) {
       this.selectedChange.emit(changes['selected'].currentValue ?? null);
@@ -116,7 +119,7 @@ export class SelectSimpleComponent<T> implements OnChanges {
   }
 
   /**
-   * Des options sont-elles sélectionnées ?
+   * Une option est-elle sélectionnée ?
    * @returns
    */
   hasSelected(): boolean {
@@ -127,55 +130,38 @@ export class SelectSimpleComponent<T> implements OnChanges {
    * Emit de l'event de selection
    * @param value
    */
-  onChange(value: T[] | null) {
+  onChange(value: T | null) {
     this.selectedChange.emit(value ?? null);
   }
 
   /**
-   * Déselectionne tous les options sélectionnées
+   * Déselectionne toutes les options sélectionnées
    */
   emptySelected() {
     this.selectedChange.emit(null);
   }
 
   /**
-   * Filtrage des option par défaut OU spécifique des options
+   * Filtrage des options
    * @param text
    * @returns
    */
-  filter(text?: string): void {
+  filter(text: string): void {
     // Sauvegarde du texte
-    this.filterInput = text === undefined ? this.filterInput : text;
-    this.searching = this.filterInput.length > 0;
+    this.filterInput = text ? this.filterInput : text;
     // Filtre
-    const newOptions = this.filterFunction(text ? text : '');
-    if (newOptions == null || newOptions.length === 0) return;
-
-    this.filteredOptions = newOptions;
-    // Concaténation des éléments sélectionnés avec les éléments filtrés (en supprimant les doublons éventuels)
-    this.filteredOptions =
-      this.selected != null
-        ? [
-            this.selected,
-            ...this.filteredOptions.filter((el) => !(this.selected === el)),
-          ]
-        : this.filteredOptions;
-  }
-
-  /**
-   * Affichage textuel par défaut OU spécifique d'une option
-   * @param option
-   * @returns
-   */
-  render(option: T): string {
-    return this.renderFunction(option);
-  }
-
-  /**
-   * Affichage textuel des options sélectionnées en label
-   * @returns
-   */
-  renderLabel(): string {
-    return this.renderLabelFunction(this.selected);
+    this.getFilteredOptions(text ? text : '')
+      .pipe(debounceTime(300))
+      .subscribe((newOptions) => {
+        this.filteredOptions = newOptions;
+        // Concaténation des éléments sélectionnés avec les éléments filtrés (en supprimant les doublons éventuels)
+        this.filteredOptions =
+          this.selected != null
+            ? [
+                this.selected,
+                ...this.filteredOptions.filter((el) => !(this.selected === el)),
+              ]
+            : this.filteredOptions;
+      });
   }
 }

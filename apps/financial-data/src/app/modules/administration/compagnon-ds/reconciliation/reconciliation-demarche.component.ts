@@ -1,28 +1,25 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, DestroyRef, inject, OnInit } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { AlertService } from 'apps/common-lib/src/public-api';
+import {
+  AlertService,
+  GeoModel,
+  ReferentielsHttpService,
+  TypeLocalisation,
+} from 'apps/common-lib/src/public-api';
 import { CompagnonDSService } from '../compagnon-ds.service';
 import { Demarche, Donnee } from '@models/demarche_simplifie/demarche.model';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { combineLatest } from 'rxjs';
+import { combineLatest, Observable } from 'rxjs';
 import { GeoLocalisationComponentService } from '../../../../../../../common-lib/src/lib/components/localisation/geo.localisation.componentservice';
-
-interface ReconciliationFormData {
-  champEJ: string | null;
-  champDS: string | null;
-  centreCouts: string | null;
-  domaineFonctionnel: string | null;
-  refProg: string | null;
-  annee: number | null;
-  commune: string | null;
-  epci: string | null;
-  departement: string | null;
-  region: string | null;
-  champSiret: string | null;
-  champMontant: string | null;
-}
+import { BudgetDataHttpService } from '@services/http/budget-lines-http.service';
+import { ReferentielProgrammation } from '@models/refs/referentiel_programmation.model';
+import {
+  CentreCouts,
+  CodeLabel,
+  DomaineFonctionnel,
+} from '@models/financial/common.models';
 
 @Component({
   selector: 'financial-reconciliation-demarche.component',
@@ -37,55 +34,32 @@ export class ReconciliationDemarcheComponent implements OnInit {
   public demarche: Demarche | null = null;
   public donnees: Donnee[] | null = null;
 
-  //Champs reconciliation Montant / Siret
-  // public centreCouts: any | null = null;
-  // public centreCoutsList: any[] = [];
-  //
-  // public programme: BopModel | null = null;
-  // public programmes: BopModel[] = [];
-  //
-  // public ref_programmation: ReferentielProgrammation | null = null;
-  // public ref_programmations: ReferentielProgrammation[] = [];
-  //
-  // public annees: number[] = [];
-  // public annee: number | null = null;
-  //
-  // public commune: GeoModel | null = null;
-  // public communes: GeoModel[] = [];
-  //
-  // public epci: GeoModel | null = null;
-  // public epcis: GeoModel[] = [];
-  //
-  // public departement: GeoModel | null = null;
-  // public departements: GeoModel[] = [];
-  //
-  // public region: GeoModel | null = null;
-  // public regions: GeoModel[] = [];
-  //Fin Champs reconciliation Montant / Siret
+  public annees: number[] = [];
 
   public reconciliationForm = new FormGroup({
-    champEJ: new FormControl<string | null>(null),
-    champDS: new FormControl<string | null>(null),
-    centreCouts: new FormControl<string | null>(null),
-    domaineFonctionnel: new FormControl<string | null>(null),
-    refProg: new FormControl<string | null>(null),
-    annee: new FormControl<number | null>(null),
-    commune: new FormControl<string | null>(null),
-    epci: new FormControl<string | null>(null),
-    departement: new FormControl<string | null>(null),
-    region: new FormControl<string | null>(null),
-    champSiret: new FormControl<string | null>(null),
-    champMontant: new FormControl<string | null>(null),
+    champEJ: new FormControl(''),
+    champDS: new FormControl(''),
+    champSiret: new FormControl(''),
+    champMontant: new FormControl(''),
   });
+
+  public centreCouts: CentreCouts | null = null;
+  public domaineFonctionnel: DomaineFonctionnel | null = null;
+  public refProg: ReferentielProgrammation | null = null;
+  public annee: number | null = null;
+  public commune: GeoModel | null = null;
+  public epci: GeoModel | null = null;
+  public departement: GeoModel | null = null;
+  public region: GeoModel | null = null;
 
   constructor(
     private _route: ActivatedRoute,
     private _alertService: AlertService,
     private _compagnonDS: CompagnonDSService,
     private _router: Router,
-    // private _budgetService: BudgetService,
-    // private _financialService: BudgetDataHttpService,
-    // private _geo: GeoLocalisationComponentService,
+    private _referentielService: ReferentielsHttpService,
+    private _financialService: BudgetDataHttpService,
+    private _geo: GeoLocalisationComponentService,
   ) {
     this.checkedId = 'reconciliation-no';
   }
@@ -135,38 +109,6 @@ export class ReconciliationDemarcheComponent implements OnInit {
       });
   }
 
-  // private loadFieldsReconciliationMontantSiret() {
-  //   forkJoin([
-  //     this._budgetService.getBop(),
-  //     this._budgetService.getReferentielsProgrammation(null),
-  //     this._financialService.getAnnees(),
-  //     this._geo.filterGeo(null, TypeLocalisation.COMMUNE),
-  //     this._geo.filterGeo(null, TypeLocalisation.EPCI),
-  //     this._geo.filterGeo(null, TypeLocalisation.DEPARTEMENT),
-  //     this._geo.filterGeo(null, TypeLocalisation.REGION),
-  //   ]).pipe(
-  //     map(
-  //       ([
-  //         fetchedBop,
-  //         fetchedRefs,
-  //         fetchedAnnees,
-  //         fetchedCommunes,
-  //         fetchedEpcis,
-  //         fetchedDepartements,
-  //         fetchedRegions,
-  //       ]) => {
-  //         this.programmes = fetchedBop;
-  //         this.ref_programmations = fetchedRefs;
-  //         this.annees = fetchedAnnees;
-  //         this.communes = fetchedCommunes;
-  //         this.epcis = fetchedEpcis;
-  //         this.departements = fetchedDepartements;
-  //         this.regions = fetchedRegions;
-  //       },
-  //     ),
-  //   );
-  // }
-
   private _initWithDemarche(demarche: Demarche) {
     this.demarche = demarche;
     // Récupération des données
@@ -193,29 +135,24 @@ export class ReconciliationDemarcheComponent implements OnInit {
     }
     if (demarche.reconciliation.champEJ) {
       this.checkedId = 'reconciliation-ej';
+      this.reconciliationForm.patchValue({
+        champEJ: demarche.reconciliation.champEJ,
+      });
     } else if (demarche.reconciliation.champDS) {
       this.checkedId = 'reconciliation-ds';
+      this.reconciliationForm.patchValue({
+        champDS: demarche.reconciliation.champDS,
+      });
     } else if (demarche.reconciliation.champSiret) {
       this.checkedId = 'reconciliation-criteres';
+      this.reconciliationForm.patchValue({
+        champSiret: demarche.reconciliation.champSiret,
+        champMontant: demarche.reconciliation.champMontant,
+      });
+      this._financialService.getAnnees().subscribe((annees) => {
+        this.annees = annees;
+      });
     }
-
-    let formData: ReconciliationFormData = {
-      champEJ: demarche.reconciliation.champEJ,
-      champDS: demarche.reconciliation.champDS,
-      centreCouts: demarche.reconciliation.centreCouts,
-      domaineFonctionnel: demarche.reconciliation.domaineFonctionnel,
-      refProg: demarche.reconciliation.refProg,
-      annee: demarche.reconciliation.annee,
-      commune: demarche.reconciliation.commune,
-      epci: demarche.reconciliation.epci,
-      departement: demarche.reconciliation.departement,
-      region: demarche.reconciliation.region,
-      champSiret: demarche.reconciliation.champSiret,
-      champMontant: demarche.reconciliation.champMontant,
-    } as ReconciliationFormData;
-    // Using JSON utilities to remove unecessary undefined values
-    formData = JSON.parse(JSON.stringify(formData));
-    this.reconciliationForm.patchValue(formData);
   }
 
   onRadioChecked(event: Event) {
@@ -244,41 +181,29 @@ export class ReconciliationDemarcheComponent implements OnInit {
         'champMontant',
         this.reconciliationForm.value.champMontant!,
       );
-      if (this.reconciliationForm.value.centreCouts) {
-        formData.append(
-          'centreCouts',
-          this.reconciliationForm.value.centreCouts,
-        );
+      if (this.centreCouts) {
+        formData.append('centreCouts', this.centreCouts.code);
       }
-      if (this.reconciliationForm.value.domaineFonctionnel) {
-        formData.append(
-          'domaineFonctionnel',
-          this.reconciliationForm.value.domaineFonctionnel,
-        );
+      if (this.domaineFonctionnel) {
+        formData.append('domaineFonctionnel', this.domaineFonctionnel.code);
       }
-      if (this.reconciliationForm.value.refProg) {
-        formData.append('refProg', this.reconciliationForm.value.refProg);
+      if (this.refProg) {
+        formData.append('refProg', this.refProg.code);
       }
-      if (this.reconciliationForm.value.annee) {
-        formData.append(
-          'annee',
-          this.reconciliationForm.value.annee.toString(),
-        );
+      if (this.annee) {
+        formData.append('annee', this.annee.toString());
       }
-      if (this.reconciliationForm.value.commune) {
-        formData.append('commune', this.reconciliationForm.value.commune);
+      if (this.commune) {
+        formData.append('commune', this.commune.code);
       }
-      if (this.reconciliationForm.value.epci) {
-        formData.append('epci', this.reconciliationForm.value.epci);
+      if (this.epci) {
+        formData.append('epci', this.epci.code);
       }
-      if (this.reconciliationForm.value.departement) {
-        formData.append(
-          'departement',
-          this.reconciliationForm.value.departement,
-        );
+      if (this.departement) {
+        formData.append('departement', this.departement.code);
       }
-      if (this.reconciliationForm.value.region) {
-        formData.append('region', this.reconciliationForm.value.region);
+      if (this.region) {
+        formData.append('region', this.region.code);
       }
     }
 
@@ -299,4 +224,44 @@ export class ReconciliationDemarcheComponent implements OnInit {
         },
       });
   }
+
+  renderCodeLabel = (item: CodeLabel): string => {
+    return item ? `${item.label} (${item.code})` : '';
+  };
+
+  getCentreCouts = (input: string): Observable<CentreCouts[]> => {
+    return this._referentielService.searchCentreCouts(input, null);
+  };
+
+  getDomainesFonctionnel = (
+    input: string,
+  ): Observable<DomaineFonctionnel[]> => {
+    return this._referentielService.searchDomainesFonctionnel(input, null);
+  };
+
+  getReferentielsProgrammation = (
+    input: string,
+  ): Observable<ReferentielProgrammation[]> => {
+    return this._referentielService.searchReferentielProgrammation(input, null);
+  };
+
+  renderGeoModel = (item: GeoModel): string => {
+    return item ? `${item.code} - ${item.nom}` : '';
+  };
+
+  getCommunes = (input: string): Observable<GeoModel[]> => {
+    return this._geo.filterGeo(input, TypeLocalisation.COMMUNE);
+  };
+
+  getEpcis = (input: string): Observable<GeoModel[]> => {
+    return this._geo.filterGeo(input, TypeLocalisation.EPCI);
+  };
+
+  getDepartements = (input: string): Observable<GeoModel[]> => {
+    return this._geo.filterGeo(input, TypeLocalisation.DEPARTEMENT);
+  };
+
+  getRegions = (input: string): Observable<GeoModel[]> => {
+    return this._geo.filterGeo(input, TypeLocalisation.REGION);
+  };
 }
