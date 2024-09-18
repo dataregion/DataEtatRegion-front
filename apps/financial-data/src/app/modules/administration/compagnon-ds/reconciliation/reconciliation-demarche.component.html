@@ -64,7 +64,7 @@
             <div class="fr-select-group">
               <label class="fr-label" for="champ-ds">Numéro de dossier DS *</label>
               <select class="fr-select" id="champ-ds" formControlName="champDS">
-                <option value="" selected disabled hidden>Sélectionner le champ dans Chorus</option>
+                <option value="" selected disabled hidden>Sélectionner le champ dans la démarche</option>
                 <option *ngFor="let donnee of donnees" [value]="donnee.id">{{ donnee.label }}</option>
               </select>
             </div>
@@ -152,18 +152,15 @@
           </div>
           <div class="fr-col-lg-6 fr-col-12" style="margin-bottom:30px; padding:0 30px;">
             <div class="fr-select-group">
-              <label class="fr-label" for="champ-siret">SIRET du bénéficiaire *</label>
-              <select class="fr-select" id="champ-siret" formControlName="champSiret">
-                <option value="" selected disabled hidden>Sélectionner le champ dans Chorus</option>
-                <option *ngFor="let donnee of donnees" [value]="donnee.id">{{ donnee.label }}</option>
-              </select>
+              <label class="fr-label" for="champ-siret">SIRET issu de Chorus</label>
+              <input class="fr-input" type="text" id="champ-siret" value="SIRET du demandeur associé au dossier" readonly>
             </div>
           </div>
           <div class="fr-col-lg-6 fr-col-12" style="margin-bottom:30px; padding:0 30px;">
             <div class="fr-select-group">
               <label class="fr-label" for="champ-montant">Montant AE</label>
               <select class="fr-select" id="champ-montant" formControlName="champMontant">
-                <option value="" selected disabled hidden>Sélectionner le champ dans Chorus</option>
+                <option value="" selected disabled hidden>Sélectionner le champ dans la démarche</option>
                 <option *ngFor="let donnee of donnees" [value]="donnee.id">{{ donnee.label }}</option>
               </select>
             </div>
