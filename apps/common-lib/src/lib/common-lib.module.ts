@@ -2,8 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AlertSnackBarComponent } from './components/snackbar/alert-snackbar.component';
 import { LocalisationComponent } from './components/localisation/localisation.component';
-import { FormsModule } from '@angular/forms';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HeaderComponent } from './components/header/header.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { RegisterComponent } from './components/register/register.component';
@@ -12,6 +11,7 @@ import { DisplayDateComponent } from './components/display-date/display-date.com
 import { AdvancedChipsMultiselectComponent } from './components/advanced-chips-multiselect/advanced-chips-multiselect.component';
 import { SelectMultipleComponent } from './components/select-multiple/select-multiple.component';
 import { BopsReferentielsComponent } from './components/bops-referentiels/bops-referentiels.component';
+import { SelectSimpleComponent } from './components/select-simple/select-simple.component';
 
 @NgModule({
   declarations: [
@@ -30,6 +30,7 @@ import { BopsReferentielsComponent } from './components/bops-referentiels/bops-r
     DisplayDateComponent,
     AdvancedChipsMultiselectComponent,
     SelectMultipleComponent,
+    SelectSimpleComponent,
   ],
   exports: [
     AlertSnackBarComponent,
@@ -42,6 +43,7 @@ import { BopsReferentielsComponent } from './components/bops-referentiels/bops-r
     RegisterComponent,
     AdvancedChipsMultiselectComponent,
     SelectMultipleComponent,
+    SelectSimpleComponent,
   ],
 })
 export class CommonLibModule {}

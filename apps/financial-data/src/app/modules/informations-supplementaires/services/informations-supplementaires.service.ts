@@ -8,8 +8,8 @@ import { EntrepriseFull } from '../models/EntrepriseFull';
 import { PersonneMoraleAttributsCorrige } from '../models/correction-api-externes/PersonneMoraleAttributsCorrige';
 import { ActivitePrincipaleCorrige } from '../models/correction-api-externes/ActivitePrincipaleCorrige';
 import { TrancheEffectifCorrige } from '../models/correction-api-externes/TrancheEffectifCorrige';
-import { DemarcheHttpService } from '@services/http/demarche.service';
 import { InformationSupplementairesViewService } from './informations-supplementaires.viewservice';
+import { CompagnonDSService } from '../../administration/compagnon-ds/compagnon-ds.service';
 
 export function fromInfoApiEntreprise(info: InfoApiEntreprise): EntrepriseFull {
   return {
@@ -37,16 +37,15 @@ export class InformationsSupplementairesService {
   }
 
   constructor(
-    private _demarche: DemarcheHttpService,
-    private _ea: ExternalAPIsService
+    private _ea: ExternalAPIsService,
+    private _compagnonDS: CompagnonDSService,
   ) {}
 
   setupViewModelService(financial_data: FinancialDataModel) {
-    const viewService = new InformationSupplementairesViewService(
-      this._demarche,
+    this._viewService = new InformationSupplementairesViewService(
       this._ea,
-      financial_data
+      this._compagnonDS,
+      financial_data,
     );
-    this._viewService = viewService;
   }
 }

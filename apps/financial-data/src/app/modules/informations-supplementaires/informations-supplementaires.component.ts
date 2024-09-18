@@ -1,7 +1,7 @@
 import {
   AsyncPipe,
-  NgIf,
   NgFor,
+  NgIf,
   NgSwitch,
   NgSwitchCase,
   NgSwitchDefault,
@@ -14,16 +14,15 @@ import { ChargementOuErreurComponent } from './chargement-ou-erreur/chargement-o
 import { DetailApiDataSubventionsComponent } from './detail-api-data-subventions/detail-api-data-subventions.component';
 import { DetailApiEntrepriseComponent } from './detail-api-entreprise/detail-api-entreprise.component';
 import { DetailCpComponent } from './detail-cp/detail-cp.component';
-import {
-  InformationsSupplementairesService,
-} from './services/informations-supplementaires.service';
+import { InformationsSupplementairesService } from './services/informations-supplementaires.service';
 import { InformationSupplementairesViewService } from './services/informations-supplementaires.viewservice';
 import { OuNonRenseignePipe } from 'apps/common-lib/src/public-api';
 import { EtablissementLight } from './models/EtablissementLight';
 import { SubventionLight } from './models/SubventionLight';
-import { DemarcheLight } from './models/DemarcheLight';
 import { DetailApiDemarcheSimplifieComponent } from './detail-api-demarche-simplifie/detail-api-demarche-simplifie.component';
 import { FinancialDataModel } from '@models/financial/financial-data.models';
+import { AffichageDossier } from '@models/demarche_simplifie/demarche.model';
+
 /* eslint-disable no-unused-vars */
 export enum View {
   light = 'light',
@@ -32,6 +31,7 @@ export enum View {
   full_api_demarche = 'full_api_demarche',
   full = 'full',
 }
+
 /* eslint-enable no-unused-vars */
 
 @Component({
@@ -68,15 +68,15 @@ export class InformationsSupplementairesComponent implements OnInit {
   get financial() {
     return this._financial!;
   }
+
   @Input() set financial(financial) {
     this._financial = financial;
     this.setup();
   }
 
-
   entreprise_light: EtablissementLight | undefined;
   api_subvention_light$: Observable<SubventionLight> | undefined;
-  api_demarche_simplifie_light$: Observable<DemarcheLight | null> | undefined;
+  affichage_dossier$: Observable<AffichageDossier> | undefined;
 
   ngOnInit() {
     const data: FinancialDataModel =
@@ -86,9 +86,8 @@ export class InformationsSupplementairesComponent implements OnInit {
 
   constructor(
     private _route: ActivatedRoute,
-    private _service: InformationsSupplementairesService
+    private _service: InformationsSupplementairesService,
   ) {}
-
 
   get vService(): InformationSupplementairesViewService {
     return this._service.viewService;
@@ -98,9 +97,9 @@ export class InformationsSupplementairesComponent implements OnInit {
     if (this._financial === undefined) return;
 
     this._service.setupViewModelService(this._financial);
-    this.api_demarche_simplifie_light$ = this.vService.api_demarche_light$();
     this.entreprise_light = this.vService.entreprise_light();
     this.api_subvention_light$ = this.vService.api_subvention_light$();
+    this.affichage_dossier$ = this.vService.dossier_demarche$();
   }
 
   _init_from_resolver_model(data: FinancialDataModel) {

@@ -1,4 +1,3 @@
-export interface ReferentielProgrammation {
-  code: string
-  label: string
-}
+import { CodeLabel } from '@models/financial/common.models';
+
+export interface ReferentielProgrammation extends CodeLabel {}
