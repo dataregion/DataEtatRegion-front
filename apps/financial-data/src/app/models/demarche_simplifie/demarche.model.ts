@@ -56,7 +56,6 @@ export interface Cadre {
   epci: string | undefined;
   departement: string | undefined;
   region: string | undefined;
-  champSiret: string | undefined;
   champMontant: string | undefined;
 }
 

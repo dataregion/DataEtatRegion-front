@@ -39,7 +39,6 @@ export class ReconciliationDemarcheComponent implements OnInit {
   public reconciliationForm = new FormGroup({
     champEJ: new FormControl(''),
     champDS: new FormControl(''),
-    champSiret: new FormControl(''),
     champMontant: new FormControl(''),
   });
 
@@ -143,10 +142,9 @@ export class ReconciliationDemarcheComponent implements OnInit {
       this.reconciliationForm.patchValue({
         champDS: demarche.reconciliation.champDS,
       });
-    } else if (demarche.reconciliation.champSiret) {
+    } else if (demarche.reconciliation.champMontant) {
       this.checkedId = 'reconciliation-criteres';
       this.reconciliationForm.patchValue({
-        champSiret: demarche.reconciliation.champSiret,
         champMontant: demarche.reconciliation.champMontant,
       });
       this._financialService.getAnnees().subscribe((annees) => {
@@ -176,7 +174,6 @@ export class ReconciliationDemarcheComponent implements OnInit {
     // else if (this.checkedId === 'reconciliation-ds')
     //   formData.append('champDS', this.reconciliationForm.value.champDS!);
     else if (this.checkedId === 'reconciliation-criteres') {
-      formData.append('champSiret', this.reconciliationForm.value.champSiret!);
       formData.append(
         'champMontant',
         this.reconciliationForm.value.champMontant!,

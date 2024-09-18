@@ -110,11 +110,8 @@ export class AffichageDemarcheComponent implements OnInit {
     if (demarche.reconciliation.champDS) {
       matchingData.push(demarche.reconciliation.champDS);
     }
-    if (demarche.reconciliation.champSiret) {
-      matchingData.push(demarche.reconciliation.champSiret);
-      if (demarche.reconciliation.champMontant) {
-        matchingData.push(demarche.reconciliation.champMontant);
-      }
+    if (demarche.reconciliation.champMontant) {
+      matchingData.push(demarche.reconciliation.champMontant);
     }
 
     // Récupération des valeurs des données des dossiers acceptés
@@ -141,17 +138,11 @@ export class AffichageDemarcheComponent implements OnInit {
                 .filter((v) => v.donnee_id === idDonnee && v.valeur !== '')
                 .map((v) => v.valeur);
             }
-            if (reconciliation.champSiret) {
-              const idSiret: number = parseInt(reconciliation.champSiret);
-              search_parameters.siret = valeurs
-                .filter((v) => v.donnee_id === idSiret && v.valeur !== '')
-                .map((v) => v.valeur);
-              if (reconciliation.champMontant) {
-                const idMontant: number = parseInt(reconciliation.champMontant);
-                search_parameters.montant = valeurs
-                  .filter((v) => v.donnee_id === idMontant && v.valeur !== '')
-                  .map((v) => parseFloat(v.valeur));
-              }
+            if (reconciliation.champMontant) {
+              const idMontant: number = parseInt(reconciliation.champMontant);
+              search_parameters.montant = valeurs
+                .filter((v) => v.donnee_id === idMontant && v.valeur !== '')
+                .map((v) => parseFloat(v.valeur));
             }
 
             this._compagnonDS.getReconciliations(demarche.number).subscribe({
