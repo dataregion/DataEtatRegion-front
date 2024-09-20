@@ -126,6 +126,10 @@ export class ReconciliationDemarcheComponent implements OnInit {
           }
         },
       });
+
+    this._financialService.getAnnees().subscribe((annees) => {
+      this.annees = annees;
+    });
   }
 
   private _setSelectedAndPatchValues(demarche: Demarche) {
@@ -146,9 +150,6 @@ export class ReconciliationDemarcheComponent implements OnInit {
       this.checkedId = 'reconciliation-criteres';
       this.reconciliationForm.patchValue({
         champMontant: demarche.reconciliation.champMontant,
-      });
-      this._financialService.getAnnees().subscribe((annees) => {
-        this.annees = annees;
       });
     }
   }
