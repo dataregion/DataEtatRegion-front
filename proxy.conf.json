@@ -15,5 +15,10 @@
     "pathRewrite": {
       "^/integ-api": "/"
     }
+  },
+  "/api/v1/security": {
+    "target": "https://superset.preprod.databretagne.fr",
+    "secure": false,
+    "changeOrigin": true
   }
 }

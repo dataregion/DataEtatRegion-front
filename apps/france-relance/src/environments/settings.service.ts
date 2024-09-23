@@ -1,14 +1,12 @@
 import { Injectable } from '@angular/core';
 import { ISettingsService } from 'apps/common-lib/src/lib/environments/interface-settings.service';
-import { IApi, Keycloak, Matomo, Settings } from 'apps/common-lib/src/public-api';
+import {IApi, Keycloak, Matomo, Ressources, Settings, Superset} from 'apps/common-lib/src/public-api';
 
 class Api implements IApi {
   franceRelance = '';
   administration = '';
-
   geo = '';
   referentiel = '';
-
   laureats_data = '';
 }
 
@@ -21,6 +19,8 @@ export class SettingsService implements ISettingsService {
     this.settings.apis = new Api();
     this.settings.keycloak = new Keycloak();
     this.settings.matomo = new Matomo();
+    this.settings.superset = new Superset();
+    this.settings.ressources = new Ressources();
   }
 
   setSettings(settings: Settings): void {
@@ -35,8 +35,16 @@ export class SettingsService implements ISettingsService {
     return this.settings.matomo;
   }
 
+  getSuperset(): Superset {
+    return this.settings.superset;
+  }
+
   getSetting(): Settings {
     return this.settings;
+  }
+
+  getRessources(): Ressources {
+    return this.settings.ressources;
   }
 
   public get apiGeo(): string {

@@ -1,0 +1,55 @@
+<ng-container *ngIf="displayError && error?.name else form">
+  <div class="box" data-test-id="search-cmp-error-msg">
+    <div class="fr-alert fr-alert--error">
+      <p>{{error?.message}}</p>
+    </div>
+  </div>
+</ng-container>
+
+<ng-template #form>
+  <form [formGroup]="searchForm" autocomplete="off">
+    <div class="box">
+      <lib-select-multiple [canFilter]="false" [canSelectAll]="true"
+                           [placeholder]="'Année'"
+                           [options]="annees"
+                           [(selected)]="selectedYear"
+                           data-test-id="annees-form-field"
+                           class="select-multiple field-15-width"
+                           icon="calendar_month"
+      />
+
+      <div class="field-localisation field-30-width">
+        <lib-localisation [(selectedNiveau)]="selectedNiveau" [(selectedLocalisation)]="selectedLocation" />
+      </div>
+
+      <button mat-fab color="primary" (click)="doSearch()" matTooltip="Rechercher" aria-label="Bouton de recherche.">
+        <mat-icon fontIcon="search"/>
+      </button>
+
+      <button mat-fab color="warn" (click)="reset()" matTooltip="Effacer la recherche"
+        aria-label="Bouton de réinitialisation des critères de recherche">
+        <mat-icon fontIcon="delete"/>
+      </button>
+    </div>
+
+  </form>
+</ng-template>
+
+<!-- Ajout d'un indicateur pour les paramètres de recherche additionnels qui ne sont pas dans le formulaire  -->
+<ng-container *ngIf="additional_searchparams?.domaines_fonctionnels && additional_searchparams.domaines_fonctionnels.length > 0">
+  <div data-test-id="notif-additionnal-search-on-domaines-fonctionnels">
+    <mat-icon aria-hidden="false" aria-label="information">information</mat-icon>
+    <span>
+      Attention, vous appliquez également un filtre sur le domaine fonctionnel
+    </span>
+  </div>
+</ng-container>
+
+<ng-container *ngIf="additional_searchparams?.sources_region && additional_searchparams.sources_region.length > 0">
+  <div data-test-id="notif-additionnal-search-on-source-region">
+    <mat-icon aria-hidden="false" aria-label="information">information</mat-icon>
+    <span>
+      Attention, vous appliquez également un filtre sur la source region
+    </span>
+  </div>
+</ng-container>

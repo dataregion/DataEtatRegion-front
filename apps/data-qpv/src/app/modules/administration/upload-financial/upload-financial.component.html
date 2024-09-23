@@ -1,0 +1,146 @@
+<mat-card class="mat-card">
+  <mat-card-header>
+    <mat-card-title>Charger des nouvelles données financières</mat-card-title>
+  </mat-card-header>
+
+  <mat-card-content>
+
+    <div class="line">
+      <div class="col">
+        <mat-form-field appearance="fill">
+          <mat-label>Année</mat-label>
+          <mat-select required [(ngModel)]="yearSelected">
+            <mat-option *ngFor="let year of years" [value]="year">
+              {{year}}
+            </mat-option>
+          </mat-select>
+          <mat-icon matSuffix>calendar_month</mat-icon>
+        </mat-form-field>
+      </div>
+
+      <div class="col">
+        <input type="file" class="file-input" [accept]="requiredFileType" (change)="fileFinancialAe = getFile($event)" #fileUploadAe>
+        <div class="file-upload">
+
+          <span>{{ fileFinancialAe !== null ? fileFinancialAe.name : "Engagements (AE)" }}</span>
+
+          <button mat-mini-fab color="primary" class="upload-btn" *ngIf="fileFinancialAe === null"
+            (click)="fileUploadAe.click()">
+            <mat-icon>attach_file</mat-icon>
+          </button>
+
+          <button mat-mini-fab color="warn" class="cancel-upload" *ngIf="fileFinancialAe !== null"
+            (click)="fileFinancialAe = null">
+            <mat-icon class="cancel-upload" (click)="fileFinancialAe = null">delete_forever</mat-icon>
+          </button>
+
+        </div>
+      </div>
+
+      <div class="col">
+        <input type="file" class="file-input" [accept]="requiredFileType" (change)="fileFinancialCp = getFile($event)" #fileUploadCp>
+        <div class="file-upload">
+
+          <span>{{ fileFinancialCp !== null ? fileFinancialCp.name : "Montants payés (CP)" }}</span>
+
+          <button mat-mini-fab color="primary" class="upload-btn" *ngIf="fileFinancialCp === null"
+            (click)="fileUploadCp.click()">
+            <mat-icon>attach_file</mat-icon>
+          </button>
+
+          <button mat-mini-fab color="warn" class="cancel-upload" *ngIf="fileFinancialCp !== null"
+            (click)="fileFinancialCp = null">
+            <mat-icon class="cancel-upload" (click)="fileFinancialCp = null">delete_forever</mat-icon>
+          </button>
+
+        </div>
+      </div>
+
+      <div class="col">
+        <button mat-fab color="primary" *ngIf="fileFinancialAe !== null && fileFinancialCp !== null" (click)="uploadFinancialFiles()"
+          (disabled)="uploadInProgress.value === true">
+          <mat-icon fontIcon="upload_file" />
+        </button>
+      </div>
+
+    </div>
+  </mat-card-content>
+</mat-card>
+
+<hr>
+
+<mat-card class="mat-card" *ngIf="isAdmin">
+  <mat-card-header>
+    <mat-card-title>Mettre à jour les référentiels</mat-card-title>
+  </mat-card-header>
+
+  <mat-card-content>
+
+    <div class="line">
+
+      <div class="col">
+        <input type="file" class="file-input" accept=".xlsx" (change)="fileReferentiel = getFile($event)"
+          #fileUploadReferentiel>
+        <div class="file-upload">
+
+          <span>{{ fileReferentiel !== null ? fileReferentiel.name : "Sélectionner le fichier calculette chorus"
+            }}</span>
+
+          <button mat-mini-fab color="primary" class="upload-btn" *ngIf="fileReferentiel === null"
+            (click)="fileUploadReferentiel.click()">
+            <mat-icon>attach_file</mat-icon>
+          </button>
+
+          <button mat-mini-fab color="warn" class="cancel-upload" *ngIf="fileReferentiel !== null"
+            (click)="fileReferentiel = null">
+            <mat-icon class="cancel-upload" (click)="fileReferentiel = null">delete_forever</mat-icon>
+          </button>
+        </div>
+      </div>
+
+      <button mat-fab color="primary" *ngIf="fileReferentiel !== null" (click)="uploadReferentiel()"
+        (disabled)="uploadInProgress.value === true">
+        <mat-icon fontIcon="upload_file" />
+      </button>
+
+    </div>
+  </mat-card-content>
+</mat-card>
+
+<hr>
+
+<mat-card class="mat-card" *ngIf=" dataSource.length> 0">
+  <mat-card-header>
+    <mat-card-title-group>
+      <mat-card-title>Historique des 10 derniers chargements des données financières</mat-card-title>
+    </mat-card-title-group>
+  </mat-card-header>
+
+  <mat-card-content class="fr-col-6">
+    <table mat-table [dataSource]="dataSource" class="fr-table fr-table--no-caption">
+      <caption>Liste des derniers fichiers chargés</caption>
+      <ng-container matColumnDef="username">
+        <th mat-header-cell *matHeaderCellDef>Utilisateur</th>
+        <td mat-cell *matCellDef="let element">{{element.username}}</td>
+      </ng-container>
+
+      <!-- Name Column -->
+      <ng-container matColumnDef="filename">
+        <th mat-header-cell *matHeaderCellDef>Fichier</th>
+        <td mat-cell *matCellDef="let element">{{element.filename}}</td>
+      </ng-container>
+
+      <!-- Weight Column -->
+      <ng-container matColumnDef="date">
+        <th mat-header-cell *matHeaderCellDef>Date</th>
+        <td mat-cell *matCellDef="let element"><lib-display-date [date]="element.date" /></td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+
+
+  </mat-card-content>
+
+</mat-card>

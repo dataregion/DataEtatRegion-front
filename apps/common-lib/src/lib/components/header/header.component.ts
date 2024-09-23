@@ -23,6 +23,9 @@ export class HeaderComponent implements OnInit {
   title: string = '';
 
   @Input()
+  subTitle: string = '';
+
+  @Input()
   logo: string = 'DataEtat.svg';
 
   constructor(
