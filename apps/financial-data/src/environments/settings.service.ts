@@ -1,14 +1,13 @@
 import { Injectable } from '@angular/core';
 import { ISettingsService } from 'apps/common-lib/src/lib/environments/interface-settings.service';
 import {
-  IApi,
-  Settings,
-  Keycloak,
-  Ressources,
   Features,
+  IApi,
+  Keycloak,
+  Matomo,
+  Ressources,
+  Settings,
 } from 'apps/common-lib/src/public-api';
-
-
 
 class Api implements IApi {
   financial_data = '';
@@ -35,6 +34,7 @@ export class SettingsService implements ISettingsService {
     this.settings.keycloak = new Keycloak();
     this.settings.ressources = new Ressources();
     this.settings.features = new Features();
+    this.settings.matomo = new Matomo();
   }
 
   setSettings(settings: Settings): void {
@@ -53,6 +53,10 @@ export class SettingsService implements ISettingsService {
     return this.settings.features;
   }
 
+  getMatomo(): Matomo {
+    return this.settings.matomo;
+  }
+
   getSetting(): FinancialSettings {
     return this.settings as FinancialSettings;
   }
@@ -68,7 +72,7 @@ export class SettingsService implements ISettingsService {
   public get apiExternes(): string {
     return (this.settings.apis as Api).apis_externes;
   }
-  
+
   public get apiLaureatsData(): string {
     return (this.settings.apis as Api).laureats_data;
   }
@@ -88,5 +92,4 @@ export class SettingsService implements ISettingsService {
   public get apiDemarches(): string {
     return (this.settings.apis as Api).demarches;
   }
-
 }
