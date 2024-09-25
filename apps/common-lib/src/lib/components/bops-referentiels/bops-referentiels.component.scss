@@ -1,13 +1,16 @@
 .bops-referentiels-wrapper-fields {
   display: flex;
 }
+
 .select-multiple {
   flex-grow: 1;
   flex-basis: 0;
 }
+
 .select-single + .select-multiple {
   margin-left: 8px;
 }
+
 .select-multiple + .select-multiple {
   margin-left: 8px;
 }

@@ -13,13 +13,7 @@ import { User } from 'apps/management/src/lib/models/users/user.models';
   standalone: true,
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
-  imports: [
-    MatIconModule,
-    MatTooltipModule,
-    CommonModule,
-    RouterModule,
-    MatMenuModule,
-  ],
+  imports: [MatIconModule, MatTooltipModule, CommonModule, RouterModule, MatMenuModule]
 })
 export class HeaderComponent implements OnInit {
   public isLoggedIn = false;

@@ -1,11 +1,7 @@
 import { APP_INITIALIZER, LOCALE_ID, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { KeycloakAngularModule, KeycloakService } from 'keycloak-angular';
-import {
-  HTTP_INTERCEPTORS,
-  provideHttpClient,
-  withInterceptorsFromDi,
-} from '@angular/common/http';
+import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { LoggerModule, NgxLoggerLevel } from 'ngx-logger';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -28,11 +24,11 @@ import {
   API_REF_PATH,
   CommonHttpInterceptor,
   CommonLibModule,
-  MaterialModule,
+  MaterialModule
 } from 'apps/common-lib/src/public-api';
 import {
   SETTINGS,
-  SettingsHttpService,
+  SettingsHttpService
 } from 'apps/common-lib/src/lib/environments/settings.http.service';
 import { ManagementModule } from 'apps/management/src/public-api';
 import { API_MANAGEMENT_PATH } from 'apps/management/src/lib/services/users-http.service';
@@ -43,7 +39,7 @@ import { HttpLink } from 'apollo-angular/http';
 import {
   aeApiModule,
   aeConfiguration,
-  aeConfigurationParameters,
+  aeConfigurationParameters
 } from 'apps/clients/apis-externes';
 import { InMemoryCache } from '@apollo/client';
 import { DATA_HTTP_SERVICE } from '@services/budget.service';
@@ -53,24 +49,20 @@ import { BudgetDataHttpService } from '@services/http/budget-lines-http.service'
 import { MultiregionsService } from '@services/multiregions.service';
 import { MatomoModule, MatomoRouterModule } from 'ngx-matomo-client';
 
-export function apiExternesConfigFactory(
-  settingsService: SettingsService,
-): aeConfiguration {
+export function apiExternesConfigFactory(settingsService: SettingsService): aeConfiguration {
   const params: aeConfigurationParameters = {
     withCredentials: false,
-    basePath: settingsService.apiExternes,
+    basePath: settingsService.apiExternes
   };
 
   return new aeConfiguration(params);
 }
 
-export function apiBudgetConfigFactory(
-  settingsService: SettingsService,
-): aeConfiguration {
+export function apiBudgetConfigFactory(settingsService: SettingsService): aeConfiguration {
   settingsService;
   const params: aeConfigurationParameters = {
     withCredentials: false,
-    basePath: settingsService.apiFinancialDataV2,
+    basePath: settingsService.apiFinancialDataV2
   };
 
   return new aeConfiguration(params);
@@ -79,12 +71,7 @@ export function apiBudgetConfigFactory(
 registerLocaleData(localeFr);
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    HomeComponent,
-    PreferenceComponent,
-    SearchDataComponent,
-  ],
+  declarations: [AppComponent, HomeComponent, PreferenceComponent, SearchDataComponent],
   bootstrap: [AppComponent],
   imports: [
     BrowserModule,
@@ -105,80 +92,75 @@ registerLocaleData(localeFr);
     budgetApiModule,
     ApolloModule,
     MatomoModule.forRoot({
-      mode: 'deferred',
+      mode: 'deferred'
     }),
-    MatomoRouterModule,
+    MatomoRouterModule
   ],
   providers: [
     {
       provide: SETTINGS,
-      useClass: SettingsService,
+      useClass: SettingsService
     },
     {
       provide: DATA_HTTP_SERVICE,
       useClass: BudgetDataHttpService,
-      multi: true,
+      multi: true
     },
     {
       provide: APP_INITIALIZER,
       useFactory: app_Init,
       multi: true,
-      deps: [
-        SettingsHttpService,
-        KeycloakService,
-        SettingsService,
-        MultiregionsService,
-      ],
+      deps: [SettingsHttpService, KeycloakService, SettingsService, MultiregionsService]
     },
     {
       provide: HTTP_INTERCEPTORS,
       useClass: CommonHttpInterceptor,
-      multi: true,
+      multi: true
     },
     DatePipe,
     {
       provide: LOCALE_ID,
-      useValue: 'fr-FR',
+      useValue: 'fr-FR'
     },
     {
       provide: API_PREFERENCE_PATH,
       useFactory: (settings: SettingsService) => {
         return settings.apiAdministration;
       },
-      deps: [SETTINGS],
+      deps: [SETTINGS]
     },
     {
       provide: API_GEO_PATH,
       useFactory: (settings: SettingsService) => {
         return settings.apiGeo;
       },
-      deps: [SETTINGS],
+      deps: [SETTINGS]
     },
     {
       provide: API_REF_PATH,
       useFactory: (settings: SettingsService) => {
         return settings.apiReferentiel;
       },
-      deps: [SETTINGS],
+      deps: [SETTINGS]
     },
     {
       provide: API_MANAGEMENT_PATH,
       useFactory: (settings: SettingsService) => {
         return settings.apiAdministration;
       },
-      deps: [SETTINGS],
+      deps: [SETTINGS]
     },
     {
       provide: aeConfiguration,
       useFactory: apiExternesConfigFactory,
       deps: [SETTINGS],
-      multi: false,
+      multi: false
     },
     {
       provide: budgetConfiguration,
       useFactory: apiBudgetConfigFactory,
       deps: [SETTINGS],
-      multi: false,
+      multi: false
     },
     {
       provide: APOLLO_OPTIONS,
@@ -187,19 +169,17 @@ registerLocaleData(localeFr);
         return {
           cache: new InMemoryCache(),
           link: httpLink.create({
-            uri: apiDs,
-          }),
+            uri: apiDs
+          })
         };
       },
-      deps: [HttpLink, SETTINGS],
+      deps: [HttpLink, SETTINGS]
     },
-    provideHttpClient(withInterceptorsFromDi()),
-  ],
+    provideHttpClient(withInterceptorsFromDi())
+  ]
 })
 export class AppModule {}
 
-export function app_Init(
-  settingsHttpService: SettingsHttpService,
-): () => Promise<any> {
+export function app_Init(settingsHttpService: SettingsHttpService): () => Promise<any> {
   return () => settingsHttpService.initializeApp();
 }

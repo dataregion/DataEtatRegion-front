@@ -6,8 +6,8 @@ import { ManagementUserComponent } from 'apps/management/src/lib/components/mana
 import { resolveUsers } from '../../resolvers/management/users.resolver';
 import { UploadLaureatsComponent } from './upload-laureats/upload-laureats.component';
 
-export const profiles_required_for_managment_page = [Profil.ADMIN]
-export const profiles_required_for_upload_page = [Profil.ADMIN, Profil.COMPTABLE]
+export const profiles_required_for_managment_page = [Profil.ADMIN];
+export const profiles_required_for_upload_page = [Profil.ADMIN, Profil.COMPTABLE];
 
 const routes: Routes = [
   {
@@ -15,24 +15,24 @@ const routes: Routes = [
     component: ManagementUserComponent,
     canActivate: [keycloakAuthGuardCanActivate],
     data: {
-      roles: profiles_required_for_managment_page,
+      roles: profiles_required_for_managment_page
     },
     resolve: {
-      usersPagination: resolveUsers,
-    },
+      usersPagination: resolveUsers
+    }
   },
   {
     path: 'upload',
     component: UploadLaureatsComponent,
     canActivate: [keycloakAuthGuardCanActivate],
     data: {
-      roles: profiles_required_for_upload_page,
-    },
-  },
+      roles: profiles_required_for_upload_page
+    }
+  }
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule],
+  exports: [RouterModule]
 })
 export class AdministrationRoutingModule {}

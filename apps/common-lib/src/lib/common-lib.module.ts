@@ -14,12 +14,7 @@ import { BopsReferentielsComponent } from './components/bops-referentiels/bops-r
 import { SelectSimpleComponent } from './components/select-simple/select-simple.component';
 
 @NgModule({
-  declarations: [
-    AlertSnackBarComponent,
-    FooterComponent,
-    RegisterComponent,
-    TermOfUseComponent,
-  ],
+  declarations: [AlertSnackBarComponent, FooterComponent, RegisterComponent, TermOfUseComponent],
   imports: [
     CommonModule,
     BopsReferentielsComponent,
@@ -30,7 +25,7 @@ import { SelectSimpleComponent } from './components/select-simple/select-simple.
     DisplayDateComponent,
     AdvancedChipsMultiselectComponent,
     SelectMultipleComponent,
-    SelectSimpleComponent,
+    SelectSimpleComponent
   ],
   exports: [
     AlertSnackBarComponent,
@@ -43,7 +38,7 @@ import { SelectSimpleComponent } from './components/select-simple/select-simple.
     RegisterComponent,
     AdvancedChipsMultiselectComponent,
     SelectMultipleComponent,
-    SelectSimpleComponent,
-  ],
+    SelectSimpleComponent
+  ]
 })
 export class CommonLibModule {}

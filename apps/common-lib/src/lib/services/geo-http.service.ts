@@ -1,10 +1,9 @@
-import { HttpClient, HttpParams } from "@angular/common/http";
-import { Injectable, InjectionToken, inject } from "@angular/core";
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { inject, Injectable, InjectionToken } from '@angular/core';
 
-import { GeoArrondissementModel, QpvModel, TypeLocalisation } from "../models/geo.models";
-import { GeoModel } from "../models/geo.models";
-import { Observable } from "rxjs";
-import { map } from "rxjs/operators";
+import { GeoArrondissementModel, GeoModel, QpvModel, TypeLocalisation } from '../models/geo.models';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 import { DataPagination } from '../models/pagination/pagination.models';
 
@@ -23,145 +22,135 @@ export const API_REF_PATH = new InjectionToken<string>('API REF');
  * voir GeoHttpService.search
  */
 interface SearchParams {
-    [key: string]: any
+  [key: string]: any;
 }
-
 
 @Injectable({
-    providedIn: 'root'
+  providedIn: 'root'
 })
 export class GeoHttpService {
+  private http = inject(HttpClient);
+  private readonly api_geo = inject(API_GEO_PATH);
+  private readonly api_ref = inject(API_REF_PATH);
 
-    private http = inject(HttpClient);
-    private readonly api_geo = inject(API_GEO_PATH);
-    private readonly api_ref = inject(API_REF_PATH);
+  public search(type: TypeLocalisation, search_param: SearchParams): Observable<GeoModel[]> {
+    const base = this._baseUrl(type);
+    const str_params = this._to_query_paramstr(search_param);
 
-    public search(
-        type: TypeLocalisation,
-        search_param: SearchParams,
-    ): Observable<GeoModel[]> {
+    const url = `${base}?${str_params}`;
 
-        const base = this._baseUrl(type);
-        const str_params = this._to_query_paramstr(search_param);
+    return this.http.get<GeoModel[]>(url).pipe(
+      map((payload) => {
+        const mapped = this._api_to_service_mapper(type, payload);
+        return mapped;
+      })
+    );
+  }
 
-        const url = `${base}?${str_params}`
+  private _baseUrl(type: TypeLocalisation): string {
+    let base = '';
 
-        return this.http.get<GeoModel[]>(url)
-            .pipe(map(payload => {
-                const mapped = this._api_to_service_mapper(type, payload);
-                return mapped;
-            }));
+    switch (type) {
+      case TypeLocalisation.CRTE:
+      case TypeLocalisation.QPV:
+      case TypeLocalisation.ARRONDISSEMENT:
+        base = `${this.api_ref}`;
+        break;
+      default:
+        base = `${this.api_geo}`;
+        break;
     }
 
-    private _baseUrl(type: TypeLocalisation): string {
-
-        let base = ''
-
-        switch (type) {
-            case TypeLocalisation.CRTE:
-            case TypeLocalisation.QPV:
-            case TypeLocalisation.ARRONDISSEMENT:
-                base = `${this.api_ref}`
-                break;
-            default:
-                base = `${this.api_geo}`
-                break;
-        }
-
-        let segment = '';
-        switch (type) {
-            case TypeLocalisation.REGION:
-                segment = 'regions';
-                break;
-            case TypeLocalisation.ARRONDISSEMENT:
-                segment = 'arrondissement';
-                break;
-            case TypeLocalisation.COMMUNE:
-                segment = 'communes';
-                break;
-            case TypeLocalisation.CRTE:
-                segment = 'crte';
-                break;
-            case TypeLocalisation.DEPARTEMENT:
-                segment = 'departements';
-                break;
-            case TypeLocalisation.EPCI:
-                segment = 'epcis';
-                break;
-            case TypeLocalisation.QPV:
-                segment = 'qpv';
-                break;
-            default:
-                throw new Error(`Non géré: ${type}`);
-        }
-
-        return `${this._remove_trailing_slash(base)}/${segment}`
+    let segment = '';
+    switch (type) {
+      case TypeLocalisation.REGION:
+        segment = 'regions';
+        break;
+      case TypeLocalisation.ARRONDISSEMENT:
+        segment = 'arrondissement';
+        break;
+      case TypeLocalisation.COMMUNE:
+        segment = 'communes';
+        break;
+      case TypeLocalisation.CRTE:
+        segment = 'crte';
+        break;
+      case TypeLocalisation.DEPARTEMENT:
+        segment = 'departements';
+        break;
+      case TypeLocalisation.EPCI:
+        segment = 'epcis';
+        break;
+      case TypeLocalisation.QPV:
+        segment = 'qpv';
+        break;
+      default:
+        throw new Error(`Non géré: ${type}`);
     }
 
-    private _remove_trailing_slash(s: string) {
+    return `${this._remove_trailing_slash(base)}/${segment}`;
+  }
 
-        if (s.endsWith('/'))
-            return s.slice(0, -1)
-        return s
-    }
+  private _remove_trailing_slash(s: string) {
+    if (s.endsWith('/')) return s.slice(0, -1);
+    return s;
+  }
 
-    private _to_query_paramstr(search_params: SearchParams) {
-        let params = new HttpParams()
+  private _to_query_paramstr(search_params: SearchParams) {
+    let params = new HttpParams();
 
-        for (const key in search_params) {
-            if (Object.prototype.hasOwnProperty.call(search_params, key)) {
-                const v = search_params[key];
+    for (const key in search_params) {
+      if (Object.prototype.hasOwnProperty.call(search_params, key)) {
+        const v = search_params[key];
 
-                params = params.set(key, v);
-            }
-        }
-
-        const str_params = params.toString();
-        return str_params;
-    }
-
-    private _api_to_service_mapper(type: TypeLocalisation, geos: GeoModel[]) {
-
-        if (type === TypeLocalisation.ARRONDISSEMENT) {
-            const payload = geos as unknown as DataPagination<GeoArrondissementModel>
-
-            return payload.items.map(arr => {
-                return {
-                    nom: arr.label,
-                    code: arr.code,
-                    type: TypeLocalisation.ARRONDISSEMENT
-                } as GeoModel
-            })
-        }
-
-        if (type === TypeLocalisation.QPV) {
-          const payload = geos as unknown as DataPagination<QpvModel>
-
-          return payload.items.map(arr => {
-              return {
-                  nom: arr.label,
-                  code: arr.code,
-                  type: TypeLocalisation.QPV
-              } as GeoModel
-          })
+        params = params.set(key, v);
       }
-
-
-        return geos.map(geo => {
-            return { ...geo, type: type }
-        });
     }
+
+    const str_params = params.toString();
+    return str_params;
+  }
+
+  private _api_to_service_mapper(type: TypeLocalisation, geos: GeoModel[]) {
+    if (type === TypeLocalisation.ARRONDISSEMENT) {
+      const payload = geos as unknown as DataPagination<GeoArrondissementModel>;
+
+      return payload.items.map((arr) => {
+        return {
+          nom: arr.label,
+          code: arr.code,
+          type: TypeLocalisation.ARRONDISSEMENT
+        } as GeoModel;
+      });
+    }
+
+    if (type === TypeLocalisation.QPV) {
+      const payload = geos as unknown as DataPagination<QpvModel>;
+
+      return payload.items.map((arr) => {
+        return {
+          nom: arr.label,
+          code: arr.code,
+          type: TypeLocalisation.QPV
+        } as GeoModel;
+      });
+    }
+
+    return geos.map((geo) => {
+      return { ...geo, type: type };
+    });
+  }
 }
-
-
-
 
 type _Term = string | null;
 
-
 /** Gère le paramètre de limite de SearchParams. A utiliser avec un ASearchParamsBuilder pour personnaliser le calcul de cet argument. */
 // eslint-disable-next-line
-export type LimitHandler = (search_params: SearchParams, type: TypeLocalisation, default_limit: number) => SearchParams;
+export type LimitHandler = (
+  search_params: SearchParams,
+  type: TypeLocalisation,
+  default_limit: number
+) => SearchParams;
 
 /**
  * Construit un SearchParams.
@@ -175,41 +164,39 @@ export type LimitHandler = (search_params: SearchParams, type: TypeLocalisation,
  * ```
  */
 abstract class ASearchParamsBuilder {
-    protected _defaultLimit = 100;
-    protected _limitHandler: LimitHandler;
+  protected _defaultLimit = 100;
+  protected _limitHandler: LimitHandler;
 
-    constructor() {
-        this._limitHandler = (search) => {
-            return { ...search, limit: this._defaultLimit };
-        }
-    }
+  constructor() {
+    this._limitHandler = (search) => {
+      return { ...search, limit: this._defaultLimit };
+    };
+  }
 
-    public withDefaultLimit(n: number) {
-        this._defaultLimit = n;
-        return this;
-    }
+  public withDefaultLimit(n: number) {
+    this._defaultLimit = n;
+    return this;
+  }
 
-    public withLimitHandler(handler: LimitHandler) {
-        this._limitHandler = handler;
-        return this;
-    }
+  public withLimitHandler(handler: LimitHandler) {
+    this._limitHandler = handler;
+    return this;
+  }
 
-    search(term: _Term, type: TypeLocalisation): SearchParams {
+  search(term: _Term, type: TypeLocalisation): SearchParams {
+    let params = this.make_search_params(term, type);
+    params = this._limitHandler(params, type, this._defaultLimit);
 
-        let params = this.make_search_params(term, type);
-        params = this._limitHandler(params, type, this._defaultLimit);
+    if (type === TypeLocalisation.COMMUNE) params = this.add_fields_commune(params);
 
-        if (type === TypeLocalisation.COMMUNE)
-            params = this.add_fields_commune(params);
+    return params;
+  }
 
-        return params;
-    }
+  protected abstract make_search_params(_term: _Term, _type: TypeLocalisation): SearchParams;
 
-    protected abstract make_search_params(_term: _Term, _type: TypeLocalisation): SearchParams;
-
-    protected add_fields_commune(search_params: SearchParams): SearchParams {
-        return { ...search_params, fields: 'nom,code,codeDepartement' }
-    }
+  protected add_fields_commune(search_params: SearchParams): SearchParams {
+    return { ...search_params, fields: 'nom,code,codeDepartement' };
+  }
 }
 
 /**
@@ -225,117 +212,109 @@ abstract class ASearchParamsBuilder {
  * Ce builder est adapté pour les recherches faites par un utilisateur sur les emplacements géographiques.
  */
 export class FuzzySearchParamsBuilder extends ASearchParamsBuilder {
+  override make_search_params(term: _Term, type: TypeLocalisation): SearchParams {
+    return this.fuzzy(term, type);
+  }
 
-    override make_search_params(term: _Term, type: TypeLocalisation): SearchParams {
-        return this.fuzzy(term, type);
+  public fuzzy(term: _Term, type: TypeLocalisation): SearchParams {
+    let search_params: SearchParams;
+    switch (type) {
+      case TypeLocalisation.ARRONDISSEMENT:
+      case TypeLocalisation.QPV:
+        search_params = this._arrondissement_or_qpv_fuzzy(term);
+        break;
+      case TypeLocalisation.COMMUNE:
+        search_params = this._commune_fuzzy(term);
+        break;
+      case TypeLocalisation.CRTE:
+        search_params = this._crte_fuzzy(term);
+        break;
+      case TypeLocalisation.REGION:
+        search_params = this._region_fuzzy(term);
+        break;
+      case TypeLocalisation.DEPARTEMENT:
+        search_params = this._departement_fuzzy(term);
+        break;
+      case TypeLocalisation.EPCI:
+        search_params = this._epci_fuzzy(term);
+        break;
+      default:
+        throw new Error(`Non géré: ${type}`);
     }
 
-    public fuzzy(term: _Term, type: TypeLocalisation): SearchParams {
+    return search_params;
+  }
 
-        let search_params: SearchParams;
-        switch (type) {
-            case TypeLocalisation.ARRONDISSEMENT:
-            case TypeLocalisation.QPV:
-                search_params = this._arrondissement_or_qpv_fuzzy(term);
-                break;
-            case TypeLocalisation.COMMUNE:
-                search_params = this._commune_fuzzy(term);
-                break;
-            case TypeLocalisation.CRTE:
-                search_params = this._crte_fuzzy(term);
-                break;
-            case TypeLocalisation.REGION:
-                search_params = this._region_fuzzy(term);
-                break;
-            case TypeLocalisation.DEPARTEMENT:
-                search_params = this._departement_fuzzy(term);
-                break;
-            case TypeLocalisation.EPCI:
-                search_params = this._epci_fuzzy(term);
-                break;
-            default:
-                throw new Error(`Non géré: ${type}`);
-        }
+  private _arrondissement_or_qpv_fuzzy(term: _Term): SearchParams {
+    if (term) return { query: term };
+    else return {};
+  }
 
-        return search_params;
+  private _commune_fuzzy(term: _Term): SearchParams {
+    if (!term) return {};
+
+    let params: SearchParams = {};
+    if (!isNaN(Number(term))) {
+      if (term.length <= 2) {
+        params = { codeDepartement: term };
+      } else if (term.length === 5) {
+        params = { codePostal: term };
+      } else {
+        params = { code: term };
+      }
+    } else {
+      params = { nom: term };
     }
+    return params;
+  }
 
-    private _arrondissement_or_qpv_fuzzy(term: _Term): SearchParams {
+  private _crte_fuzzy(term: _Term): SearchParams {
+    if (!term) return {};
 
-        if (term) return { query: term }
-        else return {}
+    let params: SearchParams = {};
+    if (!isNaN(Number(term)) && term.length <= 2) {
+      params = { departement: term };
+    } else {
+      params = { nom: term };
     }
+    return params;
+  }
 
-    private _commune_fuzzy(term: _Term): SearchParams {
+  private _departement_fuzzy(term: _Term): SearchParams {
+    if (!term) return {};
 
-        if (!term) return {};
-
-        let params: SearchParams = {};
-        if (!isNaN(Number(term))) {
-            if (term.length <= 2) {
-                params = { codeDepartement: term }
-            } else if (term.length === 5) {
-                params = { codePostal: term };
-            } else {
-                params = { code: term };
-            }
-        } else {
-            params = { nom: term };
-        }
-        return params;
+    let params: SearchParams = {};
+    if (term.length <= 3 && !isNaN(Number(term.substring(0, 1)))) {
+      params = { code: term };
+    } else {
+      params = { nom: term };
     }
+    return params;
+  }
 
-    private _crte_fuzzy(term: _Term): SearchParams {
+  private _region_fuzzy(term: _Term): SearchParams {
+    if (!term) return {};
 
-        if (!term) return {}
-
-        let params: SearchParams = {}
-        if (!isNaN(Number(term)) && term.length <= 2) {
-            params = { departement: term };
-        } else {
-            params = { nom: term };
-        }
-        return params;
+    let params: SearchParams = {};
+    if (term.length <= 2 && !isNaN(Number(term.substring(0, 1)))) {
+      params = { code: term };
+    } else {
+      params = { nom: term };
     }
+    return params;
+  }
 
-    private _departement_fuzzy(term: _Term): SearchParams {
+  private _epci_fuzzy(term: _Term) {
+    if (!term) return {};
 
-        if (!term) return {}
-
-        let params: SearchParams = {}
-        if (term.length <= 3 && !isNaN(Number(term.substring(0, 1)))) {
-            params = { code: term };
-        } else {
-            params = { nom: term };
-        }
-        return params;
+    let params: SearchParams = {};
+    if (term.length <= 9 && !isNaN(Number(term.substring(0, 8)))) {
+      params = { code: term };
+    } else {
+      params = { nom: term };
     }
-
-    private _region_fuzzy(term: _Term): SearchParams {
-
-        if (!term) return {}
-
-        let params: SearchParams = {}
-        if (term.length <= 2 && !isNaN(Number(term.substring(0, 1)))) {
-            params = { code: term };
-        } else {
-            params = { nom: term };
-        }
-        return params;
-    }
-
-    private _epci_fuzzy(term: _Term) {
-
-        if (!term) return {}
-
-        let params: SearchParams = {}
-        if (term.length <= 9 && !isNaN(Number(term.substring(0, 8)))) {
-            params = { code: term }
-        } else {
-            params = { nom: term }
-        }
-        return params
-    }
+    return params;
+  }
 }
 
 /**
@@ -344,33 +323,31 @@ export class FuzzySearchParamsBuilder extends ASearchParamsBuilder {
  * Recherche sur le cog (code officiel géographique). Adapté pour les API.
  */
 export class SearchByCodeParamsBuilder extends ASearchParamsBuilder {
+  override make_search_params(term: _Term, type: TypeLocalisation): SearchParams {
+    let search_params: SearchParams;
 
-    override make_search_params(term: _Term, type: TypeLocalisation): SearchParams {
-
-        let search_params: SearchParams;
-
-        switch(type) {
-            case TypeLocalisation.ARRONDISSEMENT:
-            case TypeLocalisation.QPV:
-                search_params = { query: term };
-                break;
-            case TypeLocalisation.COMMUNE:
-                search_params = { code: term };
-                break;
-            case TypeLocalisation.CRTE:
-                search_params = { nom: term };
-                break;
-            case TypeLocalisation.REGION:
-            case TypeLocalisation.DEPARTEMENT:
-                search_params = { code: term };
-                break;
-            case TypeLocalisation.EPCI:
-                search_params = { code: term };
-                break;
-            default:
-                throw new Error(`Non géré: ${type}`);
-        }
-
-        return search_params;
+    switch (type) {
+      case TypeLocalisation.ARRONDISSEMENT:
+      case TypeLocalisation.QPV:
+        search_params = { query: term };
+        break;
+      case TypeLocalisation.COMMUNE:
+        search_params = { code: term };
+        break;
+      case TypeLocalisation.CRTE:
+        search_params = { nom: term };
+        break;
+      case TypeLocalisation.REGION:
+      case TypeLocalisation.DEPARTEMENT:
+        search_params = { code: term };
+        break;
+      case TypeLocalisation.EPCI:
+        search_params = { code: term };
+        break;
+      default:
+        throw new Error(`Non géré: ${type}`);
     }
+
+    return search_params;
+  }
 }

@@ -20,11 +20,7 @@ import { SavePreferenceDialogComponent } from './components/save-filter/save-pre
 import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dialog.component';
 
 @NgModule({
-  declarations: [
-    PreferenceUsersComponent,
-    SavePreferenceDialogComponent,
-    ConfirmDialogComponent,
-  ],
+  declarations: [PreferenceUsersComponent, SavePreferenceDialogComponent, ConfirmDialogComponent],
   imports: [
     MatCardModule,
     MatButtonModule,
@@ -41,12 +37,8 @@ import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dial
     MatIconModule,
     MatInputModule,
     MatDialogModule,
-    MatFormFieldModule,
+    MatFormFieldModule
   ],
-  exports: [
-    PreferenceUsersComponent,
-    SavePreferenceDialogComponent,
-    ConfirmDialogComponent,
-  ],
+  exports: [PreferenceUsersComponent, SavePreferenceDialogComponent, ConfirmDialogComponent]
 })
 export class PreferenceUsersModule {}

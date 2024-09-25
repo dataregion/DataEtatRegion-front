@@ -7,7 +7,7 @@ import { SettingsService } from '../environments/settings.service';
 @Component({
   selector: 'france-relance-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss'],
+  styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
   public progressBarVisible: boolean = false;

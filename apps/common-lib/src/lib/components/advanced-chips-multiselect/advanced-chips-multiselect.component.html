@@ -1,42 +1,42 @@
 <mat-form-field>
 
-  <mat-label>{{label}}</mat-label>
+  <mat-label>{{ label }}</mat-label>
 
   <mat-chip-grid #chipGrid [ariaLabel]="'Valeurs selectionnées pour ' + label">
 
-    <mat-chip-row *ngFor="let s of visible_selectedData"
-      (removed)="remove(s)"
-      [editable]="false"
-      [aria-description]="s.item"
+    <mat-chip-row (removed)="remove(s)"
+                  *ngFor="let s of visible_selectedData"
+                  [aria-description]="s.item"
+                  [editable]="false"
     >
       {{ s.item }}
-      <button matChipRemove [attr.aria-label]="'remove ' + s.item">
+      <button [attr.aria-label]="'remove ' + s.item" matChipRemove>
         <mat-icon>cancel</mat-icon>
       </button>
 
     </mat-chip-row>
 
     <mat-chip-row *ngIf="invisible_count > 0">
-      <span >+ {{invisible_count}}</span>
+      <span>+ {{ invisible_count }}</span>
     </mat-chip-row>
 
     <input
-      type="text"
       #selectionInput
+      (matChipInputTokenEnd)="onMatChipInputEvent($event)"
       [formControl]="_inputControl"
-      [placeholder]="placeholder"
+      [matAutocomplete]="auto"
+      [matChipInputAddOnBlur]="addOnBlur"
       [matChipInputFor]="chipGrid"
       [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-      [matChipInputAddOnBlur]="addOnBlur"
-      (matChipInputTokenEnd)="onMatChipInputEvent($event)"
-      [matAutocomplete]="auto"
+      [placeholder]="placeholder"
+      type="text"
     >
 
   </mat-chip-grid>
 
   <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
     <mat-option *ngFor="let option of options_minus_selected" [value]="option">
-      {{option.item}}
+      {{ option.item }}
     </mat-option>
   </mat-autocomplete>
 

@@ -1,15 +1,15 @@
-import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges,} from '@angular/core';
-import {CommonModule, NgFor} from '@angular/common';
-import {FormsModule, ReactiveFormsModule, ValidationErrors,} from '@angular/forms';
-import {MatTooltipModule} from '@angular/material/tooltip';
-import {MatFormFieldModule} from '@angular/material/form-field';
-import {MatSelectModule} from '@angular/material/select';
-import {MatAutocompleteModule} from '@angular/material/autocomplete';
-import {MatIconModule} from '@angular/material/icon';
-import {MatInputModule} from '@angular/material/input';
-import {MatButtonModule} from '@angular/material/button';
-import {MatCheckboxModule} from '@angular/material/checkbox';
-import {debounceTime, Observable} from 'rxjs';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+import { CommonModule, NgFor } from '@angular/common';
+import { FormsModule, ReactiveFormsModule, ValidationErrors } from '@angular/forms';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { debounceTime, Observable } from 'rxjs';
 
 /**
  * Select simple paramétrable
@@ -31,8 +31,8 @@ import {debounceTime, Observable} from 'rxjs';
     NgFor,
     MatInputModule,
     MatButtonModule,
-    MatCheckboxModule,
-  ],
+    MatCheckboxModule
+  ]
 })
 export class SelectSimpleComponent<T> implements OnInit, OnChanges {
   // Filtre sur les options ?
@@ -45,9 +45,14 @@ export class SelectSimpleComponent<T> implements OnInit, OnChanges {
 
   // Options
   @Input() filteredOptions: T[] | null = [];
+  @Output() selectedChange = new EventEmitter<T | null>();
+  filterInput: string = '';
+  // Icon prefix
+  @Input() icon: string = '';
 
   // Options sélectionnées
   private _selected: T | null = null;
+
   public get selected(): T | null {
     return this._selected;
   }
@@ -56,13 +61,6 @@ export class SelectSimpleComponent<T> implements OnInit, OnChanges {
   public set selected(value: T | null) {
     this._selected = value;
   }
-
-  @Output() selectedChange = new EventEmitter<T | null>();
-
-  filterInput: string = '';
-
-  // Icon prefix
-  @Input() icon: string = '';
 
   /**
    * Fonction de filtrage par défaut, peut-être remplacée par injection
@@ -157,10 +155,7 @@ export class SelectSimpleComponent<T> implements OnInit, OnChanges {
         // Concaténation des éléments sélectionnés avec les éléments filtrés (en supprimant les doublons éventuels)
         this.filteredOptions =
           this.selected != null
-            ? [
-                this.selected,
-                ...this.filteredOptions.filter((el) => !(this.selected === el)),
-              ]
+            ? [this.selected, ...this.filteredOptions.filter((el) => !(this.selected === el))]
             : this.filteredOptions;
       });
   }

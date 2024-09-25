@@ -39,7 +39,7 @@ import { MatChipsModule } from '@angular/material/chips';
     MatSlideToggleModule,
     MatToolbarModule,
     MatChipsModule,
-    MatTableModule,
-  ],
+    MatTableModule
+  ]
 })
 export class MaterialModule {}

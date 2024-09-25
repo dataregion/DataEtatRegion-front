@@ -6,9 +6,9 @@ const config: CodegenConfig = {
     'https://raw.githubusercontent.com/demarches-simplifiees/demarches-simplifiees.fr/main/app/graphql/schema.graphql',
   generates: {
     'src/generated/graphql.ts': {
-      plugins: ['typescript'],
-    },
-  },
+      plugins: ['typescript']
+    }
+  }
 };
 
 export default config;

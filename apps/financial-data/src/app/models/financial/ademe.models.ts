@@ -1,10 +1,8 @@
-import { Commune, Siret } from "./common.models";
-import { Tag } from "../refs/tag.model";
+import { Commune, Siret } from './common.models';
+import { Tag } from '../refs/tag.model';
 
-
-
-export interface AdemeData{
-  id: number,
+export interface AdemeData {
+  id: number;
   date_convention: string;
   dates_periode_versement: string;
   montant: number;
@@ -15,7 +13,7 @@ export interface AdemeData{
   pourcentage_subvention: number;
   reference_decision: string;
   siret_beneficiaire: Siret;
-  commune: Commune
+  commune: Commune;
 
   tags: Tag[];
 }

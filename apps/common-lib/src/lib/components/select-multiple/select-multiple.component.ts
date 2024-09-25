@@ -1,7 +1,7 @@
-import { Component, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { CommonModule, NgFor } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, ValidationErrors } from '@angular/forms';
-import { MatTooltipModule} from '@angular/material/tooltip';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
@@ -30,11 +30,10 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
     NgFor,
     MatInputModule,
     MatButtonModule,
-    MatCheckboxModule,
+    MatCheckboxModule
   ]
 })
 export class SelectMultipleComponent<T> implements OnChanges {
-  
   // Select all ?
   @Input() canSelectAll: boolean = false;
 
@@ -49,23 +48,23 @@ export class SelectMultipleComponent<T> implements OnChanges {
   // Options
   @Input() options: T[] | null = [];
   filteredOptions: T[] | null = [];
+  @Output() selectedChange = new EventEmitter<T[] | null>();
+  filterInput: string = '';
+  searching: boolean = false;
+  // Icon prefix
+  @Input() icon: string = '';
 
   // Options sélectionnées
   private _selected: T[] | null = null;
+
   public get selected(): T[] | null {
     return this._selected;
   }
+
   @Input()
   public set selected(value: T[] | null) {
     this._selected = value ?? null;
   }
-  @Output() selectedChange = new EventEmitter<T[] | null>();
-
-  filterInput: string = '';
-  searching: boolean = false;
-
-  // Icon prefix
-  @Input() icon: string = '';
 
   /**
    * Fonction de filtrage par défaut, peut-être remplacée par injection
@@ -74,16 +73,18 @@ export class SelectMultipleComponent<T> implements OnChanges {
   @Input()
   filterFunction(text: string): T[] {
     // Filtre par défaut : options considérées comme des string
-    this.filteredOptions = this.options ? this.options?.filter((opt) => {
-      const optStr = opt ? (opt as string).toLowerCase() : '';
-      return optStr.includes(text.toLowerCase());
-    }) : [];
+    this.filteredOptions = this.options
+      ? this.options?.filter((opt) => {
+          const optStr = opt ? (opt as string).toLowerCase() : '';
+          return optStr.includes(text.toLowerCase());
+        })
+      : [];
     return this.filteredOptions;
   }
-  
+
   /**
    * Fonction de rendu d'une option par défaut, peut-être remplacée par injection
-   * @param option 
+   * @param option
    */
   @Input()
   renderFunction(option: T): string {
@@ -93,23 +94,23 @@ export class SelectMultipleComponent<T> implements OnChanges {
 
   /**
    * Fonction de rendu des options sélectionnées par défaut, peut-être remplacée par injection
-   * @param selected 
-   * @returns 
+   * @param selected
+   * @returns
    */
   @Input()
   renderLabelFunction(selected: T[] | null): string {
     // Affichage par défaut : options jointes par des virgules
-    return selected != null ? (selected as string[]).join(', ') : ''
+    return selected != null ? (selected as string[]).join(', ') : '';
   }
 
   /**
    * Actions au changement des inputs
-   * @param changes 
+   * @param changes
    */
   ngOnChanges(changes: SimpleChanges) {
     // Mise à jour des options
     if ('options' in changes) {
-      this.options = changes['options'].currentValue
+      this.options = changes['options'].currentValue;
       this.filteredOptions = this.options;
     }
     if ('selected' in changes) {
@@ -119,15 +120,15 @@ export class SelectMultipleComponent<T> implements OnChanges {
 
   /**
    * Toutes les options sont-elles sélectionnées ?
-   * @returns 
+   * @returns
    */
-   allSelected(): boolean {
+  allSelected(): boolean {
     return this.selected != null ? this.selected?.length === this.filteredOptions?.length : false;
   }
 
   /**
-   * Des options sont-elles sélectionnées ? 
-   * @returns 
+   * Des options sont-elles sélectionnées ?
+   * @returns
    */
   hasMultipleSelected(): boolean {
     return this.selected != null ? this.selected?.length > 0 : false;
@@ -136,8 +137,8 @@ export class SelectMultipleComponent<T> implements OnChanges {
   /**
    * Sélection de toutes les options
    */
-   toggleAll() {
-    this.onChange(!this.allSelected() ? this.filteredOptions : null)
+  toggleAll() {
+    this.onChange(!this.allSelected() ? this.filteredOptions : null);
   }
 
   /**
@@ -158,7 +159,7 @@ export class SelectMultipleComponent<T> implements OnChanges {
   /**
    * Filtrage des option par défaut OU spécifique des options
    * @param text
-   * @returns 
+   * @returns
    */
   filter(text?: string): void {
     // Sauvegarde du texte
@@ -166,23 +167,20 @@ export class SelectMultipleComponent<T> implements OnChanges {
     this.searching = this.filterInput.length > 0;
     // Filtre
     const newOptions = this.filterFunction(text ? text : '');
-    if (newOptions == null || newOptions.length === 0)
-      return
+    if (newOptions == null || newOptions.length === 0) return;
 
     this.filteredOptions = newOptions;
     // Concaténation des éléments sélectionnés avec les éléments filtrés (en supprimant les doublons éventuels)
-    this.filteredOptions = this.selected != null ?
-      [
-        ...this.selected,
-        ...this.filteredOptions.filter((el) => !this.selected?.includes(el))
-      ]
-      : this.filteredOptions
+    this.filteredOptions =
+      this.selected != null
+        ? [...this.selected, ...this.filteredOptions.filter((el) => !this.selected?.includes(el))]
+        : this.filteredOptions;
   }
 
   /**
    * Affichage textuel par défaut OU spécifique d'une option
-   * @param option 
-   * @returns 
+   * @param option
+   * @returns
    */
   render(option: T): string {
     return this.renderFunction(option);
@@ -190,10 +188,9 @@ export class SelectMultipleComponent<T> implements OnChanges {
 
   /**
    * Affichage textuel des options sélectionnées en label
-   * @returns 
+   * @returns
    */
-   renderLabel(): string {
+  renderLabel(): string {
     return this.renderLabelFunction(this.selected);
   }
-
 }

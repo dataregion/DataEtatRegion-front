@@ -25,26 +25,27 @@
 
     <div class="line">
       <div class="col">
-        <input type="file" class="file-input" accept=".csv" (change)="fileMajTag = getFile($event)"
-          #fileUploadReferentiel>
+        <input #fileUploadReferentiel (change)="fileMajTag = getFile($event)" accept=".csv" class="file-input"
+               type="file">
         <div class="file-upload">
 
           <span>{{ fileMajTag !== null ? fileMajTag.name : "Séléctionnez le fichier de mise à jour des tags" }}</span>
 
-          <button mat-mini-fab color="primary" class="upload-btn" *ngIf="fileMajTag === null"
-            (click)="fileUploadReferentiel.click()">
+          <button (click)="fileUploadReferentiel.click()" *ngIf="fileMajTag === null" class="upload-btn" color="primary"
+                  mat-mini-fab>
             <mat-icon>attach_file</mat-icon>
           </button>
 
-          <button mat-mini-fab color="warn" class="cancel-upload" *ngIf="fileMajTag !== null"
-            (click)="fileMajTag = null">
-            <mat-icon class="cancel-upload" (click)="fileMajTag = null">delete_forever</mat-icon>
+          <button (click)="fileMajTag = null" *ngIf="fileMajTag !== null" class="cancel-upload" color="warn"
+                  mat-mini-fab>
+            <mat-icon (click)="fileMajTag = null" class="cancel-upload">delete_forever</mat-icon>
           </button>
         </div>
       </div>
 
-      <button mat-fab color="primary" *ngIf="fileMajTag !== null" (click)="uploadFileMajTag()"
-        (disabled)="uploadInProgress.value === true">
+      <button (click)="uploadFileMajTag()" (disabled)="uploadInProgress.value === true" *ngIf="fileMajTag !== null"
+              color="primary"
+              mat-fab>
         <mat-icon fontIcon="upload_file" />
       </button>
 
@@ -61,26 +62,26 @@
         <caption>Référence des tags disponibles</caption>
 
         <thead>
-          <tr>
-            <td>Nom</td>
-            <td>Description</td>
-          </tr>
+        <tr>
+          <td>Nom</td>
+          <td>Description</td>
+        </tr>
         </thead>
 
         <tbody>
-          <tr *ngFor="let tag of tags">
-            <td>
-              <div class="flex-container flex-row align-center">
-                <button mat-icon-button (click)="copyTagToClipboard(tag)">
-                  <mat-icon>content_copy</mat-icon>
-                </button>
-                <span>
+        <tr *ngFor="let tag of tags">
+          <td>
+            <div class="flex-container flex-row align-center">
+              <button (click)="copyTagToClipboard(tag)" mat-icon-button>
+                <mat-icon>content_copy</mat-icon>
+              </button>
+              <span>
                   {{ displayTagCodename(tag) }}
                 </span>
-              </div>
-            </td>
-            <td>{{ tag.description }}</td>
-          </tr>
+            </div>
+          </td>
+          <td>{{ tag.description }}</td>
+        </tr>
         </tbody>
 
       </table>

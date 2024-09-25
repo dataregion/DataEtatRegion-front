@@ -11,7 +11,7 @@ import { PreferenceUsersHttpService } from '../../services/preference-users-http
  */
 @Component({
   templateUrl: './save-preference-dialog.component.html',
-  styleUrls: ['./save-preference-dialog.component.scss'],
+  styleUrls: ['./save-preference-dialog.component.scss']
 })
 export class SavePreferenceDialogComponent {
   public separatorKeysCodes: number[] = [ENTER, COMMA];
@@ -101,8 +101,7 @@ export class SavePreferenceDialogComponent {
           this.filterUser = response.filter(
             (userInResponse: { username: string }) =>
               this.preference.shares?.findIndex(
-                (userSelect) =>
-                  userSelect.shared_username_email === userInResponse.username
+                (userSelect) => userSelect.shared_username_email === userInResponse.username
               ) === -1
           );
         } else if (this._isValidEmail(this.searchUser)) {

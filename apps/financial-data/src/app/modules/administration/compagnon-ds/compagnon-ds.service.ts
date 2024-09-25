@@ -8,12 +8,12 @@ import {
   Demarche,
   Donnee,
   Reconciliation,
-  ValeurDonnee,
+  ValeurDonnee
 } from '@models/demarche_simplifie/demarche.model';
 import { SettingsService } from 'apps/financial-data/src/environments/settings.service';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class CompagnonDSService {
   private _apiDemarches: string;
@@ -34,7 +34,7 @@ export class CompagnonDSService {
 
   constructor(
     private _http: HttpClient,
-    @Inject(SETTINGS) readonly settings: SettingsService, //eslint-disable-line
+    @Inject(SETTINGS) readonly settings: SettingsService //eslint-disable-line
   ) {
     this._apiDemarches = settings.apiDemarches;
   }
@@ -43,13 +43,13 @@ export class CompagnonDSService {
     return this._http
       .get(`${this._apiDemarches}/demarche`, {
         params: {
-          id: id.toString(),
-        },
+          id: id.toString()
+        }
       })
       .pipe(
         map((demarche) => {
           return demarche as Demarche;
-        }),
+        })
       );
   }
 
@@ -63,13 +63,13 @@ export class CompagnonDSService {
     return this._http
       .get(`${this._apiDemarches}/reconciliation`, {
         params: {
-          id: id.toString(),
-        },
+          id: id.toString()
+        }
       })
       .pipe(
         map((results) => {
           return results as Reconciliation[];
-        }),
+        })
       );
   }
 
@@ -81,13 +81,13 @@ export class CompagnonDSService {
     return this._http
       .get(`${this._apiDemarches}/affichage`, {
         params: {
-          financialAeId: financialAeId.toString(),
-        },
+          financialAeId: financialAeId.toString()
+        }
       })
       .pipe(
         map((result) => {
           return result as AffichageDossier;
-        }),
+        })
       );
   }
 
@@ -99,32 +99,32 @@ export class CompagnonDSService {
     return this._http
       .get(`${this._apiDemarches}/donnees`, {
         params: {
-          id: id.toString(),
-        },
+          id: id.toString()
+        }
       })
       .pipe(
         map((results) => {
           return results as Donnee[];
-        }),
+        })
       );
   }
 
   public getValeurDonneeOfAccepted(
     numeroDemarche: number,
-    matchingData: string[],
+    matchingData: string[]
   ): Observable<ValeurDonnee[] | null> {
     return this._http
       .get(`${this._apiDemarches}/valeurs`, {
         params: {
           idDemarche: numeroDemarche.toString(),
           idDonnees: matchingData.join(','),
-          statutDossier: 'accepte',
-        },
+          statutDossier: 'accepte'
+        }
       })
       .pipe(
         map((results) => {
           return results as ValeurDonnee[];
-        }),
+        })
       );
   }
 }

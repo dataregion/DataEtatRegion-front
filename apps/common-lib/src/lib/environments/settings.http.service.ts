@@ -2,10 +2,7 @@ import { Inject, Injectable, InjectionToken } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { KeycloakService } from 'keycloak-angular';
 import { firstValueFrom } from 'rxjs';
-import {
-  Keycloak as KeycloakSettings,
-  Settings,
-} from 'apps/common-lib/src/public-api';
+import { Keycloak as KeycloakSettings, Settings } from 'apps/common-lib/src/public-api';
 import { ISettingsService } from './interface-settings.service';
 import { NGXLogger, NgxLoggerLevel } from 'ngx-logger';
 import { assert } from '../utilities/assert.function';
@@ -22,7 +19,7 @@ export class SettingsHttpService {
     private _keycloak: KeycloakService,
     private _hostname_mapper: MultiRegionClientIdMapper,
     private _logger: NGXLogger,
-    private _matomoInitializer: MatomoInitializerService,
+    private _matomoInitializer: MatomoInitializerService
   ) {}
 
   initializeApp(): Promise<any> {
@@ -41,22 +38,19 @@ export class SettingsHttpService {
         if (is_in_production) {
           this._logger.partialUpdateConfig({
             level: NgxLoggerLevel.WARN,
-            disableFileDetails: true,
+            disableFileDetails: true
           });
         } else {
           this._logger.partialUpdateConfig({
             level: NgxLoggerLevel.TRACE,
-            enableSourceMaps: true,
+            enableSourceMaps: true
           });
-          this._logger.info(
-            'Application en mode développement. Les logs sont en mode trace',
-          );
+          this._logger.info('Application en mode développement. Les logs sont en mode trace');
         }
       })
       .then(async () => {
         const keycloak_settings = this._settingsService.getKeycloakSettings();
-        const multi_region =
-          this._settingsService?.getKeycloakSettings()?.multi_region;
+        const multi_region = this._settingsService?.getKeycloakSettings()?.multi_region;
 
         if (multi_region) {
           this._logger.debug(`Initialisation de keycloak en mode multiregion`);
@@ -71,7 +65,7 @@ export class SettingsHttpService {
         if (!matomo_settings.disabled) {
           this._matomoInitializer.initializeTracker({
             siteId: matomo_settings.site_id,
-            trackerUrl: matomo_settings.tracker_url,
+            trackerUrl: matomo_settings.tracker_url
           });
         }
       });
@@ -80,10 +74,7 @@ export class SettingsHttpService {
   async init_keycloak_monoregion(settings: KeycloakSettings) {
     try {
       const { url, realm, clientId } = settings;
-      assert(
-        clientId != null,
-        'Le clientId est nécessaire dans une configuration monoregion',
-      );
+      assert(clientId != null, 'Le clientId est nécessaire dans une configuration monoregion');
 
       return await this.init_keycloak(url, realm, clientId);
     } catch (error) {
@@ -96,11 +87,11 @@ export class SettingsHttpService {
     try {
       const { url, realm } = settings;
       const clientId = this._hostname_mapper.kc_client_id_from_hostname(
-        settings.hostname_client_id_mappings,
+        settings.hostname_client_id_mappings
       );
 
       this._logger.debug(
-        `Initialisation de keycloak avec url: ${url}, realm: ${realm} et le client id: ${clientId}`,
+        `Initialisation de keycloak avec url: ${url}, realm: ${realm} et le client id: ${clientId}`
       );
 
       return await this.init_keycloak(url, realm, clientId);
@@ -116,23 +107,21 @@ export class SettingsHttpService {
         config: {
           url,
           realm,
-          clientId,
+          clientId
         },
         initOptions: {
-          checkLoginIframe: false,
+          checkLoginIframe: false
         },
         bearerPrefix: 'Bearer',
         enableBearerInterceptor: true,
-        bearerExcludedUrls: ['/assets'], // C'est une API publique,
+        bearerExcludedUrls: ['/assets'] // C'est une API publique,
         // Il est nécessaire de les whitelister pour ne pas
         // être redirigé vers la page de login de keycloak
       });
 
       return initialization;
     } catch (error) {
-      throw new Error(
-        "Une erreur s'est déroulée durant l'initialisation de keycloak",
-      );
+      throw new Error("Une erreur s'est déroulée durant l'initialisation de keycloak");
     }
   }
 }

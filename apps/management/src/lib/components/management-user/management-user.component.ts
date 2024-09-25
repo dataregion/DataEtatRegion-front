@@ -13,9 +13,7 @@ import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dial
 @Component({
   selector: 'lib-management-user',
   templateUrl: './management-user.component.html',
-  providers: [
-    { provide: MatPaginatorIntl, useValue: getFrenchPaginatorIntl() }
-  ],
+  providers: [{ provide: MatPaginatorIntl, useValue: getFrenchPaginatorIntl() }]
 })
 export class ManagementUserComponent implements OnInit {
   public displayedColumns: string[] = [
@@ -23,16 +21,14 @@ export class ManagementUserComponent implements OnInit {
     'lastName',
     'username',
     'administration',
-    'softEnabled',
+    'softEnabled'
   ];
 
   private dialog = inject(MatDialog);
 
   public pageSize: number = 100;
 
-  @ViewChild(MatCheckbox, { static: true }) public checkbox:
-    | MatCheckbox
-    | undefined;
+  @ViewChild(MatCheckbox, { static: true }) public checkbox: MatCheckbox | undefined;
   public dataSource: UsersPagination = { users: [] };
 
   constructor(
@@ -43,11 +39,9 @@ export class ManagementUserComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this._route.data.subscribe(
-      (response: { usersPagination: UsersPagination | Error } | any) => {
-        this.dataSource = response.usersPagination;
-      }
-    );
+    this._route.data.subscribe((response: { usersPagination: UsersPagination | Error } | any) => {
+      this.dataSource = response.usersPagination;
+    });
   }
 
   toggleSoftEnabled(user: User, event: MatSlideToggleChange): void {
@@ -62,24 +56,20 @@ export class ManagementUserComponent implements OnInit {
     request.subscribe({
       next: (_response: string) => {
         if (this.checkbox?.checked === true) {
-          this._retrieve_users(true).subscribe(
-            (userPagination: UsersPagination) => {
-              this.dataSource = userPagination;
-            }
-          );
+          this._retrieve_users(true).subscribe((userPagination: UsersPagination) => {
+            this.dataSource = userPagination;
+          });
         } else {
           user.softEnabled = !user.softEnabled;
         }
 
         this._alertService.openAlertSuccess(
-          `Utilisateur ${user.email} ${
-            user.softEnabled ? 'activé' : 'désactivé'
-          } avec succès.`
+          `Utilisateur ${user.email} ${user.softEnabled ? 'activé' : 'désactivé'} avec succès.`
         );
       },
       error: (error: any) => {
         console.error(error);
-      },
+      }
     });
   }
 
@@ -90,28 +80,25 @@ export class ManagementUserComponent implements OnInit {
 
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
       width: '250px',
-      data: 'Êtes-vous sûr de vouloir supprimer l\'utilisateur?'
+      data: "Êtes-vous sûr de vouloir supprimer l'utilisateur?"
     });
 
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe((result) => {
       if (result) {
         requestDelete.subscribe({
-            next: (_response: string) => {
-              this._retrieve_users(this.checkbox?.checked ?? false, 1).subscribe(
-                (userPagination: UsersPagination) => {
-                  this.dataSource = userPagination;
-                }
-              );
+          next: (_response: string) => {
+            this._retrieve_users(this.checkbox?.checked ?? false, 1).subscribe(
+              (userPagination: UsersPagination) => {
+                this.dataSource = userPagination;
+              }
+            );
 
-              this._alertService.openAlertSuccess(
-                `Utilisateur ${user.email} supprimé avec succès.`
-              );
-            },
-            error: (error: any) => {
-              console.error(error);
-            },
-
-        })
+            this._alertService.openAlertSuccess(`Utilisateur ${user.email} supprimé avec succès.`);
+          },
+          error: (error: any) => {
+            console.error(error);
+          }
+        });
       }
     });
   }
@@ -125,7 +112,7 @@ export class ManagementUserComponent implements OnInit {
   }
 
   public changePage(event: PageEvent): void {
-    this.pageSize = event.pageSize
+    this.pageSize = event.pageSize;
     this._retrieve_users(
       this.checkbox?.checked ?? false,
       event.pageIndex + 1,
@@ -144,23 +131,26 @@ export class ManagementUserComponent implements OnInit {
   }
 }
 
-
 @Component({
   selector: 'lib-management-confirm',
   template: `
     <h2 mat-dialog-title>Confirmation</h2>
 
     <div mat-dialog-content>
-    {{ message }}
+      {{ message }}
     </div>
     <mat-dialog-actions align="end">
-      <button mat-button color="warn" type="button" [mat-dialog-close]="true" cdkFocusInitial>Oui</button>
+      <button mat-button color="warn" type="button" [mat-dialog-close]="true" cdkFocusInitial>
+        Oui
+      </button>
       <button mat-button mat-dialog-close type="button">Non</button>
     </mat-dialog-actions>
   `
 })
-/* eslint no-unused-vars: 0 */  // --> OFF
+/* eslint no-unused-vars: 0 */ // --> OFF
 export class ConfirmationDialogComponent {
-  constructor(public dialogRef: MatDialogRef<ConfirmationDialogComponent>,
-              @Inject(MAT_DIALOG_DATA) public message: string) {}
+  constructor(
+    public dialogRef: MatDialogRef<ConfirmationDialogComponent>,
+    @Inject(MAT_DIALOG_DATA) public message: string
+  ) {}
 }

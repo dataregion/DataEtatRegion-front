@@ -3,22 +3,14 @@ import { Injectable } from '@angular/core';
 import { Observable, concatMap, map, of } from 'rxjs';
 
 import { Apollo, gql } from 'apollo-angular';
-import {
-  Demarche,
-  Dossier,
-  PersonneMorale,
-} from '@models/demarche_simplifie/demarche-graphql';
+import { Demarche, Dossier, PersonneMorale } from '@models/demarche_simplifie/demarche-graphql';
 import { ApolloQueryResult } from '@apollo/client';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class DemarcheHttpService {
-  
-  constructor(
-    private _apollo: Apollo
-  ) {
-  }
+  constructor(private _apollo: Apollo) {}
 
   public getDemarcheLight(id: number): Observable<Demarche | null> {
     const demarche = gql`
@@ -34,9 +26,10 @@ export class DemarcheHttpService {
       .query<{ demarche: Demarche }>({
         query: demarche,
         variables: {
-          demarcheNumber: id,
-        },
-      }).pipe(
+          demarcheNumber: id
+        }
+      })
+      .pipe(
         map((appoloResult: ApolloQueryResult<{ demarche: Demarche }>) => {
           const d = appoloResult.data;
           if (d.demarche && d.demarche !== null) return d.demarche;
@@ -44,7 +37,7 @@ export class DemarcheHttpService {
         })
       );
   }
-  
+
   /**
    * Avec un numéro de démarche, recherche le dossier
    * @param id id de la démarche
@@ -57,16 +50,12 @@ export class DemarcheHttpService {
     siret: string,
     montantAe: number
   ): Observable<Dossier | null> {
-
-    const getDossiers = (
-      after: string | undefined = undefined
-    ): Observable<Dossier | null> => {
+    const getDossiers = (after: string | undefined = undefined): Observable<Dossier | null> => {
       return this._getDemarche(id, after).pipe(
         concatMap((demarcheWidthDossier) => {
           if (demarcheWidthDossier !== null) {
             const pageInfo = demarcheWidthDossier.dossiers.pageInfo;
-            const dossiers = demarcheWidthDossier.dossiers
-              .nodes as Array<Dossier>;
+            const dossiers = demarcheWidthDossier.dossiers.nodes as Array<Dossier>;
 
             // POC pour DEBUG/analyse en preprod/prod
             const dossierSiretFilter = dossiers.filter((dossier) => {
@@ -77,15 +66,15 @@ export class DemarcheHttpService {
               return false;
             });
             // On refiltre sur le siret
-            const dossierSiret = dossierSiretFilter.find(
-              (dossier) => {
-                const montant_dossier = dossier.annotations.find(champ=> champ.label === 'Montant de la subvention accordée' )?.stringValue;
-                return (
-                  montant_dossier === undefined ||
-                  (montant_dossier as String) === montantAe.toString()
-                );
-              }
-            );
+            const dossierSiret = dossierSiretFilter.find((dossier) => {
+              const montant_dossier = dossier.annotations.find(
+                (champ) => champ.label === 'Montant de la subvention accordée'
+              )?.stringValue;
+              return (
+                montant_dossier === undefined ||
+                (montant_dossier as String) === montantAe.toString()
+              );
+            });
 
             if (dossierSiret) {
               return of(dossierSiret);
@@ -103,16 +92,9 @@ export class DemarcheHttpService {
     return getDossiers();
   }
 
-  private _getDemarche(
-    id: number,
-    after?: string
-  ): Observable<Demarche | null> {
+  private _getDemarche(id: number, after?: string): Observable<Demarche | null> {
     const demarche = gql`
-      query getDemarche(
-        $demarcheNumber: Int!
-        $state: DossierState
-        $after: String
-      ) {
+      query getDemarche($demarcheNumber: Int!, $state: DossierState, $after: String) {
         demarche(number: $demarcheNumber) {
           title
           id
@@ -150,8 +132,8 @@ export class DemarcheHttpService {
         variables: {
           demarcheNumber: id,
           state: 'accepte',
-          after: after ?? '',
-        },
+          after: after ?? ''
+        }
       })
       .valueChanges.pipe(
         map((appoloResult: ApolloQueryResult<{ demarche: Demarche }>) => {

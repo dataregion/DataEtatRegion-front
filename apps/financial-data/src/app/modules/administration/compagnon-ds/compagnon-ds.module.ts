@@ -15,12 +15,7 @@ import { AffichageDemarcheComponent } from './affichage/affichage-demarche.compo
 import { NavCompagnonDSComponent } from './nav/nav.component';
 import { SelectSimpleComponent } from '../../../../../../common-lib/src/lib/components/select-simple/select-simple.component';
 import { SelectMultipleComponent } from '../../../../../../common-lib/src/lib/components/select-multiple/select-multiple.component';
-import {
-  MatError,
-  MatFormField,
-  MatLabel,
-  MatSuffix,
-} from '@angular/material/form-field';
+import { MatError, MatFormField, MatLabel, MatSuffix } from '@angular/material/form-field';
 import { MatIcon } from '@angular/material/icon';
 import { MatIconButton } from '@angular/material/button';
 import { MatInput } from '@angular/material/input';
@@ -31,7 +26,7 @@ import { MatSelect, MatSelectTrigger } from '@angular/material/select';
   declarations: [
     IntegrationDemarcheComponent,
     ReconciliationDemarcheComponent,
-    AffichageDemarcheComponent,
+    AffichageDemarcheComponent
   ],
   imports: [
     CommonModule,
@@ -51,7 +46,7 @@ import { MatSelect, MatSelectTrigger } from '@angular/material/select';
     MatSelect,
     MatSelectTrigger,
     MatSuffix,
-    FormsModule,
-  ],
+    FormsModule
+  ]
 })
 export class CompagnonDSModule {}

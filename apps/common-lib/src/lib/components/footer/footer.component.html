@@ -1,17 +1,17 @@
-<footer class="fr-footer" role="contentinfo" id="footer">
+<footer class="fr-footer" id="footer" role="contentinfo">
   <div class="fr-container fr-container-lg">
     <div class="fr-footer__body">
-      <div class="fr-footer__brand"> <a href="/" class="fr-footer__content-link"
-          title="Retour à l’accueil du site - databretagne.fr">
-          <p class="fr-logo"> </p>
-        </a>
+      <div class="fr-footer__brand"><a class="fr-footer__content-link" href="/"
+                                       title="Retour à l’accueil du site - databretagne.fr">
+        <p class="fr-logo"></p>
+      </a>
       </div>
       <div class="fr-footer__bottom">
         <ul class="fr-footer__bottom-list">
           <li class="fr-footer__bottom-item">
             <a class="fr-footer__bottom-link" href="/cgu">Conditions générales d'utilisation</a>
           </li>
-          <li class="fr-footer__bottom-item" *ngIf="contact !== undefined">
+          <li *ngIf="contact !== undefined" class="fr-footer__bottom-item">
             <a class="fr-footer__bottom-link" href="{{contact}}" target="_blank">Nous contacter</a>
           </li>
           <ng-content />
@@ -21,19 +21,20 @@
       <div class="fr-footer__content">
         <ul class="fr-footer__content-list">
           <li *ngIf="url_github" class="fr-footer__content-item">
-            <a class="fr-footer__content-link" target="_blank" href="{{ url_github }}">
-              <img class="fr-footer__logo fr-footer__gh_img" src="assets/img/github-mark.png" alt="Documentation sur github" /> 
+            <a class="fr-footer__content-link" href="{{ url_github }}" target="_blank">
+              <img alt="Documentation sur github" class="fr-footer__logo fr-footer__gh_img"
+                   src="assets/img/github-mark.png" />
             </a>
           </li>
-          <li class="fr-footer__content-item"> <img class="fr-footer__logo" src="assets/img/tamponHomologation.png"
-              alt="ANSSI" /> </li>
-          <li class="fr-footer__content-item"> <img class="fr-footer__logo" src="assets/img/{{logo}}"
-              alt="Budget Etat" /> </li>
-          <li class="fr-footer__content-item"> <img class="fr-footer__logo" src="assets/img/logo_france_relance.png"
-              alt="France Relance" /> </li>
+          <li class="fr-footer__content-item"><img alt="ANSSI" class="fr-footer__logo"
+                                                   src="assets/img/tamponHomologation.png" /></li>
+          <li class="fr-footer__content-item"><img alt="Budget Etat" class="fr-footer__logo"
+                                                   src="assets/img/{{logo}}" /></li>
+          <li class="fr-footer__content-item"><img alt="France Relance" class="fr-footer__logo"
+                                                   src="assets/img/logo_france_relance.png" /></li>
           <li class="fr-footer__content-item">
-            <a class="fr-footer__content-link" target="_blank" href="https://geobretagne.fr"><img
-                class="fr-footer__logo" src="assets/img/logo_geobretagne.png" alt="Geobretagne" /> </a>
+            <a class="fr-footer__content-link" href="https://geobretagne.fr" target="_blank"><img
+              alt="Geobretagne" class="fr-footer__logo" src="assets/img/logo_geobretagne.png" /> </a>
           </li>
         </ul>
       </div>

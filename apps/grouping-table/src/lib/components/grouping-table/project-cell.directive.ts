@@ -1,14 +1,13 @@
-import { Directive, Input, TemplateRef } from "@angular/core";
+import { Directive, Input, TemplateRef } from '@angular/core';
 
-/* eslint no-unused-vars: 0 */  // --> OFF
+/* eslint no-unused-vars: 0 */ // --> OFF
 
 @Directive({
-    selector: '[libProjectCell]'
+  selector: '[libProjectCell]'
 })
 export class ProjectCellDirective {
+  constructor(public templateRef: TemplateRef<unknown>) {}
 
-    constructor(public templateRef: TemplateRef<unknown>) { }
-
-    @Input('libProjectCell')
-    projectCell = '';
+  @Input('libProjectCell')
+  projectCell = '';
 }

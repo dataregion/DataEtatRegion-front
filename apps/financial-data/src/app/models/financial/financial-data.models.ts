@@ -1,12 +1,19 @@
-import { Commune, Programme, Siret, GroupeMarchandise, LocalisationInterministerielle, SourceFinancialData, DomaineFonctionnel, CentreCouts } from "./common.models";
-import { Tag } from "../refs/tag.model";
-import { ReferentielProgrammation } from "@models/refs/referentiel_programmation.model";
-import { Optional } from "apps/common-lib/src/lib/utilities/optional.type";
-import { ExportableAsJson } from "apps/common-lib/src/lib/models/exportable-as-json.model";
-
+import {
+  Commune,
+  Programme,
+  Siret,
+  GroupeMarchandise,
+  LocalisationInterministerielle,
+  SourceFinancialData,
+  DomaineFonctionnel,
+  CentreCouts
+} from './common.models';
+import { Tag } from '../refs/tag.model';
+import { ReferentielProgrammation } from '@models/refs/referentiel_programmation.model';
+import { Optional } from 'apps/common-lib/src/lib/utilities/optional.type';
+import { ExportableAsJson } from 'apps/common-lib/src/lib/models/exportable-as-json.model';
 
 export interface FinancialDataModel extends ExportableAsJson {
-
   id: number;
   source: SourceFinancialData;
 
@@ -15,7 +22,7 @@ export interface FinancialDataModel extends ExportableAsJson {
 
   montant_ae: Optional<number>;
   montant_cp: Optional<number>;
-  
+
   // Commune du bénérficiaire
   commune: Optional<Commune>;
 
@@ -40,13 +47,11 @@ export interface FinancialDataModel extends ExportableAsJson {
 
   // Les CP associées à la donnée financière.
   // XXX: Présente uniquement si requêtée
-  financial_cp?: Optional<FinancialCp[]>
+  financial_cp?: Optional<FinancialCp[]>;
 }
 
 export interface FinancialCp {
-
   date_base_dp: string;
   montant: number;
   n_dp: string;
-
 }

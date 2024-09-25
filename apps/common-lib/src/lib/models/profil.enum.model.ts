@@ -1,4 +1,4 @@
-/* eslint no-unused-vars: 0 */  // --> OFF
+/* eslint no-unused-vars: 0 */ // --> OFF
 /**
  * Enum representing the different profiles a user can have
  */
@@ -14,5 +14,5 @@ export enum Profil {
   /**
    * Profil utilisateur connecté
    */
-  USERS = 'USERS',
+  USERS = 'USERS'
 }

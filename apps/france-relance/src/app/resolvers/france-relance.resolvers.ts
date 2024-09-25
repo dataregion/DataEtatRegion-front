@@ -6,8 +6,7 @@ import { ResolveFn } from '@angular/router';
 import { LaureatHttpService } from '../services/laureat.http.service';
 
 @Injectable({ providedIn: 'root' })
-export class FranceRelanceResolvers
-{
+export class FranceRelanceResolvers {
   constructor(private _service: LaureatHttpService) {}
 
   resolve(): Observable<SousAxePlanRelance[] | Error> {
@@ -17,5 +16,5 @@ export class FranceRelanceResolvers
 
 export const resolveFranceRelance: ResolveFn<SousAxePlanRelance[] | Error> = () => {
   const resolver = inject(FranceRelanceResolvers);
-  return resolver.resolve()
-}
+  return resolver.resolve();
+};

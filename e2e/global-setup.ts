@@ -1,4 +1,4 @@
-import { FullConfig, chromium } from '@playwright/test';
+import { chromium, FullConfig } from '@playwright/test';
 import login from './tests/utils/login';
 
 async function globalSetup(config: FullConfig): Promise<void> {
@@ -41,12 +41,12 @@ async function _login_profile(
     await login(page, baseUrl, username, password);
 
     await context.storageState({
-      path: `storage-state/storageState-${profile}.json`,
+      path: `storage-state/storageState-${profile}.json`
     });
     await page.close();
   } catch (error) {
     await context.tracing.stop({
-      path: './test-results/failed-setup-trace.zip',
+      path: './test-results/failed-setup-trace.zip'
     });
     await page.close();
     throw error;

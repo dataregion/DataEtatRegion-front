@@ -16,7 +16,7 @@ html, body {
   display: flex;
   flex-direction: column;
 
-  --mdc-typography-body1-font-size : 14px
+  --mdc-typography-body1-font-size: 14px
 }
 
 .hidden {
@@ -47,7 +47,7 @@ html, body {
   .mdc-snackbar__surface {
     background-color: white !important;
 
-    .mdc-snackbar__label{
+    .mdc-snackbar__label {
       color: black
     }
   }

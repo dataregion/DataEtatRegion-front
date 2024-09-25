@@ -24,7 +24,9 @@
       "dom"
     ],
     "paths": {
-      "@models/*": ["apps/financial-data/src/app/models/*"],
+      "@models/*": [
+        "apps/financial-data/src/app/models/*"
+      ],
       "@services/*": [
         "apps/financial-data/src/app/services/*"
       ],
@@ -52,7 +54,7 @@
       "management/*": [
         "dist/management/*"
       ]
-     }
+    }
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,

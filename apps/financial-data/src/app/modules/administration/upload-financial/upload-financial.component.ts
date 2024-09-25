@@ -1,36 +1,19 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import {
-  Component,
-  OnInit,
-  ElementRef,
-  ViewChild,
-  inject,
-} from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild, inject } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import {
-  AuditUpdateData,
-  DataType,
-} from '@models/audit/audit-update-data.models';
+import { AuditUpdateData, DataType } from '@models/audit/audit-update-data.models';
 import { AuditHttpService } from '@services/http/audit.service';
 import { AlertService, SessionService } from 'apps/common-lib/src/public-api';
-import {
-  BehaviorSubject,
-  Subscription,
-  catchError,
-  finalize,
-  forkJoin,
-  of,
-} from 'rxjs';
+import { BehaviorSubject, Subscription, catchError, finalize, forkJoin, of } from 'rxjs';
 import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
 import { BudgetDataHttpService } from '@services/http/budget-lines-http.service';
 
 @Component({
   selector: 'financial-upload-financial-component',
   templateUrl: './upload-financial.component.html',
-  styleUrls: [ '../common-for-pages-with-uploads.scss' ],
+  styleUrls: ['../common-for-pages-with-uploads.scss']
 })
 export class UploadFinancialComponent implements OnInit {
-
   public readonly requiredFileType: string = '.csv';
   public DataType = DataType;
 
@@ -84,17 +67,16 @@ export class UploadFinancialComponent implements OnInit {
     return this._session.isAdmin();
   }
 
-  getFile(event: any) : File {
+  getFile(event: any): File {
     return event.target.files[0];
   }
-
 
   uploadFinancialFiles() {
     if (this.fileFinancialAe !== null && this.fileFinancialCp !== null && this.yearSelected) {
       const dialogRef = this.dialog.open(ConfirmDialogComponent, {
         data: this.yearSelected,
         width: '40rem',
-        autoFocus: 'input',
+        autoFocus: 'input'
       });
 
       dialogRef.afterClosed().subscribe((result: boolean) => {
@@ -108,7 +90,7 @@ export class UploadFinancialComponent implements OnInit {
   }
 
   uploadReferentiel() {
-    if (this.fileReferentiel !== null ) {
+    if (this.fileReferentiel !== null) {
       this.uploadInProgress.next(true);
       this._service
         .loadReferentielFile(this.fileReferentiel)
@@ -128,9 +110,8 @@ export class UploadFinancialComponent implements OnInit {
             if (err.error['message']) {
               this._alertService.openAlertError(err.error['message']);
             }
-          },
+          }
         });
-
     }
   }
 
@@ -138,7 +119,11 @@ export class UploadFinancialComponent implements OnInit {
     if (this.fileFinancialAe !== null && this.fileFinancialCp !== null && this.yearSelected) {
       this.uploadInProgress.next(true);
       this._service
-        .loadFinancialBudget(this.fileFinancialAe, this.fileFinancialCp, this.yearSelected.toString())
+        .loadFinancialBudget(
+          this.fileFinancialAe,
+          this.fileFinancialCp,
+          this.yearSelected.toString()
+        )
         .pipe(
           finalize(() => {
             this.fileFinancialAe = null;
@@ -149,7 +134,7 @@ export class UploadFinancialComponent implements OnInit {
         .subscribe({
           next: () => {
             this._alertService.openAlertSuccess(
-              'Les fichiers ont bien été récupérés. Les données seront disponibles dans l\'outil à partir de demain.'
+              "Les fichiers ont bien été récupérés. Les données seront disponibles dans l'outil à partir de demain."
             );
             this._fetchAudit();
           },
@@ -157,7 +142,7 @@ export class UploadFinancialComponent implements OnInit {
             if (err.error['message']) {
               this._alertService.openAlertError(err.error['message']);
             }
-          },
+          }
         });
     }
   }
@@ -173,7 +158,7 @@ export class UploadFinancialComponent implements OnInit {
 
     forkJoin({
       ae: financialAe$,
-      cp: financialCp$,
+      cp: financialCp$
     }).subscribe((response) => {
       const tabs = [...response.ae, ...response.cp];
       tabs.sort((a1: AuditUpdateData, a2: AuditUpdateData) => {

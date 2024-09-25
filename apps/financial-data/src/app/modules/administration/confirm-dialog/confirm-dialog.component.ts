@@ -6,9 +6,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
  */
 @Component({
   templateUrl: './confirm-dialog.component.html',
-  styles: [
-    '.dialog-title { display: inline-flex; width: 100%;justify-content: space-between; }',
-  ],
+  styles: ['.dialog-title { display: inline-flex; width: 100%;justify-content: space-between; }']
 })
 export class ConfirmDialogComponent {
   public year: string;

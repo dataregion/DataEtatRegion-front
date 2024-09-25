@@ -1,62 +1,62 @@
 <ng-container [ngSwitch]="view">
   <ng-container *ngSwitchCase="'light'">
 
-    <ng-container *ngTemplateOutlet="titre; context:{ libelle: 'Informations supplémentaires' }"/>
+    <ng-container *ngTemplateOutlet="titre; context:{ libelle: 'Informations supplémentaires' }" />
 
     <div>
-      <ng-container *ngTemplateOutlet="entrepriseLight; context:{ info: entreprise_light }"/>
+      <ng-container *ngTemplateOutlet="entrepriseLight; context:{ info: entreprise_light }" />
       <hr>
-      <ng-container *ngTemplateOutlet="subventionLight; context:{ info: api_subvention_light$ | async }"/>
+      <ng-container *ngTemplateOutlet="subventionLight; context:{ info: api_subvention_light$ | async }" />
       <hr>
       <!-- POC DS -->
-      <ng-container *ngTemplateOutlet="demarcheSimplifie; context:{ info: affichage_dossier$ | async }"/>
+      <ng-container *ngTemplateOutlet="demarcheSimplifie; context:{ info: affichage_dossier$ | async }" />
       <hr>
-      <financial-informations-supplementaires-detail-cp [financial]="financial"/>
+      <financial-informations-supplementaires-detail-cp [financial]="financial" />
     </div>
   </ng-container>
 
   <ng-container *ngSwitchCase="'full_api_entreprise'">
 
     <ng-container
-      *ngTemplateOutlet="titre; context:{ libelle: 'Informations supplémentaires sur l\'établissement' }"/>
+      *ngTemplateOutlet="titre; context:{ libelle: 'Informations supplémentaires sur l\'établissement' }" />
 
-    <financial-informations-supplementaires-detail-entreprise/>
+    <financial-informations-supplementaires-detail-entreprise />
   </ng-container>
 
   <ng-container *ngSwitchCase="'full_api_data_subventions'">
 
     <ng-container
-      *ngTemplateOutlet="titre; context:{ libelle: 'Informations supplémentaires sur la subvention' }"/>
+      *ngTemplateOutlet="titre; context:{ libelle: 'Informations supplémentaires sur la subvention' }" />
 
-    <financial-informations-supplementaires-detail-subventions/>
+    <financial-informations-supplementaires-detail-subventions />
   </ng-container>
 
   <ng-container *ngSwitchCase="'full_api_demarche'">
     <ng-container
-      *ngTemplateOutlet="titre; context:{ libelle: 'Informations sur le dossier de la démarche' }"/>
+      *ngTemplateOutlet="titre; context:{ libelle: 'Informations sur le dossier de la démarche' }" />
 
-    <financial-informations-demarche-simplifie/>
+    <financial-informations-demarche-simplifie />
   </ng-container>
 
   <ng-container *ngSwitchCase="'full'">
 
-    <ng-container *ngTemplateOutlet="titre; context:{ libelle: '' }"/>
+    <ng-container *ngTemplateOutlet="titre; context:{ libelle: '' }" />
 
     <div class="conteneur-full">
       <div class="conteneur-section">
         <ng-container
-          *ngTemplateOutlet="titre; context:{ libelle: 'Informations supplémentaires sur l\'établissement' }"/>
-        <financial-informations-supplementaires-detail-entreprise/>
+          *ngTemplateOutlet="titre; context:{ libelle: 'Informations supplémentaires sur l\'établissement' }" />
+        <financial-informations-supplementaires-detail-entreprise />
       </div>
       <div class="conteneur-section">
         <ng-container
-          *ngTemplateOutlet="titre; context:{ libelle: 'Informations supplémentaires sur la subvention' }"/>
-        <financial-informations-supplementaires-detail-subventions/>
+          *ngTemplateOutlet="titre; context:{ libelle: 'Informations supplémentaires sur la subvention' }" />
+        <financial-informations-supplementaires-detail-subventions />
       </div>
 
       <div class="conteneur-section">
-        <ng-container *ngTemplateOutlet="titre; context:{ libelle: 'Informations sur le dossier de la démarche' }"/>
-        <financial-informations-demarche-simplifie/>
+        <ng-container *ngTemplateOutlet="titre; context:{ libelle: 'Informations sur le dossier de la démarche' }" />
+        <financial-informations-demarche-simplifie />
       </div>
     </div>
   </ng-container>
@@ -83,14 +83,14 @@
           <i>Source: API entreprise</i>
         </span>
         <div class="ligne">
-          <img class="logo-api-entreprise" src="assets/img/api-entreprise.custom.png" alt="Logo API entreprise">
+          <img alt="Logo API entreprise" class="logo-api-entreprise" src="assets/img/api-entreprise.custom.png">
         </div>
       </div>
 
       <div class="colonne colonne-plus-info">
-        <button class="fr-btn" (click)="on_click_full_api_entreprise()">
+        <button (click)="on_click_full_api_entreprise()" class="fr-btn">
           Information disponible
-          <span class="fr-icon-arrow-right-s-line" aria-hidden="true"></span>
+          <span aria-hidden="true" class="fr-icon-arrow-right-s-line"></span>
         </button>
       </div>
     </div>
@@ -107,7 +107,7 @@
         <strong class="titre">Sur la subvention associative</strong> <br>
         <span>
           <strong>Objectif de la subvention:</strong>
-          {{info?.objectifs | ouNonRenseigne}}
+          {{ info?.objectifs | ouNonRenseigne }}
         </span> <br>
       </div>
 
@@ -116,14 +116,14 @@
           <i>Source: Data Subvention</i>
         </span>
         <div class="ligne">
-          <img class="logo-data-subvention" src="assets/img/data-subvention.custom.png" alt="Logo data subvention">
+          <img alt="Logo data subvention" class="logo-data-subvention" src="assets/img/data-subvention.custom.png">
         </div>
       </div>
 
       <div class="colonne colonne-plus-info">
-        <button class="fr-btn" (click)="on_click_full_api_data_subventions()" [disabled]="!info.has_more_info">
+        <button (click)="on_click_full_api_data_subventions()" [disabled]="!info.has_more_info" class="fr-btn">
           {{ info.has_more_info ? 'Information disponible' : 'Information indisponible' }}
-          <span class="fr-icon-arrow-right-s-line" aria-hidden="true"></span>
+          <span aria-hidden="true" class="fr-icon-arrow-right-s-line"></span>
         </button>
       </div>
 
@@ -138,12 +138,12 @@
 
       <div class="colonne" style="flex-grow: 2;">
         <strong class="titre">Sur le dossier de la démarche</strong> <br>
-          <ng-container *ngIf="info?.nomDemarche else noDemarche">
-            <strong>Nom de la démarche:</strong> {{info.nomDemarche}}
-          </ng-container>
-          <ng-template #noDemarche>
-            <strong>Pas de dossier réconcilié</strong>
-          </ng-template>
+        <ng-container *ngIf="info?.nomDemarche else noDemarche">
+          <strong>Nom de la démarche:</strong> {{ info.nomDemarche }}
+        </ng-container>
+        <ng-template #noDemarche>
+          <strong>Pas de dossier réconcilié</strong>
+        </ng-template>
         <br>
       </div>
 
@@ -152,14 +152,14 @@
           <i>Source: Démarches Simplifiées</i>
         </span>
         <div class="ligne">
-          <img class="logo-demarche-simpligie" src="assets/img/logo-ds.png" alt="Logo démarches siplifiées">
+          <img alt="Logo démarches siplifiées" class="logo-demarche-simpligie" src="assets/img/logo-ds.png">
         </div>
       </div>
 
       <div class="colonne colonne-plus-info">
-        <button class="fr-btn" (click)="on_click_demarche_simplifie()" [disabled]="!info?.nomDemarche">
+        <button (click)="on_click_demarche_simplifie()" [disabled]="!info?.nomDemarche" class="fr-btn">
           {{ info?.nomDemarche ? 'Information disponible' : 'Information indisponible' }}
-          <span class="fr-icon-arrow-right-s-line" aria-hidden="true"></span>
+          <span aria-hidden="true" class="fr-icon-arrow-right-s-line"></span>
         </button>
       </div>
     </div>
@@ -169,10 +169,10 @@
 <ng-template #titre let-libelle="libelle">
   <div class="ligne">
     <div class="colonne">
-      <h2>{{libelle}}</h2>
+      <h2>{{ libelle }}</h2>
     </div>
     <div class="colonne" style="flex-grow: 3;"></div>
-    <div class="colonne" *ngIf="view !== 'full'">
+    <div *ngIf="view !== 'full'" class="colonne">
       <button (click)="open_in_newtab()" class="newtab fr-btn fr-btn--tertiary-no-outline fr-icon-external-link-line">
       </button>
     </div>
@@ -180,14 +180,14 @@
 </ng-template>
 
 <ng-template #loading_entreprise_light>
-  <financial-informations-supplementaires-chargement-ou-erreur nom_service_distant="entreprise.api.gouv.fr"/>
+  <financial-informations-supplementaires-chargement-ou-erreur nom_service_distant="entreprise.api.gouv.fr" />
 </ng-template>
 
 <ng-template #loading_subvention_light>
-  <financial-informations-supplementaires-chargement-ou-erreur nom_service_distant="datasubvention.beta.gouv.fr"
-    [erreur]="vService.api_subvention_light_error"/>
+  <financial-informations-supplementaires-chargement-ou-erreur [erreur]="vService.api_subvention_light_error"
+                                                               nom_service_distant="datasubvention.beta.gouv.fr" />
 </ng-template>
 
 <ng-template #check_demarche_simplifie>
-  <financial-informations-supplementaires-chargement-ou-erreur nom_service_distant="demarches-simplifiees.fr"/>
+  <financial-informations-supplementaires-chargement-ou-erreur nom_service_distant="demarches-simplifiees.fr" />
 </ng-template>

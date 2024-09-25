@@ -1,10 +1,11 @@
-<lib-header [ngClass]="{'hidden': grid_fullscreen }" [title]="'France 2030 et Relance en Bretagne'"
-  [logo]="'FranceRelance.svg'">
+<lib-header [logo]="'FranceRelance.svg'" [ngClass]="{'hidden': grid_fullscreen }"
+            [title]="'France 2030 et Relance en Bretagne'">
 
-  <li administration *ngIf="displayAdmin">
-    <button [matMenuTriggerFor]="administration" matTooltip="Administration"
-      class="fr-btn fr-btn--tertiary-no-outline fr-icon-settings-5-fill"
-      id="administration">Admin</button>
+  <li *ngIf="displayAdmin" administration>
+    <button [matMenuTriggerFor]="administration" class="fr-btn fr-btn--tertiary-no-outline fr-icon-settings-5-fill"
+            id="administration"
+            matTooltip="Administration">Admin
+    </button>
     <mat-menu #administration="matMenu">
       <button mat-menu-item routerLink='administration/management'>Gestion des utilisateurs</button>
       <button mat-menu-item routerLink='administration/upload'>Charger des données</button>
@@ -14,9 +15,9 @@
 </lib-header>
 
 <div *ngIf="progressBarVisible === true">
-  <mat-progress-bar mode="query"/>
+  <mat-progress-bar mode="query" />
 </div>
 
-<router-outlet class="page-content-outlet"/>
+<router-outlet class="page-content-outlet" />
 
-<lib-footer *ngIf="isAuthenticated" [ngClass]="{'hidden': grid_fullscreen }"/>
+<lib-footer *ngIf="isAuthenticated" [ngClass]="{'hidden': grid_fullscreen }" />

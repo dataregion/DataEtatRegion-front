@@ -1,32 +1,32 @@
 import { FormArray, FormControl, FormGroup } from '@angular/forms';
 import { GeoModel, TypeLocalisation } from 'apps/common-lib/src/public-api';
-import { JSONObject } from "apps/common-lib/src/lib/models/jsonobject";
+import { JSONObject } from 'apps/common-lib/src/lib/models/jsonobject';
 import { Nullable } from 'apps/common-lib/src/lib/utilities/optional.type';
 import { SearchParameters } from '../services/abstract-laureats.http.service';
 
 /** Modele du filtre de localisation pour le search component */
 export class _FiltreLocalisation {
-
   private _niveau_k = 'niveau';
   private _location_k = 'location';
 
-  constructor(
-    private _formGroup: FormGroup | null = null
-  ) { }
+  constructor(private _formGroup: FormGroup | null = null) {}
 
   private _niveau: Nullable<TypeLocalisation> = null;
   public get niveau(): Nullable<TypeLocalisation> {
     return this._niveau;
   }
+
   public set niveau(value: Nullable<TypeLocalisation>) {
     this._niveau = value;
     this._synchronizeFormGroup();
   }
 
   private _geoModels: Nullable<GeoModel[]> = null;
+
   public get location(): Nullable<GeoModel[]> {
     return this._geoModels;
   }
+
   public set location(value: Nullable<GeoModel[]>) {
     this._geoModels = value;
     this._synchronizeFormGroup();
@@ -49,13 +49,13 @@ export class _FiltreLocalisation {
     if (preFilter && preFilter[this._location_k])
       this.location = preFilter[this._location_k] as unknown as GeoModel[];
   }
-  
+
   /** Update search parameters structure */
   public updateSearchParams(sp: SearchParameters) {
-    sp.niveau = this.niveau
-    sp.territoires = this.location
+    sp.niveau = this.niveau;
+    sp.territoires = this.location;
   }
-  
+
   public reset() {
     this.niveau = null;
     this.location = null;
