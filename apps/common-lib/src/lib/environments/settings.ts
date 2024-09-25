@@ -1,7 +1,7 @@
 export interface IApi {}
 
 export interface HostnameClientIdMappings {
-  [key: string]: string
+  [key: string]: string;
 }
 
 export class Keycloak {
@@ -9,7 +9,7 @@ export class Keycloak {
   realm = '';
   clientId? = null;
   multi_region = false;
-  hostname_client_id_mappings: HostnameClientIdMappings = {}
+  hostname_client_id_mappings: HostnameClientIdMappings = {};
 }
 
 export class Ressources {
@@ -24,6 +24,12 @@ export class Ressources {
 
 export class Features {
   integration_ds = true;
+}
+
+export class Matomo {
+  disabled = true;
+  tracker_url = '';
+  site_id = 0;
 }
 
 export interface NocodbViews {
@@ -41,7 +47,7 @@ export interface NocodbProject<V extends NocodbViews> {
 
 export interface NocodApiProxy<
   P extends NocodbProject<V>,
-  V extends NocodbViews
+  V extends NocodbViews,
 > {
   base_uri: string;
   projects: P;
@@ -53,6 +59,7 @@ export class Settings {
   keycloak: Keycloak = new Keycloak();
   ressources: Ressources = new Ressources();
   features: Features = new Features();
+  matomo: Matomo = new Matomo();
   contact: string | undefined = undefined;
   url_github: string | undefined = undefined;
 }
