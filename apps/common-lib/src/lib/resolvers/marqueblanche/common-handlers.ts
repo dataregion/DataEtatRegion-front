@@ -3,11 +3,13 @@ import { HandlerContext } from '../../models/marqueblanche/handler-context.model
 import { MarqueBlancheParsedParams } from '../../models/marqueblanche/marqueblanche-parsed-params.model';
 import { QueryParam } from '../../models/marqueblanche/query-params.enum';
 
-// eslint-disable-next-line
+/* eslint-disable */
 export type Handler<T extends MarqueBlancheParsedParams, V extends HandlerContext> = (
   parsedParams: T,
   ctx: V
 ) => Observable<T>;
+
+/* eslint-enable */
 
 /**
  * Handler du paramètre group by de la marque blanche

@@ -14,11 +14,12 @@ import { catchError } from 'rxjs/operators';
  *  export const resolver = passing_errors(resolverFn)
  * ```
  */
+
+/* eslint-disable */
 export function passing_errors<
   U extends MarqueBlancheParsedParams,
   T extends MarqueBlancheParsedParamsResolverModel<U>
 >(fn: (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => Observable<T>): ResolveFn<T> {
-  // eslint-disable-line
   return (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
     try {
       const result = fn(route, state) as Observable<T>;
@@ -32,3 +33,5 @@ export function passing_errors<
     }
   };
 }
+
+/* eslint-enable */

@@ -145,12 +145,14 @@ export class GeoHttpService {
 type _Term = string | null;
 
 /** Gère le paramètre de limite de SearchParams. A utiliser avec un ASearchParamsBuilder pour personnaliser le calcul de cet argument. */
-// eslint-disable-next-line
+/* eslint-disable */
 export type LimitHandler = (
   search_params: SearchParams,
   type: TypeLocalisation,
   default_limit: number
 ) => SearchParams;
+
+/* eslint-enable */
 
 /**
  * Construit un SearchParams.
