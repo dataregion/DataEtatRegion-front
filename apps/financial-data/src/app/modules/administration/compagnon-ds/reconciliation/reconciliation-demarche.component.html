@@ -2,7 +2,7 @@
   <div class="fr-grid-row">
 
     <financial-nav-compagnon-ds [title]="'Réconcilier ma démarche'" [currentStep]="2" [totalStep]="3" class="fr-col-6"
-                                style="margin-top:30px;"/>
+                                style="margin-top:30px;" />
 
     <div class="fr-col-12">
       <fieldset class="fr-fieldset" id="reconciliation" aria-labelledby="radio-hint-legend radio-hint-messages">
@@ -38,7 +38,7 @@
             <input type="radio" id="reconciliation-criteres" name="reconciliation" (change)="onRadioChecked($event)"
                    [checked]="checkedId === 'reconciliation-criteres'">
             <label class="fr-label" for="reconciliation-criteres">
-              Soit avec une réconciliation sur divers critères
+              Soit avec une réconciliation par SIRET et montant
             </label>
           </div>
         </div>
@@ -73,10 +73,32 @@
 
         <ng-container *ngIf="isInputChecked('reconciliation-criteres')">
           <div class="fr-col-12">
-            <p><b>La démarche {{ demarche?.number }} concerne uniquement les EJ qui vérifient les égalités suivantes
-              :</b></p>
           </div>
-          <div class="fr-col-lg-6 fr-col-12" style="padding:0 30px;">
+          <div class="fr-col-lg-6 fr-col-12" style="margin-bottom:30px; padding:0 30px;">
+            <div class="fr-select-group">
+              <label class="fr-label" for="champ-siret">SIRET issu de Chorus *</label>
+              <input class="fr-input" type="text" id="champ-siret" value="SIRET du demandeur associé au dossier"
+                     readonly required>
+            </div>
+          </div>
+          <div class="fr-col-lg-6 fr-col-12" style="margin-bottom:30px; padding:0 30px;">
+            <div class="fr-select-group">
+              <label class="fr-label" for="champ-montant">Montant AE *</label>
+              <select class="fr-select" id="champ-montant" formControlName="champMontant" required>
+                <option value="" selected disabled hidden>Sélectionner le champ dans la démarche</option>
+                <option *ngFor="let donnee of donnees" [value]="donnee.id">{{ donnee.label }}</option>
+              </select>
+            </div>
+          </div>
+          <div class="fr-col-12" style="margin-bottom: 30px">
+            <p style="margin-bottom: 10px"><b>Si le montant et le SIRET ne suffisent pas à réconcilier les lignes Chorus (plusieurs lignes pour les mêmes Montant/SIRET), il est également possible de rajouter un ou plusieurs critères ci-dessous
+              pour affiner la réconciliation.</b></p>
+            <div class="fr-alert fr-alert--warning fr-col-12">
+              <h3 class="fr-alert__title">Attention</h3>
+              <p>Si plusieurs lignes Chorus sont trouvées pour un dossier DS malgré les critères ci-dessous, la réconciliation ne sera pas faite pour le dossier en question.</p>
+            </div>
+          </div>
+          <div class="fr-col-lg-6 fr-col-12" style="padding:0 30px">
             <div class="fr-input-group">
               <label class="fr-label" for="centre-couts">Centre de coûts</label>
               <lib-select-simple id="centre-couts" [canFilter]="true"
@@ -105,7 +127,7 @@
               <label class="fr-label">Année d'engagement</label>
               <mat-form-field class="select-single" style="width: 100%">
                 <mat-select [(ngModel)]="annee" [ngModelOptions]="{standalone: true}">
-                  <mat-option *ngFor="let annee of annees" [value]="annee">{{annee}}</mat-option>
+                  <mat-option *ngFor="let annee of annees" [value]="annee">{{ annee }}</mat-option>
                 </mat-select>
                 <button *ngIf="annee !== null" (click)="annee = null" matSuffix mat-icon-button>
                   <mat-icon>close</mat-icon>
@@ -145,24 +167,6 @@
                                  [renderLabelFunction]="renderGeoModel"
                                  [(selected)]="region"
               />
-            </div>
-          </div>
-          <div class="fr-col-12" style="margin-top:30px;">
-            <p><b>Le dossier DS et l'EJ correspondent sur les champs suivants :</b></p>
-          </div>
-          <div class="fr-col-lg-6 fr-col-12" style="margin-bottom:30px; padding:0 30px;">
-            <div class="fr-select-group">
-              <label class="fr-label" for="champ-siret">SIRET issu de Chorus</label>
-              <input class="fr-input" type="text" id="champ-siret" value="SIRET du demandeur associé au dossier" readonly>
-            </div>
-          </div>
-          <div class="fr-col-lg-6 fr-col-12" style="margin-bottom:30px; padding:0 30px;">
-            <div class="fr-select-group">
-              <label class="fr-label" for="champ-montant">Montant AE</label>
-              <select class="fr-select" id="champ-montant" formControlName="champMontant">
-                <option value="" selected disabled hidden>Sélectionner le champ dans la démarche</option>
-                <option *ngFor="let donnee of donnees" [value]="donnee.id">{{ donnee.label }}</option>
-              </select>
             </div>
           </div>
         </ng-container>

@@ -114,59 +114,61 @@ export class AffichageDemarcheComponent implements OnInit {
       matchingData.push(demarche.reconciliation.champMontant);
     }
 
-    // Récupération des valeurs des données des dossiers acceptés
-    this._compagnonDS
-      .getValeurDonneeOfAccepted(demarche.number, matchingData)
-      .pipe(takeUntilDestroyed(this._destroyRef))
-      .subscribe({
-        next: (valeurs: ValeurDonnee[] | null) => {
-          if (valeurs) {
-            this.nbDossiers = valeurs.length;
-            const search_parameters: SearchParameters = {
-              ...SearchParameters_empty,
-              source: 'FINANCIAL_DATA_AE',
-            } as const;
-            if (reconciliation.champEJ) {
-              const idDonnee: number = parseInt(reconciliation.champEJ);
-              search_parameters.n_ej = valeurs
-                .filter((v) => v.donnee_id === idDonnee && v.valeur !== '')
-                .map((v) => v.valeur);
-            }
-            if (reconciliation.champDS) {
-              const idDonnee: number = parseInt(reconciliation.champDS);
-              search_parameters.n_ds = valeurs
-                .filter((v) => v.donnee_id === idDonnee && v.valeur !== '')
-                .map((v) => v.valeur);
-            }
-            if (reconciliation.champMontant) {
-              const idMontant: number = parseInt(reconciliation.champMontant);
-              search_parameters.montant = valeurs
-                .filter((v) => v.donnee_id === idMontant && v.valeur !== '')
-                .map((v) => parseFloat(v.valeur));
-            }
+    if (matchingData.length > 0) {
+      // Récupération des valeurs des données des dossiers acceptés
+      this._compagnonDS
+        .getValeurDonneeOfAccepted(demarche.number, matchingData)
+        .pipe(takeUntilDestroyed(this._destroyRef))
+        .subscribe({
+          next: (valeurs: ValeurDonnee[] | null) => {
+            if (valeurs) {
+              this.nbDossiers = valeurs.length;
+              const search_parameters: SearchParameters = {
+                ...SearchParameters_empty,
+                source: 'FINANCIAL_DATA_AE',
+              } as const;
+              if (reconciliation.champEJ) {
+                const idDonnee: number = parseInt(reconciliation.champEJ);
+                search_parameters.n_ej = valeurs
+                  .filter((v) => v.donnee_id === idDonnee && v.valeur !== '')
+                  .map((v) => v.valeur);
+              }
+              if (reconciliation.champDS) {
+                const idDonnee: number = parseInt(reconciliation.champDS);
+                search_parameters.n_ds = valeurs
+                  .filter((v) => v.donnee_id === idDonnee && v.valeur !== '')
+                  .map((v) => v.valeur);
+              }
+              if (reconciliation.champMontant) {
+                const idMontant: number = parseInt(reconciliation.champMontant);
+                search_parameters.montant = valeurs
+                  .filter((v) => v.donnee_id === idMontant && v.valeur !== '')
+                  .map((v) => parseFloat(v.valeur));
+              }
 
-            this._compagnonDS.getReconciliations(demarche.number).subscribe({
-              next: (response: Reconciliation[] | Error) => {
-                if (response instanceof Error) {
-                  this._alertService.openAlertError(response.message);
-                  return;
-                }
-                this.matchingLines = response.length;
-                this.requestsDone = true;
-              },
-              error: (err: Error) => {
-                this._alertService.openAlertError(err.message);
-                this.requestsDone = true;
-              },
-            });
-          }
-        },
-        error: (err: HttpErrorResponse) => {
-          if (err.error['message']) {
-            this._alertService.openAlertError(err.error['message']);
-          }
-        },
-      });
+              this._compagnonDS.getReconciliations(demarche.number).subscribe({
+                next: (response: Reconciliation[] | Error) => {
+                  if (response instanceof Error) {
+                    this._alertService.openAlertError(response.message);
+                    return;
+                  }
+                  this.matchingLines = response.length;
+                  this.requestsDone = true;
+                },
+                error: (err: Error) => {
+                  this._alertService.openAlertError(err.message);
+                  this.requestsDone = true;
+                },
+              });
+            }
+          },
+          error: (err: HttpErrorResponse) => {
+            if (err.error['message']) {
+              this._alertService.openAlertError(err.error['message']);
+            }
+          },
+        });
+    }
   }
 
   ngOnInit(): void {

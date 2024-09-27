@@ -170,11 +170,19 @@ export class ReconciliationDemarcheComponent implements OnInit {
 
     const formData = new FormData();
     formData.append('id', this.demarche.number.toString());
-    if (this.checkedId === 'reconciliation-ej')
-      formData.append('champEJ', this.reconciliationForm.value.champEJ!);
-    // else if (this.checkedId === 'reconciliation-ds')
-    //   formData.append('champDS', this.reconciliationForm.value.champDS!);
-    else if (this.checkedId === 'reconciliation-criteres') {
+    if (this.checkedId === 'reconciliation-ej') {
+      if (!this.reconciliationForm.value.champEJ) {
+        this._alertService.openAlertError('Le champ Numéro EJ est obligatoire');
+        return;
+      }
+      formData.append('champEJ', this.reconciliationForm.value.champEJ);
+    } else if (this.checkedId === 'reconciliation-criteres') {
+      if (!this.reconciliationForm.value.champMontant) {
+        this._alertService.openAlertError(
+          'Le champ Montant AE est obligatoire',
+        );
+        return;
+      }
       formData.append(
         'champMontant',
         this.reconciliationForm.value.champMontant!,
