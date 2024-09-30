@@ -20,5 +20,8 @@
     "laureats_data": "<url api laureats>"
   },
   "ressources": {
+  },
+  "matomo": {
+    "disabled": true
   }
 }
