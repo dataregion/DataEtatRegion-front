@@ -2,8 +2,9 @@ import { APP_INITIALIZER, LOCALE_ID, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { KeycloakAngularModule, KeycloakService } from 'keycloak-angular';
 import {
-  HttpClientModule,
   HTTP_INTERCEPTORS,
+  provideHttpClient,
+  withInterceptorsFromDi,
 } from '@angular/common/http';
 import { LoggerModule, NgxLoggerLevel } from 'ngx-logger';
 
@@ -23,11 +24,11 @@ import { API_PREFERENCE_PATH } from 'apps/preference-users/src/public-api';
 import { SettingsService } from '../environments/settings.service';
 import { PreferenceComponent } from './pages/preference/preference.component';
 import {
-  API_REF_PATH,
   API_GEO_PATH,
+  API_REF_PATH,
+  CommonHttpInterceptor,
   CommonLibModule,
   MaterialModule,
-  CommonHttpInterceptor,
 } from 'apps/common-lib/src/public-api';
 import {
   SETTINGS,
@@ -47,14 +48,13 @@ import {
 import { InMemoryCache } from '@apollo/client';
 import { DATA_HTTP_SERVICE } from '@services/budget.service';
 
-import {
-  budgetApiModule, budgetConfiguration,
-} from 'apps/clients/budget';
+import { budgetApiModule, budgetConfiguration } from 'apps/clients/budget';
 import { BudgetDataHttpService } from '@services/http/budget-lines-http.service';
 import { MultiregionsService } from '@services/multiregions.service';
+import { MatomoModule, MatomoRouterModule } from 'ngx-matomo-client';
 
 export function apiExternesConfigFactory(
-  settingsService: SettingsService
+  settingsService: SettingsService,
 ): aeConfiguration {
   const params: aeConfigurationParameters = {
     withCredentials: false,
@@ -65,12 +65,12 @@ export function apiExternesConfigFactory(
 }
 
 export function apiBudgetConfigFactory(
-  settingsService: SettingsService
+  settingsService: SettingsService,
 ): aeConfiguration {
-  settingsService
+  settingsService;
   const params: aeConfigurationParameters = {
     withCredentials: false,
-    basePath: settingsService.apiFinancialDataV2
+    basePath: settingsService.apiFinancialDataV2,
   };
 
   return new aeConfiguration(params);
@@ -84,6 +84,30 @@ registerLocaleData(localeFr);
     HomeComponent,
     PreferenceComponent,
     SearchDataComponent,
+  ],
+  bootstrap: [AppComponent],
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    KeycloakAngularModule,
+    BrowserAnimationsModule,
+    ReactiveFormsModule,
+    LoggerModule.forRoot({ level: NgxLoggerLevel.WARN }),
+    MaterialModule,
+    GroupingTableModule,
+    MatDialogModule,
+    MatButtonModule,
+    MatProgressSpinnerModule,
+    PreferenceUsersModule,
+    CommonLibModule,
+    ManagementModule,
+    aeApiModule,
+    budgetApiModule,
+    ApolloModule,
+    MatomoModule.forRoot({
+      mode: 'deferred',
+    }),
+    MatomoRouterModule,
   ],
   providers: [
     {
@@ -99,7 +123,12 @@ registerLocaleData(localeFr);
       provide: APP_INITIALIZER,
       useFactory: app_Init,
       multi: true,
-      deps: [SettingsHttpService, KeycloakService, SettingsService, MultiregionsService],
+      deps: [
+        SettingsHttpService,
+        KeycloakService,
+        SettingsService,
+        MultiregionsService,
+      ],
     },
     {
       provide: HTTP_INTERCEPTORS,
@@ -164,33 +193,13 @@ registerLocaleData(localeFr);
       },
       deps: [HttpLink, SETTINGS],
     },
-  ],
-  bootstrap: [AppComponent],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    KeycloakAngularModule,
-    HttpClientModule,
-    BrowserAnimationsModule,
-    ReactiveFormsModule,
-    LoggerModule.forRoot({ level: NgxLoggerLevel.WARN }),
-    MaterialModule,
-    GroupingTableModule,
-    MatDialogModule,
-    MatButtonModule,
-    MatProgressSpinnerModule,
-    PreferenceUsersModule,
-    CommonLibModule,
-    ManagementModule,
-    aeApiModule,
-    budgetApiModule,
-    ApolloModule,
+    provideHttpClient(withInterceptorsFromDi()),
   ],
 })
 export class AppModule {}
 
 export function app_Init(
-  settingsHttpService: SettingsHttpService
+  settingsHttpService: SettingsHttpService,
 ): () => Promise<any> {
   return () => settingsHttpService.initializeApp();
 }

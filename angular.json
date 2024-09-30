@@ -14,12 +14,15 @@
       "prefix": "app",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:browser",
+          "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/financial-data",
+            "outputPath": {
+              "base": "dist/financial-data"
+            },
             "index": "apps/financial-data/src/index.html",
-            "main": "apps/financial-data/src/main.ts",
-            "polyfills": "apps/financial-data/src/polyfills.ts",
+            "polyfills": [
+              "apps/financial-data/src/polyfills.ts"
+            ],
             "tsConfig": "apps/financial-data/tsconfig.app.json",
             "inlineStyleLanguage": "scss",
             "assets": [
@@ -44,7 +47,8 @@
             "allowedCommonJsDependencies": [
               "js-sha256",
               "base64-js"
-            ]
+            ],
+            "browser": "apps/financial-data/src/main.ts"
           },
           "configurations": {
             "production": {
@@ -69,9 +73,7 @@
               "outputHashing": "all"
             },
             "development": {
-              "buildOptimizer": false,
               "optimization": false,
-              "vendorChunk": true,
               "extractLicenses": false,
               "sourceMap": true,
               "namedChunks": true
@@ -244,12 +246,15 @@
       "prefix": "app",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:browser",
+          "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/france-relance",
+            "outputPath": {
+              "base": "dist/france-relance"
+            },
             "index": "apps/france-relance/src/index.html",
-            "main": "apps/france-relance/src/main.ts",
-            "polyfills": "apps/france-relance/src/polyfills.ts",
+            "polyfills": [
+              "apps/france-relance/src/polyfills.ts"
+            ],
             "tsConfig": "apps/france-relance/tsconfig.app.json",
             "inlineStyleLanguage": "scss",
             "assets": [
@@ -274,7 +279,8 @@
             "allowedCommonJsDependencies": [
               "js-sha256",
               "base64-js"
-            ]
+            ],
+            "browser": "apps/france-relance/src/main.ts"
           },
           "configurations": {
             "production": {
@@ -293,9 +299,7 @@
               "outputHashing": "all"
             },
             "development": {
-              "buildOptimizer": false,
               "optimization": false,
-              "vendorChunk": true,
               "extractLicenses": false,
               "sourceMap": true,
               "namedChunks": true

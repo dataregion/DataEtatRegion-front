@@ -1,4 +1,4 @@
-<ng-container *ngIf="dossier; else chargement">
+<ng-container *ngIf="affichageDossier; else chargement">
 
 
   <div class="contenu">
@@ -14,7 +14,7 @@
 </ng-template>
 
 <ng-template #contenu>
-  <ng-container *ngIf="dossier">
+  <ng-container *ngIf="affichageDossier">
     <div class="ligne">
       <div class="colonne">
         <img class="logo-api-demarche" src="assets/img/logo-ds.png" alt="Logo API démarches simplifiées">
@@ -24,18 +24,16 @@
     <div class="ligne">
 
       <div class="colonne">
-
-        <strong>Nom de la démarche :</strong> {{title_demarche | ouNonRenseigne}} <br>
-        <strong>Numéro du dossier : </strong> {{dossier.number | ouNonRenseigne}} <br>
-        <strong> Nom du projet: </strong> {{getValueChamp("Intitulé du projet")}} <br>
-        <strong> Description du projet: </strong> - <br>
-        <strong> Catégorie du projet : </strong> {{getValueChamp("Catégorie d'opération éligible")}} <br>
-        <strong> Cout prévisionnel total du projet: </strong> {{getMontant("Coût prévisionnel global du projet (HT)")}} <br>
-        <strong> Montant demandé :</strong> {{ getMontant("Montant de subvention DETR sollicité")}} <br>
-        <strong> Montant accordé :</strong> {{ montantAccorde}} <br>
-
-        <strong> Date de fin de projet :</strong> {{getValueChamp("Date prévisionnelle de fin de l'opération")}} <br>
-        <strong> Contact : </strong> {{getValueChamp("Email du référent")}}
+        <strong>Nom de la démarche :</strong> {{affichageDossier.nomDemarche | ouNonRenseigne}} <br>
+        <strong>Numéro du dossier : </strong> {{affichageDossier.numeroDossier | ouNonRenseigne}} <br>
+        <strong> Nom du projet: </strong> {{affichageDossier.nomProjet | ouNonRenseigne}} <br>
+        <strong> Description du projet: </strong> {{affichageDossier.descriptionProjet | ouNonRenseigne}} <br>
+        <strong> Catégorie du projet : </strong> {{affichageDossier.categorieProjet | ouNonRenseigne}} <br>
+        <strong> Cout prévisionnel total du projet: </strong> {{getMontant(affichageDossier.coutProjet)}} <br>
+        <strong> Montant demandé :</strong> {{ getMontant(affichageDossier.montantDemande)}} <br>
+        <strong> Montant accordé :</strong> {{ getMontant(affichageDossier.montantAccorde)}} <br>
+        <strong> Date de fin de projet :</strong> {{affichageDossier.dateFinProjet | ouNonRenseigne}} <br>
+        <strong> Contact : </strong> {{affichageDossier.contact | ouNonRenseigne}}
       </div>
     </div>
 

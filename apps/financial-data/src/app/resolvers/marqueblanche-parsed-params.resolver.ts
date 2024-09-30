@@ -1,34 +1,44 @@
 import { inject } from '@angular/core';
 import { ActivatedRouteSnapshot, ResolveFn } from '@angular/router';
 import { PreFilters } from '@models/search/prefilters.model';
-import { GeoHttpService, SearchByCodeParamsBuilder } from 'apps/common-lib/src/lib/services/geo-http.service';
+import {
+  GeoHttpService,
+  SearchByCodeParamsBuilder,
+} from 'apps/common-lib/src/lib/services/geo-http.service';
 import { ReferentielsHttpService } from 'apps/common-lib/src/lib/services/referentiels.service';
 import { GeoModel, TypeLocalisation } from 'apps/common-lib/src/public-api';
-import { JSONObject } from "apps/common-lib/src/lib/models/jsonobject";
+import { JSONObject } from 'apps/common-lib/src/lib/models/jsonobject';
 import { NGXLogger } from 'ngx-logger';
 import { Observable, of } from 'rxjs';
-import { mergeMap, map } from 'rxjs/operators';
+import { map, mergeMap } from 'rxjs/operators';
 
 import {
   MarqueBlancheParsedParams as Params,
-  MarqueBlancheParsedParamsResolverModel as ResolverModel
+  MarqueBlancheParsedParamsResolverModel as ResolverModel,
 } from 'apps/common-lib/src/lib/models/marqueblanche/marqueblanche-parsed-params.model';
 import { FinancialQueryParam } from '@models/marqueblanche/query-params.enum';
 import { QueryParam } from 'apps/common-lib/src/lib/models/marqueblanche/query-params.enum';
-import { p_group_by as common_group_by, fullscreen } from 'apps/common-lib/src/lib/resolvers/marqueblanche/common-handlers';
+import {
+  fullscreen,
+  p_group_by as common_group_by,
+} from 'apps/common-lib/src/lib/resolvers/marqueblanche/common-handlers';
 import { HandlerContext } from 'apps/common-lib/src/lib/models/marqueblanche/handler-context.model';
 import { passing_errors } from 'apps/common-lib/src/lib/resolvers/marqueblanche/utils';
 import { assert_is_a_GroupByFieldname } from '@models/marqueblanche/groupby-fieldname.enum';
 import { GroupingColumn } from 'apps/grouping-table/src/lib/components/grouping-table/group-utils';
 import { groupby_mapping } from '@models/marqueblanche/groupby-mapping.model';
-import { synonymes_from_types_localisation, to_type_localisation } from '@models/marqueblanche/niveau-localisation.model';
+import {
+  synonymes_from_types_localisation,
+  to_type_localisation,
+} from '@models/marqueblanche/niveau-localisation.model';
 import { Beneficiaire } from '@models/search/beneficiaire.model';
 import { to_types_categories_juridiques } from '@models/marqueblanche/type-etablissement.model';
 import { ReferentielProgrammation } from '@models/refs/referentiel_programmation.model';
 
 export interface MarqueBlancheParsedParams extends Params {
-  preFilters: PreFilters,
+  preFilters: PreFilters;
 }
+
 export type MarqueBlancheParsedParamsResolverModel = ResolverModel<MarqueBlancheParsedParams>
 
 /** Resolver qui parse les paramètres de la marque blanche */
@@ -56,14 +66,20 @@ function _resolver(route: ActivatedRouteSnapshot): Observable<{ data: MarqueBlan
   const api_geo = inject(GeoHttpService)
   const api_ref = inject(ReferentielsHttpService)
 
-  const empty: MarqueBlancheParsedParams = { preFilters: {}, p_group_by: [], group_by: [], has_marqueblanche_params: false, fullscreen: false }
+  const empty: MarqueBlancheParsedParams = {
+    preFilters: {},
+    p_group_by: [],
+    group_by: [],
+    has_marqueblanche_params: false,
+    fullscreen: false
+  }
 
   const uuid = route.queryParamMap.get(QueryParam.Uuid);
 
   if (uuid) {
     logger.debug("Paramètre UUID présent. on ne calcule pas les filtres marque blanche");
     return of(
-      { data: empty }
+      {data: empty}
     );
   }
 
@@ -72,8 +88,8 @@ function _resolver(route: ActivatedRouteSnapshot): Observable<{ data: MarqueBlan
     has_marqueblanche_params = has_marqueblanche_params || route.queryParamMap.has(p_name);
   }
 
-  const handlerCtx = { api_geo, api_ref, route, logger };
-  const model = of({ ...empty, has_marqueblanche_params })
+  const handlerCtx = {api_geo, api_ref, route, logger};
+  const model = of({...empty, has_marqueblanche_params})
     .pipe(
       mergeMap(previous => programmes(previous, handlerCtx)),
       mergeMap(previous => localisation(previous, handlerCtx)),
@@ -91,7 +107,7 @@ function _resolver(route: ActivatedRouteSnapshot): Observable<{ data: MarqueBlan
       map(previous => annees_min_max(previous, handlerCtx)),
       mergeMap(previous => fullscreen<MarqueBlancheParsedParams, HandlerContext>(previous, handlerCtx)),
       map(result => {
-        return { data: result }
+        return {data: result}
       })
     )
 
@@ -108,14 +124,16 @@ function beneficiaires(
   if (!sirets)
     return of(previous);
 
-  const beneficiaires = sirets.map(x => { return { siret: x } as Beneficiaire })
+  const beneficiaires = sirets.map(x => {
+    return {siret: x} as Beneficiaire
+  })
 
   const preFilters: PreFilters = {
     ...previous.preFilters,
     beneficiaires: beneficiaires,
   }
 
-  return of({ ...previous, preFilters })
+  return of({...previous, preFilters})
 }
 
 function type_beneficiaire(
@@ -123,9 +141,9 @@ function type_beneficiaire(
   ctx: _HandlerContext
 ): Observable<MarqueBlancheParsedParams> {
 
-  const types_beneficiaires = 
+  const types_beneficiaires =
     _extract_multiple_queryparams(previous, ctx, FinancialQueryParam.TypesBeneficiaires)
-    ?.map(x => to_types_categories_juridiques(x))
+      ?.map(x => to_types_categories_juridiques(x))
 
   if (!types_beneficiaires)
     return of(previous)
@@ -135,7 +153,7 @@ function type_beneficiaire(
     types_beneficiaires,
   }
 
-  return of({ ... previous, preFilters })
+  return of({...previous, preFilters})
 }
 
 function source_region(
@@ -152,7 +170,7 @@ function source_region(
     sources_region: sources
   }
 
-  return of({ ...previous, preFilters })
+  return of({...previous, preFilters})
 }
 
 function domaines_fonctionnels(
@@ -181,7 +199,9 @@ function referentiels_programmation(
   if (!codes)
     return of(previous);
 
-  const referentiels = codes.map(x => { return { code: x } as ReferentielProgrammation })
+  const referentiels = codes.map(x => {
+    return {code: x} as ReferentielProgrammation
+  })
 
   const programmes = _extract_multiple_queryparams(previous, ctx, FinancialQueryParam.Programmes);
   if (referentiels && programmes) {
@@ -190,7 +210,7 @@ function referentiels_programmation(
         throw Error("Vous devez utiliser des `programmes` et des `referentiels_programmation` associés.")
     });
   }
-  
+
 
   function handle_refs(refs: ReferentielProgrammation[]) {
     return {
@@ -202,7 +222,7 @@ function referentiels_programmation(
     };
   }
 
-  const result = ctx.api_ref.search(codes.join(','), null)
+  const result = ctx.api_ref.searchReferentielProgrammation(codes.join(','), null)
     .pipe(
       map(refs => handle_refs(refs))
     );
@@ -221,7 +241,7 @@ function group_by(
 
     assert_is_a_GroupByFieldname(param_name)
     const columnName = groupby_mapping[param_name]
-    const column: GroupingColumn = { columnName }
+    const column: GroupingColumn = {columnName}
 
     columns.push(column);
   }
@@ -245,7 +265,7 @@ function programmes(
     return of(previous)
 
   const bops = codes.map(code => {
-    return { 'code': code }
+    return {'code': code}
   });
 
   const preFilters = {
@@ -253,13 +273,13 @@ function programmes(
     bops,
   }
 
-  return of({ ...previous, preFilters })
+  return of({...previous, preFilters})
 }
 
 /** Gère le préfiltre de localisation*/
 function localisation(
   previous: MarqueBlancheParsedParams,
-  { api_geo, route, logger }: _HandlerContext,
+  {api_geo, route, logger}: _HandlerContext,
 ): Observable<MarqueBlancheParsedParams> {
 
   const p_niveau_geo = route.queryParamMap.get(FinancialQueryParam.Niveau_geo);
@@ -278,7 +298,7 @@ function localisation(
 
     if (!niveauxLocalisationLegaux.includes(niveau_geo))
       throw Error(`Le niveau géographique doit être une de ces valeurs ${niveauxLocalisationLegaux}`)
-  } catch(e) {
+  } catch (e) {
     const niveaux_valides = synonymes_from_types_localisation(niveauxLocalisationLegaux)
     throw Error(`Le niveau géographique doit être une de ces valeurs ${niveaux_valides}`)
   }
@@ -308,7 +328,7 @@ function localisation(
 /** Gère le préfiltre des années */
 function annees_min_max(
   previous: MarqueBlancheParsedParams,
-  { route, logger }: _HandlerContext,
+  {route, logger}: _HandlerContext,
 ): MarqueBlancheParsedParams {
 
   const annee_courante = new Date().getFullYear();
@@ -352,7 +372,7 @@ function annees_min_max(
     year: pf_annees,
   }
 
-  return { ...previous, preFilters: _preFilters };
+  return {...previous, preFilters: _preFilters};
 }
 
 //region fonctions utilitaires
@@ -388,17 +408,17 @@ function _parse_annee(annee: string | null): number {
 /** Parse un paramètre multiple séparé par des virugles*/
 function _extract_multiple_queryparams(
   _previous: MarqueBlancheParsedParams,
-  { route, logger }: _HandlerContext,
-
+  {route, logger}: _HandlerContext,
   query_param: FinancialQueryParam,
-  ): string[] | undefined {
+): string[] | undefined {
 
-    const p_params = route.queryParamMap.get(query_param);
-    if (!p_params)
-      return;
+  const p_params = route.queryParamMap.get(query_param);
+  if (!p_params)
+    return;
 
-    const params = p_params.split(',');
-    logger.debug(`Application du paramètre ${query_param}: ${params}`);
-    return params;
+  const params = p_params.split(',');
+  logger.debug(`Application du paramètre ${query_param}: ${params}`);
+  return params;
 }
+
 //endregion

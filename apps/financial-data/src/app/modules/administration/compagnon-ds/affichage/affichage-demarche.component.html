@@ -1,12 +1,12 @@
 <div class="fr-container">
     <div class="fr-grid-row">
-        
+
         <financial-nav-compagnon-ds [title]="'Afficher ma démarche'" [currentStep]="3" [totalStep]="3" class="fr-col-8" style="margin-top:30px;"/>
 
         <div class="fr-col-12">
             <div class="fr-alert fr-alert--info" *ngIf="requestsDone" style="margin-bottom:30px;">
                 <h3 class="fr-alert__title">Cadre défini</h3>
-                <p>Pour {{nbDossiers}} dossiers acceptés ayant le numéro EJ de renseigné, {{matchingLines}} lignes financières Chorus ont pu être cadrées (démarche {{demarche?.number}})</p>
+                <p>Pour {{nbDossiers}} dossiers acceptés, {{matchingLines}} lignes financières Chorus ont pu être cadrées (démarche {{demarche?.number}})</p>
             </div>
         </div>
 
