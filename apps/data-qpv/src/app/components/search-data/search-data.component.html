@@ -19,7 +19,7 @@
       />
 
       <div class="field-localisation field-30-width">
-        <lib-localisation [(selectedNiveau)]="selectedNiveau" [(selectedLocalisation)]="selectedLocation" />
+        <lib-localisation [selectedNiveau]="defaultNiveauQpv" [(selectedLocalisation)]="selectedLocation" [niveauxExcludeFilter]="['Région', 'Département', 'EPCI', 'Commune', 'CRTE', 'Arrondissement']"/>
       </div>
 
       <button mat-fab color="primary" (click)="doSearch()" matTooltip="Rechercher" aria-label="Bouton de recherche.">

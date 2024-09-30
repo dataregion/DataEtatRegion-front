@@ -1,4 +1,12 @@
-import { Component, DestroyRef, EventEmitter, inject, Input, Output } from '@angular/core';
+import {
+  Component,
+  Input,
+  Output,
+  OnInit,
+  EventEmitter,
+  DestroyRef,
+  inject,
+} from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -33,10 +41,22 @@ import { debounceTime, Subject, Subscription } from 'rxjs';
   ],
   providers: [GeoLocalisationComponentService]
 })
-export class LocalisationComponent {
-  public selectedNiveauString: string = '';
+export class LocalisationComponent implements OnInit {
+
+  private _destroyRef = inject(DestroyRef)
+
+  private _selectedNiveau: TypeLocalisation | null = null;
+  private _selectedLocalisation: GeoModel[] | null = null;
+  private _subFilterGeo: Subscription | null = null;
+
+  public selectedNiveauString: string = ''
+
+  @Input() niveauxExcludeFilter: string[] | null = null;
+
   // Liste des niveaux de localisation
-  public niveaux = Object.values(TypeLocalisation);
+  public niveaux: string[] | null = null;
+  // public niveaux = Object.values(TypeLocalisation);
+
   // Liste des Geomodel
   public geomodels: GeoModel[] | null = null;
   public filteredGeomodels: GeoModel[] | null = null;
@@ -44,8 +64,6 @@ export class LocalisationComponent {
   inputFilter = new Subject<string>();
   @Output() selectedNiveauChange = new EventEmitter<TypeLocalisation | null>();
   @Output() selectedLocalisationChange = new EventEmitter<GeoModel[] | null>();
-  private _destroyRef = inject(DestroyRef);
-  private _subFilterGeo: Subscription | null = null;
 
   constructor(private _geo: GeoLocalisationComponentService) {
     this.inputFilter.pipe(debounceTime(300), takeUntilDestroyed(this._destroyRef)).subscribe(() => {
@@ -75,7 +93,13 @@ export class LocalisationComponent {
     });
   }
 
-  private _selectedNiveau: TypeLocalisation | null = null;
+  ngOnInit() {
+    // Filtre des TypeLocalisation disponible
+    this.niveaux = Object.values(TypeLocalisation);
+    if (this.niveauxExcludeFilter !== null) {
+      this.niveaux = this.niveaux.filter(niveau => !this.niveauxExcludeFilter?.includes(niveau));
+    }
+  }
 
   /**
    * Niveau
@@ -119,8 +143,6 @@ export class LocalisationComponent {
 
     this.selectedNiveauChange.emit(this._selectedNiveau);
   }
-
-  private _selectedLocalisation: GeoModel[] | null = null;
 
   /**
    * Localisation

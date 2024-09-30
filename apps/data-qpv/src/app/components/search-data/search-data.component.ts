@@ -26,7 +26,6 @@ import {
 } from 'rxjs';
 import { BopModel } from '@models/refs/bop.models';
 import { FinancialData, FinancialDataResolverModel } from '@models/financial/financial-data-resolvers.models';
-import { FinancialDataModel } from '@models/financial/financial-data.models';
 import {
   Preference,
 } from 'apps/preference-users/src/lib/models/preference.models';
@@ -54,6 +53,10 @@ import { TypeCategorieJuridique } from '@models/financial/common.models';
 import { tag_fullname } from '@models/refs/tag.model';
 import { AutocompleteRefProgrammationService } from './autocomplete-ref-programmation.service';
 import { OtherTypeCategorieJuridique, SearchParameters, SearchParameters_empty, SearchTypeCategorieJuridique } from '@services/interface-data.service';
+import {
+  GeoLocalisationComponentService
+} from "../../../../../common-lib/src/lib/components/localisation/geo.localisation.componentservice";
+import {QpvSearchArgs} from "../../models/qpv-search/qpv-search.models";
 
 
 @Component({
@@ -63,6 +66,7 @@ import { OtherTypeCategorieJuridique, SearchParameters, SearchParameters_empty, 
   providers: [
     AutocompleteBeneficiaireService,
     AutocompleteTagsService,
+    GeoLocalisationComponentService,
   ]
 })
 export class SearchDataComponent implements OnInit, AfterViewInit {
@@ -110,6 +114,11 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
   set selectedNiveau(data: TypeLocalisation | null) {
     this.searchForm.get('niveau')?.setValue(data ?? null);
   }
+
+  get defaultNiveauQpv() : TypeLocalisation | null {
+    return TypeLocalisation.QPV
+  }
+
   get selectedLocation() : GeoModel[] | null {
     return this.searchForm.get('location')?.value ?? null;
   }
@@ -211,13 +220,13 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
   /**
    * Resultats de la recherche.
    */
-  @Output() searchResultsEventEmitter = new EventEmitter<FinancialDataModel[]>();
+  @Output() searchResultsEventEmitter = new EventEmitter<QpvSearchArgs>();
 
   /**
    * Les donnees de la recherche
    */
-  private _searchResult: FinancialDataModel[] | null = null;
-  searchResult(): FinancialDataModel[] | null {
+  private _searchResult: QpvSearchArgs | null = null;
+  searchResult(): QpvSearchArgs | null {
     return this._searchResult;
   }
 
@@ -327,43 +336,27 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
     const formValue = this.searchForm.value;
     this.searchInProgress.next(true);
 
-    const search_parameters: SearchParameters = {
-      ...SearchParameters_empty,
-      themes: formValue.theme || null,
-      bops: formValue.bops || null,
-      referentiels_programmation: this.selectedReferentiels || null,//this.additional_searchparams?.referentiels_programmation || null,
-      niveau:  formValue.niveau || null,
-      locations:  formValue.location,
-      years: this.selectedYear,
-      beneficiaires: this.selectedBeneficiaires || null,
-      types_beneficiaires: this.selectedTypesBenef || null,//this.additional_searchparams.types_beneficiaires,
-      tags: formValue.tags?.map(tag => tag_fullname(tag)) ?? null,
-      domaines_fonctionnels: this.additional_searchparams?.domaines_fonctionnels || null,
-      source_region: this.additional_searchparams?.sources_region || null,
+    this.searchFinish = true;
+    this.currentFilter.next(this._buildPreference(formValue as JSONObject));
+
+    let newQpvSearchArgsObject: QpvSearchArgs = {
+      qpv_codes: [],  // Example string values
+      annees: []  // Example number values
+    };
+
+    if(formValue.location) {
+      for(const loc of formValue.location) {
+        if(loc.type === 'QPV') {
+          newQpvSearchArgsObject.qpv_codes.push(loc.code);
+        }
+      }
     }
 
-    this._search_subscription = this._budgetService
-      .search(search_parameters)
-      .pipe(
-        finalize(() => {
-          this.searchInProgress.next(false);
-        })
-      )
-      .subscribe({
-        next: (response: FinancialDataModel[] | Error) => {
-          this.searchFinish = true;
-          this.currentFilter.next(this._buildPreference(formValue as JSONObject));
-          this._searchResult = response as FinancialDataModel[];
-          this.searchResultsEventEmitter.next(this._searchResult);
-        },
-        error: (err: Error) => {
-          this.searchFinish = true;
-          this._searchResult = [];
-          this.currentFilter.next(this._buildPreference(formValue as JSONObject));
-          this.searchResultsEventEmitter.next(this._searchResult);
-          this._alertService.openAlert("error", err, 8);
-        },
-      });
+    if(formValue.year) {
+      newQpvSearchArgsObject.annees = formValue.year;
+    }
+
+    this.searchResultsEventEmitter.next(newQpvSearchArgsObject);
   }
 
   /**

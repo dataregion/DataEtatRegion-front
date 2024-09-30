@@ -34,6 +34,7 @@ import { SearchDataComponent } from 'apps/data-qpv/src/app/components/search-dat
 import { BudgetService } from '@services/budget.service';
 import { DatePipe } from '@angular/common';
 import { ExportDataService } from 'apps/appcommon/src/lib/export-data.service';
+import {QpvSearchArgs} from "../../models/qpv-search/qpv-search.models";
 
 @Component({
   selector: 'data-qpv-home',
@@ -48,7 +49,7 @@ export class HomeComponent implements OnInit {
     return this.columnsMetaData as ColumnsMetaData;
   }
 
-  tableData?: TableData;
+  currentSearchFilter?: QpvSearchArgs;
 
   @ViewChild(SearchDataComponent) searchData!: SearchDataComponent;
 
@@ -61,6 +62,10 @@ export class HomeComponent implements OnInit {
    * Filtre à appliquer sur la recherche
    */
   preFilter?: PreFilters;
+
+  public current_years : number[] = [];
+  public current_qpv_codes : string[] = [];
+
 
   lastImportDate: string | null = null;
 
@@ -218,23 +223,6 @@ export class HomeComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe((_) => { });
-  }
-
-  public downloadData(extension: string, allColumns: boolean): void {
-    this.searchData.searchForm.markAllAsTouched(); // pour notifier les erreurs sur le formulaire
-    if (this.searchData.searchForm.valid && !this.searchData.searchInProgress.value) {
-      this.searchData.searchInProgress.next(true);
-      const blob = this._exportDataService.getBlob(this.searchData.searchResult() ?? [], extension,!allColumns ? this.displayedOrderedColumns : null);
-      if (blob) {
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = this._filename(extension);
-        document.body.appendChild(a);
-        a.click();
-        this.searchData.searchInProgress.next(false);
-      }
-    }
   }
 
   private _filename(extension: string): string {

@@ -10,16 +10,16 @@
     <mat-icon matSuffix>map</mat-icon>
   </mat-form-field>
 
-  <lib-select-multiple [(selected)]="selectedLocalisation" [canFilter]="true"
-                       [canSelectAll]="false"
-                       [filterFunction]="filterGeomodels"
-                       [options]="filteredGeomodels"
-                       [placeholder]="selectedNiveauString"
-                       [renderFunction]="renderGeomodelOption"
-                       [renderLabelFunction]="renderBopLabel"
-                       class="select-multiple"
-                       data-test-id="localisation-select"
-                       icon="map" matTooltip="Filtrer sur une zone géographique"
-                       matTooltipPosition="above"
-  />
+  <lib-select-multiple [canFilter]="true" [canSelectAll]="false"
+    [placeholder]="selectedNiveauString"
+    [options]="filteredGeomodels"
+    [(selected)]="selectedLocalisation"
+    [filterFunction]="filterGeomodels"
+    [renderFunction]="renderGeomodelOption"
+    [renderLabelFunction]="renderBopLabel"
+    data-test-id="localisation-select"
+    class="select-multiple"
+    matTooltip="Filtrer sur une zone géographique" matTooltipPosition="above"
+    icon="map"
+    />
 </div>

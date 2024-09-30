@@ -4,6 +4,8 @@ import {
   EventEmitter, Inject, InjectionToken,
   Input,
   OnInit,
+  OnChanges,
+  SimpleChanges,
   Output,
 } from '@angular/core';
 import { ActivatedRoute, Data } from '@angular/router';
@@ -12,6 +14,8 @@ import {TableData} from "../../../../../grouping-table/src/lib/components/groupi
 import { SETTINGS } from 'apps/common-lib/src/lib/environments/settings.http.service';
 import {SettingsService} from "../../../environments/settings.service";
 import {Superset} from "../../../../../common-lib/src/lib/environments/settings";
+import {QpvSearchArgs} from "../../models/qpv-search/qpv-search.models";
+
 
 @Component({
   selector: 'data-qpv-superset-iframe',
@@ -19,17 +23,19 @@ import {Superset} from "../../../../../common-lib/src/lib/environments/settings"
   styleUrls: ['./superset-iframe.component.scss'],
   providers: []
 })
-export class SupersetIframeComponent implements OnInit {
+export class SupersetIframeComponent implements OnInit, OnChanges {
 
   @Input() dashboardSlugType!: string;
-  @Input() dashboardArgsQpvCodes!: string[];
-  @Input() dashboardArgsQpvYears!: string[];
+
+  @Input() searchArgs: QpvSearchArgs | undefined;
 
   @Input() dashboardArgsCreditType: string = "";
 
   private _supersetBaseDashboardUrl: string = "";
 
   private _supersetSettings: Superset;
+
+  public sanitizedUrl: SafeResourceUrl | undefined;
 
 
   constructor(
@@ -42,6 +48,14 @@ export class SupersetIframeComponent implements OnInit {
 
   ngOnInit(): void {
     this._supersetBaseDashboardUrl = this._supersetSettings.baseDashboardUrl;
+    this.updateSanitizedUrl();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    // If any input property changes, update the sanitized URL
+    if (changes['searchArgs']) {
+      this.updateSanitizedUrl();
+    }
   }
 
   private getDashboardSlug(): string {
@@ -53,24 +67,25 @@ export class SupersetIframeComponent implements OnInit {
 
   private getCurrentDashboardArgsString(): string {
     let args = "";
-    args += `?standalone=true`;
+    args += `?standalone=2`;
 
-    if (this.dashboardArgsCreditType && this.dashboardArgsCreditType ! === "") {
+    if (this.dashboardArgsCreditType && this.dashboardArgsCreditType !== "") {
       args += `&credit_type=${this.dashboardArgsCreditType}`;
     }
 
-    if(this.dashboardArgsQpvCodes && this.dashboardArgsQpvCodes.length > 0) {
-      args += `&qpv_codes=${this.dashboardArgsQpvCodes.join(",")}`;
+    if(this.searchArgs && this.searchArgs.qpv_codes && this.searchArgs.qpv_codes.length > 0) {
+      args += `&qpv_codes=${this.searchArgs.qpv_codes.join(",")}`;
     }
 
-    if(this.dashboardArgsQpvYears && this.dashboardArgsQpvYears.length > 0) {
-      args += `&years=${this.dashboardArgsQpvYears.join(",")}`;
+    if(this.searchArgs && this.searchArgs.annees && this.searchArgs.annees.length > 0) {
+      args += `&years=${this.searchArgs.annees.join(",")}`;
     }
     return args;
   }
 
-  public getSanitizedUrl():  SafeResourceUrl {
-    return this.domSanitizer.bypassSecurityTrustResourceUrl(`${this._supersetBaseDashboardUrl}/${this.getDashboardSlug()}/${this.getCurrentDashboardArgsString()}`);
+  public updateSanitizedUrl():  void {
+    console.error("let me refresh");
+    this.sanitizedUrl =  this.domSanitizer.bypassSecurityTrustResourceUrl(`${this._supersetBaseDashboardUrl}/${this.getDashboardSlug()}/${this.getCurrentDashboardArgsString()}`);
   }
 
 }
