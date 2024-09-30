@@ -1,7 +1,7 @@
 import { HttpErrorResponse } from "@angular/common/http";
 import { Component, DestroyRef, inject, OnInit } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { AlertService } from "apps/common-lib/src/public-api";
+import { AlertService, LoaderService } from "apps/common-lib/src/public-api";
 import { DemarcheHttpService } from "@services/http/demarche.service";
 import { forkJoin } from 'rxjs';
 import { CompagnonDSService } from "../compagnon-ds.service";
@@ -29,8 +29,10 @@ export class IntegrationDemarcheComponent implements OnInit {
     public integree: boolean = false;
     public dejaIntegree: boolean = false;
     public dateIntegration: Date | null = null;
+    public somethingIsLoading: boolean = false;
 
     constructor(
+        private _loaderService: LoaderService,
         private _route: ActivatedRoute,
         private _demarcheService: DemarcheHttpService,
         private _compagnonDS: CompagnonDSService,
@@ -62,6 +64,10 @@ export class IntegrationDemarcheComponent implements OnInit {
                 this.integrationForm.patchValue({ numeroDemarche: params["number"] })
                 this.searchDemarche()
             }
+        });
+        
+        this._loaderService.isLoading().subscribe((loading) => {
+            this.somethingIsLoading = loading;
         });
     }
 
