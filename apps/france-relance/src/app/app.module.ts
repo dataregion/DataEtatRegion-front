@@ -1,7 +1,11 @@
 import { APP_INITIALIZER, LOCALE_ID, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { KeycloakAngularModule, KeycloakService } from 'keycloak-angular';
-import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import {
+  HTTP_INTERCEPTORS,
+  provideHttpClient,
+  withInterceptorsFromDi,
+} from '@angular/common/http';
 import { LoggerModule, NgxLoggerLevel } from 'ngx-logger';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -33,86 +37,97 @@ import { HomeComponent } from './pages/home/home.component';
 import { PreferenceComponent } from './pages/preference/preference.component';
 import { SearchDataComponent } from './components/search-data.component';
 import { SlugifyPipe } from 'apps/common-lib/src/lib/pipes/slugify.pipe';
+import { MatomoModule, MatomoRouterModule } from 'ngx-matomo-client';
 
 registerLocaleData(localeFr);
 
-@NgModule({ declarations: [
-        AppComponent,
-        HomeComponent,
-        PreferenceComponent,
-        SearchDataComponent,
-    ],
-    bootstrap: [AppComponent], imports: [BrowserModule,
-        AppRoutingModule,
-        KeycloakAngularModule,
-        ReactiveFormsModule,
-        CommonModule,
-        BrowserAnimationsModule,
-        ReactiveFormsModule,
-        LoggerModule.forRoot({ level: NgxLoggerLevel.WARN }),
-        MaterialModule,
-        FormsModule,
-        MatDialogModule,
-        MatButtonModule,
-        PreferenceUsersModule,
-        GroupingTableModule,
-        CommonLibModule,
-        ManagementModule], providers: [
-        {
-            provide: SETTINGS,
-            useClass: SettingsService,
-        },
-        DatePipe,
-        SlugifyPipe,
-        {
-            provide: APP_INITIALIZER,
-            useFactory: app_Init,
-            multi: true,
-            deps: [SettingsHttpService, KeycloakService, SettingsService],
-        },
-        {
-            provide: HTTP_INTERCEPTORS,
-            useClass: CommonHttpInterceptor,
-            multi: true,
-        },
-        {
-            provide: LOCALE_ID,
-            useValue: 'fr-FR',
-        },
-        {
-            provide: API_PREFERENCE_PATH,
-            useFactory: (settings: SettingsService) => {
-                return settings.apiAdministration;
-            },
-            deps: [SETTINGS],
-        },
-        {
-            provide: API_GEO_PATH,
-            useFactory: (settings: SettingsService) => {
-                return settings.apiGeo;
-            },
-            deps: [SETTINGS],
-        },
-        {
-            provide: API_REF_PATH,
-            useFactory: (settings: SettingsService) => {
-                return settings.apiReferentiel;
-            },
-            deps: [SETTINGS],
-        },
-        {
-            provide: API_MANAGEMENT_PATH,
-            useFactory: (settings: SettingsService) => {
-                return settings.apiAdministration;
-            },
-            deps: [SETTINGS],
-        },
-        provideHttpClient(withInterceptorsFromDi()),
-    ] })
+@NgModule({
+  declarations: [
+    AppComponent,
+    HomeComponent,
+    PreferenceComponent,
+    SearchDataComponent,
+  ],
+  bootstrap: [AppComponent],
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    KeycloakAngularModule,
+    ReactiveFormsModule,
+    CommonModule,
+    BrowserAnimationsModule,
+    ReactiveFormsModule,
+    LoggerModule.forRoot({ level: NgxLoggerLevel.WARN }),
+    MaterialModule,
+    FormsModule,
+    MatDialogModule,
+    MatButtonModule,
+    PreferenceUsersModule,
+    GroupingTableModule,
+    CommonLibModule,
+    ManagementModule,
+    MatomoModule.forRoot({
+      mode: 'deferred',
+    }),
+    MatomoRouterModule,
+  ],
+  providers: [
+    {
+      provide: SETTINGS,
+      useClass: SettingsService,
+    },
+    DatePipe,
+    SlugifyPipe,
+    {
+      provide: APP_INITIALIZER,
+      useFactory: app_Init,
+      multi: true,
+      deps: [SettingsHttpService, KeycloakService, SettingsService],
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: CommonHttpInterceptor,
+      multi: true,
+    },
+    {
+      provide: LOCALE_ID,
+      useValue: 'fr-FR',
+    },
+    {
+      provide: API_PREFERENCE_PATH,
+      useFactory: (settings: SettingsService) => {
+        return settings.apiAdministration;
+      },
+      deps: [SETTINGS],
+    },
+    {
+      provide: API_GEO_PATH,
+      useFactory: (settings: SettingsService) => {
+        return settings.apiGeo;
+      },
+      deps: [SETTINGS],
+    },
+    {
+      provide: API_REF_PATH,
+      useFactory: (settings: SettingsService) => {
+        return settings.apiReferentiel;
+      },
+      deps: [SETTINGS],
+    },
+    {
+      provide: API_MANAGEMENT_PATH,
+      useFactory: (settings: SettingsService) => {
+        return settings.apiAdministration;
+      },
+      deps: [SETTINGS],
+    },
+    provideHttpClient(withInterceptorsFromDi()),
+  ],
+})
 export class AppModule {}
 
 export function app_Init(
-  settingsHttpService: SettingsHttpService
+  settingsHttpService: SettingsHttpService,
 ): () => Promise<any> {
   return () => settingsHttpService.initializeApp();
 }
