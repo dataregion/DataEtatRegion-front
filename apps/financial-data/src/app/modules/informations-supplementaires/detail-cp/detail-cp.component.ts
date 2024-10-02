@@ -1,4 +1,4 @@
-import { NgIf, NgFor, CurrencyPipe } from '@angular/common';
+import { CurrencyPipe, NgFor, NgIf } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { FinancialDataModel } from '@models/financial/financial-data.models';
 

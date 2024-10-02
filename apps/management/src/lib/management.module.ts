@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import {
-  ManagementUserComponent,
-  ConfirmationDialogComponent
+  ConfirmationDialogComponent,
+  ManagementUserComponent
 } from './components/management-user/management-user.component';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';

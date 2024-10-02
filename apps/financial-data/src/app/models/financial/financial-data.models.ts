@@ -1,12 +1,12 @@
 import {
+  CentreCouts,
   Commune,
-  Programme,
-  Siret,
+  DomaineFonctionnel,
   GroupeMarchandise,
   LocalisationInterministerielle,
-  SourceFinancialData,
-  DomaineFonctionnel,
-  CentreCouts
+  Programme,
+  Siret,
+  SourceFinancialData
 } from './common.models';
 import { Tag } from '../refs/tag.model';
 import { ReferentielProgrammation } from '@models/refs/referentiel_programmation.model';

@@ -1,10 +1,10 @@
-import { Inject, Injectable, inject } from '@angular/core';
+import { Inject, inject, Injectable } from '@angular/core';
 import {
   AbstractLaureatsHttpService,
   SearchParameters,
   SearchResults
 } from './abstract-laureats.http.service';
-import { Observable, catchError, map } from 'rxjs';
+import { catchError, map, Observable } from 'rxjs';
 import { SousAxePlanRelance, SousAxePlanRelanceForFilter } from '../models/axe.models';
 import { Structure } from '../models/structure.models';
 import { Territoire } from '../models/territoire.models';

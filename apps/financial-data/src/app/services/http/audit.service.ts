@@ -1,7 +1,7 @@
-import { Injectable, Inject } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 
 import { HttpClient } from '@angular/common/http';
-import { Observable, map } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { SettingsService } from '../../../environments/settings.service';
 import { AuditUpdateData, DataType } from '../../models/audit/audit-update-data.models';
 import { SETTINGS } from 'apps/common-lib/src/lib/environments/settings.http.service';

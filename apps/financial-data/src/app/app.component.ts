@@ -1,14 +1,14 @@
-import { Component, OnInit, Inject, InjectionToken } from '@angular/core';
+import { Component, Inject, InjectionToken, OnInit } from '@angular/core';
 import { MultiregionsService } from '@services/multiregions.service';
 import { SETTINGS } from 'apps/common-lib/src/lib/environments/settings.http.service';
 import { GridInFullscreenStateService } from 'apps/common-lib/src/lib/services/grid-in-fullscreen-state.service';
 import { LoaderService, SessionService } from 'apps/common-lib/src/public-api';
 import { SettingsService } from '../environments/settings.service';
 import {
+  profiles_required_for_demarches,
   profiles_required_for_managment_page,
   profiles_required_for_tags_page,
-  profiles_required_for_upload_page,
-  profiles_required_for_demarches
+  profiles_required_for_upload_page
 } from './modules/administration/administration-routing.module';
 
 export const MULTIREGIONS_SERVICE = new InjectionToken<MultiregionsService>('MultiregionsService');

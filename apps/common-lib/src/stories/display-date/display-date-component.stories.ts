@@ -1,4 +1,4 @@
-import { moduleMetadata, type Meta, type StoryObj } from '@storybook/angular';
+import { type Meta, moduleMetadata, type StoryObj } from '@storybook/angular';
 
 import { DisplayDateComponent } from '../../lib/components/display-date/display-date.component';
 import { DatePipe } from '@angular/common';

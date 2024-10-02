@@ -1,7 +1,7 @@
 import { Inject, Injectable, InjectionToken } from '@angular/core';
 import { FinancialDataModel } from '@models/financial/financial-data.models';
 import { BopModel } from '@models/refs/bop.models';
-import { Observable, forkJoin, map } from 'rxjs';
+import { forkJoin, map, Observable } from 'rxjs';
 import { SettingsService } from '../../environments/settings.service';
 import { SETTINGS } from 'apps/common-lib/src/lib/environments/settings.http.service';
 import { HttpClient } from '@angular/common/http';

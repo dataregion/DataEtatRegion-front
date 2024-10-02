@@ -1,11 +1,7 @@
 import { APP_INITIALIZER, LOCALE_ID, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { KeycloakAngularModule, KeycloakService } from 'keycloak-angular';
-import {
-  HTTP_INTERCEPTORS,
-  provideHttpClient,
-  withInterceptorsFromDi,
-} from '@angular/common/http';
+import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { LoggerModule, NgxLoggerLevel } from 'ngx-logger';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -23,11 +19,11 @@ import {
   API_REF_PATH,
   CommonHttpInterceptor,
   CommonLibModule,
-  MaterialModule,
+  MaterialModule
 } from 'apps/common-lib/src/public-api';
 import {
   SETTINGS,
-  SettingsHttpService,
+  SettingsHttpService
 } from 'apps/common-lib/src/lib/environments/settings.http.service';
 import { AppComponent } from './app.component';
 import { API_MANAGEMENT_PATH } from 'apps/management/src/lib/services/users-http.service';
@@ -42,12 +38,7 @@ import { MatomoModule, MatomoRouterModule } from 'ngx-matomo-client';
 registerLocaleData(localeFr);
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    HomeComponent,
-    PreferenceComponent,
-    SearchDataComponent,
-  ],
+  declarations: [AppComponent, HomeComponent, PreferenceComponent, SearchDataComponent],
   bootstrap: [AppComponent],
   imports: [
     BrowserModule,
@@ -67,14 +58,14 @@ registerLocaleData(localeFr);
     CommonLibModule,
     ManagementModule,
     MatomoModule.forRoot({
-      mode: 'deferred',
+      mode: 'deferred'
     }),
-    MatomoRouterModule,
+    MatomoRouterModule
   ],
   providers: [
     {
       provide: SETTINGS,
-      useClass: SettingsService,
+      useClass: SettingsService
     },
     DatePipe,
     SlugifyPipe,
@@ -82,52 +73,50 @@ registerLocaleData(localeFr);
       provide: APP_INITIALIZER,
       useFactory: app_Init,
       multi: true,
-      deps: [SettingsHttpService, KeycloakService, SettingsService],
+      deps: [SettingsHttpService, KeycloakService, SettingsService]
     },
     {
       provide: HTTP_INTERCEPTORS,
       useClass: CommonHttpInterceptor,
-      multi: true,
+      multi: true
     },
     {
       provide: LOCALE_ID,
-      useValue: 'fr-FR',
+      useValue: 'fr-FR'
     },
     {
       provide: API_PREFERENCE_PATH,
       useFactory: (settings: SettingsService) => {
         return settings.apiAdministration;
       },
-      deps: [SETTINGS],
+      deps: [SETTINGS]
     },
     {
       provide: API_GEO_PATH,
       useFactory: (settings: SettingsService) => {
         return settings.apiGeo;
       },
-      deps: [SETTINGS],
+      deps: [SETTINGS]
     },
     {
       provide: API_REF_PATH,
       useFactory: (settings: SettingsService) => {
         return settings.apiReferentiel;
       },
-      deps: [SETTINGS],
+      deps: [SETTINGS]
     },
     {
       provide: API_MANAGEMENT_PATH,
       useFactory: (settings: SettingsService) => {
         return settings.apiAdministration;
       },
-      deps: [SETTINGS],
+      deps: [SETTINGS]
     },
-    provideHttpClient(withInterceptorsFromDi()),
-  ],
+    provideHttpClient(withInterceptorsFromDi())
+  ]
 })
 export class AppModule {}
 
-export function app_Init(
-  settingsHttpService: SettingsHttpService,
-): () => Promise<any> {
+export function app_Init(settingsHttpService: SettingsHttpService): () => Promise<any> {
   return () => settingsHttpService.initializeApp();
 }

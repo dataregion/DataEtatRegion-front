@@ -1,4 +1,4 @@
-import { moduleMetadata, type Meta, type StoryObj, applicationConfig } from '@storybook/angular';
+import { applicationConfig, type Meta, moduleMetadata, type StoryObj } from '@storybook/angular';
 
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { MaterialModule } from '../../public-api';

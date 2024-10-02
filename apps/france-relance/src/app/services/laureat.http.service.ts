@@ -1,12 +1,8 @@
-import { Injectable, inject } from '@angular/core';
-import {
-  AbstractLaureatsHttpService,
-  SearchParameters,
-  SearchResults
-} from './abstract-laureats.http.service';
+import { inject, Injectable } from '@angular/core';
+import { AbstractLaureatsHttpService, SearchParameters, SearchResults } from './abstract-laureats.http.service';
 import { FranceRelanceHttpService } from './france-relance.http.service';
 import { France2030HttpService } from './france-2030.http.service';
-import { Observable, forkJoin, map } from 'rxjs';
+import { forkJoin, map, Observable } from 'rxjs';
 import { SousAxePlanRelanceForFilter } from '../models/axe.models';
 import { Structure } from '../models/structure.models';
 import { Territoire } from '../models/territoire.models';

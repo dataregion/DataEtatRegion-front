@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { resolveInformationsSupplementaires } from '../../resolvers/informations-supplementaires-resolver';
 import { InformationsSupplementairesComponent } from './informations-supplementaires.component';
-import { _path_full } from './routes'; // eslint-disable-line
 
 const routes: Routes = [
   {

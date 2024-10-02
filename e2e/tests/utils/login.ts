@@ -10,4 +10,4 @@ async function login(page: Page, url: string, username: string, password: string
   await page.locator('button', { hasText: 'Se connecter' }).click();
 }
 
-export default login
+export default login;

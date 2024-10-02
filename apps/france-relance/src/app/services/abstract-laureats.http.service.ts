@@ -1,6 +1,6 @@
 import { GeoModel, NocodbHttpService, TypeLocalisation } from 'apps/common-lib/src/public-api';
 import { Observable, of, throwError } from 'rxjs';
-import { SousAxePlanRelanceForFilter, SousAxePlanRelance } from '../models/axe.models';
+import { SousAxePlanRelance, SousAxePlanRelanceForFilter } from '../models/axe.models';
 import { Structure } from '../models/structure.models';
 import { Territoire } from '../models/territoire.models';
 import { FrontLaureat, Laureat } from '../models/laureat.models';

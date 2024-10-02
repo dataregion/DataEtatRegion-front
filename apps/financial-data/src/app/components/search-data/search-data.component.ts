@@ -2,15 +2,15 @@ import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output } from '@
 import { FormControl, FormGroup, ValidationErrors, Validators } from '@angular/forms';
 import { ActivatedRoute, Data } from '@angular/router';
 import {
-  switchMap,
-  of,
-  startWith,
-  Observable,
-  finalize,
   BehaviorSubject,
   debounceTime,
+  finalize,
+  forkJoin,
+  Observable,
+  of,
+  startWith,
   Subscription,
-  forkJoin
+  switchMap
 } from 'rxjs';
 import { BopModel } from '@models/refs/bop.models';
 import {

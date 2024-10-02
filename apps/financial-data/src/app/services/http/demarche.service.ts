@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import { Observable, concatMap, map, of } from 'rxjs';
+import { concatMap, map, Observable, of } from 'rxjs';
 
 import { Apollo, gql } from 'apollo-angular';
 import { Demarche, Dossier, PersonneMorale } from '@models/demarche_simplifie/demarche-graphql';

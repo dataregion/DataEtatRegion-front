@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable, Inject } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { SETTINGS } from 'apps/common-lib/src/lib/environments/settings.http.service';
 import { GeoModel, NocoDbResponse, TypeLocalisation } from 'apps/common-lib/src/public-api';
 import { map, Observable, of } from 'rxjs';

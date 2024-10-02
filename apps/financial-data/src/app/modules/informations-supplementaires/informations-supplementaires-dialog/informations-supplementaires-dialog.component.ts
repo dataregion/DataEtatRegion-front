@@ -1,6 +1,5 @@
 import { Component, Inject } from '@angular/core';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { MatDialogModule } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { RowData } from 'apps/grouping-table/src/lib/components/grouping-table/group-utils';
 import { InformationsSupplementairesComponent } from '../informations-supplementaires.component';
 import { FinancialDataModel } from '@models/financial/financial-data.models';

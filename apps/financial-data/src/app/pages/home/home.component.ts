@@ -10,12 +10,12 @@ import { ActivatedRoute, Data } from '@angular/router';
 import { AlertService, GeoModel } from 'apps/common-lib/src/public-api';
 import { GridInFullscreenStateService } from 'apps/common-lib/src/lib/services/grid-in-fullscreen-state.service';
 import {
+  ColumnsMetaData,
   DisplayedOrderedColumn,
   GroupingColumn,
-  RowData,
-  TableData,
   ParameterizedColumnsMetaData,
-  ColumnsMetaData
+  RowData,
+  TableData
 } from 'apps/grouping-table/src/lib/components/grouping-table/group-utils';
 import { GroupingConfigDialogComponent } from 'apps/grouping-table/src/lib/components/grouping-config-dialog/grouping-config-dialog.component';
 import { StructureColumnsDialogComponent } from 'apps/grouping-table/src/lib/components/structure-columns-dialog/structure-columns-dialog.component';
