@@ -9,4 +9,4 @@ export interface FinancialData {
   annees: number[];
 }
 
-export type FinancialDataResolverModel = TOrError<FinancialData>
+export type FinancialDataResolverModel = TOrError<FinancialData>;

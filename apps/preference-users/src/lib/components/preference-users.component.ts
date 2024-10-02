@@ -2,9 +2,9 @@ import { Component, Input, OnInit, inject } from '@angular/core';
 import {
   Preference,
   MapPreferenceFilterMetadata,
-  PreferenceWithShared,
+  PreferenceWithShared
 } from '../models/preference.models';
-import { JSONValue } from "apps/common-lib/src/lib/models/jsonobject";
+import { JSONValue } from 'apps/common-lib/src/lib/models/jsonobject';
 import { MatDialog } from '@angular/material/dialog';
 import { PreferenceUsersHttpService } from '../services/preference-users-http.service';
 import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
@@ -17,8 +17,8 @@ import { SavePreferenceDialogComponent } from './save-filter/save-preference-dia
   styles: [
     '.mat-column-filters { width: 55%; } ',
     '.mat-column-shares { width: 20% }',
-    '.mat-column-name { width: 10% }',
-  ],
+    '.mat-column-name { width: 10% }'
+  ]
 })
 export class PreferenceUsersComponent implements OnInit {
   /**
@@ -38,7 +38,7 @@ export class PreferenceUsersComponent implements OnInit {
 
   public dataSource: PreferenceWithShared = {
     create_by_user: [],
-    shared_with_user: [],
+    shared_with_user: []
   };
 
   public readonly objectKeys = Object.keys;
@@ -74,19 +74,18 @@ export class PreferenceUsersComponent implements OnInit {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       data: 'Êtes-vous sûrs de vouloir supprimer le filtre ?',
       width: '40rem',
-      autoFocus: 'input',
+      autoFocus: 'input'
     });
 
     dialogRef.afterClosed().subscribe((result: boolean) => {
       if (result) {
         this._service.deletePreference(uuid).subscribe({
           next: () => {
-            this.dataSource.create_by_user =
-              this.dataSource.create_by_user.filter(
-                (data) => data.uuid && data.uuid !== uuid
-              );
+            this.dataSource.create_by_user = this.dataSource.create_by_user.filter(
+              (data) => data.uuid && data.uuid !== uuid
+            );
             this._alertService.openAlertSuccess('Suppression du filtre');
-          },
+          }
         });
       }
     });
@@ -100,7 +99,7 @@ export class PreferenceUsersComponent implements OnInit {
     this.dialog.open(SavePreferenceDialogComponent, {
       data: preference,
       width: '40rem',
-      autoFocus: 'input',
+      autoFocus: 'input'
     });
   }
 }

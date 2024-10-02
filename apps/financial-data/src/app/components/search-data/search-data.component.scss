@@ -32,13 +32,33 @@ form .mat-fab {
   height: 0;
 }
 
-.field-100-width  { width: 100%; }
-.field-50-width   { width: 50%; }
-.field-30-width   { width: 30%; }
-.field-25-width   { width: 25%; }
-.field-20-width   { width: 15%; }
-.field-15-width   { width: 15%; }
-.field-10-width   { width: 10%; }
+.field-100-width {
+  width: 100%;
+}
+
+.field-50-width {
+  width: 50%;
+}
+
+.field-30-width {
+  width: 30%;
+}
+
+.field-25-width {
+  width: 25%;
+}
+
+.field-20-width {
+  width: 15%;
+}
+
+.field-15-width {
+  width: 15%;
+}
+
+.field-10-width {
+  width: 10%;
+}
 
 @media (max-width: 800px) {
   .box {

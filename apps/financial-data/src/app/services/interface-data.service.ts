@@ -9,6 +9,7 @@ import { RefSiret } from 'apps/common-lib/src/lib/models/refs/RefSiret';
 export enum OtherTypeCategorieJuridique {
   AUTRES = 'autres'
 }
+
 export type SearchTypeCategorieJuridique = TypeCategorieJuridique | OtherTypeCategorieJuridique;
 
 export interface SearchParameters {
@@ -21,7 +22,7 @@ export interface SearchParameters {
   bops: BopModel[] | null;
   referentiels_programmation: ReferentielProgrammation[] | null;
   niveau: TypeLocalisation | null;
-  locations: GeoModel[] | null,
+  locations: GeoModel[] | null;
   years: number[] | null;
   beneficiaires: RefSiret[] | null;
   types_beneficiaires: SearchTypeCategorieJuridique[] | null;
@@ -48,17 +49,16 @@ export const SearchParameters_empty: SearchParameters = {
   tags: null,
 
   domaines_fonctionnels: null,
-  source_region: null,
-}
+  source_region: null
+};
 
-/* eslint no-unused-vars: 0 */  // --> OFF
+/* eslint no-unused-vars: 0 */ // --> OFF
 /**
  * Interface Http Service pour remonter des informations dans une application type Budget
  * T étant le type métier
  * M le modèle générique
  */
 export interface DataHttpService<T, M> {
-
   search(search_parameters: SearchParameters): Observable<DataPagination<T> | null>;
 
   getById(source: SourceFinancialData, id: any, ...options: any[]): Observable<T>;

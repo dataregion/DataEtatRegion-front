@@ -3,10 +3,7 @@ import { CommonModule } from '@angular/common';
 
 import { AdministrationRoutingModule } from './administration-routing.module';
 import { UploadFinancialComponent } from './upload-financial/upload-financial.component';
-import {
-  CommonLibModule,
-  MaterialModule,
-} from 'apps/common-lib/src/public-api';
+import { CommonLibModule, MaterialModule } from 'apps/common-lib/src/public-api';
 import { MatDialogModule } from '@angular/material/dialog';
 
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -25,6 +22,6 @@ import { NavCompagnonDSComponent } from './compagnon-ds/nav/nav.component';
     ReactiveFormsModule,
     MatDialogModule,
     NavCompagnonDSComponent
-  ],
+  ]
 })
 export class AdministrationModule {}

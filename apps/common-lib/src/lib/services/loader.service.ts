@@ -2,12 +2,11 @@ import { Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class LoaderService {
-  private _loadingOperationCount = 0;
-
   public loading$ = new Subject<boolean>();
+  private _loadingOperationCount = 0;
 
   /**
    * Chargement en cours

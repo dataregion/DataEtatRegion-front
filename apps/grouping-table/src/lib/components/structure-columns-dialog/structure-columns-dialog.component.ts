@@ -1,28 +1,17 @@
 import { Component, Inject } from '@angular/core';
-import {
-  MAT_DIALOG_DATA,
-  MatDialogModule,
-  MatDialogRef,
-} from '@angular/material/dialog';
-import {
-  ColumnMetaDataDef,
-  DisplayedOrderedColumn
-} from '../grouping-table/group-utils';
+import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { ColumnMetaDataDef, DisplayedOrderedColumn } from '../grouping-table/group-utils';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatCheckboxChange, MatCheckboxModule } from '@angular/material/checkbox';
 import { CommonModule } from '@angular/common';
-import {
-  CdkDragDrop,
-  DragDropModule,
-  moveItemInArray,
-} from '@angular/cdk/drag-drop';
+import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
 
 export type StructureColumnsDialogData = {
   defaultOrder: DisplayedOrderedColumn[];
   columns: ColumnMetaDataDef[];
-  displayedOrderedColumns: DisplayedOrderedColumn[]
+  displayedOrderedColumns: DisplayedOrderedColumn[];
 };
 
 /**
@@ -40,17 +29,16 @@ export type StructureColumnsDialogData = {
     MatIconModule,
     MatButtonModule,
     MatTooltipModule,
-    DragDropModule,
-  ],
+    DragDropModule
+  ]
 })
 export class StructureColumnsDialogComponent {
-
   // Référence pour toujours connaître l'ordre de base des colonnes
   defaultOrder: DisplayedOrderedColumn[];
   // Liste des colonnes pour l'affichage de la liste
   columns: ColumnMetaDataDef[];
   // Liste des statuts des colonnes
-  displayedOrderedColumns: DisplayedOrderedColumn[]
+  displayedOrderedColumns: DisplayedOrderedColumn[];
 
   constructor(
     private _dialogRef: MatDialogRef<StructureColumnsDialogComponent>,
@@ -67,9 +55,11 @@ export class StructureColumnsDialogComponent {
    * @returns
    */
   isColumnDisplayed(label: string) {
-    return this.displayedOrderedColumns.filter((col) => {
-      return col.columnLabel === label && (col.displayed === undefined || col.displayed);
-    }).length === 1 || this.displayedOrderedColumns.length === 0;
+    return (
+      this.displayedOrderedColumns.filter((col) => {
+        return col.columnLabel === label && (col.displayed === undefined || col.displayed);
+      }).length === 1 || this.displayedOrderedColumns.length === 0
+    );
   }
 
   /**
@@ -77,9 +67,11 @@ export class StructureColumnsDialogComponent {
    * @returns boolean
    */
   allDisplayed() {
-    return this.displayedOrderedColumns.filter((col) => {
-      return col.displayed === undefined || col.displayed;
-    }).length === this.columns.length || this.displayedOrderedColumns.length === 0;
+    return (
+      this.displayedOrderedColumns.filter((col) => {
+        return col.displayed === undefined || col.displayed;
+      }).length === this.columns.length || this.displayedOrderedColumns.length === 0
+    );
   }
 
   /**
@@ -88,15 +80,11 @@ export class StructureColumnsDialogComponent {
    */
   moveColumn(event: CdkDragDrop<ColumnMetaDataDef[]>) {
     // Ordonnement des colonnes de la liste
-    moveItemInArray(
-      this.columns,
-      event.previousIndex,
-      event.currentIndex
-    );
+    moveItemInArray(this.columns, event.previousIndex, event.currentIndex);
     // On ordonne selon le nouvel ordre
     this.displayedOrderedColumns.sort((col1, col2) => {
-      const index1 = this.columns.findIndex((col) => col1.columnLabel === col.label)
-      const index2 = this.columns.findIndex((col) => col2.columnLabel === col.label)
+      const index1 = this.columns.findIndex((col) => col1.columnLabel === col.label);
+      const index2 = this.columns.findIndex((col) => col2.columnLabel === col.label);
       return index1 - index2;
     });
   }
@@ -108,7 +96,7 @@ export class StructureColumnsDialogComponent {
   onCheckboxChange(event: MatCheckboxChange) {
     this.displayedOrderedColumns.map((col) => {
       if (col.columnLabel === event.source._elementRef.nativeElement.getAttribute('data-column'))
-        col = this._toggleCheckboxBoolean(col, event.checked)
+        col = this._toggleCheckboxBoolean(col, event.checked);
     });
   }
 
@@ -118,7 +106,7 @@ export class StructureColumnsDialogComponent {
   onAllCheckboxChange() {
     const allDisplayed = this.allDisplayed();
     this.displayedOrderedColumns.forEach((col) => {
-      this._toggleCheckboxBoolean(col, !allDisplayed)
+      this._toggleCheckboxBoolean(col, !allDisplayed);
     });
   }
 
@@ -128,12 +116,13 @@ export class StructureColumnsDialogComponent {
    * @param checked Nouvelle valeur du displayed
    * @returns
    */
-  private _toggleCheckboxBoolean(col: DisplayedOrderedColumn, checked: boolean): DisplayedOrderedColumn {
-    if (checked)
-      delete col.displayed;
-    else
-      col.displayed = false;
-    return col
+  private _toggleCheckboxBoolean(
+    col: DisplayedOrderedColumn,
+    checked: boolean
+  ): DisplayedOrderedColumn {
+    if (checked) delete col.displayed;
+    else col.displayed = false;
+    return col;
   }
 
   /**

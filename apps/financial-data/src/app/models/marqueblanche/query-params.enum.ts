@@ -1,25 +1,29 @@
-import { QueryParam as CommonQueryParam, QueryParam_values as common_values } from "apps/common-lib/src/lib/models/marqueblanche/query-params.enum";
+import {
+  QueryParam as CommonQueryParam,
+  QueryParam_values as common_values
+} from 'apps/common-lib/src/lib/models/marqueblanche/query-params.enum';
 
 /* eslint-disable no-unused-vars */
 /** Nom des paramètres supportés par financial */
 export enum FinancialQueryParam {
-    Programmes = 'programmes',
+  Programmes = 'programmes',
 
-    Niveau_geo = 'niveau_geo',
-    Code_geo = 'code_geo',
+  Niveau_geo = 'niveau_geo',
+  Code_geo = 'code_geo',
 
-    Annee_min = 'annee_min',
-    Annee_max = 'annee_max',
+  Annee_min = 'annee_min',
+  Annee_max = 'annee_max',
 
-    DomaineFonctionnel = 'domaines_fonctionnels',
-    ReferentielsProgrammation = 'referentiels_programmation',
+  DomaineFonctionnel = 'domaines_fonctionnels',
+  ReferentielsProgrammation = 'referentiels_programmation',
 
-    SourceRegion = 'source_region',
+  SourceRegion = 'source_region',
 
-    Beneficiaires = 'beneficiaires',
+  Beneficiaires = 'beneficiaires',
 
-    TypesBeneficiaires = 'types_beneficiaires'
+  TypesBeneficiaires = 'types_beneficiaires'
 }
+
 const values_FinancialQueryParam = Object.values(FinancialQueryParam);
 
 export type QueryParam = CommonQueryParam | FinancialQueryParam;

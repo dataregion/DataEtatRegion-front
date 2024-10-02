@@ -5,8 +5,8 @@ import { GroupingTableContextService } from './grouping-table-context.service';
   selector: 'lib-grouping-table-header',
   templateUrl: './grouping-table-header.component.html',
   host: {
-    class: 'header',
-  },
+    class: 'header'
+  }
 })
 export class GroupingTableHeaderComponent {
   context = inject(GroupingTableContextService);

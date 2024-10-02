@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { SETTINGS } from 'apps/common-lib/src/lib/environments/settings.http.service';
 import { GridInFullscreenStateService } from 'apps/common-lib/src/lib/services/grid-in-fullscreen-state.service';
 import { LoaderService, SessionService } from 'apps/common-lib/src/public-api';
@@ -7,7 +7,7 @@ import { SettingsService } from '../environments/settings.service';
 @Component({
   selector: 'france-relance-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss'],
+  styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
   public progressBarVisible: boolean = false;

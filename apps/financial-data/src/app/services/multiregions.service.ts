@@ -9,40 +9,36 @@ export enum Region {
 }
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class MultiregionsService {
-
   private _synonymes: { [key in Region]: string[] } = {
     [Region.BRETAGNE]: [
-      "bretagne.nocode.csm.ovh",
-      "budget.bretagne.preprod.dataregion.fr",
-      "budget.bretagne.dataregion.fr",
-      "budget.preprod.databretagne.fr",
-      "budget.databretagne.fr",
+      'bretagne.nocode.csm.ovh',
+      'budget.bretagne.preprod.dataregion.fr',
+      'budget.bretagne.dataregion.fr',
+      'budget.preprod.databretagne.fr',
+      'budget.databretagne.fr'
     ],
     [Region.PDL]: [
-      "pdl.nocode.csm.ovh",
-      "budget.paysdelaloire.dataregion.fr",
-      "budget.paysdelaloire.preprod.dataregion.fr",
+      'pdl.nocode.csm.ovh',
+      'budget.paysdelaloire.dataregion.fr',
+      'budget.paysdelaloire.preprod.dataregion.fr'
     ],
     [Region.HDF]: [
-      "hdf.nocode.csm.ovh",
-      "budget.hautsdefrance.dataregion.fr",
-      "budget.hautsdefrance.preprod.dataregion.fr",
-      "budget-hautsdefrance.preprod.dataregion.fr",
+      'hdf.nocode.csm.ovh',
+      'budget.hautsdefrance.dataregion.fr',
+      'budget.hautsdefrance.preprod.dataregion.fr',
+      'budget-hautsdefrance.preprod.dataregion.fr'
     ]
   };
 
   public getRegionByHostname(): string {
-    const hostname = location.host
-    if (hostname.includes('localhost'))
-      return "Localhost";
+    const hostname = location.host;
+    if (hostname.includes('localhost')) return 'Localhost';
     for (const [key, value] of Object.entries(this._synonymes)) {
-      if (value.includes(hostname))
-        return key;
+      if (value.includes(hostname)) return key;
     }
-    return "Error";
+    return 'Error';
   }
-
 }

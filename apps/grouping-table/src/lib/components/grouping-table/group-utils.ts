@@ -1,4 +1,4 @@
-/* eslint no-unused-vars: 0 */  // --> OFF
+/* eslint no-unused-vars: 0 */ // --> OFF
 
 export type AggregateReducerContext = {
   row: RowData;
@@ -76,7 +76,7 @@ export type ParameterizedColumnMetaDataDef<T> = {
   columnStyle?: Record<string, string>;
 };
 
-export type ColumnMetaDataDef = ParameterizedColumnMetaDataDef<RowData>
+export type ColumnMetaDataDef = ParameterizedColumnMetaDataDef<RowData>;
 
 export class AggregatorFns {
   static sum(
@@ -102,11 +102,7 @@ export class AggregatorFns {
     return ((accumulator || 0) * (nbRows - 1) + (currentValue || 0)) / nbRows;
   }
 
-  static count(
-    currentValue: any,
-    context: AggregateReducerContext,
-    accumulator?: number
-  ): number {
+  static count(currentValue: any, context: AggregateReducerContext, accumulator?: number): number {
     return (accumulator || 0) + 1;
   }
 }
@@ -132,7 +128,7 @@ export class ParameterizedColumnsMetaData<T extends ParameterizedColumnMetaDataD
   }
 }
 
-export class ColumnsMetaData extends ParameterizedColumnsMetaData<ColumnMetaDataDef> { }
+export class ColumnsMetaData extends ParameterizedColumnsMetaData<ColumnMetaDataDef> {}
 
 export type ColumnSizes = number[];
 
@@ -174,7 +170,7 @@ export class Group {
   _group_desc(a: Group, b: Group) {
     if (a.columnValue < b.columnValue) return 1;
     if (a.columnValue > b.columnValue) return -1;
-    return 0
+    return 0;
   }
 
   get groups() {
@@ -193,20 +189,19 @@ export class Group {
     public readonly columnValue?: any,
     public readonly parent?: Group,
     private _columnsAggregateFns?: Record<string, AggregateReducer<any>>
-  ) { }
+  ) {}
 
-  getOrCreateGroup(column: ColumnMetaDataDef, groupColumnGroupingKey: any, groupColumnValue: any): Group {
+  getOrCreateGroup(
+    column: ColumnMetaDataDef,
+    groupColumnGroupingKey: any,
+    groupColumnValue: any
+  ): Group {
     if (!this.groupsMap) {
       this.groupsMap = new Map();
     }
     let group = this.groupsMap.get(groupColumnGroupingKey);
     if (!group) {
-      group = new Group(
-        column,
-        groupColumnValue,
-        this,
-        this._columnsAggregateFns
-      );
+      group = new Group(column, groupColumnValue, this, this._columnsAggregateFns);
       this.groupsMap.set(groupColumnGroupingKey, group);
     }
     return group;
@@ -274,15 +269,15 @@ export const groupByColumns = (
     }
   }
 
-  // Vérification : la nouvelle structure de grouping (Grouping[]) a-t-elle changé par rapport à l'ancienne (RootGroup) 
+  // Vérification : la nouvelle structure de grouping (Grouping[]) a-t-elle changé par rapport à l'ancienne (RootGroup)
   let same: boolean = false;
   if (previousRoot && previousRoot.groups.length !== 0 && !dataChanges) {
-    // On travaille avec une copie de groupings car on va faire des shift() 
-    same = _check_grouping_structure([...groupings], previousRoot)
+    // On travaille avec une copie de groupings car on va faire des shift()
+    same = _check_grouping_structure([...groupings], previousRoot);
   }
 
   // Si aucun changement de structure, on ne recréé pas les groupes et on retourne l'ancien contexte
-  let root = previousRoot
+  let root = previousRoot;
   if (!same) {
     root = new RootGroup(aggregateFns);
     for (const row of table) {
@@ -291,7 +286,7 @@ export const groupByColumns = (
       for (const grouping of groupings) {
         const column = columnsMetaData.getByColumnName(grouping.columnName);
 
-        const defaultRenderFn = ((row: RowData, col: ColumnMetaDataDef) => row[col.name]);
+        const defaultRenderFn = (row: RowData, col: ColumnMetaDataDef) => row[col.name];
         const groupValueFn = column.renderFn || defaultRenderFn;
         const groupKeyFn = column.groupingKeyFn || groupValueFn;
 
@@ -320,7 +315,7 @@ const _check_grouping_structure = (newGroupings: GroupingColumn[], group: Group)
     return false;
   }
 
-  // On continue de plonger avec des nouveaux paramètres : pop sur le nouveau grouping & récupération du groupe enfant de l'ancienne structure 
-  newGroupings.shift()
+  // On continue de plonger avec des nouveaux paramètres : pop sur le nouveau grouping & récupération du groupe enfant de l'ancienne structure
+  newGroupings.shift();
   return _check_grouping_structure(newGroupings ?? [], group.groups[0]);
-}
+};

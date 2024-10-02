@@ -1,23 +1,8 @@
-import {
-  Component,
-  OnInit,
-  ElementRef,
-  ViewChild,
-} from '@angular/core';
-import {
-  AuditUpdateData,
-  DataType,
-} from '@models/audit/audit-update-data.models';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { AuditUpdateData, DataType } from '@models/audit/audit-update-data.models';
 import { AuditHttpService } from '@services/http/audit.service';
 import { AlertService, SessionService } from 'apps/common-lib/src/public-api';
-import {
-  BehaviorSubject,
-  Subscription,
-  catchError,
-  finalize,
-  forkJoin,
-  of,
-} from 'rxjs';
+import { BehaviorSubject, catchError, finalize, forkJoin, of, Subscription } from 'rxjs';
 
 import { BudgetDataHttpService } from '@services/http/budget-lines-http.service';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -25,10 +10,9 @@ import { HttpErrorResponse } from '@angular/common/http';
 @Component({
   selector: 'france-relance-upload-laureats-component',
   templateUrl: './upload-laureats.component.html',
-  styleUrls: [ '../common-for-pages-with-uploads.scss' ],
+  styleUrls: ['../common-for-pages-with-uploads.scss']
 })
 export class UploadLaureatsComponent implements OnInit {
-
   public readonly requiredFileType: string = '.csv';
   public DataType = DataType;
 
@@ -73,10 +57,9 @@ export class UploadLaureatsComponent implements OnInit {
     return this._session.isAdmin();
   }
 
-  getFile(event: any) : File {
+  getFile(event: any): File {
     return event.target.files[0];
   }
-
 
   uploadFrance2030File() {
     if (this.fileFrance2030 !== null && this.yearSelected && this.typeSelected) {
@@ -108,7 +91,7 @@ export class UploadLaureatsComponent implements OnInit {
             if (err.error['message']) {
               this._alertService.openAlertError(err.error['message']);
             }
-          },
+          }
         });
     }
   }
@@ -119,9 +102,9 @@ export class UploadLaureatsComponent implements OnInit {
       .pipe(catchError((_error) => of([])));
 
     forkJoin({
-      audit: france2030$,
+      audit: france2030$
     }).subscribe((response) => {
-      const tabs = [...response.audit ];
+      const tabs = [...response.audit];
       tabs.sort((a1: AuditUpdateData, a2: AuditUpdateData) => {
         return a1.date <= a2.date ? 1 : -1;
       });

@@ -9,22 +9,24 @@
           <mat-option *ngFor="let axe of axe_plan_relance" [value]="axe">
             <span>
               <span class="fr-tag fr-tag--sm">
-              {{axe.annotation}} 
+              {{ axe.annotation }}
               </span>
             </span>
             <span>
-              {{axe.axe}} - {{axe.label}}
+              {{ axe.axe }} - {{ axe.label }}
             </span>
           </mat-option>
           <mat-select-trigger>
-            {{axePlanDeRelanceControls.value && axePlanDeRelanceControls.value.length ? axePlanDeRelanceControls.value[0].label : ''}}
+            {{ axePlanDeRelanceControls.value && axePlanDeRelanceControls.value.length ? axePlanDeRelanceControls.value[0].label : '' }}
             <span *ngIf="axePlanDeRelanceControls.value?.length > 1" class="example-additional-selection">
-              (+{{axePlanDeRelanceControls.value.length - 1}} {{axePlanDeRelanceControls.value?.length === 2 ? 'autre' :
-              'autres'}})
+              (+{{ axePlanDeRelanceControls.value.length - 1 }} {{
+                axePlanDeRelanceControls.value?.length === 2 ? 'autre' :
+                  'autres'
+              }})
             </span>
           </mat-select-trigger>
         </mat-select>
-        <button *ngIf="axePlanDeRelanceControls.value !== null" matSuffix mat-icon-button (click)="cancelAxe()">
+        <button (click)="cancelAxe()" *ngIf="axePlanDeRelanceControls.value !== null" mat-icon-button matSuffix>
           <mat-icon>close</mat-icon>
         </button>
       </mat-form-field>
@@ -32,41 +34,42 @@
 
     <div class="element field-30-width">
       <lib-localisation
-          [(selectedNiveau)]="filteredLocalisation.niveau"
-          [(selectedLocalisation)]="filteredLocalisation.location" />
+        [(selectedLocalisation)]="filteredLocalisation.location"
+        [(selectedNiveau)]="filteredLocalisation.niveau" />
     </div>
 
     <div class="element field-30-width">
       <mat-form-field appearance="fill">
         <mat-label>Lauréat</mat-label>
-        <input type="text" matInput formControlName="structure" [matAutocomplete]="structure">
-        <button *ngIf="searchForm.controls['structure'].value !== null" matSuffix mat-icon-button
-          (click)="searchForm.controls['structure'].setValue(null)">
+        <input [matAutocomplete]="structure" formControlName="structure" matInput type="text">
+        <button (click)="searchForm.controls['structure'].setValue(null)"
+                *ngIf="searchForm.controls['structure'].value !== null" mat-icon-button
+                matSuffix>
           <mat-icon>close</mat-icon>
         </button>
-        <mat-autocomplete #structure="matAutocomplete" [displayWith]="displayLaureat"
-          (optionSelected)="onSelectLaureat($event.option.value)">
+        <mat-autocomplete #structure="matAutocomplete" (optionSelected)="onSelectLaureat($event.option.value)"
+                          [displayWith]="displayLaureat">
           <mat-option *ngFor="let laureat of filteredLaureat | async" [value]="laureat">
-            {{displayLaureat(laureat)}}
+            {{ displayLaureat(laureat) }}
           </mat-option>
         </mat-autocomplete>
       </mat-form-field>
     </div>
-    
+
     <div class="spacer"></div>
 
-    <button mat-fab color="primary" (click)="doSearch()">
-      <mat-icon fontIcon="search"/>
+    <button (click)="doSearch()" color="primary" mat-fab>
+      <mat-icon fontIcon="search" />
     </button>
 
-    <button mat-fab color="warn" matTooltip="Reset le formulaire" (click)="reset()" *ngIf="searchFinish === true">
-      <mat-icon fontIcon="disabled_by_default"/>
+    <button (click)="reset()" *ngIf="searchFinish === true" color="warn" mat-fab matTooltip="Reset le formulaire">
+      <mat-icon fontIcon="disabled_by_default" />
     </button>
 
   </div>
 </form>
 
 <div *ngIf="warningMessage" class="fr-alert fr-alert--info">
-  {{warningMessage}}
+  {{ warningMessage }}
 </div>
 

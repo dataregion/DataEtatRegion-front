@@ -8,15 +8,13 @@ import {
   OnInit,
   Output,
   SimpleChanges,
-  ViewChild,
+  ViewChild
 } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { AlertService } from 'apps/common-lib/src/public-api';
-import {
-  Preference,
-} from 'apps/preference-users/src/lib/models/preference.models';
-import { JSONObject } from "apps/common-lib/src/lib/models/jsonobject";
+import { Preference } from 'apps/preference-users/src/lib/models/preference.models';
+import { JSONObject } from 'apps/common-lib/src/lib/models/jsonobject';
 import {
   BehaviorSubject,
   debounceTime,
@@ -24,7 +22,7 @@ import {
   Observable,
   of,
   startWith,
-  switchMap,
+  switchMap
 } from 'rxjs';
 import { SousAxePlanRelance, SousAxePlanRelanceForFilter } from '../models/axe.models';
 import { Structure } from '../models/structure.models';
@@ -39,12 +37,12 @@ import { Optional } from 'apps/common-lib/src/lib/utilities/optional.type';
 @Component({
   selector: 'france-relance-search-data',
   templateUrl: './search-data.component.html',
-  styleUrls: ['./search-data.component.scss'],
+  styleUrls: ['./search-data.component.scss']
 })
 export class SearchDataComponent implements OnInit, OnChanges {
   public separatorKeysCodes: number[] = [ENTER, COMMA];
-  
-  warningMessage?: string
+
+  warningMessage?: string;
 
   /**
    * Resultats de la recherche.
@@ -87,9 +85,8 @@ export class SearchDataComponent implements OnInit, OnChanges {
     private _route: ActivatedRoute,
     private _alertService: AlertService,
     private _service: LaureatHttpService,
-    private _exportService: ExportDataService,
-  ) {
-  }
+    private _exportService: ExportDataService
+  ) {}
 
   /**
    * Applique le filtre par défaut
@@ -97,30 +94,22 @@ export class SearchDataComponent implements OnInit, OnChanges {
    */
   ngOnChanges(_changes: SimpleChanges): void {
     if (this.preFilter !== null) {
-
       if (this.preFilter['axe_plan_relance']) {
         const preFilterAxe = Array.isArray(this.preFilter['axe_plan_relance'])
-          ? (this.preFilter[
-              'axe_plan_relance'
-            ] as unknown as SousAxePlanRelance[])
-          : ([
-              this.preFilter['axe_plan_relance'],
-            ] as unknown as SousAxePlanRelance[]);
+          ? (this.preFilter['axe_plan_relance'] as unknown as SousAxePlanRelance[])
+          : ([this.preFilter['axe_plan_relance']] as unknown as SousAxePlanRelance[]);
         const axeSelected = this.axe_plan_relance.filter(
           (axe) =>
             preFilterAxe.findIndex(
-              (preFilterAxe) =>
-                preFilterAxe.axe === axe.axe && preFilterAxe.label === axe.label
+              (preFilterAxe) => preFilterAxe.axe === axe.axe && preFilterAxe.label === axe.label
             ) !== -1
         );
         this.searchForm.controls['axe_plan_relance'].setValue(axeSelected);
       }
 
-      this.searchForm.controls['structure'].setValue(
-        this.preFilter['structure'] ?? null
-      );
+      this.searchForm.controls['structure'].setValue(this.preFilter['structure'] ?? null);
 
-      this.filteredLocalisation.fromPreFilter(this.preFilter)
+      this.filteredLocalisation.fromPreFilter(this.preFilter);
 
       // lance la recherche pour afficher les resultats
       this.doSearch();
@@ -157,8 +146,8 @@ export class SearchDataComponent implements OnInit, OnChanges {
 
         niveau: null,
         territoires: null
-      }
-      this.filteredLocalisation.updateSearchParams(sp)
+      };
+      this.filteredLocalisation.updateSearchParams(sp);
 
       this._service
         .searchLaureats(sp)
@@ -180,8 +169,8 @@ export class SearchDataComponent implements OnInit, OnChanges {
             this.searchFinish = true;
             this.currentFilter.next(this._buildPreference(formValue));
             this.searchResults.next([]);
-            this._alertService.openAlert("error", err, 8);
-          },
+            this._alertService.openAlert('error', err, 8);
+          }
         });
     }
   }
@@ -200,8 +189,7 @@ export class SearchDataComponent implements OnInit, OnChanges {
           object[key] !== undefined &&
           object[key] !== '' &&
           !Array.isArray(object[key])) ||
-        (Array.isArray(object[key]) &&
-          (object[key] as Array<unknown>).length > 0)
+        (Array.isArray(object[key]) && (object[key] as Array<unknown>).length > 0)
       ) {
         preference.filters[key] = object[key];
       }
@@ -215,7 +203,7 @@ export class SearchDataComponent implements OnInit, OnChanges {
     this.filteredLocalisation.reset();
   }
 
-  public onSelectLaureat(_event: Structure): void { }
+  public onSelectLaureat(_event: Structure): void {}
 
   public displayLaureat(laureat: Structure): string {
     if (laureat) return laureat.label + ' - ' + laureat.siret;
@@ -228,14 +216,12 @@ export class SearchDataComponent implements OnInit, OnChanges {
 
       axe_plan_relance: new FormControl(null),
       structure: new FormControl(null),
-      filterTerritoire: new FormControl(null), // pour le filtre des territoires
+      filterTerritoire: new FormControl(null) // pour le filtre des territoires
     });
-    this.filteredLocalisation.initAndSynchonizeFormGroup(this.searchForm)
+    this.filteredLocalisation.initAndSynchonizeFormGroup(this.searchForm);
 
     // filtre beneficiaire
-    this.filteredTerritoire = this.searchForm.controls[
-      'filterTerritoire'
-    ].valueChanges.pipe(
+    this.filteredTerritoire = this.searchForm.controls['filterTerritoire'].valueChanges.pipe(
       startWith(''),
       debounceTime(300),
       switchMap((value) => {
@@ -247,9 +233,7 @@ export class SearchDataComponent implements OnInit, OnChanges {
     );
 
     // filtre laureat
-    this.filteredLaureat = this.searchForm.controls[
-      'structure'
-    ].valueChanges.pipe(
+    this.filteredLaureat = this.searchForm.controls['structure'].valueChanges.pipe(
       startWith(''),
       debounceTime(300),
       switchMap((value) => {

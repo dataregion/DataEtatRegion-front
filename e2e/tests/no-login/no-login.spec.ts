@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { expect, test } from '@playwright/test';
 import { financial_url_helper } from '../utils/urls.conf';
 
 test.describe("Page d'authentification", () => {
@@ -6,18 +6,16 @@ test.describe("Page d'authentification", () => {
     await waitingRedirectKeycloak(page);
   });
 
-  test("L'utilisateur non connecté est redirigé vers la page de login", async ({
-    page,
-  }) => {
+  test("L'utilisateur non connecté est redirigé vers la page de login", async ({ page }) => {
     await expect(page).toHaveURL(/^https:\/\/auth.*/);
 
     await expect(page).toHaveTitle(/^Se connecter .*/);
 
     await expect(await page.textContent('h1')).toBe('Connexion');
 
-    await expect(
-      await page.getByRole('button', { name: 'Se connecter' }).textContent()
-    ).toBe('Se connecter');
+    await expect(await page.getByRole('button', { name: 'Se connecter' }).textContent()).toBe(
+      'Se connecter'
+    );
   });
 
   test("L'utilisateur ne peux pas se connecter", async ({ page }) => {
@@ -35,7 +33,7 @@ test.describe("Page d'authentification", () => {
 
 // attente de redirection vers keycloak
 async function waitingRedirectKeycloak(page: any) {
-  const root = financial_url_helper().root
+  const root = financial_url_helper().root;
   await page.goto(root.pathname);
-  await page.waitForURL(/^https:\/\/auth.*/)
+  await page.waitForURL(/^https:\/\/auth.*/);
 }

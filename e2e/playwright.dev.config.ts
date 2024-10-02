@@ -10,8 +10,8 @@ const devConfig = {
   // },
   use: {
     baseURL: 'http://localhost:4200/',
-    testIdAttribute: 'data-test-id',
-  },
+    testIdAttribute: 'data-test-id'
+  }
 };
 
 export default devConfig;

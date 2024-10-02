@@ -9,46 +9,47 @@ import { EntrepriseFull } from '../models/EntrepriseFull';
   standalone: true,
   selector: 'financial-informations-supplementaires-detail-entreprise',
   templateUrl: './detail-api-entreprise.component.html',
-  styleUrls: ['../commun-informations-supplementaires.scss', './detail-api-entreprise.component.scss'],
+  styleUrls: [
+    '../commun-informations-supplementaires.scss',
+    './detail-api-entreprise.component.scss'
+  ],
   imports: [
     ChargementOuErreurComponent,
 
-    NgIf, AsyncPipe, NgFor, CurrencyPipe,
+    NgIf,
+    AsyncPipe,
+    NgFor,
+    CurrencyPipe,
     NgTemplateOutlet,
 
-    DatePipe, OuNonRenseignePipe,
+    DatePipe,
+    OuNonRenseignePipe
   ]
 })
 export class DetailApiEntrepriseComponent {
+  public info: EntrepriseFull | null = null;
 
-  public info: EntrepriseFull | null = null
-
-  get vService() { return this.service.viewService }
+  get vService() {
+    return this.service.viewService;
+  }
 
   constructor(private service: InformationsSupplementairesService) {
-
-    service.viewService.api_entreprise_full$().subscribe(
-      (info) => this.info = info
-    )
+    service.viewService.api_entreprise_full$().subscribe((info) => (this.info = info));
   }
 
   stringify(data: any) {
-    return JSON.stringify(data)
+    return JSON.stringify(data);
   }
 
   lien_annuaire_entreprise(siret: string) {
-    return `https://annuaire-entreprises.data.gouv.fr/etablissement/${siret}`
+    return `https://annuaire-entreprises.data.gouv.fr/etablissement/${siret}`;
   }
 
   vue_tribool(b: boolean | undefined) {
+    if (b === undefined || b === null) return `Non renseigné`;
 
-    if (b === undefined || b === null)
-      return `Non renseigné`
-
-    if (b)
-      return 'oui'
-    else
-      return 'non'
+    if (b) return 'oui';
+    else return 'non';
   }
 
   get lignes_adresse() {
@@ -59,25 +60,26 @@ export class DetailApiEntrepriseComponent {
       this.info?.donnees_etablissement.adresse.acheminement_postal.l4,
       this.info?.donnees_etablissement.adresse.acheminement_postal.l5,
       this.info?.donnees_etablissement.adresse.acheminement_postal.l6,
-      this.info?.donnees_etablissement.adresse.acheminement_postal.l7,
-    ].filter(line => Boolean(line));
+      this.info?.donnees_etablissement.adresse.acheminement_postal.l7
+    ].filter((line) => Boolean(line));
   }
 
   get label_ess() {
     return this.vue_tribool(this.info?.quick.ess);
   }
 
-  get rge_disponible() { return !this.info?.certifications_rge_indispo }
+  get rge_disponible() {
+    return !this.info?.certifications_rge_indispo;
+  }
+
   get label_rge() {
+    let a_rge_active = false;
 
-    let a_rge_active = false
-
-    const rges = this.info?.certifications_rge || []
+    const rges = this.info?.certifications_rge || [];
 
     for (const rge of rges) {
-
-      const exprirationstr = rge.data.date_expiration
-      const expiration = Date.parse(exprirationstr)
+      const exprirationstr = rge.data.date_expiration;
+      const expiration = Date.parse(exprirationstr);
 
       if (expiration > Date.now()) {
         a_rge_active = true;
@@ -88,7 +90,10 @@ export class DetailApiEntrepriseComponent {
     return this.vue_tribool(a_rge_active);
   }
 
-  get qualibat_disponible() { return !this.info?.certification_qualibat_indispo }
+  get qualibat_disponible() {
+    return !this.info?.certification_qualibat_indispo;
+  }
+
   get label_qualibat() {
     const a_certif_qualibat = Boolean(this.info?.certification_qualibat);
 
@@ -96,9 +101,10 @@ export class DetailApiEntrepriseComponent {
   }
 
   get has_chiffre_d_affaires() {
-    return Boolean(this.info?.chiffre_d_affaires) && (this.info!.chiffre_d_affaires.length > 0);
+    return Boolean(this.info?.chiffre_d_affaires) && this.info!.chiffre_d_affaires.length > 0;
   }
 
-  get tva_disponible() { return !this.info?.tva_indispo }
-
+  get tva_disponible() {
+    return !this.info?.tva_indispo;
+  }
 }

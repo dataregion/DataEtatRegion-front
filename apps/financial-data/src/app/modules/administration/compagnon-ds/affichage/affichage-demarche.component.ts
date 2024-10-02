@@ -8,12 +8,9 @@ import {
   Demarche,
   Donnee,
   Reconciliation,
-  ValeurDonnee,
+  ValeurDonnee
 } from '@models/demarche_simplifie/demarche.model';
-import {
-  SearchParameters,
-  SearchParameters_empty,
-} from '@services/interface-data.service';
+import { SearchParameters, SearchParameters_empty } from '@services/interface-data.service';
 import { BudgetService } from '@services/budget.service';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -32,7 +29,7 @@ interface AffichageFormData {
 
 @Component({
   selector: 'financial-afficher-demarche.component',
-  templateUrl: './affichage-demarche.component.html',
+  templateUrl: './affichage-demarche.component.html'
 })
 export class AffichageDemarcheComponent implements OnInit {
   private _destroyRef = inject(DestroyRef);
@@ -54,7 +51,7 @@ export class AffichageDemarcheComponent implements OnInit {
     montantDemande: new FormControl(''),
     montantAccorde: new FormControl(''),
     dateFinProjet: new FormControl(''),
-    contact: new FormControl(''),
+    contact: new FormControl('')
   });
 
   constructor(
@@ -62,7 +59,7 @@ export class AffichageDemarcheComponent implements OnInit {
     private _router: Router,
     private _alertService: AlertService,
     private _compagnonDS: CompagnonDSService,
-    private _budgetService: BudgetService,
+    private _budgetService: BudgetService
   ) {}
 
   private _patchValues(demarche: Demarche) {
@@ -77,7 +74,7 @@ export class AffichageDemarcheComponent implements OnInit {
       montantDemande: demarche.affichage.montantDemande,
       montantAccorde: demarche.affichage.montantAccorde,
       dateFinProjet: demarche.affichage.dateFinProjet,
-      contact: demarche.affichage.contact,
+      contact: demarche.affichage.contact
     } as AffichageFormData;
     // Using JSON utilities to remove unecessary undefined values
     formData = JSON.parse(JSON.stringify(formData));
@@ -88,14 +85,12 @@ export class AffichageDemarcheComponent implements OnInit {
     this.demarche = demarche;
 
     // Récupération des données
-    this._compagnonDS.donnees$
-      .pipe(takeUntilDestroyed(this._destroyRef))
-      .subscribe((value) => {
-        if (value !== null) {
-          this.donnees = value;
-          this._patchValues(demarche);
-        }
-      });
+    this._compagnonDS.donnees$.pipe(takeUntilDestroyed(this._destroyRef)).subscribe((value) => {
+      if (value !== null) {
+        this.donnees = value;
+        this._patchValues(demarche);
+      }
+    });
 
     if (demarche.reconciliation === null) {
       return;
@@ -125,7 +120,7 @@ export class AffichageDemarcheComponent implements OnInit {
               this.nbDossiers = valeurs.length;
               const search_parameters: SearchParameters = {
                 ...SearchParameters_empty,
-                source: 'FINANCIAL_DATA_AE',
+                source: 'FINANCIAL_DATA_AE'
               } as const;
               if (reconciliation.champEJ) {
                 const idDonnee: number = parseInt(reconciliation.champEJ);
@@ -158,7 +153,7 @@ export class AffichageDemarcheComponent implements OnInit {
                 error: (err: Error) => {
                   this._alertService.openAlertError(err.message);
                   this.requestsDone = true;
-                },
+                }
               });
             }
           },
@@ -166,7 +161,7 @@ export class AffichageDemarcheComponent implements OnInit {
             if (err.error['message']) {
               this._alertService.openAlertError(err.error['message']);
             }
-          },
+          }
         });
     }
   }
@@ -175,7 +170,7 @@ export class AffichageDemarcheComponent implements OnInit {
     // Vérification des query params & de si la démarche est déjà présente en BDD
     combineLatest({
       params: this._route.queryParams,
-      demarche: this._compagnonDS.demarche$,
+      demarche: this._compagnonDS.demarche$
     })
       .pipe(takeUntilDestroyed(this._destroyRef))
       .subscribe((results) => {
@@ -199,19 +194,15 @@ export class AffichageDemarcheComponent implements OnInit {
               if (value !== null) {
                 this._initWithDemarche(value);
               } else {
-                this._alertService.openAlertError(
-                  "Cette démarche n'a pas été intégrée.",
-                );
-                this._router.navigate([
-                  '/administration/demarches/integration',
-                ]);
+                this._alertService.openAlertError("Cette démarche n'a pas été intégrée.");
+                this._router.navigate(['/administration/demarches/integration']);
               }
             },
             error: (err: HttpErrorResponse) => {
               if (err.error['message']) {
                 this._alertService.openAlertError(err.error['message']);
               }
-            },
+            }
           });
       });
   }
@@ -227,31 +218,19 @@ export class AffichageDemarcheComponent implements OnInit {
       formData.append('nomProjet', this.affichageForm.value.nomProjet);
     }
     if (this.affichageForm.value.descriptionProjet) {
-      formData.append(
-        'descriptionProjet',
-        this.affichageForm.value.descriptionProjet,
-      );
+      formData.append('descriptionProjet', this.affichageForm.value.descriptionProjet);
     }
     if (this.affichageForm.value.categorieProjet) {
-      formData.append(
-        'categorieProjet',
-        this.affichageForm.value.categorieProjet,
-      );
+      formData.append('categorieProjet', this.affichageForm.value.categorieProjet);
     }
     if (this.affichageForm.value.coutProjet) {
       formData.append('coutProjet', this.affichageForm.value.coutProjet);
     }
     if (this.affichageForm.value.montantDemande) {
-      formData.append(
-        'montantDemande',
-        this.affichageForm.value.montantDemande,
-      );
+      formData.append('montantDemande', this.affichageForm.value.montantDemande);
     }
     if (this.affichageForm.value.montantAccorde) {
-      formData.append(
-        'montantAccorde',
-        this.affichageForm.value.montantAccorde,
-      );
+      formData.append('montantAccorde', this.affichageForm.value.montantAccorde);
     }
     if (this.affichageForm.value.dateFinProjet) {
       formData.append('dateFinProjet', this.affichageForm.value.dateFinProjet);
@@ -267,7 +246,7 @@ export class AffichageDemarcheComponent implements OnInit {
         next: (demarche: Demarche) => {
           this._compagnonDS.setDemarche(demarche);
           this._alertService.openAlertSuccess(
-            `La démarche a correctement été réconciliée avec ${this.matchingLines.toString()} lignes financières.`,
+            `La démarche a correctement été réconciliée avec ${this.matchingLines.toString()} lignes financières.`
           );
           this._router.navigate(['/']);
         },
@@ -275,7 +254,7 @@ export class AffichageDemarcheComponent implements OnInit {
           if (err.error['message']) {
             this._alertService.openAlertError(err.error['message']);
           }
-        },
+        }
       });
   }
 }

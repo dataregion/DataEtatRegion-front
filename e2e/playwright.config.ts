@@ -23,7 +23,7 @@ const config: PlaywrightTestConfig = {
      * Maximum time expect() should wait for the condition to be met.
      * For example in `await expect(locator).toHaveText();`
      */
-    timeout: 5000,
+    timeout: 5000
   },
   /* Run tests in files in parallel */
   fullyParallel: true,
@@ -42,7 +42,7 @@ const config: PlaywrightTestConfig = {
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'retain-on-failure',
     baseURL: 'https://bretagne.nocode.csm.ovh',
-    testIdAttribute: 'data-test-id',
+    testIdAttribute: 'data-test-id'
   },
 
   projects: [
@@ -50,15 +50,15 @@ const config: PlaywrightTestConfig = {
       name: 'no-login-chrome',
       testDir: './tests/no-login',
       use: {
-        ...devices['Desktop Chrome'],
-      },
+        ...devices['Desktop Chrome']
+      }
     },
     {
       name: 'no-login-firefox',
       testDir: './tests/no-login',
       use: {
-        ...devices['Desktop Firefox'],
-      },
+        ...devices['Desktop Firefox']
+      }
     },
 
     // test profile USE SImple
@@ -67,16 +67,16 @@ const config: PlaywrightTestConfig = {
       testIgnore: ['**/no-login/**', '**/admin/**'],
       use: {
         storageState: 'storage-state/storageState-simple.json',
-        ...devices['Desktop Chrome'],
-      },
+        ...devices['Desktop Chrome']
+      }
     },
     {
       name: 'login-simple-firefox',
       testIgnore: ['**/no-login/**', '**/admin/**'],
       use: {
         storageState: 'storage-state/storageState-simple.json',
-        ...devices['Desktop Firefox'],
-      },
+        ...devices['Desktop Firefox']
+      }
     },
     // test profile ADMIN
     {
@@ -84,17 +84,17 @@ const config: PlaywrightTestConfig = {
       testMatch: '**/admin/**.spec.ts',
       use: {
         storageState: 'storage-state/storageState-admin.json',
-        ...devices['Desktop Chrome'],
-      },
+        ...devices['Desktop Chrome']
+      }
     },
     {
       name: 'admin-profile-firefox',
       testMatch: '**/admin/**.spec.ts',
       use: {
         storageState: 'storage-state/storageState-admin.json',
-        ...devices['Desktop Firefox'],
-      },
-    },
+        ...devices['Desktop Firefox']
+      }
+    }
     // {
     //   name: 'firefox',
     //   use: {
@@ -136,7 +136,7 @@ const config: PlaywrightTestConfig = {
     //     channel: 'chrome',
     //   },
     // },
-  ],
+  ]
 
   /* Folder for test artifacts such as screenshots, videos, traces, etc. */
   // outputDir: 'test-results/',

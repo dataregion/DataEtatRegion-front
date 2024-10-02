@@ -1,11 +1,4 @@
-import {
-  AsyncPipe,
-  CurrencyPipe,
-  DatePipe,
-  NgFor,
-  NgIf,
-  NgTemplateOutlet,
-} from '@angular/common';
+import { AsyncPipe, CurrencyPipe, DatePipe, NgFor, NgIf, NgTemplateOutlet } from '@angular/common';
 import { Component } from '@angular/core';
 import { ChargementOuErreurComponent } from '../chargement-ou-erreur/chargement-ou-erreur.component';
 import { InformationsSupplementairesService } from '../services/informations-supplementaires.service';
@@ -27,15 +20,15 @@ import { AffichageDossier } from '@models/demarche_simplifie/demarche.model';
     NgTemplateOutlet,
 
     DatePipe,
-    OuNonRenseignePipe,
-  ],
+    OuNonRenseignePipe
+  ]
 })
 export class DetailApiDemarcheSimplifieComponent {
   public affichageDossier!: AffichageDossier;
 
   public moneyFormat = new Intl.NumberFormat('fr-FR', {
     style: 'currency',
-    currency: 'EUR',
+    currency: 'EUR'
   });
 
   constructor(private service: InformationsSupplementairesService) {

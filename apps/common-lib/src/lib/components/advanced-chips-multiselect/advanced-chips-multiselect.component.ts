@@ -4,12 +4,16 @@ import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatChipInputEvent, MatChipsModule } from '@angular/material/chips';
-import { MatAutocomplete, MatAutocompleteModule, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import {
+  MatAutocomplete,
+  MatAutocompleteModule,
+  MatAutocompleteSelectedEvent
+} from '@angular/material/autocomplete';
 import { MatIconModule } from '@angular/material/icon';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 
 export interface SelectedData {
-  item: any
+  item: any;
 }
 
 /**
@@ -26,13 +30,13 @@ export interface SelectedData {
     MatChipsModule,
     MatAutocompleteModule,
     MatFormFieldModule,
-    MatSelectModule, FormsModule,
+    MatSelectModule,
+    FormsModule,
     ReactiveFormsModule,
     NgFor
   ]
 })
 export class AdvancedChipsMultiselectComponent {
-
   @ViewChild('selectionInput', { static: false }) input!: ElementRef<HTMLInputElement>;
   @ViewChild('auto', { static: false }) matAutoComplete!: MatAutocomplete;
 
@@ -42,35 +46,9 @@ export class AdvancedChipsMultiselectComponent {
   @Input() label = 'Default label';
   @Input() placeholder = 'placeholder';
   @Input() options: SelectedData[] | null = [];
-
-  private _selectedData: SelectedData[] = [];
-  public get selectedData(): SelectedData[] {
-    return this._selectedData;
-  }
-  @Input()
-  public set selectedData(value: SelectedData[]) {
-    if (!value)
-      this._selectedData = []
-    else
-      this._selectedData = value;
-  }
   @Output() selectedDataChange: EventEmitter<SelectedData[]> = new EventEmitter<SelectedData[]>();
-
   @Output() inputChange: EventEmitter<string> = new EventEmitter<string>();
-
   _inputControl = new FormControl();
-
-  get visible_selectedData() {
-    return this.selectedData?.slice(0, this.numberOfVisibleChips) ?? [];
-  }
-  get invisible_count() {
-    const length = this.selectedData?.length ?? 0
-    const count = length - this.numberOfVisibleChips;
-    if (count > 0)
-      return count
-    else
-      return 0
-  }
 
   constructor() {
     this._inputControl.valueChanges.subscribe((value) => {
@@ -78,17 +56,39 @@ export class AdvancedChipsMultiselectComponent {
     });
   }
 
+  private _selectedData: SelectedData[] = [];
+
+  public get selectedData(): SelectedData[] {
+    return this._selectedData;
+  }
+
+  @Input()
+  public set selectedData(value: SelectedData[]) {
+    if (!value) this._selectedData = [];
+    else this._selectedData = value;
+  }
+
+  get visible_selectedData() {
+    return this.selectedData?.slice(0, this.numberOfVisibleChips) ?? [];
+  }
+
+  get invisible_count() {
+    const length = this.selectedData?.length ?? 0;
+    const count = length - this.numberOfVisibleChips;
+    if (count > 0) return count;
+    else return 0;
+  }
+
   public get options_minus_selected(): SelectedData[] | undefined {
     const selected = this.selectedData;
     return this.options?.filter(
-      option => !selected.some(selection => selection.item === option.item)
-    )
+      (option) => !selected.some((selection) => selection.item === option.item)
+    );
   }
 
   // # region: event de l'input
   onMatChipInputEvent(_event: MatChipInputEvent) {
-    if (this.matAutoComplete.isOpen)
-      return;
+    if (this.matAutoComplete.isOpen) return;
 
     // XXX: desactivation de l'input "libre"
     // this.add($event.value)
@@ -119,5 +119,6 @@ export class AdvancedChipsMultiselectComponent {
     this.input.nativeElement.value = '';
     this._inputControl.setValue(null);
   }
+
   // # endregion
 }

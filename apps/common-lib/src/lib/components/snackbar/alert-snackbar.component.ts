@@ -5,20 +5,20 @@ import { MAT_SNACK_BAR_DATA } from '@angular/material/snack-bar';
 export enum AlertType {
   Error = 'error',
   Success = 'success',
-  Info = 'info',
+  Info = 'info'
 }
 
 export interface AlertMessage {
   message: string;
   type: AlertType;
 }
-/* eslint-enable no-unused-vars */
 
+/* eslint-enable no-unused-vars */
 
 @Component({
   selector: 'lib-snackbar',
   templateUrl: './alert-snackbar.component.html',
-  styles: ['h3 {font-size: 1.25rem; line-height: 1.75rem; font-weight: 700}'],
+  styles: ['h3 {font-size: 1.25rem; line-height: 1.75rem; font-weight: 700}']
 })
 export class AlertSnackBarComponent {
   public classAlert: string;

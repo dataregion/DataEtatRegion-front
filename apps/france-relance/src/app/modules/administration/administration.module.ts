@@ -1,10 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import {
-  CommonLibModule,
-  MaterialModule,
-} from 'apps/common-lib/src/public-api';
+import { CommonLibModule, MaterialModule } from 'apps/common-lib/src/public-api';
 import { MatDialogModule } from '@angular/material/dialog';
 
 import { FormsModule } from '@angular/forms';
@@ -19,7 +16,7 @@ import { UploadLaureatsComponent } from './upload-laureats/upload-laureats.compo
     AdministrationRoutingModule,
     MaterialModule,
     FormsModule,
-    MatDialogModule,
-  ],
+    MatDialogModule
+  ]
 })
 export class AdministrationModule {}

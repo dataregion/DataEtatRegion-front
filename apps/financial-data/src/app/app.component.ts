@@ -1,20 +1,22 @@
-import { Component, OnInit, Inject, InjectionToken } from '@angular/core';
+import { Component, Inject, InjectionToken, OnInit } from '@angular/core';
 import { MultiregionsService } from '@services/multiregions.service';
 import { SETTINGS } from 'apps/common-lib/src/lib/environments/settings.http.service';
 import { GridInFullscreenStateService } from 'apps/common-lib/src/lib/services/grid-in-fullscreen-state.service';
 import { LoaderService, SessionService } from 'apps/common-lib/src/public-api';
 import { SettingsService } from '../environments/settings.service';
-import { profiles_required_for_managment_page, profiles_required_for_tags_page, profiles_required_for_upload_page, profiles_required_for_demarches } from './modules/administration/administration-routing.module';
+import {
+  profiles_required_for_demarches,
+  profiles_required_for_managment_page,
+  profiles_required_for_tags_page,
+  profiles_required_for_upload_page
+} from './modules/administration/administration-routing.module';
 
-
-export const MULTIREGIONS_SERVICE = new InjectionToken<MultiregionsService>(
-  'MultiregionsService'
-);
+export const MULTIREGIONS_SERVICE = new InjectionToken<MultiregionsService>('MultiregionsService');
 
 @Component({
   selector: 'financial-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss'],
+  styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
   public progressBarVisible: boolean = false;
@@ -24,7 +26,7 @@ export class AppComponent implements OnInit {
   public showUploadFinancialDataPage: boolean = false;
   public showUpdateTagsPage: boolean = false;
   public showIntegrationDemarchePage: boolean = false;
-  public region: string = "";
+  public region: string = '';
 
   get grid_fullscreen() {
     return this._gridFullscreen.fullscreen;
@@ -46,12 +48,18 @@ export class AppComponent implements OnInit {
     this._sessionService.getUser().subscribe((user) => {
       this.isAuthenticated = user !== null;
 
-      this.showManageUsersPage = this._sessionService.hasOneRole(profiles_required_for_managment_page);
-      this.showUploadFinancialDataPage = this._sessionService.hasOneRole(profiles_required_for_upload_page);
+      this.showManageUsersPage = this._sessionService.hasOneRole(
+        profiles_required_for_managment_page
+      );
+      this.showUploadFinancialDataPage = this._sessionService.hasOneRole(
+        profiles_required_for_upload_page
+      );
       this.showUpdateTagsPage = this._sessionService.hasOneRole(profiles_required_for_tags_page);
-      this.showIntegrationDemarchePage = this._sessionService.hasOneRole(profiles_required_for_demarches) && this.settings.getFeatures().integration_ds;
+      this.showIntegrationDemarchePage =
+        this._sessionService.hasOneRole(profiles_required_for_demarches) &&
+        this.settings.getFeatures().integration_ds;
     });
-    
+
     this.region = this._multiregions.getRegionByHostname();
   }
 
@@ -66,31 +74,30 @@ export class AppComponent implements OnInit {
   public getRessource(key: string): string | undefined {
     let ressource: string | undefined;
     switch (key) {
-      case "visuterritoire":
+      case 'visuterritoire':
         ressource = this.settings.getRessources().visuterritoire;
         break;
-      case "relance":
+      case 'relance':
         ressource = this.settings.getRessources().relance;
         break;
-      case "graphiques":
+      case 'graphiques':
         ressource = this.settings.getRessources().graphiques;
         break;
-      case "api_swagger":
+      case 'api_swagger':
         ressource = this.settings.getRessources().api_swagger;
         break;
-      case "documentation":
+      case 'documentation':
         ressource = this.settings.getRessources().documentation;
         break;
-      case "suivi_usage": 
+      case 'suivi_usage':
         ressource = this.settings.getRessources().suivi_usage;
         break;
-      case "grist": 
+      case 'grist':
         ressource = this.settings.getRessources().grist;
         break;
-      default: 
+      default:
         ressource = undefined;
     }
-    return ressource
+    return ressource;
   }
-
 }

@@ -2,13 +2,13 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import {
   MapPreferenceFilterMetadata,
-  Preference,
+  Preference
 } from 'apps/preference-users/src/lib/models/preference.models';
-import { JSONObject } from "apps/common-lib/src/lib/models/jsonobject";
+import { JSONObject } from 'apps/common-lib/src/lib/models/jsonobject';
 
 @Component({
   selector: 'france-relance-preference',
-  templateUrl: './preference.component.html',
+  templateUrl: './preference.component.html'
 })
 export class PreferenceComponent {
   constructor(private _router: Router) {}
@@ -16,16 +16,16 @@ export class PreferenceComponent {
   public mappingValueFilter: MapPreferenceFilterMetadata = {
     structure: {
       label: 'Lauréat',
-      renderFn: (row: JSONObject) => row['label'],
+      renderFn: (row: JSONObject) => row['label']
     },
     territoire: {
       label: 'Territoire',
-      renderFn: (row: JSONObject) => row['Commune'],
+      renderFn: (row: JSONObject) => row['Commune']
     },
     axe_plan_relance: {
       label: 'Axe du plan de relance',
-      renderFn: (row: JSONObject) => row['axe'] + ' - ' + row['label'],
-    },
+      renderFn: (row: JSONObject) => row['axe'] + ' - ' + row['label']
+    }
   };
 
   /**
@@ -36,7 +36,7 @@ export class PreferenceComponent {
    */
   public applyPreference = (uuid: string, _pref: Preference) => {
     this._router.navigate([''], {
-      queryParams: { uuid: uuid },
+      queryParams: { uuid: uuid }
     });
   };
 }

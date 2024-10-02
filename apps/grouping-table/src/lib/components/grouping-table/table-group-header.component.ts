@@ -6,8 +6,8 @@ import { GroupingTableContextService } from './grouping-table-context.service';
   selector: 'lib-table-group-header',
   templateUrl: './table-group-header.component.html',
   host: {
-    class: 'header clickable',
-  },
+    class: 'header clickable'
+  }
 })
 export class TableGroupHeaderComponent {
   @Input() group!: Group;

@@ -1,4 +1,4 @@
-import { inject, Injectable } from "@angular/core";
+import { inject, Injectable } from '@angular/core';
 import {
   ColumnMetaDataDef,
   ColumnsMetaData,
@@ -8,11 +8,11 @@ import {
   RootGroup,
   RowData,
   TableData
-} from "./group-utils";
-import { DomSanitizer, SafeHtml } from "@angular/platform-browser";
-import { OutputEvents } from "./output-events";
-import { ProjectCellDirective } from "./project-cell.directive";
-import { ProjectGroupingDirective } from "./project-grouping.directive";
+} from './group-utils';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { OutputEvents } from './output-events';
+import { ProjectCellDirective } from './project-cell.directive';
+import { ProjectGroupingDirective } from './project-grouping.directive';
 
 @Injectable()
 export class GroupingTableContextService {
@@ -45,7 +45,13 @@ export class GroupingTableContextService {
   }
 
   private calculateGroups(dataChanges: boolean): RootGroup {
-    return groupByColumns(this.data, this.groupingColumns, this.columnsMetaData, this.rootGroup, dataChanges);
+    return groupByColumns(
+      this.data,
+      this.groupingColumns,
+      this.columnsMetaData,
+      this.rootGroup,
+      dataChanges
+    );
   }
 
   /**
@@ -106,9 +112,9 @@ export class GroupingTableContextService {
   set outputEvents(outputEvents: OutputEvents) {
     this._outputEvents = outputEvents;
   }
- 
+
   clickOnRow(row: RowData) {
-    this._outputEvents?.["click-on-row"].emit(row);
+    this._outputEvents?.['click-on-row'].emit(row);
   }
 
   // #region: customisation via content projection
@@ -116,15 +122,20 @@ export class GroupingTableContextService {
   groupingProjections: ProjectGroupingDirective[] = [];
 
   projectionForCell(name: string): ProjectCellDirective | null {
-    return this.cellProjections?.find(projection => {
-      return projection.projectCell === name;
-    }) || null;
+    return (
+      this.cellProjections?.find((projection) => {
+        return projection.projectCell === name;
+      }) || null
+    );
   }
 
   projectionForGrouping(name: string): ProjectGroupingDirective | null {
-    return this.groupingProjections?.find(projection => {
-      return projection.projectGrouping === name;
-    }) || null;
+    return (
+      this.groupingProjections?.find((projection) => {
+        return projection.projectGrouping === name;
+      }) || null
+    );
   }
+
   // #endregion
 }

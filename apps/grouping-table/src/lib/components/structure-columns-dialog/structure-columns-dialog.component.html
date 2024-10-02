@@ -2,11 +2,11 @@
   <div class="dialog-title">
     <h2>Choisir les colonnes</h2>
     <button
-      type="button"
-      mat-icon-button
-      mat-dialog-close
       aria-label="Fermer"
+      mat-dialog-close
+      mat-icon-button
       matTooltip="Fermer"
+      type="button"
     >
       <mat-icon>close</mat-icon>
     </button>
@@ -19,25 +19,26 @@
 
     <div class="select-all-container">
       <p>Sélectionner et ordonner les données :</p>
-      <button mat-stroked-button extended [color]="allDisplayed() ? 'basic' : 'primary'" type="button" (click)="onAllCheckboxChange()">
-        <mat-icon>{{allDisplayed() ? 'close' : 'check_circle_outline'}}</mat-icon>
-        {{'Tout ' + (allDisplayed() ? 'déselectionner' : 'sélectionner')}}
+      <button (click)="onAllCheckboxChange()" [color]="allDisplayed() ? 'basic' : 'primary'" extended mat-stroked-button
+              type="button">
+        <mat-icon>{{ allDisplayed() ? 'close' : 'check_circle_outline' }}</mat-icon>
+        {{ 'Tout ' + (allDisplayed() ? 'déselectionner' : 'sélectionner') }}
       </button>
     </div>
 
-    <div cdkDropList class="column-list" (cdkDropListDropped)="moveColumn($event)">
+    <div (cdkDropListDropped)="moveColumn($event)" cdkDropList class="column-list">
       <div
         *ngFor="let col of columns; let i = index"
-        class="column-box"
         cdkDrag
+        class="column-box"
       >
-        <mat-icon aria-hidden="true" fontIcon="drag_handle"/>
-        <div>{{col.label}}</div>
+        <mat-icon aria-hidden="true" fontIcon="drag_handle" />
+        <div>{{ col.label }}</div>
         <div>
           <mat-checkbox
+            (change)="onCheckboxChange($event)"
             [attr.data-column]="col.label"
             [checked]="isColumnDisplayed(col.label)"
-            (change)="onCheckboxChange($event)"
           />
         </div>
       </div>
@@ -48,6 +49,6 @@
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">
-  <button mat-button color="primary" type="button" (click)="validate()">Appliquer</button>
+  <button (click)="validate()" color="primary" mat-button type="button">Appliquer</button>
   <button mat-button mat-dialog-close type="button">Annuler</button>
 </mat-dialog-actions>

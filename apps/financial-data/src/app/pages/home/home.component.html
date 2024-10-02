@@ -4,8 +4,8 @@
   </mat-card-header>
 
   <mat-card-content class="content-column">
-    <financial-search-data (searchResultsEventEmitter)="tableData = $event" (currentFilter)="newFilter = $event"
-      [preFilter]="preFilter" [ngClass]="{ 'hidden': grid_fullscreen }"/>
+    <financial-search-data (currentFilter)="newFilter = $event" (searchResultsEventEmitter)="tableData = $event"
+                           [ngClass]="{ 'hidden': grid_fullscreen }" [preFilter]="preFilter" />
 
     <div class="main-content overlay-container no-content">
       <ng-container *ngIf="tableData && tableData.length === 0 else groupingTable">
@@ -14,10 +14,12 @@
     </div>
   </mat-card-content>
 
-  <div class="last-import" *ngIf="lastImportDate">
-    <mat-icon class="info-icon" aria-hidden="false" aria-label="Example home icon" fontIcon="info"/>
+  <div *ngIf="lastImportDate" class="last-import">
+    <mat-icon aria-hidden="false" aria-label="Example home icon" class="info-icon" fontIcon="info" />
     <div>
-      Le dernier chargement complet des données financières date du <lib-display-date [date]="lastImportDate"/>. <br>
+      Le dernier chargement complet des données financières date du
+      <lib-display-date [date]="lastImportDate" />
+      . <br>
       Les données prennent donc en compte la situation au dernier jour du mois précédent.
     </div>
   </div>
@@ -30,18 +32,20 @@
       <div>
         <ul class="fr-btns-group--inline">
           <li>
-            <button *ngIf="!grid_fullscreen"
-              data-test-id="group-by-btn"
-              class="fr-btn fr-btn--sm fr-btn--secondary fr-btn--icon-left fr-icon-menu-2-fill"
-              (click)="openGroupConfigDialog()" aria-label="Grouper les lignes par">
+            <button (click)="openGroupConfigDialog()"
+                    *ngIf="!grid_fullscreen"
+                    aria-label="Grouper les lignes par"
+                    class="fr-btn fr-btn--sm fr-btn--secondary fr-btn--icon-left fr-icon-menu-2-fill"
+                    data-test-id="group-by-btn">
               Grouper les lignes par
             </button>
           </li>
           <li>
-            <button *ngIf="!grid_fullscreen"
-              data-test-id="chose-columns-btn"
-              class="fr-btn fr-btn--sm fr-btn--secondary fr-btn--icon-left fr-icon-table-line"
-              (click)="openSortColumnsDialog()" aria-label="Choisir les colonnes">
+            <button (click)="openSortColumnsDialog()"
+                    *ngIf="!grid_fullscreen"
+                    aria-label="Choisir les colonnes"
+                    class="fr-btn fr-btn--sm fr-btn--secondary fr-btn--icon-left fr-icon-table-line"
+                    data-test-id="chose-columns-btn">
               Choisir les colonnes
             </button>
           </li>
@@ -53,52 +57,53 @@
       <div>
         <ul class="fr-btns-group--inline">
           <li>
-            <button *ngIf="!grid_fullscreen"
-              class="fr-btn fr-btn--sm fr-btn--secondary fr-btn--icon-left fr-icon-save-fill"
-              (click)="openSaveFilterDialog()" aria-label="Sauvegarder la recherche">
+            <button (click)="openSaveFilterDialog()"
+                    *ngIf="!grid_fullscreen"
+                    aria-label="Sauvegarder la recherche"
+                    class="fr-btn fr-btn--sm fr-btn--secondary fr-btn--icon-left fr-icon-save-fill">
               Sauvegarder la recherche
             </button>
           </li>
 
           <li>
-            <button *ngIf="!grid_fullscreen && searchData.searchFinish === true" 
-              class="fr-btn fr-btn--sm fr-btn--secondary fr-btn--icon-left fr-icon-download-fill" 
-              aria-label="Bouton de téléchargement de données."
-              [disabled]="searchData.searchInProgress.value === true"
-              [matMenuTriggerFor]="downloadOptions">
+            <button *ngIf="!grid_fullscreen && searchData.searchFinish === true"
+                    [disabled]="searchData.searchInProgress.value === true"
+                    [matMenuTriggerFor]="downloadOptions"
+                    aria-label="Bouton de téléchargement de données."
+                    class="fr-btn fr-btn--sm fr-btn--secondary fr-btn--icon-left fr-icon-download-fill">
               Télécharger les données
             </button>
             <mat-menu #downloadOptions="matMenu">
-              
-              <button mat-menu-item [matMenuTriggerFor]="allColumnsFormats">
+
+              <button [matMenuTriggerFor]="allColumnsFormats" mat-menu-item>
                 Toutes les colonnes
               </button>
               <mat-menu #allColumnsFormats="matMenu">
-                <button mat-menu-item (click)="downloadData('csv', true)">Format CSV</button>
-                <button mat-menu-item (click)="downloadData('xlsx', true)">Format Excel</button>
-                <button mat-menu-item (click)="downloadData('ods', true)">Format Libre Office</button>
+                <button (click)="downloadData('csv', true)" mat-menu-item>Format CSV</button>
+                <button (click)="downloadData('xlsx', true)" mat-menu-item>Format Excel</button>
+                <button (click)="downloadData('ods', true)" mat-menu-item>Format Libre Office</button>
               </mat-menu>
-              
-              <button mat-menu-item [matMenuTriggerFor]="displayedColumnsFormats">
+
+              <button [matMenuTriggerFor]="displayedColumnsFormats" mat-menu-item>
                 Les colonnes affichées
               </button>
               <mat-menu #displayedColumnsFormats="matMenu">
-                <button mat-menu-item (click)="downloadData('csv', false)">Format CSV</button>
-                <button mat-menu-item (click)="downloadData('xlsx', false)">Format Excel</button>
-                <button mat-menu-item (click)="downloadData('ods', false)">Format Libre Office</button>
+                <button (click)="downloadData('csv', false)" mat-menu-item>Format CSV</button>
+                <button (click)="downloadData('xlsx', false)" mat-menu-item>Format Excel</button>
+                <button (click)="downloadData('ods', false)" mat-menu-item>Format Libre Office</button>
               </mat-menu>
 
             </mat-menu>
           </li>
-          
+
           <li>
 
             <button
-              data-test-id="toggle-grid-fullscreen-btn"
-              class="fr-btn fr-btn--sm fr-btn--secondary fr-btn--icon-left"
+              (click)="toggle_grid_fullscreen()"
               [ngClass]="{ 'fr-icon-subtract-line': grid_fullscreen, 'fr-icon-fullscreen-line': !grid_fullscreen }"
-              (click)="toggle_grid_fullscreen()" aria-label="Bouton de contrôle du plein écran">
-              {{fullscreen_label}}
+              aria-label="Bouton de contrôle du plein écran"
+              class="fr-btn fr-btn--sm fr-btn--secondary fr-btn--icon-left" data-test-id="toggle-grid-fullscreen-btn">
+              {{ fullscreen_label }}
             </button>
 
           </li>
@@ -106,32 +111,32 @@
       </div>
     </div>
 
-    <lib-grouping-table class="h-100" 
-      [tableData]="tableData" 
-      [columnsMetaData]="genericColumnsMetadata"
-      [groupingColumns]="groupingColumns" 
-      (rowClick)="onRowClick($event)"
+    <lib-grouping-table (rowClick)="onRowClick($event)"
+                        [columnsMetaData]="genericColumnsMetadata"
+                        [groupingColumns]="groupingColumns"
+                        [tableData]="tableData"
+                        class="h-100"
     >
 
-      <ng-template libProjectCell="tags" let-cell="cell">
+      <ng-template let-cell="cell" libProjectCell="tags">
 
-          <mat-chip-listbox>
-            <mat-chip *ngFor="let tag of cell"
-              [matTooltip]="tag?.description" matTooltipPosition="above"
-            >
-              {{displayTag(tag)}}
-            </mat-chip>
-          </mat-chip-listbox>
+        <mat-chip-listbox>
+          <mat-chip *ngFor="let tag of cell"
+                    [matTooltip]="tag?.description" matTooltipPosition="above"
+          >
+            {{ displayTag(tag) }}
+          </mat-chip>
+        </mat-chip-listbox>
 
       </ng-template>
 
-      <ng-template libProjectGrouping="tags" let-cell="cell">
+      <ng-template let-cell="cell" libProjectGrouping="tags">
 
-          <mat-chip-listbox>
-            <mat-chip *ngFor="let tag of cell">
-              {{displayTag(tag)}}
-            </mat-chip>
-          </mat-chip-listbox>
+        <mat-chip-listbox>
+          <mat-chip *ngFor="let tag of cell">
+            {{ displayTag(tag) }}
+          </mat-chip>
+        </mat-chip-listbox>
 
       </ng-template>
 

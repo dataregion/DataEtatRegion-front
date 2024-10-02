@@ -1,4 +1,3 @@
-
 /**
  * Un type pour définir l'optionabilité
  */

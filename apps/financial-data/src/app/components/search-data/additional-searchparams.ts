@@ -6,5 +6,5 @@ export interface AdditionalSearchParameters {
 
 export const empty_additional_searchparams: AdditionalSearchParameters = {
   domaines_fonctionnels: [],
-  sources_region: [],
-}
+  sources_region: []
+};

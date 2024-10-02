@@ -1,9 +1,9 @@
 <div class="fr-col-12">
-    <div class="fr-stepper">
-        <h2 class="fr-stepper__title" data-test-id="stepperTitle">
-            {{title}}
-            <span class="fr-stepper__state">Étape {{currentStep}} sur {{totalStep}}</span>
-        </h2>
-        <div class="fr-stepper__steps" [attr.data-fr-current-step]="currentStep" [attr.data-fr-steps]="totalStep"></div>
-    </div>
+  <div class="fr-stepper">
+    <h2 class="fr-stepper__title" data-test-id="stepperTitle">
+      {{ title }}
+      <span class="fr-stepper__state">Étape {{ currentStep }} sur {{ totalStep }}</span>
+    </h2>
+    <div [attr.data-fr-current-step]="currentStep" [attr.data-fr-steps]="totalStep" class="fr-stepper__steps"></div>
+  </div>
 </div>

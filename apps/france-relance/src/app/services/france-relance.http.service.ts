@@ -1,17 +1,17 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable, Inject } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { SETTINGS } from 'apps/common-lib/src/lib/environments/settings.http.service';
-import {
-  GeoModel,
-  NocoDbResponse,
-  TypeLocalisation,
-} from 'apps/common-lib/src/public-api';
+import { GeoModel, NocoDbResponse, TypeLocalisation } from 'apps/common-lib/src/public-api';
 import { map, Observable, of } from 'rxjs';
 import { SettingsService } from '../../environments/settings.service';
 import { SousAxePlanRelance, SousAxePlanRelanceForFilter } from '../models/axe.models';
 import { Structure } from '../models/structure.models';
 import { Territoire } from '../models/territoire.models';
-import { AbstractLaureatsHttpService, SearchParameters, SearchResults } from './abstract-laureats.http.service';
+import {
+  AbstractLaureatsHttpService,
+  SearchParameters,
+  SearchResults
+} from './abstract-laureats.http.service';
 import { SourceLaureatsData } from '../models/common.model';
 
 class UnsupportedNiveauLocalisation extends Error {
@@ -19,17 +19,17 @@ class UnsupportedNiveauLocalisation extends Error {
    *
    */
   constructor(niveau: string) {
-    super(UnsupportedNiveauLocalisation._message_utilisateur(niveau))
+    super(UnsupportedNiveauLocalisation._message_utilisateur(niveau));
     Object.setPrototypeOf(this, UnsupportedNiveauLocalisation.prototype);
   }
 
   static _message_utilisateur(niveau: string) {
-    return `Impossible de rechercher au niveau ${niveau} au sein de la base France Relance. Nous n'afficherons pas les résultats France Relance.`
+    return `Impossible de rechercher au niveau ${niveau} au sein de la base France Relance. Nous n'afficherons pas les résultats France Relance.`;
   }
 }
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class FranceRelanceHttpService extends AbstractLaureatsHttpService {
   constructor(
@@ -50,35 +50,33 @@ export class FranceRelanceHttpService extends AbstractLaureatsHttpService {
 
     const params = `fields=${field_sous_axe},${field_axe}&limit=5000&sort=${field_axe},${field_sous_axe}`;
 
-
-
     const answer$ = this.http
       .get<NocoDbResponse<any>>(`${apiFr}/Dispositifs/Dispositifs?${params}`)
       .pipe(
-        map((response: NocoDbResponse<any>) =>
-          response.list.reduce((uniqueArray, current) => {
-            const itemExists = uniqueArray.find(
-              (item: { label: any }) => item.label === current[field_sous_axe]
-            );
-            if (!itemExists) {
-              uniqueArray.push({
-                label: current[field_sous_axe],
-                axe: current[field_axe],
-              });
-            }
-            return uniqueArray;
-          }, []) as SousAxePlanRelance[]
+        map(
+          (response: NocoDbResponse<any>) =>
+            response.list.reduce((uniqueArray, current) => {
+              const itemExists = uniqueArray.find(
+                (item: { label: any }) => item.label === current[field_sous_axe]
+              );
+              if (!itemExists) {
+                uniqueArray.push({
+                  label: current[field_sous_axe],
+                  axe: current[field_axe]
+                });
+              }
+              return uniqueArray;
+            }, []) as SousAxePlanRelance[]
         ),
-        map(axes => {
-          return axes.map(axe => {
+        map((axes) => {
+          return axes.map((axe) => {
             const annotated = {
               ...axe,
-              annotation: "REL",
-            } as SousAxePlanRelanceForFilter
+              annotation: 'REL'
+            } as SousAxePlanRelanceForFilter;
             return annotated;
-          })
-        }
-        )
+          });
+        })
       );
     return answer$;
   }
@@ -97,9 +95,7 @@ export class FranceRelanceHttpService extends AbstractLaureatsHttpService {
     const params = `fields=${fields}&limit=50&sort=${sort}&${where}`;
 
     return this.http
-      .get<NocoDbResponse<Structure[]>>(
-        `${apiFr}/Laureats/Laureats-front?${params}`
-      )
+      .get<NocoDbResponse<Structure[]>>(`${apiFr}/Laureats/Laureats-front?${params}`)
       .pipe(
         map((response: NocoDbResponse<any>) =>
           response.list.reduce((uniqueArray, current) => {
@@ -111,7 +107,7 @@ export class FranceRelanceHttpService extends AbstractLaureatsHttpService {
             if (!itemExists) {
               uniqueArray.push({
                 label: current['Structure'],
-                siret: current['NuméroDeSiretSiConnu'],
+                siret: current['NuméroDeSiretSiConnu']
               });
             }
             return uniqueArray;
@@ -133,9 +129,9 @@ export class FranceRelanceHttpService extends AbstractLaureatsHttpService {
     const params = `fields=${fields}&limit=500&${where}&sort=Commune`;
 
     return this.http
-      .get<NocoDbResponse<Territoire>>(
-        `${apiFr}/LocalisationBretagne/LocalisationBretagne?${params}`
-      )
+      .get<
+        NocoDbResponse<Territoire>
+      >(`${apiFr}/LocalisationBretagne/LocalisationBretagne?${params}`)
       .pipe(map((response) => response.list));
   }
 
@@ -144,43 +140,52 @@ export class FranceRelanceHttpService extends AbstractLaureatsHttpService {
    * @param axe
    * @returns
    */
-  public searchLaureats(
-    sp: SearchParameters
-  ): Observable<SearchResults> {
+  public searchLaureats(sp: SearchParameters): Observable<SearchResults> {
     try {
       return this._searchLaureats(sp);
     } catch (error) {
       if (error instanceof UnsupportedNiveauLocalisation) {
         return of({
           messages_utilisateur: [error.message],
-          resultats: [],
-        } as SearchResults)
+          resultats: []
+        } as SearchResults);
       }
       throw error;
     }
   }
 
-  private _searchLaureats(
-    { axes, structure, territoires }: SearchParameters
-  ): Observable<SearchResults> {
+  private _searchLaureats({
+    axes,
+    structure,
+    territoires
+  }: SearchParameters): Observable<SearchResults> {
     const apiFr = this._settings.apiFranceRelance;
 
     const fields_list = [
-      'Structure','NuméroDeSiretSiConnu','SubventionAccordée','Synthèse','axe','sous-axe','dispositif',
-      'code_region','label_region',
-      'code_departement','label_departement',
-      'code_epci','label_epci',
-      'code_commune','label_commune',
-      'code_arrondissement','label_arrondissement'
-    ]
-    const fields = fields_list.join(',')
-    const rest_params = this._buildparams(axes, structure, territoires)
+      'Structure',
+      'NuméroDeSiretSiConnu',
+      'SubventionAccordée',
+      'Synthèse',
+      'axe',
+      'sous-axe',
+      'dispositif',
+      'code_region',
+      'label_region',
+      'code_departement',
+      'label_departement',
+      'code_epci',
+      'label_epci',
+      'code_commune',
+      'label_commune',
+      'code_arrondissement',
+      'label_arrondissement'
+    ];
+    const fields = fields_list.join(',');
+    const rest_params = this._buildparams(axes, structure, territoires);
     const params = `fields=${fields}&${rest_params}`;
 
     return this.mapNocoDbReponse(
-      this.http.get<NocoDbResponse<any>>(
-        `${apiFr}/Laureats/Laureats-front?${params}`
-      )
+      this.http.get<NocoDbResponse<any>>(`${apiFr}/Laureats/Laureats-front?${params}`)
     ).pipe(
       map(this._mapToSourceLaureatsData(SourceLaureatsData.RELANCE)),
       map(this._wrap_in_searchresult)
@@ -192,8 +197,7 @@ export class FranceRelanceHttpService extends AbstractLaureatsHttpService {
     structure: Structure | null,
     territoires: GeoModel[] | null
   ): string {
-    let params =
-      'sort=Structure,axe,dispositif&limit=5000&where=(Montant,gt,0)';
+    let params = 'sort=Structure,axe,dispositif&limit=5000&where=(Montant,gt,0)';
     if (structure) {
       params += `~and(Structure,eq,${structure.label})`;
     }
@@ -203,22 +207,22 @@ export class FranceRelanceHttpService extends AbstractLaureatsHttpService {
     }
 
     if (territoires && territoires.length > 0) {
-      const territoire = territoires[0]
+      const territoire = territoires[0];
       const territoires_supportes = {
-        [TypeLocalisation.REGION]: "code_region",
-        [TypeLocalisation.DEPARTEMENT]: "code_departement",
-        [TypeLocalisation.EPCI]: "code_epci",
-        [TypeLocalisation.COMMUNE]: "code_commune",
+        [TypeLocalisation.REGION]: 'code_region',
+        [TypeLocalisation.DEPARTEMENT]: 'code_departement',
+        [TypeLocalisation.EPCI]: 'code_epci',
+        [TypeLocalisation.COMMUNE]: 'code_commune',
         [TypeLocalisation.CRTE]: null,
-        [TypeLocalisation.ARRONDISSEMENT]: "code_arrondissement",
+        [TypeLocalisation.ARRONDISSEMENT]: 'code_arrondissement',
         [TypeLocalisation.QPV]: null
-      }
+      };
       if (territoires_supportes[territoire.type!] == null) {
-        throw new UnsupportedNiveauLocalisation(territoire.type!)
+        throw new UnsupportedNiveauLocalisation(territoire.type!);
       }
 
       // on est toujours sur le même type
-      const codes_joined = territoires.map((t) => t.code).join(',')
+      const codes_joined = territoires.map((t) => t.code).join(',');
       params += `~and(${territoires_supportes[territoire.type!]},in,${codes_joined})`;
     }
 

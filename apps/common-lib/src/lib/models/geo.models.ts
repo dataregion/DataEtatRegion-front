@@ -1,4 +1,4 @@
-/* eslint no-unused-vars: 0 */  // --> OFF
+/* eslint no-unused-vars: 0 */ // --> OFF
 
 export enum TypeLocalisation {
   REGION = 'Région',
@@ -21,7 +21,7 @@ export interface GeoCommuneModel extends GeoModel {
   codesPostaux: string[];
 }
 
-export interface QpvModel extends  Omit<GeoModel, 'nom'> {
+export interface QpvModel extends Omit<GeoModel, 'nom'> {
   label: string;
   label_commune: string;
 }

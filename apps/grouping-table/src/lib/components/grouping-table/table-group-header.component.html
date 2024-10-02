@@ -8,24 +8,24 @@
       </div>
       <div>
 
-        <div>{{group.column?.label}}</div>
+        <div>{{ group.column?.label }}</div>
 
-        <ng-container 
+        <ng-container
           *ngIf="groupingCustomProjection(group.column!.name); let projection; else defaultCellDisplay"
-          [ngTemplateOutlet]="projection?.templateRef ?? null"
-          [ngTemplateOutletContext]="{ 'column': group.column, 'row': null, 'cell': group.columnValue }" />
+          [ngTemplateOutletContext]="{ 'column': group.column, 'row': null, 'cell': group.columnValue }"
+          [ngTemplateOutlet]="projection?.templateRef ?? null" />
         <ng-template #defaultCellDisplay>
-          <div><strong>{{ group.columnValue !== "" ? group.columnValue : "Non renseigné"}}</strong></div>
+          <div><strong>{{ group.columnValue !== "" ? group.columnValue : "Non renseigné" }}</strong></div>
         </ng-template>
 
       </div>
       <div class="group-size">
-        {{group.count}}
+        {{ group.count }}
       </div>
     </div>
 
     <div *ngSwitchDefault class="grouping-table-cell col-{{i}}">
-      {{group | financialGroupAggregate: col}}
+      {{ group | financialGroupAggregate: col }}
     </div>
   </ng-container>
 </ng-container>

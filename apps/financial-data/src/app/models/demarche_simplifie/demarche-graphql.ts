@@ -545,7 +545,6 @@ export type Demarche = {
   title: Scalars['String'];
 };
 
-
 /** Une démarche */
 export type DemarcheDeletedDossiersArgs = {
   after?: InputMaybe<Scalars['String']>;
@@ -555,7 +554,6 @@ export type DemarcheDeletedDossiersArgs = {
   last?: InputMaybe<Scalars['Int']>;
   order?: InputMaybe<Order>;
 };
-
 
 /** Une démarche */
 export type DemarcheDossiersArgs = {
@@ -573,12 +571,10 @@ export type DemarcheDossiersArgs = {
   updatedSince?: InputMaybe<Scalars['ISO8601DateTime']>;
 };
 
-
 /** Une démarche */
 export type DemarcheGroupeInstructeursArgs = {
   closed?: InputMaybe<Scalars['Boolean']>;
 };
-
 
 /** Une démarche */
 export type DemarchePendingDeletedDossiersArgs = {
@@ -793,24 +789,20 @@ export type Dossier = {
   usager: Profile;
 };
 
-
 /** Un dossier */
 export type DossierAnnotationsArgs = {
   id?: InputMaybe<Scalars['ID']>;
 };
-
 
 /** Un dossier */
 export type DossierAvisArgs = {
   id?: InputMaybe<Scalars['ID']>;
 };
 
-
 /** Un dossier */
 export type DossierChampsArgs = {
   id?: InputMaybe<Scalars['ID']>;
 };
-
 
 /** Un dossier */
 export type DossierMessagesArgs = {
@@ -1366,9 +1358,8 @@ export type File = {
 
 export type FindDemarcheInput =
   /** ID de la démarche. */
-  { id: Scalars['ID']; number?: never; }
-  |  /** Numero de la démarche. */
-  { id?: never; number: Scalars['Int']; };
+  | { id: Scalars['ID']; number?: never } /** Numero de la démarche. */
+  | { id?: never; number: Scalars['Int'] };
 
 export type GeoArea = {
   description?: Maybe<Scalars['String']>;
@@ -1512,7 +1503,6 @@ export type GroupeInstructeurWithDossiers = {
   pendingDeletedDossiers: DeletedDossierConnection;
 };
 
-
 /** Un groupe instructeur avec ses dossiers */
 export type GroupeInstructeurWithDossiersDeletedDossiersArgs = {
   after?: InputMaybe<Scalars['String']>;
@@ -1522,7 +1512,6 @@ export type GroupeInstructeurWithDossiersDeletedDossiersArgs = {
   last?: InputMaybe<Scalars['Int']>;
   order?: InputMaybe<Order>;
 };
-
 
 /** Un groupe instructeur avec ses dossiers */
 export type GroupeInstructeurWithDossiersDossiersArgs = {
@@ -1539,7 +1528,6 @@ export type GroupeInstructeurWithDossiersDossiersArgs = {
   state?: InputMaybe<DossierState>;
   updatedSince?: InputMaybe<Scalars['ISO8601DateTime']>;
 };
-
 
 /** Un groupe instructeur avec ses dossiers */
 export type GroupeInstructeurWithDossiersPendingDeletedDossiersArgs = {
@@ -1768,106 +1756,85 @@ export type Mutation = {
   groupeInstructeurSupprimerInstructeurs?: Maybe<GroupeInstructeurSupprimerInstructeursPayload>;
 };
 
-
 export type MutationCreateDirectUploadArgs = {
   input: CreateDirectUploadInput;
 };
-
 
 export type MutationDemarcheClonerArgs = {
   input: DemarcheClonerInput;
 };
 
-
 export type MutationDossierAccepterArgs = {
   input: DossierAccepterInput;
 };
-
 
 export type MutationDossierArchiverArgs = {
   input: DossierArchiverInput;
 };
 
-
 export type MutationDossierChangerGroupeInstructeurArgs = {
   input: DossierChangerGroupeInstructeurInput;
 };
-
 
 export type MutationDossierClasserSansSuiteArgs = {
   input: DossierClasserSansSuiteInput;
 };
 
-
 export type MutationDossierEnvoyerMessageArgs = {
   input: DossierEnvoyerMessageInput;
 };
-
 
 export type MutationDossierModifierAnnotationAjouterLigneArgs = {
   input: DossierModifierAnnotationAjouterLigneInput;
 };
 
-
 export type MutationDossierModifierAnnotationCheckboxArgs = {
   input: DossierModifierAnnotationCheckboxInput;
 };
-
 
 export type MutationDossierModifierAnnotationDateArgs = {
   input: DossierModifierAnnotationDateInput;
 };
 
-
 export type MutationDossierModifierAnnotationDatetimeArgs = {
   input: DossierModifierAnnotationDatetimeInput;
 };
-
 
 export type MutationDossierModifierAnnotationIntegerNumberArgs = {
   input: DossierModifierAnnotationIntegerNumberInput;
 };
 
-
 export type MutationDossierModifierAnnotationTextArgs = {
   input: DossierModifierAnnotationTextInput;
 };
-
 
 export type MutationDossierPasserEnInstructionArgs = {
   input: DossierPasserEnInstructionInput;
 };
 
-
 export type MutationDossierRefuserArgs = {
   input: DossierRefuserInput;
 };
-
 
 export type MutationDossierRepasserEnConstructionArgs = {
   input: DossierRepasserEnConstructionInput;
 };
 
-
 export type MutationDossierRepasserEnInstructionArgs = {
   input: DossierRepasserEnInstructionInput;
 };
-
 
 export type MutationGroupeInstructeurAjouterInstructeursArgs = {
   input: GroupeInstructeurAjouterInstructeursInput;
 };
 
-
 export type MutationGroupeInstructeurCreerArgs = {
   input: GroupeInstructeurCreerInput;
 };
 
-
 export type MutationGroupeInstructeurModifierArgs = {
   input: GroupeInstructeurModifierInput;
 };
-
 
 export type MutationGroupeInstructeurSupprimerInstructeursArgs = {
   input: GroupeInstructeurSupprimerInstructeursInput;
@@ -2108,9 +2075,7 @@ export type Profile = {
 
 export type ProfileInput =
   /** Email */
-  { email: Scalars['String']; id?: never; }
-  |  /** ID */
-  { email?: never; id: Scalars['ID']; };
+  { email: Scalars['String']; id?: never } /** ID */ | { email?: never; id: Scalars['ID'] };
 
 export type Query = {
   __typename?: 'Query';
@@ -2123,21 +2088,17 @@ export type Query = {
   groupeInstructeur: GroupeInstructeurWithDossiers;
 };
 
-
 export type QueryDemarcheArgs = {
   number: Scalars['Int'];
 };
-
 
 export type QueryDemarcheDescriptorArgs = {
   demarche: FindDemarcheInput;
 };
 
-
 export type QueryDossierArgs = {
   number: Scalars['Int'];
 };
-
 
 export type QueryGroupeInstructeurArgs = {
   number: Scalars['Int'];
