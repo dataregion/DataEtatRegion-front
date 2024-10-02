@@ -3,22 +3,28 @@ import { Observable, Subject } from 'rxjs';
 import { User } from 'apps/management/src/lib/models/users/user.models';
 import { Profil } from '../models/profil.enum.model';
 import { AuthUtils } from './auth-utils.service';
+import { Optional } from '../utilities/optional.type';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SessionService {
-  public userInfo$ = new Subject<User | null>();
   private _userInfo: User | null = null;
   private auth_utils = inject(AuthUtils);
+
+  public authenticated$ = new Subject<void>();
+  public userInfo$ = new Subject<User | null>();
+  public region_code: Optional<string> = null
 
   constructor() {}
 
   // eslint-disable-next-line no-undef
-  public setAuthentication(info: Keycloak.KeycloakProfile, roles: any): void {
+  public setAuthentication(info: Keycloak.KeycloakProfile, roles: any, region_code?: string): void {
     this._userInfo = info as User;
     this._userInfo.roles = this.auth_utils.roles_to_uppercase(roles);
+    this.region_code = region_code;
     this.userInfo$.next(this._userInfo);
+    this.authenticated$.next();
   }
 
   public getUser(): Observable<User | null> {

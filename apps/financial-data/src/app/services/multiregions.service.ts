@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { SessionService } from 'apps/common-lib/src/public-api';
 
 /* eslint-disable no-unused-vars */
 
@@ -12,33 +13,43 @@ export enum Region {
   providedIn: 'root'
 })
 export class MultiregionsService {
+  
+  private _region = ""
+
+  constructor(private _sessionService: SessionService) { 
+    
+    this._sessionService.authenticated$.subscribe(() => {
+      this._region = this._findRegion()
+    })
+  }
+
   private _synonymes: { [key in Region]: string[] } = {
     [Region.BRETAGNE]: [
-      'bretagne.nocode.csm.ovh',
-      'budget.bretagne.preprod.dataregion.fr',
-      'budget.bretagne.dataregion.fr',
-      'budget.preprod.databretagne.fr',
-      'budget.databretagne.fr'
+      "053",
     ],
     [Region.PDL]: [
-      'pdl.nocode.csm.ovh',
-      'budget.paysdelaloire.dataregion.fr',
-      'budget.paysdelaloire.preprod.dataregion.fr'
+      "052",
     ],
     [Region.HDF]: [
-      'hdf.nocode.csm.ovh',
-      'budget.hautsdefrance.dataregion.fr',
-      'budget.hautsdefrance.preprod.dataregion.fr',
-      'budget-hautsdefrance.preprod.dataregion.fr'
+      "032",
     ]
   };
+  
+  private _findRegion(): string {
+      const region_code = this._sessionService.region_code
 
-  public getRegionByHostname(): string {
-    const hostname = location.host;
-    if (hostname.includes('localhost')) return 'Localhost';
-    for (const [key, value] of Object.entries(this._synonymes)) {
-      if (value.includes(hostname)) return key;
-    }
-    return 'Error';
+      const hostname = location.host
+      for (const [key, value] of Object.entries(this._synonymes)) {
+        if (value.includes(hostname))
+          return key;
+        if (region_code && value.includes(region_code))
+          return key
+      }
+
+      return "Error";
+  }
+
+  public getRegionLabel(): string {
+    return this._region;
   }
 }
