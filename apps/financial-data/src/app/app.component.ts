@@ -24,7 +24,10 @@ export class AppComponent implements OnInit {
   public showUploadFinancialDataPage: boolean = false;
   public showUpdateTagsPage: boolean = false;
   public showIntegrationDemarchePage: boolean = false;
-  public region: string = "";
+  
+  get region() {
+    return this._multiregions.getRegionLabel()
+  }
 
   get grid_fullscreen() {
     return this._gridFullscreen.fullscreen;
@@ -51,8 +54,6 @@ export class AppComponent implements OnInit {
       this.showUpdateTagsPage = this._sessionService.hasOneRole(profiles_required_for_tags_page);
       this.showIntegrationDemarchePage = this._sessionService.hasOneRole(profiles_required_for_demarches) && this.settings.getFeatures().integration_ds;
     });
-    
-    this.region = this._multiregions.getRegionByHostname();
   }
 
   public get contact(): string | undefined {

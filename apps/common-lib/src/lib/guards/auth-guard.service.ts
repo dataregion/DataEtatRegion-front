@@ -5,6 +5,7 @@ import { KeycloakAuthGuard, KeycloakService } from 'keycloak-angular';
 import { SessionService } from 'apps/common-lib/src/public-api';
 import { NGXLogger } from 'ngx-logger';
 import { AuthUtils } from '../services/auth-utils.service';
+import { jwtDecode } from 'jwt-decode';
 /* eslint-disable no-unused-vars */
 
 @Injectable({
@@ -48,9 +49,14 @@ export class AuthGuard extends KeycloakAuthGuard {
       });
     }
 
+    const userProfile = await this.keycloak.loadUserProfile()
+    const accessToken = await this.keycloak.getToken()
+    const decodedAccessToken: Record<string, any> = jwtDecode(accessToken);
+    const code_region = decodedAccessToken['region'] ?? null
     this.sessionService.setAuthentication(
-      await this.keycloak.loadUserProfile(),
-      this.keycloak.getUserRoles()
+      userProfile,
+      this.keycloak.getUserRoles(),
+      code_region
     );
 
     // Get the roles required from the route.
