@@ -1,7 +1,7 @@
 import { HttpClient } from "@angular/common/http";
 import { Inject, Injectable, inject } from "@angular/core";
-import { SourceFinancialData } from "@models/financial/common.models";
-import { FinancialCp, FinancialDataModel } from "@models/financial/financial-data.models";
+import { SourceFinancialData } from "apps/data-qpv/src/app/models/financial/common.models";
+import { FinancialCp, FinancialDataModel } from "apps/data-qpv/src/app/models/financial/financial-data.models";
 import { BudgetService as GeneratedBudgetApiService } from "apps/clients/budget";
 import { EnrichedFlattenFinancialLinesSchema } from "apps/clients/budget/model/enrichedFlattenFinancialLinesSchema";
 import { SETTINGS } from "apps/common-lib/src/lib/environments/settings.http.service";
@@ -10,7 +10,7 @@ import { SettingsService } from "apps/data-qpv/src/environments/settings.service
 import { Observable, of } from "rxjs";
 import { BudgetLineHttpMapper } from "./budget-lines-http.mapper.service";
 import { Optional } from "apps/common-lib/src/lib/utilities/optional.type";
-import { DataHttpService, SearchParameters } from "@services/interface-data.service";
+import { DataHttpService, SearchParameters } from "apps/data-qpv/src/app/services/interface-data.service";
 import { SearchUtilsService } from "apps/common-lib/src/lib/services/search-utils.service";
 
 @Injectable({

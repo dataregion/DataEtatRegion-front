@@ -14,47 +14,19 @@ export class PreferenceComponent {
   constructor(private _router: Router) {}
 
   public mappingValueFilter: MapPreferenceFilterMetadata = {
-    theme: {
-      label: 'Thème'
+    annees: {
+      label: 'Années'
     },
-    bops: {
-      label: 'Programmes',
-      renderFn: (row: JSONObject) => row['code'] + ' - ' + row['label'],
-    },
-    referentiels_programmation: {
-      label: 'Référentiels',
-      renderFn: (row: JSONObject) => row['code'],
-    },
-    location: {
-      label: 'Territoire',
+    zone: {
+      label: 'Zone géographique',
       renderFn: (row: JSONObject) => {
         return `${row['type']} : ${row['nom']} (${row['code']})`;
       },
     },
-    year: {
-      label: 'Année'
+    qpv: {
+      label: 'QPV',
+      renderFn: (row: JSONObject) => row['code'] + ' - ' + row['label'],
     },
-    beneficiaire: {
-      label: 'Bénéficiare',
-      renderFn: (row: JSONObject) => {
-        return this._ppTags(row);
-      },
-    },
-    beneficiaires: {
-      label: "Bénéficiaires",
-      renderFn: (row: JSONObject) => {
-        return this._ppBeneficiaire(row);
-      },
-    },
-    types_beneficiaires: {
-      label: "Types de bénéficiaires"
-    },
-    tags: {
-      label: "Tags",
-      renderFn: (row: JSONObject) => {
-        return this._ppTags(row);
-      },
-    }
   };
 
   /**
@@ -69,14 +41,4 @@ export class PreferenceComponent {
     });
   };
 
-  private _ppBeneficiaire(json: any) {
-    if (json['denomination']) {
-      return `${json['denomination']} (${json['siret']})`;
-    }
-    return `Siret : (${json['siret']})`;
-  }
-
-  private _ppTags(json: any) {
-    return `${json['item']}`;
-  }
 }

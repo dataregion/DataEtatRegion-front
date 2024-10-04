@@ -1,6 +1,6 @@
 import { inject } from '@angular/core';
 import { ActivatedRouteSnapshot, ResolveFn } from '@angular/router';
-import { PreFilters } from '@models/search/prefilters.model';
+import { PreFilters } from 'apps/data-qpv/src/app/models/search/prefilters.model';
 import { GeoHttpService, SearchByCodeParamsBuilder } from 'apps/common-lib/src/lib/services/geo-http.service';
 import { ReferentielsHttpService } from 'apps/common-lib/src/lib/services/referentiels.service';
 import { GeoModel, TypeLocalisation } from 'apps/common-lib/src/public-api';
@@ -13,14 +13,13 @@ import {
   MarqueBlancheParsedParams as Params,
   MarqueBlancheParsedParamsResolverModel as ResolverModel
 } from 'apps/common-lib/src/lib/models/marqueblanche/marqueblanche-parsed-params.model';
-import { FinancialQueryParam } from '@models/marqueblanche/query-params.enum';
+import { FinancialQueryParam } from 'apps/data-qpv/src/app/models/marqueblanche/query-params.enum';
 import { QueryParam } from 'apps/common-lib/src/lib/models/marqueblanche/query-params.enum';
 import { p_group_by as common_group_by, fullscreen } from 'apps/common-lib/src/lib/resolvers/marqueblanche/common-handlers';
 import { HandlerContext } from 'apps/common-lib/src/lib/models/marqueblanche/handler-context.model';
 import { passing_errors } from 'apps/common-lib/src/lib/resolvers/marqueblanche/utils';
 import { assert_is_a_GroupByFieldname } from '@models/marqueblanche/groupby-fieldname.enum';
 import { GroupingColumn } from 'apps/grouping-table/src/lib/components/grouping-table/group-utils';
-import { groupby_mapping } from '@models/marqueblanche/groupby-mapping.model';
 import { synonymes_from_types_localisation, to_type_localisation } from '@models/marqueblanche/niveau-localisation.model';
 import { Beneficiaire } from '@models/search/beneficiaire.model';
 import { to_types_categories_juridiques } from '@models/marqueblanche/type-etablissement.model';
@@ -75,21 +74,8 @@ function _resolver(route: ActivatedRouteSnapshot): Observable<{ data: MarqueBlan
   const handlerCtx = { api_geo, api_ref, route, logger };
   const model = of({ ...empty, has_marqueblanche_params })
     .pipe(
-      mergeMap(previous => programmes(previous, handlerCtx)),
       mergeMap(previous => localisation(previous, handlerCtx)),
-      mergeMap(previous => beneficiaires(previous, handlerCtx)),
-      mergeMap(previous => type_beneficiaire(previous, handlerCtx)),
-    )
-    .pipe(
-      mergeMap(previous => domaines_fonctionnels(previous, handlerCtx)),
-      mergeMap(previous => referentiels_programmation(previous, handlerCtx)),
-      mergeMap(previous => source_region(previous, handlerCtx)),
-
-      mergeMap(previous => common_group_by(previous, handlerCtx)),
-      mergeMap(previous => group_by(previous, handlerCtx)),
-
       map(previous => annees_min_max(previous, handlerCtx)),
-      mergeMap(previous => fullscreen<MarqueBlancheParsedParams, HandlerContext>(previous, handlerCtx)),
       map(result => {
         return { data: result }
       })
@@ -98,163 +84,6 @@ function _resolver(route: ActivatedRouteSnapshot): Observable<{ data: MarqueBlan
   return model;
 }
 
-
-function beneficiaires(
-  previous: MarqueBlancheParsedParams,
-  ctx: _HandlerContext
-): Observable<MarqueBlancheParsedParams> {
-
-  const sirets = _extract_multiple_queryparams(previous, ctx, FinancialQueryParam.Beneficiaires);
-  if (!sirets)
-    return of(previous);
-
-  const beneficiaires = sirets.map(x => { return { siret: x } as Beneficiaire })
-
-  const preFilters: PreFilters = {
-    ...previous.preFilters,
-    beneficiaires: beneficiaires,
-  }
-
-  return of({ ...previous, preFilters })
-}
-
-function type_beneficiaire(
-  previous: MarqueBlancheParsedParams,
-  ctx: _HandlerContext
-): Observable<MarqueBlancheParsedParams> {
-
-  const types_beneficiaires = 
-    _extract_multiple_queryparams(previous, ctx, FinancialQueryParam.TypesBeneficiaires)
-    ?.map(x => to_types_categories_juridiques(x))
-
-  if (!types_beneficiaires)
-    return of(previous)
-
-  const preFilters: PreFilters = {
-    ...previous.preFilters,
-    types_beneficiaires,
-  }
-
-  return of({ ... previous, preFilters })
-}
-
-function source_region(
-  previous: MarqueBlancheParsedParams,
-  ctx: _HandlerContext
-): Observable<MarqueBlancheParsedParams> {
-
-  const sources = _extract_multiple_queryparams(previous, ctx, FinancialQueryParam.SourceRegion);
-  if (!sources)
-    return of(previous)
-
-  const preFilters: PreFilters = {
-    ...previous.preFilters,
-    sources_region: sources
-  }
-
-  return of({ ...previous, preFilters })
-}
-
-function domaines_fonctionnels(
-  previous: MarqueBlancheParsedParams,
-  ctx: _HandlerContext
-): Observable<MarqueBlancheParsedParams> {
-
-  const codes = _extract_multiple_queryparams(previous, ctx, FinancialQueryParam.DomaineFonctionnel);
-  if (!codes)
-    return of(previous);
-
-  const preFilters: PreFilters = {
-    ...previous.preFilters,
-    domaines_fonctionnels: codes
-  }
-
-  return of({...previous, preFilters})
-}
-
-function referentiels_programmation(
-  previous: MarqueBlancheParsedParams,
-  ctx: _HandlerContext
-): Observable<MarqueBlancheParsedParams> {
-
-  const codes = _extract_multiple_queryparams(previous, ctx, FinancialQueryParam.ReferentielsProgrammation);
-  if (!codes)
-    return of(previous);
-
-  const referentiels = codes.map(x => { return { code: x } as ReferentielProgrammation })
-
-  const programmes = _extract_multiple_queryparams(previous, ctx, FinancialQueryParam.Programmes);
-  if (referentiels && programmes) {
-    referentiels.forEach(ref => {
-      if (!programmes.includes(ref.code.substring(0, 4).substring(1)))
-        throw Error("Vous devez utiliser des `programmes` et des `referentiels_programmation` associés.")
-    });
-  }
-  
-
-  function handle_refs(refs: ReferentielProgrammation[]) {
-    return {
-      ...previous,
-      preFilters: {
-        ...previous.preFilters,
-        referentiels_programmation: refs
-      }
-    };
-  }
-
-  const result = ctx.api_ref.search(codes.join(','), null)
-    .pipe(
-      map(refs => handle_refs(refs))
-    );
-
-  return result;
-}
-
-/** Renseigne les {@link GroupingColumn} suivant {@link MarqueBlancheParsedParams.p_group_by}*/
-function group_by(
-  previous: MarqueBlancheParsedParams,
-  _: _HandlerContext,
-): Observable<MarqueBlancheParsedParams> {
-
-  const columns: GroupingColumn[] = []
-  for (const param_name of previous.p_group_by) {
-
-    assert_is_a_GroupByFieldname(param_name)
-    const columnName = groupby_mapping[param_name]
-    const column: GroupingColumn = { columnName }
-
-    columns.push(column);
-  }
-
-  return of(
-    {
-      ...previous,
-      group_by: columns,
-    }
-  )
-}
-
-/** Gère le préfiltre des programmes */
-function programmes(
-  previous: MarqueBlancheParsedParams,
-  ctx: _HandlerContext,
-): Observable<MarqueBlancheParsedParams> {
-
-  const codes = _extract_multiple_queryparams(previous, ctx, FinancialQueryParam.Programmes);
-  if (!codes)
-    return of(previous)
-
-  const bops = codes.map(code => {
-    return { 'code': code }
-  });
-
-  const preFilters = {
-    ...previous.preFilters,
-    bops,
-  }
-
-  return of({ ...previous, preFilters })
-}
 
 /** Gère le préfiltre de localisation*/
 function localisation(
@@ -288,7 +117,7 @@ function localisation(
       throw new Error(`Impossible de trouver une localisation pour ${niveau_geo}: ${code_geo}`);
     const _preFilters: PreFilters = {
       ...previous.preFilters,
-      location: [geo[0]] as unknown as JSONObject[] // XXX: Ici, on ne gère qu'un seul code_geo
+      localisation: [geo[0]] as unknown as JSONObject[] // XXX: Ici, on ne gère qu'un seul code_geo
     }
     return {
       ...previous,

@@ -1,9 +1,9 @@
 import { Observable } from 'rxjs';
 import { DataPagination } from '../../../../common-lib/src/lib/models/pagination/pagination.models';
-import { BopModel } from '@models/refs/bop.models';
+import { BopModel } from 'apps/data-qpv/src/app/models/refs/bop.models';
 import { GeoModel, TypeLocalisation } from '../../../../common-lib/src/lib/models/geo.models';
-import { SourceFinancialData, TypeCategorieJuridique } from '@models/financial/common.models';
-import { ReferentielProgrammation } from '@models/refs/referentiel_programmation.model';
+import { SourceFinancialData, TypeCategorieJuridique } from 'apps/data-qpv/src/app/models/financial/common.models';
+import { ReferentielProgrammation } from 'apps/data-qpv/src/app/models/refs/referentiel_programmation.model';
 import { RefSiret } from 'apps/common-lib/src/lib/models/refs/RefSiret';
 
 export enum OtherTypeCategorieJuridique {

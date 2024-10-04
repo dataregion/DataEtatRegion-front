@@ -37,6 +37,8 @@ export class SupersetIframeComponent implements OnInit, OnChanges {
 
   public sanitizedUrl: SafeResourceUrl | undefined;
 
+  private height: number = 0;
+
 
   constructor(
     private domSanitizer: DomSanitizer,
@@ -67,7 +69,7 @@ export class SupersetIframeComponent implements OnInit, OnChanges {
 
   private getCurrentDashboardArgsString(): string {
     let args = "";
-    args += `?standalone=2`;
+    args += `?standalone=3&embedded=true`;
 
     if (this.dashboardArgsCreditType && this.dashboardArgsCreditType !== "") {
       args += `&credit_type=${this.dashboardArgsCreditType}`;

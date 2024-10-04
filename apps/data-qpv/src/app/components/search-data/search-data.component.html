@@ -8,18 +8,27 @@
 
 <ng-template #form>
   <form [formGroup]="searchForm" autocomplete="off">
-    <div class="box">
+    <div class="box fr-grid-row">
       <lib-select-multiple [canFilter]="false" [canSelectAll]="true"
                            [placeholder]="'Année'"
                            [options]="annees"
-                           [(selected)]="selectedYear"
+                           [(selected)]="selectedAnnees"
                            data-test-id="annees-form-field"
-                           class="select-multiple field-15-width"
+                           class="select-multiple fr-col-2"
                            icon="calendar_month"
       />
 
-      <div class="field-localisation field-30-width">
-        <lib-localisation [selectedNiveau]="defaultNiveauQpv" [(selectedLocalisation)]="selectedLocation" [niveauxExcludeFilter]="['Région', 'Département', 'EPCI', 'Commune', 'CRTE', 'Arrondissement']"/>
+      <div class="field-localisation fr-col-4">
+        <lib-localisation [selectedNiveau]="selectedZone" [(selectedLocalisation)]="selectedLocalisation" [niveauxExcludeFilter]="['QPV']"/>
+      </div>
+
+      <div class="field-localisation fr-col-2">
+        <lib-select-multiple [canFilter]="true" [canSelectAll]="false"
+                           [placeholder]="'QPV'"
+                           [options]="qpvs"
+                           [(selected)]="selectedQpv"
+                           data-test-id="qpv-form-field"
+      />
       </div>
 
       <button mat-fab color="primary" (click)="doSearch()" matTooltip="Rechercher" aria-label="Bouton de recherche.">

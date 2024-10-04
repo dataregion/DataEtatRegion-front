@@ -42,13 +42,13 @@ import {
   aeConfigurationParameters,
 } from 'apps/clients/apis-externes';
 import { InMemoryCache } from '@apollo/client';
-import { DATA_HTTP_SERVICE } from '@services/budget.service';
+import { DATA_HTTP_SERVICE } from 'apps/data-qpv/src/app/services/budget.service';
 
 import {
   budgetApiModule, budgetConfiguration,
 } from 'apps/clients/budget';
-import { BudgetDataHttpService } from '@services/http/budget-lines-http.service';
-import { MultiregionsService } from '@services/multiregions.service';
+import { BudgetDataHttpService } from 'apps/data-qpv/src/app/services/http/budget-lines-http.service';
+import { MultiregionsService } from 'apps/data-qpv/src/app/services/multiregions.service';
 
 import { SupersetIframeComponent } from './components/superset-iframe/superset-iframe.component'
 import {MatTab, MatTabGroup} from "@angular/material/tabs";
@@ -166,19 +166,6 @@ registerLocaleData(localeFr);
             useFactory: apiBudgetConfigFactory,
             deps: [SETTINGS],
             multi: false,
-        },
-        {
-            provide: APOLLO_OPTIONS,
-            useFactory(httpLink: HttpLink, settings: SettingsService) {
-                const apiDs = settings.apiExternes + '/demarche-simplifie';
-                return {
-                    cache: new InMemoryCache(),
-                    link: httpLink.create({
-                        uri: apiDs,
-                    }),
-                };
-            },
-            deps: [HttpLink, SETTINGS],
         },
         provideHttpClient(withInterceptorsFromDi()),
     ] })

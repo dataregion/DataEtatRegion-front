@@ -1,13 +1,33 @@
-<mat-card class="mat-card">
-  <mat-card-header [ngClass]="{'hidden': grid_fullscreen }">
-    <mat-card-title>Rechercher des données financières à l'échelle des QPV</mat-card-title>
-    <mat-card-subtitle>Affiche les données des territoires et leurs crédits</mat-card-subtitle>
-  </mat-card-header>
+<div style="background-color:#fff;">
+  <div class="fr-container">
+    <div class="fr-grid-row">
 
-  <mat-card-content class="content-column">
-    <data-qpv-search-data (searchResultsEventEmitter)="currentSearchFilter = $event" (currentFilter)="newFilter = $event"
-      [preFilter]="preFilter" [ngClass]="{ 'hidden': grid_fullscreen }"/>
+      <div class="fr-col-12">
+        <h3 style="margin-top:50px; margin-bottom:10px;">Rechercher des données financières à l'échelle des QPV</h3>
+        <p>Affiche les données des territoires et leurs crédits</p>
+      </div>
 
-      <data-qpv-superset-iframe class="superset-dashboard-credit-wrapper" dashboardSlugType="credit" dashboardArgsCreditType="p147" [searchArgs]="currentSearchFilter"></data-qpv-superset-iframe>
-  </mat-card-content>
-</mat-card>
+      <data-qpv-search-data (searchResultsEventEmitter)="currentSearchFilter = $event"
+                            (currentFilter)="newFilter = $event"
+                            [preFilter]="preFilter"
+                            [ngClass]="{ 'hidden': grid_fullscreen }"/>
+
+    </div>
+  </div>
+</div>
+
+<div style="background-color:#f5f5fe;">
+  <div class="fr-container">
+    <div class="fr-grid-row">
+
+      <div class="fr-col-6">
+        <data-qpv-superset-iframe class="superset-dashboard-credit-wrapper" dashboardSlugType="credit" dashboardArgsCreditType="p147" [searchArgs]="currentSearchFilter"></data-qpv-superset-iframe>
+      </div>
+
+      <div class="fr-col-6">
+        <p style="text-align: center; margin-top: 30px;">Cartographie & Tableau</p>
+      </div>
+
+    </div>
+  </div>
+</div>

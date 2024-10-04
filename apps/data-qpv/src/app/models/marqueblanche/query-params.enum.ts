@@ -3,22 +3,13 @@ import { QueryParam as CommonQueryParam, QueryParam_values as common_values } fr
 /* eslint-disable no-unused-vars */
 /** Nom des paramètres supportés par financial */
 export enum FinancialQueryParam {
-    Programmes = 'programmes',
+    Annee_min = 'annee_min',
+    Annee_max = 'annee_max',
 
     Niveau_geo = 'niveau_geo',
     Code_geo = 'code_geo',
 
-    Annee_min = 'annee_min',
-    Annee_max = 'annee_max',
-
-    DomaineFonctionnel = 'domaines_fonctionnels',
-    ReferentielsProgrammation = 'referentiels_programmation',
-
-    SourceRegion = 'source_region',
-
-    Beneficiaires = 'beneficiaires',
-
-    TypesBeneficiaires = 'types_beneficiaires'
+    QPV = 'code_qpv',
 }
 const values_FinancialQueryParam = Object.values(FinancialQueryParam);
 

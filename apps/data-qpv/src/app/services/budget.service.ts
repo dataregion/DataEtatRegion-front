@@ -1,14 +1,14 @@
 import { Inject, Injectable, InjectionToken } from '@angular/core';
-import { FinancialDataModel } from '@models/financial/financial-data.models';
-import { BopModel } from '@models/refs/bop.models';
+import { FinancialDataModel } from 'apps/data-qpv/src/app/models/financial/financial-data.models';
+import { BopModel } from 'apps/data-qpv/src/app/models/refs/bop.models';
 import { Observable, forkJoin, map } from 'rxjs';
 import { SettingsService } from '../../environments/settings.service';
 import { SETTINGS } from 'apps/common-lib/src/lib/environments/settings.http.service';
 import { HttpClient } from '@angular/common/http';
 import { DataPagination } from 'apps/common-lib/src/lib/models/pagination/pagination.models';
 import { SourceFinancialData } from '@models/financial/common.models';
-import { Tag } from '@models/refs/tag.model';
-import { ReferentielProgrammation } from '@models/refs/referentiel_programmation.model';
+import { Tag } from 'apps/data-qpv/src/app/models/refs/tag.model';
+import { ReferentielProgrammation } from 'apps/data-qpv/src/app/models/refs/referentiel_programmation.model';
 
 import { RefSiret } from 'apps/common-lib/src/lib/models/refs/RefSiret';
 import { DataHttpService, SearchParameters } from './interface-data.service';
