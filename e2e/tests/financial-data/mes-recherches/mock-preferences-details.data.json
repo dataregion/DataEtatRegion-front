@@ -3,7 +3,7 @@
   "uuid": "7dd35a3d-c43c-4fea-b329-2a1ba58d5941",
   "username": "csm@sib.fr",
   "name": "decats",
-  "application_host": "https://bretagne.nocode.csm.ovh",
+  "application_host": "https://budget-bretagne.nocode.csm.ovh",
   "filters": {
     "year": [],
     "beneficiaires": [
