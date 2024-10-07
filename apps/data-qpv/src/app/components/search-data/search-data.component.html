@@ -14,7 +14,7 @@
                            [options]="annees"
                            [(selected)]="selectedAnnees"
                            data-test-id="annees-form-field"
-                           class="select-multiple fr-col-2"
+                           class="select-multiple fr-col-3"
                            icon="calendar_month"
       />
 
@@ -22,7 +22,7 @@
         <lib-localisation [selectedNiveau]="selectedZone" [(selectedLocalisation)]="selectedLocalisation" [niveauxExcludeFilter]="['QPV']"/>
       </div>
 
-      <div class="field-localisation fr-col-2">
+      <div class="field-localisation fr-col-3">
         <lib-select-multiple [canFilter]="true" [canSelectAll]="false"
                            [placeholder]="'QPV'"
                            [options]="qpvs"
@@ -31,14 +31,12 @@
       />
       </div>
 
-      <button mat-fab color="primary" (click)="doSearch()" matTooltip="Rechercher" aria-label="Bouton de recherche.">
-        <mat-icon fontIcon="search"/>
-      </button>
-
-      <button mat-fab color="warn" (click)="reset()" matTooltip="Effacer la recherche"
-        aria-label="Bouton de réinitialisation des critères de recherche">
-        <mat-icon fontIcon="delete"/>
-      </button>
+      <div class="col-fr-2">
+        <button class="fr-btn fr-icon-search-line" (click)="doSearch()" aria-label="Bouton de recherche.">
+        </button>
+        <button class="fr-btn fr-btn--secondary fr-icon-delete-line" (click)="reset()" aria-label="Bouton de réinitialisation des critères de recherche">
+        </button>
+      </div>
     </div>
 
   </form>
