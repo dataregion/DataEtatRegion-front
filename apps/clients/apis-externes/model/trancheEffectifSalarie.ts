@@ -9,7 +9,11 @@
  */
 
 
-export interface NumeroTvaHolder { 
-    tva_number: string;
+export interface TrancheEffectifSalarie { 
+    a?: number;
+    code?: string;
+    date_reference?: string;
+    de?: number;
+    intitule?: string;
 }
 

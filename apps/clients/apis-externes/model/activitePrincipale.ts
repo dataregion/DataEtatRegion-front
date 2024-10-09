@@ -9,7 +9,9 @@
  */
 
 
-export interface NumeroTvaHolder { 
-    tva_number: string;
+export interface ActivitePrincipale { 
+    code?: string;
+    libelle?: string;
+    nomenclature?: string;
 }
 
