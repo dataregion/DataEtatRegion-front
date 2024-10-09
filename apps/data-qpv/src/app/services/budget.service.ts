@@ -11,6 +11,7 @@ import { Tag } from 'apps/data-qpv/src/app/models/refs/tag.model';
 import { ReferentielProgrammation } from 'apps/data-qpv/src/app/models/refs/referentiel_programmation.model';
 
 import { RefSiret } from 'apps/common-lib/src/lib/models/refs/RefSiret';
+import { RefQpv } from 'apps/common-lib/src/lib/models/refs/RefQpv';
 import { DataHttpService, SearchParameters } from './interface-data.service';
 
 export const DATA_HTTP_SERVICE = new InjectionToken<DataHttpService<any, FinancialDataModel>>(
@@ -117,6 +118,30 @@ export class BudgetService {
       .pipe(
         map(response => {
           return response as RefSiret
+        })
+      );
+  }
+
+  public getQpvs$(): Observable<DataPagination<RefQpv>> {
+    const params = `limit=1000`;
+    const url = `${this._apiRef}/qpv?${params}`;
+    return this.http
+      .get<DataPagination<RefQpv>>(url)
+      .pipe(
+        map(response => {
+          return response as DataPagination<RefQpv>
+        })
+      );
+  }
+
+  public getQpv(code: string): Observable<RefQpv> {
+
+    const url = `${this._apiRef}/qpv/${code}`;
+    return this.http
+      .get<RefQpv>(url)
+      .pipe(
+        map(response => {
+          return response as RefQpv
         })
       );
   }

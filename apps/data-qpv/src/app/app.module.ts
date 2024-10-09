@@ -52,6 +52,7 @@ import { MultiregionsService } from 'apps/data-qpv/src/app/services/multiregions
 
 import { SupersetIframeComponent } from './components/superset-iframe/superset-iframe.component'
 import {MatTab, MatTabGroup} from "@angular/material/tabs";
+import {MapComponent} from "./components/map/map.component";
 
 export function apiExternesConfigFactory(
   settingsService: SettingsService
@@ -83,6 +84,7 @@ registerLocaleData(localeFr);
         HomeComponent,
         PreferenceComponent,
         SearchDataComponent,
+        MapComponent,
         SupersetIframeComponent,
     ],
     bootstrap: [AppComponent], imports: [BrowserModule,

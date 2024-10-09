@@ -69,7 +69,7 @@ export class SupersetIframeComponent implements OnInit, OnChanges {
 
   private getCurrentDashboardArgsString(): string {
     let args = "";
-    args += `?standalone=3&embedded=true`;
+    args += `?standalone=4&embedded=true`;
 
     if (this.dashboardArgsCreditType && this.dashboardArgsCreditType !== "") {
       args += `&credit_type=${this.dashboardArgsCreditType}`;
