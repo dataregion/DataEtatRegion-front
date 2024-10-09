@@ -25,12 +25,30 @@ export class MapComponent implements OnInit {
 
   map: Map | undefined;
 
+  contourLayer: VectorLayer;
+  clusterLayer: VectorLayer;
+
   color_dark_blue: string = '0, 0, 145'
   color_navy_blue: string = '0, 30, 168'
   color_lavande: string = '154, 154, 255'
 
   constructor(private budgetService: BudgetService) {
-    this.clusterStyleFunction = this.clusterStyleFunction.bind(this);
+
+    this.contourLayer = new VectorLayer({
+      source: new VectorSource(),
+      minZoom: 12,
+    });
+
+    this.clusterLayer = new VectorLayer({
+      source: new Cluster({
+        source: new VectorSource(),
+        distance: 100, // Distance in pixels to cluster
+      }),
+      // declutter: true,
+      style: this.clusterStyleFunction.bind(this)
+    });
+
+    //this.clusterStyleFunction = this.clusterStyleFunction.bind(this);
     this.contourStyleFuction = this.contourStyleFuction.bind(this);
   }
 
@@ -52,6 +70,10 @@ export class MapComponent implements OnInit {
         projection: 'EPSG:3857',
       })
     });
+
+    this.map?.addLayer(this.contourLayer);
+    this.map?.addLayer(this.clusterLayer);
+
     this.fetchQpvs();
   }
 
@@ -89,34 +111,11 @@ export class MapComponent implements OnInit {
         features_points.push(feature_point);
       });
 
-      // Create a vector source with the features
-      const vectorSourceContours = new VectorSource({
-        features: features_countours
-      });
+      this.contourLayer.getSource()?.addFeatures(features_countours);
 
-      // Add the vector layer to the map
-      const vectorLayer = new VectorLayer({
-        source: vectorSourceContours
-      });
-
-      // Create a vector source with the features
-      const vectorSourcePoints = new VectorSource({
-        features: features_points
-      });
-
-      const clusterSource = new Cluster({
-        distance: 100, // Distance in pixels to cluster
-        source: vectorSourcePoints
-      });
-
-      const clusterLayer = new VectorLayer({
-        source: clusterSource,
-        // declutter: true,
-        style: this.clusterStyleFunction
-      });
-
-      this.map?.addLayer(vectorLayer);
-      this.map?.addLayer(clusterLayer);
+      const clusterSource = this.clusterLayer.getSource() as Cluster<Feature>; // Get the Cluster source
+      const vectorSource = clusterSource.getSource() as VectorSource; // Get the underlying VectorSource
+      vectorSource.addFeatures(features_points);
     });
   }
 
