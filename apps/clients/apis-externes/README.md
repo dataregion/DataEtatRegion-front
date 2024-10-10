@@ -1,4 +1,8 @@
-## ds-client@1.0.0
+## apis-externes@1.0.0
+
+API proxy de data subventions
+
+The version of the OpenAPI document: 1.0
 
 ### Building
 
@@ -19,7 +23,7 @@ Navigate to the folder of your consuming project and run one of next commands.
 _published:_
 
 ```
-npm install ds-client@1.0.0 --save
+npm install apis-externes@1.0.0 --save
 ```
 
 _without publishing (not recommended):_
@@ -39,7 +43,7 @@ npm link
 
 In your project:
 ```
-npm link ds-client
+npm link apis-externes
 ```
 
 __Note for Windows users:__ The Angular CLI has troubles to use linked npm packages.
@@ -54,7 +58,7 @@ In your Angular project:
 
 ```
 // without configuring providers
-import { aeApiModule } from 'ds-client';
+import { aeApiModule } from 'apis-externes';
 import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
@@ -73,7 +77,7 @@ export class AppModule {}
 
 ```
 // configuring providers
-import { aeApiModule, aeConfiguration, aeConfigurationParameters } from 'ds-client';
+import { aeApiModule, aeConfiguration, aeConfigurationParameters } from 'apis-externes';
 
 export function apiConfigFactory (): aeConfiguration {
   const params: aeConfigurationParameters = {
@@ -93,7 +97,7 @@ export class AppModule {}
 
 ```
 // configuring providers with an authentication service that manages your access tokens
-import { aeApiModule, aeConfiguration } from 'ds-client';
+import { aeApiModule, aeConfiguration } from 'apis-externes';
 
 @NgModule({
     imports: [ aeApiModule ],
@@ -117,7 +121,7 @@ export class AppModule {}
 ```
 
 ```
-import { DefaultApi } from 'ds-client';
+import { DefaultApi } from 'apis-externes';
 
 export class AppComponent {
     constructor(private apiGateway: DefaultApi) { }
@@ -155,7 +159,7 @@ export class AppModule {
 If different than the generated base path, during app bootstrap, you can provide the base path to your service.
 
 ```
-import { BASE_PATH } from 'ds-client';
+import { BASE_PATH } from 'apis-externes';
 
 bootstrap(AppComponent, [
     { provide: BASE_PATH, useValue: 'https://your-web-service.com' },
@@ -164,7 +168,7 @@ bootstrap(AppComponent, [
 or
 
 ```
-import { BASE_PATH } from 'ds-client';
+import { BASE_PATH } from 'apis-externes';
 
 @NgModule({
     imports: [],
@@ -188,7 +192,7 @@ export const environment = {
 
 In the src/app/app.module.ts:
 ```
-import { BASE_PATH } from 'ds-client';
+import { BASE_PATH } from 'apis-externes';
 import { environment } from '../environments/environment';
 
 @NgModule({

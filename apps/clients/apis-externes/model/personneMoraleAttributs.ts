@@ -9,7 +9,8 @@
  */
 
 
-export interface NumeroTvaHolder { 
-    tva_number: string;
+export interface PersonneMoraleAttributs { 
+    raison_sociale?: string;
+    sigle?: string;
 }
 
