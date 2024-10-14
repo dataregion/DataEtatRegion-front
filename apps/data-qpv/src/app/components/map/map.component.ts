@@ -1,12 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit, ViewEncapsulation} from '@angular/core';
 import Map from 'ol/Map';
 import View from 'ol/View';
 import TileLayer from 'ol/layer/Tile';
-import OSM from 'ol/source/OSM';
+import {FullScreen, defaults as defaultControls, Control} from 'ol/control';
 import XYZ from 'ol/source/XYZ';
 import { fromLonLat } from 'ol/proj';
 import {BudgetService} from "apps/data-qpv/src/app/services/budget.service";
-import {GeoJSON, WKT} from "ol/format";
+import {GeoJSON, MVT, WKT} from "ol/format";
 import {Fill, Stroke, Style} from "ol/style";
 import CircleStyle from "ol/style/Circle";
 import VectorSource from "ol/source/Vector";
@@ -15,37 +15,54 @@ import {Feature} from "ol";
 import Cluster from 'ol/source/Cluster';
 import Text from 'ol/style/Text';
 import {FeatureLike} from "ol/Feature";
+import { MapLevelCustomControlService, LevelControl } from './map-level-custom-control.service';
+import {VectorTile as VectorTileLayer} from "ol/layer";
+import {VectorTile as VectorTileSource} from "ol/source";
 
 @Component({
   selector: 'data-qpv-map',
   templateUrl: './map.component.html',
-  styleUrls: ['./map.component.scss']
+  styleUrls: ['./map.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class MapComponent implements OnInit {
 
   map: Map | undefined;
+  mapLevelControl!: LevelControl;
+
+  searchedQpvCode: string = "QN00201M";
+  searchedYears: Array<number> = [2021, 2022];
+  searchedLevel: string = "qpv";
 
   contourLayer: VectorLayer;
   clusterLayer: VectorLayer;
 
-  color_dark_blue: string = '0, 0, 145'
-  color_navy_blue: string = '0, 30, 168'
-  color_lavande: string = '154, 154, 255'
+  colorDarkBlue: string = '0, 0, 145';
+  colorNavyBlue: string = '0, 30, 168';
+  colorLavande: string = '154, 154, 255';
 
-  constructor(private budgetService: BudgetService) {
+  clusterZoomThreshold = 12;
+
+  constructor(
+    private budgetService: BudgetService,
+    private mapLevelControlService: MapLevelCustomControlService,
+  ) {
+    this.mapLevelControl = this.mapLevelControlService.createLevelControl();
 
     this.contourLayer = new VectorLayer({
       source: new VectorSource(),
-      minZoom: 12,
+      minZoom: this.clusterZoomThreshold,
+      zIndex: 2,
     });
 
     this.clusterLayer = new VectorLayer({
       source: new Cluster({
         source: new VectorSource(),
-        distance: 100, // Distance in pixels to cluster
+        distance: 75, // Distance in pixels to cluster
       }),
       // declutter: true,
-      style: this.clusterStyleFunction.bind(this)
+      style: this.clusterStyleFunction.bind(this),
+      zIndex: 3,
     });
 
     //this.clusterStyleFunction = this.clusterStyleFunction.bind(this);
@@ -57,11 +74,30 @@ export class MapComponent implements OnInit {
 
     this.map = new Map({
       target: 'ol-map',
+      controls: defaultControls().extend([new FullScreen()]),
       layers: [
-        new TileLayer({
+        new TileLayer({ // Fond de carte
           source:  new XYZ({
-            url: 'http://{a-c}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png'
+            url: 'http://{a-c}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png',
           })
+        }),
+        new VectorTileLayer({ // contours des territoires
+          source: new VectorTileSource({
+            format: new MVT(),
+            url: 'https://data.geopf.fr/tms/1.0.0/ADMIN_EXPRESS/{z}/{x}/{y}.pbf',
+            // maxZoom: 15,
+          }),
+          style: new Style({
+            fill: new Fill({
+              color: 'rgba(255, 255, 255, 0)',
+            }),
+            stroke: new Stroke({
+              color: 'rgba(110, 110, 110, 1)',
+            }),
+          }),
+          visible: true,
+          opacity: 0.9,
+          zIndex: 1,
         })
       ],
       view: new View({
@@ -70,6 +106,8 @@ export class MapComponent implements OnInit {
         projection: 'EPSG:3857',
       })
     });
+
+    this.map.addControl(this.mapLevelControl);
 
     this.map?.addLayer(this.contourLayer);
     this.map?.addLayer(this.clusterLayer);
@@ -92,6 +130,7 @@ export class MapComponent implements OnInit {
         const feature_countour = new Feature({
           geometry: geom,
           name: qpv.label,
+          code: qpv.code,
         });
 
         const point = new WKT().readGeometry(qpv.centroid, {
@@ -102,6 +141,7 @@ export class MapComponent implements OnInit {
         const feature_point = new Feature({
           geometry: point,
           name: qpv.label,
+          code: qpv.code,
         });
 
         // Style for each feature (optional)
@@ -116,7 +156,30 @@ export class MapComponent implements OnInit {
       const clusterSource = this.clusterLayer.getSource() as Cluster<Feature>; // Get the Cluster source
       const vectorSource = clusterSource.getSource() as VectorSource; // Get the underlying VectorSource
       vectorSource.addFeatures(features_points);
+
+      this.updateCustomControl(this.searchedQpvCode, this.searchedYears);
     });
+  }
+
+  private updateCustomControl(searchedQpv: string, searchedYears: Array<number>): void {
+    const clusterSource = this.clusterLayer.getSource() as Cluster<Feature>; // Get the Cluster source
+    const vectorSource = clusterSource.getSource() as VectorSource;
+    const qpvFeature = this.findFeatureByCode(vectorSource, searchedQpv);
+    if (qpvFeature) {
+      this.mapLevelControl?.updateSelectedQpv(qpvFeature, searchedYears);
+    }
+  }
+
+  private findFeatureByCode(vectorSource: VectorSource, code: string): Feature | undefined {
+    const features = vectorSource.getFeatures();
+
+    for (const feature of features) {
+      if (feature.get('code') === code) {
+        return feature;
+      }
+    }
+
+    return undefined;
   }
 
   private clusterStyleFunction(feature: FeatureLike, resolution: number): Style {
@@ -133,7 +196,7 @@ export class MapComponent implements OnInit {
     return new Style({
       image: new CircleStyle({
         radius: Math.min(30, 10 + size * 3),
-        fill: new Fill({ color: `rgba( ${this.color_dark_blue}, 1)` }),
+        fill: new Fill({ color: `rgba( ${this.colorDarkBlue}, 1)` }),
       }),
       text: new Text({
         text: size.toString(),
@@ -154,20 +217,20 @@ export class MapComponent implements OnInit {
 
     return new Style({
       image: new CircleStyle({
-        radius: (zoomLevel && zoomLevel > 12) ? 50 : 10,
-        fill: new Fill({ color: `rgba( ${this.color_lavande}, 0.2)` }),
+        radius: (zoomLevel && zoomLevel > this.clusterZoomThreshold) ? 50 : 10,
+        fill: new Fill({ color: `rgba( ${this.colorLavande}, 0.2)` }),
         stroke: new Stroke({
-          color: `rgba( ${this.color_lavande}, 1)`,
+          color: `rgba( ${this.colorLavande}, 1)`,
           width: 3
         })
       }),
       text: new Text({
         text: featureName,
-        fill: new Fill({ color: `rgba( ${this.color_dark_blue}, 1)` }),
+        fill: new Fill({ color: `rgba( ${this.colorDarkBlue}, 1)` }),
         font: 'bold 16px Marianne, Calibri,sans-serif',
         offsetX: 0,
         // offsetY: 0,
-        offsetY: (zoomLevel && zoomLevel > 12) ? 65 : 25,
+        offsetY: (zoomLevel && zoomLevel > this.clusterZoomThreshold) ? 65 : 25,
       }),
     });
   }
@@ -175,8 +238,8 @@ export class MapComponent implements OnInit {
   private contourStyleFuction() {
     return new Style({
       stroke: new Stroke({
-        color: `rgba(${this.color_navy_blue}, 0.8)`,
-        width: 1
+        color: `rgba(${this.colorNavyBlue}, 0.8)`,
+        width: 2
       })
     })
   }
