@@ -67,6 +67,7 @@ export class MapComponent implements OnInit {
 
     //this.clusterStyleFunction = this.clusterStyleFunction.bind(this);
     this.contourStyleFuction = this.contourStyleFuction.bind(this);
+    this.selectedContourStyleFuction = this.selectedContourStyleFuction.bind(this);
   }
 
   ngOnInit(): void {
@@ -144,8 +145,12 @@ export class MapComponent implements OnInit {
           code: qpv.code,
         });
 
-        // Style for each feature (optional)
-        feature_countour.setStyle(this.contourStyleFuction);
+        // We apply countour style for each feature
+        if (feature_countour.get('code') === this.searchedQpvCode) {
+          feature_countour.setStyle(this.selectedContourStyleFuction);
+        } else {
+          feature_countour.setStyle(this.contourStyleFuction);
+        }
 
         features_countours.push(feature_countour);
         features_points.push(feature_point);
@@ -237,6 +242,18 @@ export class MapComponent implements OnInit {
 
   private contourStyleFuction() {
     return new Style({
+      stroke: new Stroke({
+        color: `rgba(${this.colorNavyBlue}, 0.8)`,
+        width: 2
+      })
+    })
+  }
+
+  private selectedContourStyleFuction() {
+    return new Style({
+      fill: new Fill({
+        color: `rgba( ${this.colorNavyBlue}, 0.2)`
+      }),
       stroke: new Stroke({
         color: `rgba(${this.colorNavyBlue}, 0.8)`,
         width: 2
