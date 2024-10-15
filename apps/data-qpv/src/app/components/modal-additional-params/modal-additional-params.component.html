@@ -1,0 +1,18 @@
+<dsfr-modal
+  [dialogId]="'modal-filtres'"
+  [titleModal]="titleModal"
+  [actions]="actions"
+  [size]="size"
+  [headingLevel]="headingLevel"
+  [autoCloseOnAction]="autoCloseOnAction"
+>
+
+  <form [formGroup]="formModal">
+    
+    <dsfr-fieldset [id]="'fieldset-filtres'" formArrayName="financeurs">
+      <dsfr-form-checkbox [formGroupName]="i" *ngFor="let item of data; let i = index" label="item"></dsfr-form-checkbox>
+    </dsfr-fieldset>
+    
+  </form>
+
+</dsfr-modal>
