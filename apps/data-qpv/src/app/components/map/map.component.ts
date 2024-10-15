@@ -154,7 +154,7 @@ export class MapComponent implements AfterViewInit {
         });
 
         // We apply countour style for each feature
-        if (this._searchArgs?.qpv_codes?.includes(feature_countour.get('code'))) {
+        if (this._searchArgs?.qpv_codes?.map(qpv => qpv.code)?.includes(feature_countour.get('code'))) {
           feature_countour.setStyle(this.selectedContourStyleFuction);
         } else {
           feature_countour.setStyle(this.contourStyleFuction);
@@ -169,8 +169,7 @@ export class MapComponent implements AfterViewInit {
       const clusterSource = this.clusterLayer.getSource() as Cluster<Feature>; // Get the Cluster source
       const vectorSource = clusterSource.getSource() as VectorSource; // Get the underlying VectorSource
       vectorSource.addFeatures(features_points);
-
-      this.updateCustomControl(this._searchArgs?.qpv_codes, this._searchArgs?.annees);
+      this.updateCustomControl(this._searchArgs?.qpv_codes?.map(qpv => qpv.code), this._searchArgs?.annees);
     });
   }
 

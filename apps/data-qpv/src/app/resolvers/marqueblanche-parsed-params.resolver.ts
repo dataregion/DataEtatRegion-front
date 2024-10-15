@@ -110,7 +110,7 @@ function qpv_codes(
       throw new Error(`Impossible de trouver une localisation pour ${niveau_geo}: ${code_geo}`);
     const _preFilters: PreFilters = {
       ...previous.preFilters,
-      localisation: [geo[0]] as unknown as JSONObject[] // XXX: Ici, on ne gère qu'un seul code_geo
+      qpv: [geo[0]] as unknown as JSONObject[] // XXX: Ici, on ne gère qu'un seul code_geo
     }
     return {
       ...previous,
