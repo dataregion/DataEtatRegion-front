@@ -65,56 +65,32 @@ export class BudgetDataHttpService implements DataHttpService<EnrichedFlattenFin
      * @returns
      */
     public search(
-        { n_ej, source, beneficiaires, types_beneficiaires, bops, themes, niveau, locations, years, domaines_fonctionnels, referentiels_programmation, source_region, tags }: SearchParameters
+        { bops, years, niveau, locations, centre_couts, themes, beneficiaires, types_beneficiaires }: SearchParameters
     ): Observable<DataPagination<EnrichedFlattenFinancialLinesSchema> | null> {
         if (
-            n_ej == null &&
-            source == null &&
             bops == null &&
-            themes == null &&
+            years == null &&
             niveau == null &&
             locations == null &&
-            years == null &&
+            centre_couts == null &&
+            themes == null &&
             beneficiaires == null &&
-            types_beneficiaires == null &&
-            tags == null &&
-            domaines_fonctionnels == null &&
-            referentiels_programmation == null &&
-            source_region == null
+            types_beneficiaires == null
         )
             return of();
 
-        const numeros_ej = n_ej ?? undefined;
-        const data_source = source ?? undefined;
-        const codes_programme = bops?.filter((bop) => bop.code).map((bop) => bop.code);
-        const niveau_geo = this._searchUtils.normalize_type_geo(niveau)
-        const listCode = locations?.map((l) => l.code) ?? undefined;
-        const p_themes = themes ?? undefined;
-        const siret_beneficiaire: string[] | undefined = beneficiaires?.map(x => x.siret) ?? [];
-        const p_types_beneficaires = types_beneficiaires ?? undefined;
-        const annees = years ?? undefined;
-        const p_domaines_fonctionnels: string[] | undefined = domaines_fonctionnels ?? []
-        const p_refprod: string[] | undefined = referentiels_programmation?.map(rp => rp.code) ?? []
-        const p_tags: string[] | undefined = tags ?? []
+        const codes_programme = this._sanitize_req_arg(bops?.filter((bop) => bop.code).map((bop) => bop.code))
+        const annees = this._sanitize_req_arg(years ?? undefined)
+        const niveau_geo = this._sanitize_req_arg(this._searchUtils.normalize_type_geo(niveau))
+        const listCode = this._sanitize_req_arg(locations?.map((l) => l.code) ?? undefined)
+        const codes_cc: string[] | undefined = this._sanitize_req_arg(centre_couts?.map(cc => cc.code) ?? [])
+        const p_themes = this._sanitize_req_arg(themes ?? undefined)
+        const siret_beneficiaire: string[] | undefined = this._sanitize_req_arg(beneficiaires?.map(x => x.siret) ?? [])
+        const p_types_beneficaires = this._sanitize_req_arg(types_beneficiaires ?? undefined)
 
-        const query_params = [
-            this._sanitize_req_arg(numeros_ej),
-            this._sanitize_req_arg(data_source),
-            this._sanitize_req_arg(codes_programme),
-            this._sanitize_req_arg(niveau_geo),
-            this._sanitize_req_arg(listCode),
-            this._sanitize_req_arg(p_themes),
-            this._sanitize_req_arg(siret_beneficiaire),
-            this._sanitize_req_arg(p_types_beneficaires),
-            this._sanitize_req_arg(annees),
-            this._sanitize_req_arg(p_domaines_fonctionnels),
-            this._sanitize_req_arg(p_refprod),
-            this._sanitize_req_arg(p_tags)
-        ] as const;
 
         const req$ = this._budgetApi.getBudgetCtrl(
-            "0", "6500",
-            ...query_params
+            "0", "6500", undefined, undefined, codes_programme,  niveau_geo, listCode, p_themes, siret_beneficiaire, p_types_beneficaires, annees, undefined, undefined 
         ) as unknown as Observable<DataPagination<EnrichedFlattenFinancialLinesSchema> | null>;
 
         return req$

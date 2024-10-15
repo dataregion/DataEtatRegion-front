@@ -6,13 +6,15 @@ import { SettingsService } from '../../environments/settings.service';
 import { SETTINGS } from 'apps/common-lib/src/lib/environments/settings.http.service';
 import { HttpClient } from '@angular/common/http';
 import { DataPagination } from 'apps/common-lib/src/lib/models/pagination/pagination.models';
-import { SourceFinancialData } from '@models/financial/common.models';
+import { SourceFinancialData } from 'apps/data-qpv/src/app/models/financial/common.models';
 import { Tag } from 'apps/data-qpv/src/app/models/refs/tag.model';
 import { ReferentielProgrammation } from 'apps/data-qpv/src/app/models/refs/referentiel_programmation.model';
 
 import { RefSiret } from 'apps/common-lib/src/lib/models/refs/RefSiret';
 import { RefQpv } from 'apps/common-lib/src/lib/models/refs/RefQpv';
 import { DataHttpService, SearchParameters } from './interface-data.service';
+import { CentreCouts } from '../models/financial/common.models';
+import { Beneficiaire } from '../models/qpv-search/beneficiaire.model';
 
 export const DATA_HTTP_SERVICE = new InjectionToken<DataHttpService<any, FinancialDataModel>>(
   'DataHttpService'
@@ -176,4 +178,25 @@ export class BudgetService {
       map(data => service.mapToGeneric(data))
     );
   }
+
+  public getCentreCouts(): Observable<CentreCouts[]> {
+    const url = `${this._apiRef}/centre-couts`;
+    return this.http.get<DataPagination<CentreCouts>>(url)
+      .pipe(
+        map(response => {
+          return response.items as CentreCouts[]
+        })
+    );
+  }
+
+  public getBeneficiaires(): Observable<Beneficiaire[]> {
+    const url = `${this._apiRef}/beneficiaire`;
+    return this.http.get<DataPagination<Beneficiaire>>(url)
+      .pipe(
+        map(response => {
+          return response.items as Beneficiaire[]
+        })
+    );
+  }
+
 }

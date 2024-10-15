@@ -1,12 +1,14 @@
 import { TOrError } from 'apps/common-lib/src/lib/models/marqueblanche/t-or-error.model';
-import { BopModel } from '../refs/bop.models';
-import { ReferentielProgrammation } from '@models/refs/referentiel_programmation.model';
+import { CentreCouts, TypeCategorieJuridique } from './common.models';
+import { Beneficiaire } from 'apps/data-qpv/src/app/models/qpv-search/beneficiaire.model';
+import { BopModel } from 'apps/data-qpv/src/app/models/refs/bop.models';
 
 export interface FinancialData {
-  themes: string[];
-  bop: BopModel[];
-  referentiels_programmation: ReferentielProgrammation[];
+  bops: BopModel[];
   annees: number[];
+  financeurs: CentreCouts[];
+  thematiques: string[];
+  porteurs: Beneficiaire[];
 }
 
 export type FinancialDataResolverModel = TOrError<FinancialData>

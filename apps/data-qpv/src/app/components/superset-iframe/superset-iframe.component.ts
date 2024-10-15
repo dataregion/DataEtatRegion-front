@@ -27,7 +27,7 @@ export class SupersetIframeComponent implements OnInit, OnChanges {
 
   @Input() dashboardSlugType!: string;
 
-  @Input() searchArgs: QpvSearchArgs | undefined;
+  @Input() searchArgs: QpvSearchArgs | null = null;
 
   @Input() dashboardArgsCreditType: string = "";
 
@@ -82,11 +82,15 @@ export class SupersetIframeComponent implements OnInit, OnChanges {
     if(this.searchArgs && this.searchArgs.annees && this.searchArgs.annees.length > 0) {
       args += `&years=${this.searchArgs.annees.join(",")}`;
     }
+
+    if(this.searchArgs && this.searchArgs.niveau && this.searchArgs.localisations && this.searchArgs.localisations.length > 0) {
+      args += `&niveau_geo=${this.searchArgs.niveau.toLowerCase()}&codes_geo=${this.searchArgs.localisations.map(l => l.code).join(",")}`;
+    }
+
     return args;
   }
 
   public updateSanitizedUrl():  void {
-    console.error("let me refresh");
     this.sanitizedUrl =  this.domSanitizer.bypassSecurityTrustResourceUrl(`${this._supersetBaseDashboardUrl}/${this.getDashboardSlug()}/${this.getCurrentDashboardArgsString()}`);
   }
 

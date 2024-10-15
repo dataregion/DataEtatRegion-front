@@ -1,7 +1,9 @@
-import { ExportableAsJson } from "apps/common-lib/src/lib/models/exportable-as-json.model";
+import { GeoModel, TypeLocalisation } from "apps/common-lib/src/lib/models/geo.models";
 
 
 export interface QpvSearchArgs {
-  qpv_codes: string[];
-  annees: number[];
+  annees: number[] | null;
+  niveau: TypeLocalisation | null;
+  localisations: GeoModel[] | null;
+  qpv_codes: string[] | null;
 }

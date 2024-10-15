@@ -178,7 +178,7 @@ function annees_min_max(
 
   const _preFilters = {
     ...previous.preFilters,
-    year: pf_annees,
+    annees: pf_annees,
   }
 
   return { ...previous, preFilters: _preFilters };

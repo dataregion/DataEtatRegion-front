@@ -31,6 +31,7 @@ import { BudgetService } from 'apps/data-qpv/src/app/services/budget.service';
 import { DatePipe } from '@angular/common';
 import { ExportDataService } from 'apps/appcommon/src/lib/export-data.service';
 import {QpvSearchArgs} from "apps/data-qpv/src/app/models/qpv-search/qpv-search.models";
+import { FinancialDataModel } from '../../models/financial/financial-data.models';
 
 @Component({
   selector: 'data-qpv-home',
@@ -38,21 +39,16 @@ import {QpvSearchArgs} from "apps/data-qpv/src/app/models/qpv-search/qpv-search.
   styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent implements OnInit {
-  private dialog = inject(MatDialog);
 
   columnsMetaData: ParameterizedColumnsMetaData<FinancialColumnMetaDataDef>;
   get genericColumnsMetadata(): ColumnsMetaData {
     return this.columnsMetaData as ColumnsMetaData;
   }
 
-  currentSearchFilter?: QpvSearchArgs;
+  currentSearchArgs: QpvSearchArgs | null = null;
+  currentSearchResults: FinancialDataModel[] | null = [];
 
   @ViewChild(SearchDataComponent) searchData!: SearchDataComponent;
-
-  /**
-   * Filtre retourner par le formulaire de recherche
-   */
-  newFilter?: Preference;
 
   /**
    * Filtre à appliquer sur la recherche
@@ -62,35 +58,34 @@ export class HomeComponent implements OnInit {
   public current_years : number[] = [];
   public current_qpv_codes : string[] = [];
 
-
-  lastImportDate: string | null = null;
-
-  /**
-   * Statuts des colonnes (ordre et displayed)
-   */
-  displayedOrderedColumns: DisplayedOrderedColumn[] = [];
-
-  get grid_fullscreen() {
-    return this._gridFullscreen.fullscreen;
+  public isSearchArgsEmpty() {
+    return this.currentSearchArgs === null ||
+          (
+            (this.currentSearchArgs.annees === null || this.currentSearchArgs.annees.length === 0) &&
+            (this.currentSearchArgs.niveau === null) &&
+            (this.currentSearchArgs.localisations === null || this.currentSearchArgs.localisations.length === 0) &&
+            (this.currentSearchArgs.qpv_codes === null || this.currentSearchArgs.qpv_codes.length === 0)
+          ) 
   }
-  toggle_grid_fullscreen() {
-    this._gridFullscreen.fullscreen = !this.grid_fullscreen;
-  }
-  get fullscreen_label() {
-    if (!this.grid_fullscreen) return 'Agrandir le tableau';
-    else return 'Rétrécir le tableau';
+
+  public searchArgsToText(): string {
+    let text = ""
+    if (this.currentSearchArgs === null)
+      return "";
+    if (this.currentSearchArgs.niveau !== null && this.currentSearchArgs.localisations && this.currentSearchArgs.localisations.length !== 0)
+      text += this.currentSearchArgs.niveau + " : " + this.currentSearchArgs.localisations?.map(l => l.code + " - " + l.nom).join(",")
+    if (this.currentSearchArgs.qpv_codes !== null && this.currentSearchArgs.qpv_codes.length !== 0)
+      text += (text.length !== 0 ? " ; " : "") + "QPV : " + this.currentSearchArgs.qpv_codes?.join(",")
+    if (this.currentSearchArgs.annees !== null && this.currentSearchArgs.annees.length !== 0)
+      text += (text.length !== 0 ? " ; " : "") + "Années : " + this.currentSearchArgs.annees?.join(",")
+    return text
   }
 
   constructor(
     private _route: ActivatedRoute,
     private _alertService: AlertService,
     private _preferenceService: PreferenceUsersHttpService,
-    private _auditService: AuditHttpService,
     private _gridFullscreen: GridInFullscreenStateService,
-    private _logger: NGXLogger,
-    private _budgetService: BudgetService,
-    private _exportDataService: ExportDataService,
-    private _datePipe: DatePipe,
   ) {
     this.columnsMetaData = new ParameterizedColumnsMetaData<FinancialColumnMetaDataDef>(colonnes);
     this.preFilter = undefined;
@@ -118,34 +113,11 @@ export class HomeComponent implements OnInit {
         const response = data as { mb_parsed_params: MarqueBlancheParsedParamsResolverModel }
 
         const mb_has_params = response.mb_parsed_params?.data?.has_marqueblanche_params;
-        const mb_group_by = response.mb_parsed_params?.data?.group_by;
-        const mb_fullscreen = response.mb_parsed_params?.data?.fullscreen;
 
         if (!mb_has_params)
           return;
-
-        if (mb_fullscreen) this.toggle_grid_fullscreen();
       });
 
-    this._auditService.getLastDateUpdateData().subscribe((response) => {
-      if (response.date) {
-        this.lastImportDate = response.date;
-      }
-    });
-  }
-
-  public openSaveFilterDialog(): void {
-    if (this.newFilter) {
-      this.newFilter.name = '';
-    }
-
-    const dialogRef = this.dialog.open(SavePreferenceDialogComponent, {
-      data: this.newFilter,
-      width: '40rem',
-      autoFocus: 'input',
-    });
-
-    dialogRef.afterClosed().subscribe((_) => { });
   }
 
 }

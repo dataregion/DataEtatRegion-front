@@ -2,11 +2,16 @@ import {
   AfterViewInit,
   Component,
   EventEmitter,
+  inject,
+  Inject,
   Input,
   OnInit,
   Output,
+  ViewChild,
 } from '@angular/core';
 import {
+  FormArray,
+  FormBuilder,
   FormControl,
   FormGroup,
   ValidationErrors,
@@ -15,6 +20,7 @@ import {
 import { ActivatedRoute, Data } from '@angular/router';
 import {
   BehaviorSubject,
+  finalize,
   Subscription,
 } from 'rxjs';
 import { FinancialData, FinancialDataResolverModel } from 'apps/data-qpv/src/app/models/financial/financial-data-resolvers.models';
@@ -37,6 +43,16 @@ import {
   GeoLocalisationComponentService
 } from "../../../../../common-lib/src/lib/components/localisation/geo.localisation.componentservice";
 import {QpvSearchArgs} from "../../models/qpv-search/qpv-search.models";
+import { CentreCouts } from 'apps/data-qpv/src/app/models/financial/common.models';
+import { Beneficiaire } from 'apps/data-qpv/src/app/models/qpv-search/beneficiaire.model';
+import { BopModel } from 'apps/data-qpv/src/app/models/refs/bop.models';
+import { FinancialDataModel } from '../../models/financial/financial-data.models';
+import { SearchParameters, SearchParameters_empty } from '../../services/interface-data.service';
+import { SavePreferenceDialogComponent } from 'apps/preference-users/src/public-api';
+import { MatDialog } from '@angular/material/dialog';
+import { DsfrModalComponent } from '@edugouvfr/ngx-dsfr';
+import { ModalAdditionalParamsComponent } from '../modal-additional-params/modal-additional-params.component';
+
 
 
 @Component({
@@ -55,9 +71,14 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
 
   public additional_searchparams: AdditionalSearchParameters = empty_additional_searchparams;
 
+  public bops: BopModel[] = [];
+
   public annees: number[] = [];
   public qpvs: GeoModel[] = [];
 
+  public financeurs: CentreCouts[] = [];
+  public thematiques: string[] = [];
+  public porteurs: Beneficiaire[] = [];
 
 
   /**
@@ -74,22 +95,22 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
   /**
    * Localisation
    */
-  get selectedZone() : TypeLocalisation | null {
-    return this.searchForm.get('zone')?.value ?? null;
+  get selectedNiveau() : TypeLocalisation | null {
+    return this.searchForm.get('niveau')?.value ?? null;
   }
-  set selectedZone(data: TypeLocalisation | null) {
-    this.searchForm.get('zone')?.setValue(data ?? null);
-  }
-
-  get defaultNiveauQpv() : TypeLocalisation | null {
-    return TypeLocalisation.QPV
+  set selectedNiveau(data: TypeLocalisation | null) {
+    this.searchForm.get('niveau')?.setValue(data ?? null);
   }
 
-  get selectedLocalisation() : GeoModel[] | null {
-    return this.searchForm.get('localisation')?.value ?? null;
+  // get defaultNiveauQpv() : TypeLocalisation | null {
+  //   return TypeLocalisation.QPV
+  // }
+
+  get selectedLocalisations() : GeoModel[] | null {
+    return this.searchForm.get('localisations')?.value ?? null;
   }
-  set selectedLocalisation(data: GeoModel[] | null) {
-    this.searchForm.get('localisation')?.setValue(data ?? null);
+  set selectedLocalisations(data: GeoModel[] | null) {
+    this.searchForm.get('localisations')?.setValue(data ?? null);
   }
 
   /**
@@ -102,6 +123,20 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
   set selectedQpv(data: any | null) {
     this.searchForm.get('qpv')?.setValue(data ?? null);
   }
+
+  /**
+   * Les donnees de la recherche
+   */
+  private _searchResults: FinancialDataModel[] | null = null;
+  get searchResults(): FinancialDataModel[] | null {
+    return this._searchResults;
+  }
+  @Input()
+  set searchResults(results: FinancialDataModel[] | null) {
+    this._searchResults = results;
+    this.searchResultsEventEmitter.emit(this._searchResults)
+  }
+  @Output() searchResultsEventEmitter = new EventEmitter<FinancialDataModel[] | null>();
 
   /**
    * Indique si la recherche a été effectué
@@ -122,15 +157,9 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
   /**
    * Resultats de la recherche.
    */
-  @Output() searchResultsEventEmitter = new EventEmitter<QpvSearchArgs>();
+  @Output() searchArgsEventEmitter = new EventEmitter<QpvSearchArgs>();
 
-  /**
-   * Les donnees de la recherche
-   */
-  private _searchResult: QpvSearchArgs | null = null;
-  searchResult(): QpvSearchArgs | null {
-    return this._searchResult;
-  }
+
 
   /**
    * Resultats de la recherche.
@@ -160,8 +189,8 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
           Validators.max(new Date().getFullYear()),
         ],
       }),
-      zone: new FormControl<TypeLocalisation | null>(null),
-      localisation: new FormControl<GeoModel[] | null>({ value: null, disabled: false }, []),
+      niveau: new FormControl<TypeLocalisation | null>(null),
+      localisations: new FormControl<GeoModel[] | null>({ value: null, disabled: false }, []),
       qpv: new FormControl<any | null>(null),
     });
   }
@@ -185,7 +214,11 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
     const mb_prefilter = response.mb_parsed_params?.data?.preFilters;
 
     this.displayError = false;
+    this.bops = financial.bops;
     this.annees = financial.annees;
+    this.financeurs = financial.financeurs;
+    this.thematiques = financial.thematiques;
+    this.porteurs = financial.porteurs;
 
     if (!mb_has_params)
       return
@@ -201,19 +234,12 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    // récupération des themes dans le resolver
+    // Récupération des options de select du formulaires
     this._route.data.subscribe(
       (data: Data) => {
         setTimeout(() => { this._on_route_data(data) }, 0);
       }
     );
-  }
-
-  /**
-   * Retourne le ValidationErrors benefOrBopRequired
-   */
-  public get errorsBenefOrBop(): ValidationErrors | null {
-    return this.searchForm.errors != null ? this.searchForm.errors['benefOrBopRequired'] : null;
   }
 
   /**
@@ -229,25 +255,54 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
 
     this.searchFinish = true;
     this.currentFilter.next(this._buildPreference(formValue as JSONObject));
-
     let newQpvSearchArgsObject: QpvSearchArgs = {
-      qpv_codes: [],  // Example string values
-      annees: []  // Example number values
+      annees: this.selectedAnnees,
+      niveau: this.selectedNiveau,
+      localisations: this.selectedLocalisations,
+      qpv_codes: this.selectedQpv, 
     };
 
-    if(formValue.localisation) {
-      for(const loc of formValue.localisation) {
-        if(loc.type === 'QPV') {
-          newQpvSearchArgsObject.qpv_codes.push(loc.code);
-        }
-      }
+    // if (formValue.localisations) {
+    //   for (const loc of formValue.localisations) {
+    //     if (loc.type === 'QPV') {
+    //       newQpvSearchArgsObject.qpv_codes?.push(loc.code);
+    //     }
+    //   }
+    // }
+
+    // if (formValue.annees) {
+    //   newQpvSearchArgsObject.annees = formValue.annees;
+    // }
+
+    this.searchArgsEventEmitter.next(newQpvSearchArgsObject);
+
+    const search_parameters: SearchParameters = {
+      ...SearchParameters_empty,
+      years: formValue.annees || null,
+      niveau: formValue.niveau || null,
+      locations: formValue.localisations || null,
     }
 
-    if(formValue.annees) {
-      newQpvSearchArgsObject.annees = formValue.annees;
-    }
-
-    this.searchResultsEventEmitter.next(newQpvSearchArgsObject);
+    this._search_subscription = this._budgetService
+      .search(search_parameters)
+      .pipe(
+        finalize(() => {
+          this.searchInProgress.next(false);
+        })
+      )
+      .subscribe({
+        next: (response: FinancialDataModel[] | Error) => {
+          this.searchFinish = true;
+          this.currentFilter.next(this._buildPreference(formValue as JSONObject));
+          this.searchResults = response as FinancialDataModel[];
+        },
+        error: (err: Error) => {
+          this.searchFinish = true;
+          this.searchResults = [];
+          this.currentFilter.next(this._buildPreference(formValue as JSONObject));
+          this._alertService.openAlert("error", err, 8);
+        },
+      });
   }
 
   /**
@@ -272,6 +327,7 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
   public reset(): void {
     this.searchFinish = false;
     this.searchForm.reset();
+    this.doSearch();
   }
 
 
@@ -285,8 +341,8 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
     }
 
     if (preFilter.localisation) {
-      this.selectedLocalisation = preFilter.localisation as unknown as GeoModel[]
-      this.selectedZone = this.selectedLocalisation != null ? this.selectedLocalisation.map(gm => gm.type)[0] as TypeLocalisation : null;
+      this.selectedLocalisations = preFilter.localisation as unknown as GeoModel[]
+      this.selectedNiveau = this.selectedLocalisations != null ? this.selectedLocalisations.map(gm => gm.type)[0] as TypeLocalisation : null;
     }
 
     if (preFilter.qpv) {
@@ -295,6 +351,43 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
 
     // lance la recherche pour afficher les resultats
     this.doSearch();
+  }
+
+
+  /**
+   * Filtre retourner par le formulaire de recherche
+   */
+  @Input()
+  newFilter?: Preference;
+
+  private dialog = inject(MatDialog);
+
+  public openSaveFilterDialog(): void {
+    if (this.newFilter) {
+      this.newFilter.name = '';
+    }
+
+    const dialogRef = this.dialog.open(SavePreferenceDialogComponent, {
+      data: this.newFilter,
+      width: '40rem',
+      autoFocus: 'input',
+    });
+
+    dialogRef.afterClosed().subscribe((_) => { });
+  }
+
+
+
+  @ViewChild('modal-additional-params') modalParams?: ModalAdditionalParamsComponent;
+  @ViewChild('dsfr-modal') dialogParams?: DsfrModalComponent;
+
+  openModalFinanceurs() {
+    this.modalParams?.setData(this.financeurs);
+    this.dialogParams?.open();
+  }
+
+  closeModal() {
+    this.dialogParams?.close();
   }
 
 }

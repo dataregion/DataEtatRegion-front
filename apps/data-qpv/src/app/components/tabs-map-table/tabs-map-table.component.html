@@ -1,0 +1,23 @@
+<div class="fr-grid-row fr-grid-row--gutters">
+  <div class="fr-col-12">
+    <dsfr-tabs [selectedTabIndex]="selectedTabIndex" [tabsAriaLabel]="tabsAriaLabel" [fullViewport]="fullViewport">
+      
+      <dsfr-tab tabId="tab-table" label="Tableau">
+        <dsfr-datatable #datatable
+          [caption]="''"
+          [data]="mappedResults"
+          [columns]="columns"
+          [showSearch]="false"
+          [pagination]="true"
+          [initialState]="initialState"
+          [rowsPerPageOptions]="rowsPerPageOptions"
+        ></dsfr-datatable>
+      </dsfr-tab>
+
+      <dsfr-tab tabId="tab-cartographie" label="Cartographie">
+        <h4 class="fr-h4">Contenu 2</h4>
+      </dsfr-tab>
+    
+    </dsfr-tabs>
+  </div>
+</div>

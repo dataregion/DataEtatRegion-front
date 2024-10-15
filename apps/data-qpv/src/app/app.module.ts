@@ -51,8 +51,10 @@ import { BudgetDataHttpService } from 'apps/data-qpv/src/app/services/http/budge
 import { MultiregionsService } from 'apps/data-qpv/src/app/services/multiregions.service';
 
 import { SupersetIframeComponent } from './components/superset-iframe/superset-iframe.component'
-import {MatTab, MatTabGroup} from "@angular/material/tabs";
-import {MapComponent} from "./components/map/map.component";
+import { DsfrTabsModule, DsfrModalModule, DsfrDataTableModule, DsfrAlertModule, DsfrFormFieldsetModule } from '@edugouvfr/ngx-dsfr';
+import { TabsSupersetIframesComponent } from './components/tabs-superset-iframes/tabs-superset-iframes.component';
+import { TabsMapTableComponent } from './components/tabs-map-table/tabs-map-table.component';
+import { ModalAdditionalParamsComponent } from './components/modal-additional-params/modal-additional-params.component';
 
 export function apiExternesConfigFactory(
   settingsService: SettingsService
@@ -79,15 +81,20 @@ export function apiBudgetConfigFactory(
 
 registerLocaleData(localeFr);
 
-@NgModule({ declarations: [
-        AppComponent,
-        HomeComponent,
-        PreferenceComponent,
-        SearchDataComponent,
-        MapComponent,
-        SupersetIframeComponent,
-    ],
-    bootstrap: [AppComponent], imports: [BrowserModule,
+@NgModule({
+  declarations: [
+    AppComponent,
+    HomeComponent,
+    PreferenceComponent,
+    SearchDataComponent,
+    SupersetIframeComponent,
+    TabsSupersetIframesComponent,
+    TabsMapTableComponent,
+    ModalAdditionalParamsComponent,
+  ],
+  bootstrap: [AppComponent],
+  imports: [
+    BrowserModule,
     AppRoutingModule,
     KeycloakAngularModule,
     BrowserAnimationsModule,
@@ -103,74 +110,81 @@ registerLocaleData(localeFr);
     ManagementModule,
     aeApiModule,
     budgetApiModule,
-    ApolloModule, MatTabGroup, MatTab], providers: [
-        {
-            provide: SETTINGS,
-            useClass: SettingsService,
+    DsfrTabsModule,
+    DsfrModalModule,
+    DsfrDataTableModule,
+    DsfrFormFieldsetModule,
+    DsfrAlertModule,
+    ApolloModule
+  ], providers: [
+    {
+        provide: SETTINGS,
+        useClass: SettingsService,
+    },
+    {
+        provide: DATA_HTTP_SERVICE,
+        useClass: BudgetDataHttpService,
+        multi: true,
+    },
+    {
+        provide: APP_INITIALIZER,
+        useFactory: app_Init,
+        multi: true,
+        deps: [SettingsHttpService, KeycloakService, SettingsService, MultiregionsService],
+    },
+    {
+        provide: HTTP_INTERCEPTORS,
+        useClass: CommonHttpInterceptor,
+        multi: true,
+    },
+    DatePipe,
+    {
+        provide: LOCALE_ID,
+        useValue: 'fr-FR',
+    },
+    {
+        provide: API_PREFERENCE_PATH,
+        useFactory: (settings: SettingsService) => {
+            return settings.apiAdministration;
         },
-        {
-            provide: DATA_HTTP_SERVICE,
-            useClass: BudgetDataHttpService,
-            multi: true,
+        deps: [SETTINGS],
+    },
+    {
+        provide: API_GEO_PATH,
+        useFactory: (settings: SettingsService) => {
+            return settings.apiGeo;
         },
-        {
-            provide: APP_INITIALIZER,
-            useFactory: app_Init,
-            multi: true,
-            deps: [SettingsHttpService, KeycloakService, SettingsService, MultiregionsService],
+        deps: [SETTINGS],
+    },
+    {
+        provide: API_REF_PATH,
+        useFactory: (settings: SettingsService) => {
+            return settings.apiReferentiel;
         },
-        {
-            provide: HTTP_INTERCEPTORS,
-            useClass: CommonHttpInterceptor,
-            multi: true,
+        deps: [SETTINGS],
+    },
+    {
+        provide: API_MANAGEMENT_PATH,
+        useFactory: (settings: SettingsService) => {
+            return settings.apiAdministration;
         },
-        DatePipe,
-        {
-            provide: LOCALE_ID,
-            useValue: 'fr-FR',
-        },
-        {
-            provide: API_PREFERENCE_PATH,
-            useFactory: (settings: SettingsService) => {
-                return settings.apiAdministration;
-            },
-            deps: [SETTINGS],
-        },
-        {
-            provide: API_GEO_PATH,
-            useFactory: (settings: SettingsService) => {
-                return settings.apiGeo;
-            },
-            deps: [SETTINGS],
-        },
-        {
-            provide: API_REF_PATH,
-            useFactory: (settings: SettingsService) => {
-                return settings.apiReferentiel;
-            },
-            deps: [SETTINGS],
-        },
-        {
-            provide: API_MANAGEMENT_PATH,
-            useFactory: (settings: SettingsService) => {
-                return settings.apiAdministration;
-            },
-            deps: [SETTINGS],
-        },
-        {
-            provide: aeConfiguration,
-            useFactory: apiExternesConfigFactory,
-            deps: [SETTINGS],
-            multi: false,
-        },
-        {
-            provide: budgetConfiguration,
-            useFactory: apiBudgetConfigFactory,
-            deps: [SETTINGS],
-            multi: false,
-        },
-        provideHttpClient(withInterceptorsFromDi()),
-    ] })
+        deps: [SETTINGS],
+    },
+    {
+        provide: aeConfiguration,
+        useFactory: apiExternesConfigFactory,
+        deps: [SETTINGS],
+        multi: false,
+    },
+    {
+        provide: budgetConfiguration,
+        useFactory: apiBudgetConfigFactory,
+        deps: [SETTINGS],
+        multi: false,
+    },
+    provideHttpClient(withInterceptorsFromDi()),
+  ]
+})
 export class AppModule {}
 
 export function app_Init(

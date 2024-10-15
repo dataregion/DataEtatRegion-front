@@ -37,7 +37,6 @@ export class SettingsService implements ISettingsService {
     this.settings.ressources = new Ressources();
     this.settings.superset = new Superset();
     this.settings.features = new Features();
-    this.settings.superset = new Superset();
   }
 
   setSettings(settings: Settings): void {

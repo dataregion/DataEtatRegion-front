@@ -1,9 +1,8 @@
 import { Observable } from 'rxjs';
-import { DataPagination } from '../../../../common-lib/src/lib/models/pagination/pagination.models';
+import { DataPagination } from 'apps/common-lib/src/lib/models/pagination/pagination.models';
 import { BopModel } from 'apps/data-qpv/src/app/models/refs/bop.models';
-import { GeoModel, TypeLocalisation } from '../../../../common-lib/src/lib/models/geo.models';
-import { SourceFinancialData, TypeCategorieJuridique } from 'apps/data-qpv/src/app/models/financial/common.models';
-import { ReferentielProgrammation } from 'apps/data-qpv/src/app/models/refs/referentiel_programmation.model';
+import { GeoModel, TypeLocalisation } from 'apps/common-lib/src/lib/models/geo.models';
+import { CentreCouts, SourceFinancialData, TypeCategorieJuridique } from 'apps/data-qpv/src/app/models/financial/common.models';
 import { RefSiret } from 'apps/common-lib/src/lib/models/refs/RefSiret';
 
 export enum OtherTypeCategorieJuridique {
@@ -12,43 +11,25 @@ export enum OtherTypeCategorieJuridique {
 export type SearchTypeCategorieJuridique = TypeCategorieJuridique | OtherTypeCategorieJuridique;
 
 export interface SearchParameters {
-  n_ej: string[] | null;
-  n_ds: string[] | null;
-  siret: string[] | null;
-  montant: number[] | null;
-  source: string | null;
-  themes: string[] | null;
   bops: BopModel[] | null;
-  referentiels_programmation: ReferentielProgrammation[] | null;
+  years: number[] | null;
   niveau: TypeLocalisation | null;
   locations: GeoModel[] | null,
-  years: number[] | null;
+  centre_couts: CentreCouts[] | null;
+  themes: string[] | null;
   beneficiaires: RefSiret[] | null;
   types_beneficiaires: SearchTypeCategorieJuridique[] | null;
-  tags: string[] | null;
-
-  domaines_fonctionnels: string[] | null;
-  source_region: string[] | null;
 }
 
 export const SearchParameters_empty: SearchParameters = {
-  n_ej: null,
-  source: null,
-  n_ds: null,
-  siret: null,
-  montant: null,
-  themes: null,
   bops: null,
-  referentiels_programmation: null,
+  years: null,
   niveau: null,
   locations: null,
-  years: null,
+  centre_couts: null,
+  themes: null,
   beneficiaires: null,
   types_beneficiaires: null,
-  tags: null,
-
-  domaines_fonctionnels: null,
-  source_region: null,
 }
 
 /* eslint no-unused-vars: 0 */  // --> OFF

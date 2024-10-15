@@ -1,6 +1,6 @@
 import { Commune, Programme, Siret, GroupeMarchandise, LocalisationInterministerielle, SourceFinancialData, DomaineFonctionnel, CentreCouts } from "./common.models";
 import { Tag } from "../refs/tag.model";
-import { ReferentielProgrammation } from "@models/refs/referentiel_programmation.model";
+import { ReferentielProgrammation } from "apps/data-qpv/src/app/models/refs/referentiel_programmation.model";
 import { Optional } from "apps/common-lib/src/lib/utilities/optional.type";
 import { ExportableAsJson } from "apps/common-lib/src/lib/models/exportable-as-json.model";
 
