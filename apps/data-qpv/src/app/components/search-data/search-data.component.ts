@@ -1,6 +1,7 @@
 import {
   AfterViewInit,
   Component,
+  DestroyRef,
   EventEmitter,
   inject,
   Inject,
@@ -179,6 +180,7 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
     private _alertService: AlertService,
     private _budgetService: BudgetService,
     private _logger: NGXLogger,
+    private _geo: GeoLocalisationComponentService
   ) {
     // Formulaire avc champs déclarés dans l'ordre
     this.searchForm = new FormGroup<SearchForm>({
@@ -229,7 +231,16 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
     }
   }
 
+  private _subFilterGeo: Subscription | null = null;
+  private _destroyRef = inject(DestroyRef)
+
   ngOnInit(): void {
+    this._geo
+      .filterGeo(null, TypeLocalisation.QPV)
+      .pipe(takeUntilDestroyed(this._destroyRef))
+      .subscribe((response) => {
+        this.qpvs = response as GeoModel[]
+      });
   }
 
   ngAfterViewInit(): void {
@@ -390,3 +401,7 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
   }
 
 }
+function takeUntilDestroyed(_destroyRef: any): import("rxjs").OperatorFunction<GeoModel[], unknown> {
+  throw new Error('Function not implemented.');
+}
+
