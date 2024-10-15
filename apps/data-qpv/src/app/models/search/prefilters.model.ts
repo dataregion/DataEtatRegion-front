@@ -5,6 +5,6 @@ export interface PreFilters {
 
   annees?: number[]
   localisation?: JSONObject[]
-  qpv?: GeoModel
+  qpv?: JSONObject[]
 
 }

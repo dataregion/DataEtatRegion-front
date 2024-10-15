@@ -116,11 +116,10 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
   /**
    * QPV
    */
-  get selectedQpv() : any | null {
-    const annees = this.searchForm.get('qpv')?.value;
-    return annees && annees.length != 0 ? annees : null;
+  get selectedQpv() : GeoModel[] | null {
+    return this.searchForm.get('qpv')?.value ?? null;
   }
-  set selectedQpv(data: any | null) {
+  set selectedQpv(data: GeoModel[] | null) {
     this.searchForm.get('qpv')?.setValue(data ?? null);
   }
 
@@ -346,7 +345,7 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
     }
 
     if (preFilter.qpv) {
-      this.selectedQpv = preFilter.qpv
+      this.selectedQpv = preFilter.qpv as unknown as GeoModel[]
     }
 
     // lance la recherche pour afficher les resultats

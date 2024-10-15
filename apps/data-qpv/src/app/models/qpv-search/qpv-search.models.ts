@@ -5,5 +5,5 @@ export interface QpvSearchArgs {
   annees: number[] | null;
   niveau: TypeLocalisation | null;
   localisations: GeoModel[] | null;
-  qpv_codes: string[] | null;
+  qpv_codes: GeoModel[] | null;
 }

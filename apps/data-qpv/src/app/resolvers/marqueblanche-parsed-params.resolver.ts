@@ -74,14 +74,57 @@ function _resolver(route: ActivatedRouteSnapshot): Observable<{ data: MarqueBlan
   const handlerCtx = { api_geo, api_ref, route, logger };
   const model = of({ ...empty, has_marqueblanche_params })
     .pipe(
-      mergeMap(previous => localisation(previous, handlerCtx)),
       map(previous => annees_min_max(previous, handlerCtx)),
+      mergeMap(previous => localisation(previous, handlerCtx)),
+      mergeMap(previous => qpv_codes(previous, handlerCtx)),
       map(result => {
         return { data: result }
       })
     )
 
   return model;
+}
+
+/** Gère le préfiltre des codes QPV */
+function qpv_codes(
+  previous: MarqueBlancheParsedParams,
+  { api_geo, route, logger }: _HandlerContext,
+): Observable<MarqueBlancheParsedParams> {
+
+  const p_code_geo = route.queryParamMap.get(FinancialQueryParam.QPV);
+
+  let niveau_geo: TypeLocalisation = TypeLocalisation.QPV;
+  let code_geo: string
+  try {
+    code_geo = p_code_geo!;
+
+    if (!niveauxLocalisationLegaux.includes(niveau_geo))
+      throw Error(`Le niveau géographique doit être une de ces valeurs ${niveauxLocalisationLegaux}`)
+  } catch(e) {
+    const niveaux_valides = synonymes_from_types_localisation(niveauxLocalisationLegaux)
+    throw Error(`Le niveau géographique doit être une de ces valeurs ${niveaux_valides}`)
+  }
+
+  function handle_geo(geo: GeoModel[]) {
+    if (geo.length !== 1)
+      throw new Error(`Impossible de trouver une localisation pour ${niveau_geo}: ${code_geo}`);
+    const _preFilters: PreFilters = {
+      ...previous.preFilters,
+      localisation: [geo[0]] as unknown as JSONObject[] // XXX: Ici, on ne gère qu'un seul code_geo
+    }
+    return {
+      ...previous,
+      preFilters: _preFilters
+    };
+  }
+
+  logger.debug(`Application des paramètres ${FinancialQueryParam.Niveau_geo}: ${niveau_geo} et ${FinancialQueryParam.Code_geo}: ${code_geo}`);
+  const result = filterGeo(api_geo, code_geo, niveau_geo)
+    .pipe(
+      map(geo => handle_geo(geo))
+    );
+
+  return result;
 }
 
 
