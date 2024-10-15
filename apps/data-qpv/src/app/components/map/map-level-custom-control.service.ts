@@ -7,6 +7,7 @@ import {applyStyle} from 'ol-mapbox-style';
 import {Fill, Stroke, Style} from "ol/style";
 import {FeatureLike} from "ol/Feature";
 import { Point } from 'ol/geom';
+import Map from "ol/Map";
 
 @Injectable({
   providedIn: 'root',
@@ -30,6 +31,7 @@ export enum MapLevel {
 export class LevelControl extends Control {
 
   private nodeElement: HTMLDivElement;
+  private currentMap: Map | undefined;
   private zoomByLevel: { [key: string]: number } = {
     'region': 7,
     'departement': 9,
@@ -86,29 +88,38 @@ export class LevelControl extends Control {
     zoomToCurrentBtn.addEventListener('click', this.gotoCurrentCenter.bind(this), false);
   }
 
+  setCurrentMap(map: Map): void {
+    this.currentMap = map;
+  }
+
   handleSelectChange(event: Event): void {
     const selectedValue = (event.target as HTMLSelectElement).value;
-    this.getMap()?.getView()?.setZoom(this.zoomByLevel[selectedValue]);
+    this.currentMap?.getView()?.setZoom(this.zoomByLevel[selectedValue]);
   }
 
   gotoCurrentCenter() {
     if (this.currentCenter) {
-      this.getMap()?.getView()?.setCenter(this.currentCenter.getCoordinates());
+      this.currentMap?.getView()?.setCenter(this.currentCenter.getCoordinates());
     }
   }
 
-  updateSelectedQpv(searchedQpv: FeatureLike, searchedYears: Array<number>) {
+  updateSelectedQpv(searchedQpv: FeatureLike, searchedYears: number[] | null | undefined) {
     this.updateTitle(searchedQpv.get('name'), searchedYears);
     this.currentCenter = searchedQpv.get('geometry');
     this.gotoCurrentCenter();
   }
 
-  updateTitle(searchedQpvName: string, searchedYears: Array<number>) {
+  updateTitle(searchedQpvName: string, searchedYears: number[] | null | undefined) {
     const titleElements = this.nodeElement.getElementsByClassName('map-level-control-title');
 
     if (titleElements && titleElements.length > 0) {
       const titleElement = titleElements[0];
-      titleElement.innerHTML = `${searchedQpvName} - ${searchedYears.join('; ')}`;
+      if (searchedYears) {
+        titleElement.innerHTML = `${searchedQpvName} - ${searchedYears.join('; ')}`;
+      } else {
+        titleElement.innerHTML = `${searchedQpvName}`;
+      }
+
     }
   }
 }

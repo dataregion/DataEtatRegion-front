@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewEncapsulation} from '@angular/core';
+import {Component, Input, AfterViewInit, ViewEncapsulation} from '@angular/core';
 import Map from 'ol/Map';
 import View from 'ol/View';
 import TileLayer from 'ol/layer/Tile';
@@ -18,6 +18,7 @@ import {FeatureLike} from "ol/Feature";
 import { MapLevelCustomControlService, LevelControl } from './map-level-custom-control.service';
 import {VectorTile as VectorTileLayer} from "ol/layer";
 import {VectorTile as VectorTileSource} from "ol/source";
+import {QpvSearchArgs} from "../../models/qpv-search/qpv-search.models";
 
 @Component({
   selector: 'data-qpv-map',
@@ -25,14 +26,11 @@ import {VectorTile as VectorTileSource} from "ol/source";
   styleUrls: ['./map.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
-export class MapComponent implements OnInit {
+export class MapComponent implements AfterViewInit {
 
-  map: Map | undefined;
-  mapLevelControl!: LevelControl;
-
-  searchedQpvCode: string = "QN00201M";
-  searchedYears: Array<number> = [2021, 2022];
-  searchedLevel: string = "qpv";
+  public map: Map | undefined;
+  public mapId: string;
+  public mapLevelControl!: LevelControl;
 
   contourLayer: VectorLayer;
   clusterLayer: VectorLayer;
@@ -43,10 +41,19 @@ export class MapComponent implements OnInit {
 
   clusterZoomThreshold = 12;
 
+  private _searchArgs: QpvSearchArgs | undefined;
+  @Input()
+  set searchArgs(data: QpvSearchArgs | undefined) {
+    this._searchArgs = data;
+    this.mapLevelControl?.gotoCurrentCenter();
+  }
+
   constructor(
     private budgetService: BudgetService,
     private mapLevelControlService: MapLevelCustomControlService,
   ) {
+    this.mapId = `ol-map-${Math.floor(Math.random() * 100)}`;
+
     this.mapLevelControl = this.mapLevelControlService.createLevelControl();
 
     this.contourLayer = new VectorLayer({
@@ -70,11 +77,11 @@ export class MapComponent implements OnInit {
     this.selectedContourStyleFuction = this.selectedContourStyleFuction.bind(this);
   }
 
-  ngOnInit(): void {
+  ngAfterViewInit(): void {
     const franceCoordinates = fromLonLat([1.888334, 46.603354]);
 
     this.map = new Map({
-      target: 'ol-map',
+      target: this.mapId,
       controls: defaultControls().extend([new FullScreen()]),
       layers: [
         new TileLayer({ // Fond de carte
@@ -107,6 +114,7 @@ export class MapComponent implements OnInit {
         projection: 'EPSG:3857',
       })
     });
+    this.mapLevelControl.setCurrentMap(this.map);
 
     this.map.addControl(this.mapLevelControl);
 
@@ -146,7 +154,7 @@ export class MapComponent implements OnInit {
         });
 
         // We apply countour style for each feature
-        if (feature_countour.get('code') === this.searchedQpvCode) {
+        if (this._searchArgs?.qpv_codes?.includes(feature_countour.get('code'))) {
           feature_countour.setStyle(this.selectedContourStyleFuction);
         } else {
           feature_countour.setStyle(this.contourStyleFuction);
@@ -162,11 +170,14 @@ export class MapComponent implements OnInit {
       const vectorSource = clusterSource.getSource() as VectorSource; // Get the underlying VectorSource
       vectorSource.addFeatures(features_points);
 
-      this.updateCustomControl(this.searchedQpvCode, this.searchedYears);
+      this.updateCustomControl(this._searchArgs?.qpv_codes, this._searchArgs?.annees);
     });
   }
 
-  private updateCustomControl(searchedQpv: string, searchedYears: Array<number>): void {
+  private updateCustomControl(
+    searchedQpv: string[] | null | undefined,
+    searchedYears: number[] | null | undefined
+  ): void {
     const clusterSource = this.clusterLayer.getSource() as Cluster<Feature>; // Get the Cluster source
     const vectorSource = clusterSource.getSource() as VectorSource;
     const qpvFeature = this.findFeatureByCode(vectorSource, searchedQpv);
@@ -175,11 +186,14 @@ export class MapComponent implements OnInit {
     }
   }
 
-  private findFeatureByCode(vectorSource: VectorSource, code: string): Feature | undefined {
+  private findFeatureByCode(
+    vectorSource: VectorSource,
+    code: string[] | null | undefined
+  ): Feature | undefined {
     const features = vectorSource.getFeatures();
 
     for (const feature of features) {
-      if (feature.get('code') === code) {
+      if (code?.includes(feature.get('code'))) {
         return feature;
       }
     }

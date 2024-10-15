@@ -15,7 +15,7 @@ export class TabsMapTableComponent {
   private _tabsAriaLabel = "Système d'onglets pour l'affichage des données (tableau et cartographie)"
   private _fullViewport = false
 
-  private _searchResults: FinancialDataModel[] | null = []; 
+  private _searchResults: FinancialDataModel[] | null = [];
 
   public mappedResults: any[] = []
 
@@ -255,9 +255,9 @@ export class TabsMapTableComponent {
     {id: '259', name: 'Martinez', firstName: 'Juan', birthDate: '1994-04-25', city: 'Dallas'},
     {id: '260', name: 'Taylor', firstName: 'Aisha', birthDate: '1982-08-16', city: 'San Jose'},
   ]
-  
+
   private _currentSearchFilter: QpvSearchArgs | undefined;
-  
+
   get searchArgs(): QpvSearchArgs | undefined {
     return this._currentSearchFilter;
   }
