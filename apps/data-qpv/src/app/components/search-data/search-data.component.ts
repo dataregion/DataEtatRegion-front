@@ -150,7 +150,6 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
   }
   @Input()
   set searchFinish(searchFinish: boolean) {
-    console.log("emit searchFinish")
     this._searchFinish = searchFinish
     this.searchFinishChange.emit(searchFinish)
   }
@@ -163,16 +162,10 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
   }
   @Input()
   set searchInProgress(searchInProgress: BehaviorSubject<boolean>) {
-    console.log("emit searchInProgress")
     this._searchInProgress = searchInProgress
     this.searchInProgressChange.emit(searchInProgress)
   }
   @Output() searchInProgressChange = new EventEmitter<BehaviorSubject<boolean>>();
-
-  /**
-   * Indique si la recherche est en cours
-   */
-  // public searchInProgress = new BehaviorSubject(false);
 
   /**
    * Affiche une erreur
@@ -194,7 +187,6 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
 
   @Input() public set preFilter(value: PreFilters | undefined) {
     try {
-      console.log(value)
       this._apply_prefilters(value);
     } catch(e) {
       this.displayError = true;
@@ -262,7 +254,6 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
     const financial = response.financial.data! as FinancialData;
     const mb_has_params = response.mb_parsed_params?.data?.has_marqueblanche_params;
     const mb_prefilter = response.mb_parsed_params?.data?.preFilters;
-    console.log(mb_prefilter)
 
     this.displayError = false;
     this.bops = financial.bops;
@@ -289,8 +280,6 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
       .filterGeo("", TypeLocalisation.QPV)
       .pipe(takeUntilDestroyed(this._destroyRef))
       .subscribe((response) => {
-        console.log("=============== ICI")
-        console.log(response)
         this.qpvs = response as GeoModel[]
         this.filteredQPV = response as GeoModel[]
         // TODO : Facto du filter générique pour gérer aussi les Observable
@@ -301,7 +290,6 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
             ...this.filteredQPV.filter((el) => !this.selectedQpv?.map(s => s.code).includes(el.code))
           ]
           : this.filteredQPV
-          console.log('ok finish')
       });
   }
 
@@ -309,7 +297,6 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
     // Récupération des options de select du formulaires
     this._route.data.subscribe(
       (data: Data) => {
-        console.log(data)
         setTimeout(() => { this._on_route_data(data) }, 0);
       }
     );
@@ -405,8 +392,6 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
       this.selectedLocalisations = preFilter.localisation as unknown as GeoModel[]
       this.selectedNiveau = this.selectedLocalisations != null ? this.selectedLocalisations.map(gm => gm.type)[0] as TypeLocalisation : null;
     }
-    console.log("apply")
-    console.log(preFilter)
     if (preFilter.qpv) {
       this.selectedQpv = preFilter.qpv as unknown as GeoModel[]
     }

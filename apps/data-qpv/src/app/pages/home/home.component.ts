@@ -50,6 +50,7 @@ export class HomeComponent implements OnInit {
 
   @ViewChild(SearchDataComponent) searchData!: SearchDataComponent;
 
+  public selectedTabIndex: number = 0;
   public searchFinish: boolean = false;
   public searchInProgress: BehaviorSubject<boolean> = new BehaviorSubject(false);
 

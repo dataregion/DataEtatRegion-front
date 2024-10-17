@@ -11,6 +11,26 @@ import { FinancialDataModel } from '../../models/financial/financial-data.models
 export class TabsSupersetIframesComponent {
 
   private _selectedTabIndex: number = 0
+  get selectedTabIndex(): number {
+    return this._selectedTabIndex;
+  }
+  @Input()
+  set selectedTabIndex(selectedTabIndex: number) {
+    this._selectedTabIndex = selectedTabIndex;
+    this.selectedTabIndexChange.emit(this._selectedTabIndex);
+  }
+  @Output() selectedTabIndexChange = new EventEmitter<number>();
+
+  private _tabs: any = {
+    "tab-iframe-1": 0,
+    "tab-iframe-2": 1,
+    "tab-iframe-3": 2,
+  }
+  public emitSelectedTab(event: any) {
+    this.selectedTabIndexChange.emit(this._tabs[event]);
+  }
+
+
   private _tabsAriaLabel: string = "Système d'onglets pour les graphiques des crédits"
   private _fullViewport: boolean = false
 
@@ -39,10 +59,6 @@ export class TabsSupersetIframesComponent {
     this.searchResultsChange.emit(this._searchResults);
   }
   @Output() searchResultsChange = new EventEmitter<FinancialDataModel[] | null>();
-
-  get selectedTabIndex() {
-    return this._selectedTabIndex
-  }
 
   get tabsAriaLabel() {
     return this._tabsAriaLabel

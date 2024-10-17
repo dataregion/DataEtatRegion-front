@@ -30,20 +30,44 @@ export class TabsMapTableComponent {
     page: 1,
     rowsPerPage: 20,
     sort: null
-}
+  }
 
+  private _selectedTabIndexCredits: number = 0
+  get selectedTabIndexCredits() {
+    return this._selectedTabIndexCredits
+  }
+  @Input()
+  set selectedTabIndexCredits(selectedTabIndexCredits: number) {
+    this._selectedTabIndexCredits = selectedTabIndexCredits
+    this.dataLoaded = false;
+    this._refreshDatatable()
+    setTimeout(() => { this.dataLoaded = true; }, 1000);
+  }
+
+  public mappingTabsBops: any = {
+    0: "p147",
+    1: "commun",
+    2: null
+  }
+
+  public dataLoaded: boolean = false;
 
   get searchResults() {
     return this._searchResults;
   }
   @Input()
   set searchResults(results: FinancialDataModel[] | null) {
-    results?.forEach(f => {
-      if (this.bops === "147" && f.programme?.code !== "147")
-        return;
-      if (this.bops === "-147" && f.programme?.code === "147")
-        return;
+    this._searchResults = results
+    this._refreshDatatable()
+  }
 
+  private _refreshDatatable() {
+    this.mappedResults = []
+    this._searchResults?.forEach(f => {
+      if (this.mappingTabsBops[this.selectedTabIndexCredits] === "p147" && f.programme?.code !== "147")
+        return;
+      if (this.mappingTabsBops[this.selectedTabIndexCredits] === "commun" && f.programme?.code === "147")
+        return;
       this.mappedResults.push({
         "id": f.id,
         "siret.nom_beneficiaire": f.siret?.nom_beneficiaire,
