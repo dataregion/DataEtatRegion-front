@@ -69,14 +69,14 @@ export class SupersetIframeComponent implements OnInit, OnChanges {
 
   private getCurrentDashboardArgsString(): string {
     let args = "";
-    args += `?standalone=4&embedded=true`;
+    args += `?standalone=3&embedded=true`;
 
     if (this.dashboardArgsCreditType && this.dashboardArgsCreditType !== "") {
       args += `&credit_type=${this.dashboardArgsCreditType}`;
     }
 
     if(this.searchArgs && this.searchArgs.qpv_codes && this.searchArgs.qpv_codes.length > 0) {
-      args += `&qpv_codes=${this.searchArgs.qpv_codes.join(",")}`;
+      args += `&qpv_codes=${this.searchArgs.qpv_codes.map(q => q.code).join(",")}`;
     }
 
     if(this.searchArgs && this.searchArgs.annees && this.searchArgs.annees.length > 0) {
@@ -92,6 +92,7 @@ export class SupersetIframeComponent implements OnInit, OnChanges {
 
   public updateSanitizedUrl():  void {
     this.sanitizedUrl =  this.domSanitizer.bypassSecurityTrustResourceUrl(`${this._supersetBaseDashboardUrl}/${this.getDashboardSlug()}/${this.getCurrentDashboardArgsString()}`);
+    console.log(this.sanitizedUrl)
   }
 
 }

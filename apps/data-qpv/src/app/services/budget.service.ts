@@ -90,6 +90,7 @@ export class BudgetService {
           (response) => {
             if (response == null) // XXX: no content
               return [];
+
             return response.items;
           }
         )

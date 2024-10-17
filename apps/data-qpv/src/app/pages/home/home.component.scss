@@ -73,3 +73,26 @@
   color: white;
   background-color: #000091;
 }
+
+.spinner-wrapper {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+  padding-top: 100px;
+}
+.loading-spinner {
+	pointer-events: none;
+	width: 7em;
+	height: 7em;
+	border: 0.4em solid transparent;
+	border-color: #eee;
+	border-top-color: #000091;
+	border-radius: 50%;
+	animation: loadingspin 1s linear infinite;
+}
+
+@keyframes loadingspin {
+	100% {
+			transform: rotate(360deg)
+	}
+}

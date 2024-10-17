@@ -104,6 +104,7 @@ export class BudgetService implements BudgetServiceInterface {
      * @param codeProgramme le code programme (BOP)
      * @param niveauGeo le niveau géographique
      * @param codeGeo Le code d\&#39;une commune (5 chiffres), le numéro de département (2 caractères), le code epci (9 chiffres), le code d\&#39;arrondissement (3 ou 4 chiffres)ou le crte (préfixé par \&#39;crte-\&#39;)
+     * @param codesQpv Les codes de QPV
      * @param theme Le libelle theme (si code_programme est renseigné, le theme est ignoré).
      * @param siretBeneficiaire Code siret d\&#39;un beneficiaire.
      * @param typesBeneficiaires Types de bénéficiaire.
@@ -114,10 +115,10 @@ export class BudgetService implements BudgetServiceInterface {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getBudgetCtrl(pageNumber?: string, limit?: string, nEj?: Array<string>, source?: string, codeProgramme?: Array<string>, niveauGeo?: string, codeGeo?: Array<string>, theme?: Array<string>, siretBeneficiaire?: Array<string>, typesBeneficiaires?: Array<string>, annee?: Array<number>, domaineFonctionnel?: Array<string>, referentielProgrammation?: Array<string>, tags?: Array<string>, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<PaginatedBudgetLines>;
-    public getBudgetCtrl(pageNumber?: string, limit?: string, nEj?: Array<string>, source?: string, codeProgramme?: Array<string>, niveauGeo?: string, codeGeo?: Array<string>, theme?: Array<string>, siretBeneficiaire?: Array<string>, typesBeneficiaires?: Array<string>, annee?: Array<number>, domaineFonctionnel?: Array<string>, referentielProgrammation?: Array<string>, tags?: Array<string>, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<PaginatedBudgetLines>>;
-    public getBudgetCtrl(pageNumber?: string, limit?: string, nEj?: Array<string>, source?: string, codeProgramme?: Array<string>, niveauGeo?: string, codeGeo?: Array<string>, theme?: Array<string>, siretBeneficiaire?: Array<string>, typesBeneficiaires?: Array<string>, annee?: Array<number>, domaineFonctionnel?: Array<string>, referentielProgrammation?: Array<string>, tags?: Array<string>, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<PaginatedBudgetLines>>;
-    public getBudgetCtrl(pageNumber?: string, limit?: string, nEj?: Array<string>, source?: string, codeProgramme?: Array<string>, niveauGeo?: string, codeGeo?: Array<string>, theme?: Array<string>, siretBeneficiaire?: Array<string>, typesBeneficiaires?: Array<string>, annee?: Array<number>, domaineFonctionnel?: Array<string>, referentielProgrammation?: Array<string>, tags?: Array<string>, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<any> {
+    public getBudgetCtrl(pageNumber?: string, limit?: string, nEj?: Array<string>, source?: string, codeProgramme?: Array<string>, niveauGeo?: string, codeGeo?: Array<string>, codesQpv?: Array<string>, theme?: Array<string>, siretBeneficiaire?: Array<string>, typesBeneficiaires?: Array<string>, annee?: Array<number>, domaineFonctionnel?: Array<string>, referentielProgrammation?: Array<string>, tags?: Array<string>, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<PaginatedBudgetLines>;
+    public getBudgetCtrl(pageNumber?: string, limit?: string, nEj?: Array<string>, source?: string, codeProgramme?: Array<string>, niveauGeo?: string, codeGeo?: Array<string>, codesQpv?: Array<string>, theme?: Array<string>, siretBeneficiaire?: Array<string>, typesBeneficiaires?: Array<string>, annee?: Array<number>, domaineFonctionnel?: Array<string>, referentielProgrammation?: Array<string>, tags?: Array<string>, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<PaginatedBudgetLines>>;
+    public getBudgetCtrl(pageNumber?: string, limit?: string, nEj?: Array<string>, source?: string, codeProgramme?: Array<string>, niveauGeo?: string, codeGeo?: Array<string>, codesQpv?: Array<string>, theme?: Array<string>, siretBeneficiaire?: Array<string>, typesBeneficiaires?: Array<string>, annee?: Array<number>, domaineFonctionnel?: Array<string>, referentielProgrammation?: Array<string>, tags?: Array<string>, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<PaginatedBudgetLines>>;
+    public getBudgetCtrl(pageNumber?: string, limit?: string, nEj?: Array<string>, source?: string, codeProgramme?: Array<string>, niveauGeo?: string, codeGeo?: Array<string>, codesQpv?: Array<string>, theme?: Array<string>, siretBeneficiaire?: Array<string>, typesBeneficiaires?: Array<string>, annee?: Array<number>, domaineFonctionnel?: Array<string>, referentielProgrammation?: Array<string>, tags?: Array<string>, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<any> {
 
         let localVarQueryParameters = new HttpParams({encoder: this.encoder});
         if (pageNumber !== undefined && pageNumber !== null) {
@@ -147,6 +148,10 @@ export class BudgetService implements BudgetServiceInterface {
         if (codeGeo) {
             localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
                 [...codeGeo].join(COLLECTION_FORMATS['csv']), 'code_geo');
+        }
+        if (codesQpv) {
+            localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+                [...codesQpv].join(COLLECTION_FORMATS['csv']), 'codes_qpv');
         }
         if (theme) {
             localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,

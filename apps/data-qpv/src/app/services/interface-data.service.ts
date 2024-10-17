@@ -15,6 +15,7 @@ export interface SearchParameters {
   years: number[] | null;
   niveau: TypeLocalisation | null;
   locations: GeoModel[] | null,
+  qpvs: GeoModel[] | null,
   centre_couts: CentreCouts[] | null;
   themes: string[] | null;
   beneficiaires: RefSiret[] | null;
@@ -26,6 +27,7 @@ export const SearchParameters_empty: SearchParameters = {
   years: null,
   niveau: null,
   locations: null,
+  qpvs: null,
   centre_couts: null,
   themes: null,
   beneficiaires: null,

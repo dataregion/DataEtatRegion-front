@@ -15,15 +15,9 @@ import {
 } from 'apps/common-lib/src/lib/models/marqueblanche/marqueblanche-parsed-params.model';
 import { FinancialQueryParam } from 'apps/data-qpv/src/app/models/marqueblanche/query-params.enum';
 import { QueryParam } from 'apps/common-lib/src/lib/models/marqueblanche/query-params.enum';
-import { p_group_by as common_group_by, fullscreen } from 'apps/common-lib/src/lib/resolvers/marqueblanche/common-handlers';
 import { HandlerContext } from 'apps/common-lib/src/lib/models/marqueblanche/handler-context.model';
 import { passing_errors } from 'apps/common-lib/src/lib/resolvers/marqueblanche/utils';
-import { assert_is_a_GroupByFieldname } from '@models/marqueblanche/groupby-fieldname.enum';
-import { GroupingColumn } from 'apps/grouping-table/src/lib/components/grouping-table/group-utils';
 import { synonymes_from_types_localisation, to_type_localisation } from '@models/marqueblanche/niveau-localisation.model';
-import { Beneficiaire } from '@models/search/beneficiaire.model';
-import { to_types_categories_juridiques } from '@models/marqueblanche/type-etablissement.model';
-import { ReferentielProgrammation } from '@models/refs/referentiel_programmation.model';
 
 export interface MarqueBlancheParsedParams extends Params {
   preFilters: PreFilters,
@@ -91,23 +85,14 @@ function qpv_codes(
   { api_geo, route, logger }: _HandlerContext,
 ): Observable<MarqueBlancheParsedParams> {
 
-  const p_code_geo = route.queryParamMap.get(FinancialQueryParam.QPV);
+  const codes_qpv = route.queryParamMap.get(FinancialQueryParam.QPV);
 
-  let niveau_geo: TypeLocalisation = TypeLocalisation.QPV;
-  let code_geo: string
-  try {
-    code_geo = p_code_geo!;
-
-    if (!niveauxLocalisationLegaux.includes(niveau_geo))
-      throw Error(`Le niveau géographique doit être une de ces valeurs ${niveauxLocalisationLegaux}`)
-  } catch(e) {
-    const niveaux_valides = synonymes_from_types_localisation(niveauxLocalisationLegaux)
-    throw Error(`Le niveau géographique doit être une de ces valeurs ${niveaux_valides}`)
-  }
+  if (codes_qpv === null)
+    return of(previous);
 
   function handle_geo(geo: GeoModel[]) {
     if (geo.length !== 1)
-      throw new Error(`Impossible de trouver une localisation pour ${niveau_geo}: ${code_geo}`);
+      throw new Error(`Impossible de trouver une localisation pour QPV: ${codes_qpv}`);
     const _preFilters: PreFilters = {
       ...previous.preFilters,
       qpv: [geo[0]] as unknown as JSONObject[] // XXX: Ici, on ne gère qu'un seul code_geo
@@ -118,8 +103,8 @@ function qpv_codes(
     };
   }
 
-  logger.debug(`Application des paramètres ${FinancialQueryParam.Niveau_geo}: ${niveau_geo} et ${FinancialQueryParam.Code_geo}: ${code_geo}`);
-  const result = filterGeo(api_geo, code_geo, niveau_geo)
+  logger.debug(`Application des paramètres QPV et ${FinancialQueryParam.Code_geo}: ${codes_qpv}`);
+  const result = filterGeo(api_geo, codes_qpv ? codes_qpv : "", TypeLocalisation.QPV)
     .pipe(
       map(geo => handle_geo(geo))
     );

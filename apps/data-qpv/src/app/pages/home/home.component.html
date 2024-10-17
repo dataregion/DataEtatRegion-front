@@ -11,6 +11,8 @@
       <div class="fr-col-12" style="margin-bottom:30px;">
         <data-qpv-search-data (searchArgsEventEmitter)="currentSearchArgs = $event"
                             [preFilter]="preFilter"
+                            [(searchFinish)]="searchFinish"
+                            [(searchInProgress)]="searchInProgress"
                             (searchResultsEventEmitter)="currentSearchResults = $event"
                             />
       </div>
@@ -22,19 +24,39 @@
 <div style="background-color:#f5f5fe;">
   <div class="fr-container">
 
-    <div class="fr-grid-row" *ngIf="!isSearchArgsEmpty()">
+    <div *ngIf="!isSearchOver()" class="spinner-wrapper">
+      <span class="loading-spinner"></span>
+    </div>
+
+    <div class="fr-grid-row" *ngIf="!isSearchArgsEmpty() && !isSearchResultsEmpty() && isSearchOver()">
       <div class="fr-col-12">
         <span class="search-resume" [innerText]="searchArgsToText()"></span>
       </div>
-      <div class="fr-col-12" style="margin-bottom: 50px;">
+      <div class="fr-col-6" style="margin-bottom: 50px;">
         <tabs-superset-iframes [searchArgs]="currentSearchArgs" [searchResults]="currentSearchResults" />
+      </div>
+      <div class="fr-col-6" style="margin-bottom: 50px;">
+        <tabs-map-table [searchArgs]="currentSearchArgs" [searchResults]="currentSearchResults" />
       </div>
     </div>
 
-    <div class="fr-grid-row" *ngIf="isSearchArgsEmpty()">
+    <div class="fr-grid-row" *ngIf="isSearchArgsEmpty() && !isSearchResultsEmpty() && isSearchOver()">
       <div class="fr-col-12" style="padding-top: 50px; padding-bottom: 50px;">
         <dsfr-alert
           [message]="'Veuillez effectuer une recherche pour afficher des données '"
+          [severity]="'info'"
+          [ariaRoleValue]="'alert'"
+          [size]="'MD'"
+          [hasAriaRole]="false"
+          [closeable]="false"
+        ></dsfr-alert>
+      </div>
+    </div>
+
+    <div class="fr-grid-row" *ngIf="!isSearchArgsEmpty() && isSearchResultsEmpty() && isSearchOver()">
+      <div class="fr-col-12" style="padding-top: 50px; padding-bottom: 50px;">
+        <dsfr-alert
+          [message]="'Aucune subvention pour cette recherche'"
           [severity]="'info'"
           [ariaRoleValue]="'alert'"
           [size]="'MD'"

@@ -21,7 +21,9 @@ import {
 import { ActivatedRoute, Data } from '@angular/router';
 import {
   BehaviorSubject,
+  debounceTime,
   finalize,
+  Subject,
   Subscription,
 } from 'rxjs';
 import { FinancialData, FinancialDataResolverModel } from 'apps/data-qpv/src/app/models/financial/financial-data-resolvers.models';
@@ -53,6 +55,7 @@ import { SavePreferenceDialogComponent } from 'apps/preference-users/src/public-
 import { MatDialog } from '@angular/material/dialog';
 import { DsfrModalComponent } from '@edugouvfr/ngx-dsfr';
 import { ModalAdditionalParamsComponent } from '../modal-additional-params/modal-additional-params.component';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 
 
@@ -141,12 +144,35 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
   /**
    * Indique si la recherche a été effectué
    */
-  public searchFinish = false;
+  private _searchFinish: boolean = false;
+  get searchFinish() {
+    return this._searchFinish
+  }
+  @Input()
+  set searchFinish(searchFinish: boolean) {
+    console.log("emit searchFinish")
+    this._searchFinish = searchFinish
+    this.searchFinishChange.emit(searchFinish)
+  }
+  @Output() searchFinishChange = new EventEmitter<boolean>();
+
+
+  private _searchInProgress: BehaviorSubject<boolean> = new BehaviorSubject(false);
+  get searchInProgress() {
+    return this._searchInProgress
+  }
+  @Input()
+  set searchInProgress(searchInProgress: BehaviorSubject<boolean>) {
+    console.log("emit searchInProgress")
+    this._searchInProgress = searchInProgress
+    this.searchInProgressChange.emit(searchInProgress)
+  }
+  @Output() searchInProgressChange = new EventEmitter<BehaviorSubject<boolean>>();
 
   /**
    * Indique si la recherche est en cours
    */
-  public searchInProgress = new BehaviorSubject(false);
+  // public searchInProgress = new BehaviorSubject(false);
 
   /**
    * Affiche une erreur
@@ -168,6 +194,7 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
 
   @Input() public set preFilter(value: PreFilters | undefined) {
     try {
+      console.log(value)
       this._apply_prefilters(value);
     } catch(e) {
       this.displayError = true;
@@ -194,6 +221,28 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
       localisations: new FormControl<GeoModel[] | null>({ value: null, disabled: false }, []),
       qpv: new FormControl<any | null>(null),
     });
+
+    
+    this.inputFilter.pipe(debounceTime(300), takeUntilDestroyed(this._destroyRef)).subscribe(() => {
+      const term = this.input !== '' ? this.input : null;
+
+      if (this._subFilterGeo)
+        this._subFilterGeo.unsubscribe();
+
+      this._subFilterGeo = this._geo.filterGeo(term, TypeLocalisation.QPV)
+        .pipe(takeUntilDestroyed(this._destroyRef))
+        .subscribe((response: GeoModel[]) => {
+          this.filteredQPV = response;
+          // TODO : Facto du filter générique pour gérer aussi les Observable
+          // Concaténation des éléments sélectionnés avec les éléments filtrés (en supprimant les doublons éventuels)
+          this.filteredQPV = this.selectedQpv != null ?
+            [
+              ...this.selectedQpv,
+              ...this.filteredQPV.filter((el) => !this.selectedQpv?.map(s => s.code).includes(el.code))
+            ]
+            : this.filteredQPV
+        });
+    });
   }
 
   private _on_route_data(data: Data) {
@@ -213,6 +262,7 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
     const financial = response.financial.data! as FinancialData;
     const mb_has_params = response.mb_parsed_params?.data?.has_marqueblanche_params;
     const mb_prefilter = response.mb_parsed_params?.data?.preFilters;
+    console.log(mb_prefilter)
 
     this.displayError = false;
     this.bops = financial.bops;
@@ -236,10 +286,22 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this._geo
-      .filterGeo(null, TypeLocalisation.QPV)
+      .filterGeo("", TypeLocalisation.QPV)
       .pipe(takeUntilDestroyed(this._destroyRef))
       .subscribe((response) => {
+        console.log("=============== ICI")
+        console.log(response)
         this.qpvs = response as GeoModel[]
+        this.filteredQPV = response as GeoModel[]
+        // TODO : Facto du filter générique pour gérer aussi les Observable
+        // Concaténation des éléments sélectionnés avec les éléments filtrés (en supprimant les doublons éventuels)
+        this.filteredQPV = this.selectedQpv != null ?
+          [
+            ...this.selectedQpv,
+            ...this.filteredQPV.filter((el) => !this.selectedQpv?.map(s => s.code).includes(el.code))
+          ]
+          : this.filteredQPV
+          console.log('ok finish')
       });
   }
 
@@ -247,6 +309,7 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
     // Récupération des options de select du formulaires
     this._route.data.subscribe(
       (data: Data) => {
+        console.log(data)
         setTimeout(() => { this._on_route_data(data) }, 0);
       }
     );
@@ -263,7 +326,6 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
     const formValue = this.searchForm.value;
     this.searchInProgress.next(true);
 
-    this.searchFinish = true;
     this.currentFilter.next(this._buildPreference(formValue as JSONObject));
     let newQpvSearchArgsObject: QpvSearchArgs = {
       annees: this.selectedAnnees,
@@ -272,18 +334,6 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
       qpv_codes: this.selectedQpv, 
     };
 
-    // if (formValue.localisations) {
-    //   for (const loc of formValue.localisations) {
-    //     if (loc.type === 'QPV') {
-    //       newQpvSearchArgsObject.qpv_codes?.push(loc.code);
-    //     }
-    //   }
-    // }
-
-    // if (formValue.annees) {
-    //   newQpvSearchArgsObject.annees = formValue.annees;
-    // }
-
     this.searchArgsEventEmitter.next(newQpvSearchArgsObject);
 
     const search_parameters: SearchParameters = {
@@ -291,6 +341,7 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
       years: formValue.annees || null,
       niveau: formValue.niveau || null,
       locations: formValue.localisations || null,
+      qpvs: formValue.qpv || null,
     }
 
     this._search_subscription = this._budgetService
@@ -354,7 +405,8 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
       this.selectedLocalisations = preFilter.localisation as unknown as GeoModel[]
       this.selectedNiveau = this.selectedLocalisations != null ? this.selectedLocalisations.map(gm => gm.type)[0] as TypeLocalisation : null;
     }
-
+    console.log("apply")
+    console.log(preFilter)
     if (preFilter.qpv) {
       this.selectedQpv = preFilter.qpv as unknown as GeoModel[]
     }
@@ -387,21 +439,26 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
   }
 
 
-
-  @ViewChild('modal-additional-params') modalParams?: ModalAdditionalParamsComponent;
-  @ViewChild('dsfr-modal') dialogParams?: DsfrModalComponent;
-
-  openModalFinanceurs() {
-    this.modalParams?.setData(this.financeurs);
-    this.dialogParams?.open();
+  input: string = '';
+  inputFilter = new Subject<string>();
+  public filteredQPV: GeoModel[] | null = null;
+  
+  public renderQPVOption = (geo: GeoModel): string => {
+    return geo.code + ' - ' + geo.nom
+  }
+  public filterQPV = (value: string): GeoModel[] => {
+    this.input = value;
+    this.inputFilter.next(value);
+    return this.filteredQPV ?? [];
+  }
+  public renderQPVLabel = (bops: GeoModel[]) => {
+    let label: string = ''
+    if (bops)
+      bops.forEach((bop, i) => {
+        label += (bop.code + ' - ' + bop.nom) + (i !== bops.length - 1 ? ', ' : '')
+      })
+    return label
   }
 
-  closeModal() {
-    this.dialogParams?.close();
-  }
-
-}
-function takeUntilDestroyed(_destroyRef: any): import("rxjs").OperatorFunction<GeoModel[], unknown> {
-  throw new Error('Function not implemented.');
 }
 

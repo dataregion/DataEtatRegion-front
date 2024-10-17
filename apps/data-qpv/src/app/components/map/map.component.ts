@@ -41,9 +41,9 @@ export class MapComponent implements AfterViewInit {
 
   clusterZoomThreshold = 12;
 
-  private _searchArgs: QpvSearchArgs | undefined;
+  private _searchArgs: QpvSearchArgs | null = null;
   @Input()
-  set searchArgs(data: QpvSearchArgs | undefined) {
+  set searchArgs(data: QpvSearchArgs | null) {
     this._searchArgs = data;
     this.mapLevelControl?.gotoCurrentCenter();
   }
