@@ -1,10 +1,10 @@
 <ng-container [ngSwitch]="groupLevel > 0">
   <ng-container *ngSwitchCase="true">
-    <lib-table-group *ngFor="let g of group.groups_desc" [group]="g" [groupLevel]="groupLevel - 1"/>
+    <lib-table-group *ngFor="let g of group.groups_desc" [groupLevel]="groupLevel - 1" [group]="g" />
   </ng-container>
 
   <ng-container *ngSwitchDefault>
-    <lib-table-rows [rows]="group.rows || []"/>
+    <lib-table-rows [rows]="group.rows || []" />
   </ng-container>
 
 </ng-container>

@@ -2,13 +2,13 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import {
   MapPreferenceFilterMetadata,
-  Preference,
+  Preference
 } from 'apps/preference-users/src/lib/models/preference.models';
-import { JSONObject } from "apps/common-lib/src/lib/models/jsonobject";
+import { JSONObject } from 'apps/common-lib/src/lib/models/jsonobject';
 
 @Component({
   selector: 'financial-preference',
-  templateUrl: './preference.component.html',
+  templateUrl: './preference.component.html'
 })
 export class PreferenceComponent {
   constructor(private _router: Router) {}
@@ -19,17 +19,17 @@ export class PreferenceComponent {
     },
     bops: {
       label: 'Programmes',
-      renderFn: (row: JSONObject) => row['code'] + ' - ' + row['label'],
+      renderFn: (row: JSONObject) => row['code'] + ' - ' + row['label']
     },
     referentiels_programmation: {
       label: 'Référentiels',
-      renderFn: (row: JSONObject) => row['code'],
+      renderFn: (row: JSONObject) => row['code']
     },
     location: {
       label: 'Territoire',
       renderFn: (row: JSONObject) => {
         return `${row['type']} : ${row['nom']} (${row['code']})`;
-      },
+      }
     },
     year: {
       label: 'Année'
@@ -38,22 +38,22 @@ export class PreferenceComponent {
       label: 'Bénéficiare',
       renderFn: (row: JSONObject) => {
         return this._ppTags(row);
-      },
+      }
     },
     beneficiaires: {
-      label: "Bénéficiaires",
+      label: 'Bénéficiaires',
       renderFn: (row: JSONObject) => {
         return this._ppBeneficiaire(row);
-      },
+      }
     },
     types_beneficiaires: {
-      label: "Types de bénéficiaires"
+      label: 'Types de bénéficiaires'
     },
     tags: {
-      label: "Tags",
+      label: 'Tags',
       renderFn: (row: JSONObject) => {
         return this._ppTags(row);
-      },
+      }
     }
   };
 
@@ -65,7 +65,7 @@ export class PreferenceComponent {
    */
   public applyPreference = (uuid: string, _pref: Preference) => {
     this._router.navigate([''], {
-      queryParams: { uuid: uuid },
+      queryParams: { uuid: uuid }
     });
   };
 

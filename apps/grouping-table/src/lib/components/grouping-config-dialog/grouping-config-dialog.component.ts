@@ -1,23 +1,12 @@
 import { Component, Inject } from '@angular/core';
-import {
-  MAT_DIALOG_DATA,
-  MatDialogModule,
-  MatDialogRef,
-} from '@angular/material/dialog';
-import {
-  ColumnMetaDataDef,
-  GroupingColumn,
-} from '../grouping-table/group-utils';
+import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { ColumnMetaDataDef, GroupingColumn } from '../grouping-table/group-utils';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSelectChange, MatSelectModule } from '@angular/material/select';
 import { CommonModule } from '@angular/common';
-import {
-  CdkDragDrop,
-  DragDropModule,
-  moveItemInArray,
-} from '@angular/cdk/drag-drop';
+import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
 
 export type GroupingConfigDialogData = {
   groupingOrder: string[];
@@ -39,8 +28,8 @@ export type GroupingConfigDialogData = {
     MatButtonModule,
     MatTooltipModule,
     MatSelectModule,
-    DragDropModule,
-  ],
+    DragDropModule
+  ]
 })
 export class GroupingConfigDialogComponent {
   readonly allColumns: ColumnMetaDataDef[];
@@ -52,12 +41,16 @@ export class GroupingConfigDialogComponent {
     private _dialogRef: MatDialogRef<GroupingConfigDialogComponent>,
     @Inject(MAT_DIALOG_DATA) dialogData: GroupingConfigDialogData
   ) {
-    this.groupingOrder = dialogData.groupingOrder
+    this.groupingOrder = dialogData.groupingOrder;
     this.allColumns = dialogData.columns
-      .filter((col) => this.groupingOrder.includes(col.name) || dialogData.groupingColumns.map(col => col.columnName).includes(col.name))
+      .filter(
+        (col) =>
+          this.groupingOrder.includes(col.name) ||
+          dialogData.groupingColumns.map((col) => col.columnName).includes(col.name)
+      )
       .sort((col1, col2) => {
-        const index1 = this.groupingOrder.findIndex((col) => col === col1.name)
-        const index2 = this.groupingOrder.findIndex((col) => col === col2.name)
+        const index1 = this.groupingOrder.findIndex((col) => col === col1.name);
+        const index2 = this.groupingOrder.findIndex((col) => col === col2.name);
         return index1 - index2;
       });
 
@@ -66,14 +59,10 @@ export class GroupingConfigDialogComponent {
       columnByName[col.name] = col;
     }
 
-    this.groupingColumns = dialogData.groupingColumns
-    .map(
+    this.groupingColumns = dialogData.groupingColumns.map(
       (gpCol) => columnByName[gpCol.columnName]
     );
-    this.remainingColumns = this.calculateRemainingColumns(
-      this.allColumns,
-      this.groupingColumns
-    )
+    this.remainingColumns = this.calculateRemainingColumns(this.allColumns, this.groupingColumns);
   }
 
   /**
@@ -93,34 +82,24 @@ export class GroupingConfigDialogComponent {
   }
 
   moveGroup(event: CdkDragDrop<ColumnMetaDataDef[]>) {
-    moveItemInArray(
-      this.groupingColumns,
-      event.previousIndex,
-      event.currentIndex
-    );
+    moveItemInArray(this.groupingColumns, event.previousIndex, event.currentIndex);
   }
 
   addGroup(event: MatSelectChange) {
     this.groupingColumns.push(event.value);
-    this.remainingColumns = this.calculateRemainingColumns(
-      this.allColumns,
-      this.groupingColumns
-    );
+    this.remainingColumns = this.calculateRemainingColumns(this.allColumns, this.groupingColumns);
   }
 
   removeGroup(index: number) {
     this.groupingColumns.splice(index, 1);
-    this.remainingColumns = this.calculateRemainingColumns(
-      this.allColumns,
-      this.groupingColumns
-    );
+    this.remainingColumns = this.calculateRemainingColumns(this.allColumns, this.groupingColumns);
   }
 
   validate() {
     this._dialogRef.close(
       this.groupingColumns.map(
         (col): GroupingColumn => ({
-          columnName: col.name,
+          columnName: col.name
         })
       )
     );

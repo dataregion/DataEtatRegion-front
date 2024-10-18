@@ -1,130 +1,130 @@
 {
-    "data": {
-        "demarche": {
-            "number": 99999,
-            "title": "Titre démarche",
-            "state": "publiee",
-            "dateCreation": "2020-01-01T00:00:00+02:00",
-            "dateFermeture": null,
-            "chorusConfiguration": {
-                "centreDeCout": "ref1",
-                "domaineFonctionnel": "ref2",
-                "referentielDeProgrammation": "ref3"
+  "data": {
+    "demarche": {
+      "number": 99999,
+      "title": "Titre démarche",
+      "state": "publiee",
+      "dateCreation": "2020-01-01T00:00:00+02:00",
+      "dateFermeture": null,
+      "chorusConfiguration": {
+        "centreDeCout": "ref1",
+        "domaineFonctionnel": "ref2",
+        "referentielDeProgrammation": "ref3"
+      },
+      "revisions": [
+        {
+          "id": "id78260",
+          "champDescriptors": [
+            {
+              "id": "id12345",
+              "label": "Texte",
+              "__typename": "TextChampDescriptor"
             },
-            "revisions": [
-                {
-                    "id": "id78260",
-                    "champDescriptors": [
-                        {
-                            "id": "id12345",
-                            "label": "Texte",
-                            "__typename": "TextChampDescriptor"
-                        },
-                        {
-                            "id": "id08203",
-                            "label": "Email",
-                            "__typename": "EmailChampDescriptor"
-                        }
-                    ],
-                    "annotationDescriptors": [
-                        {
-                            "id": "id92231",
-                            "label": "EJ",
-                            "__typename": "TextChampDescriptor"
-                        },
-                        {
-                            "id": "id92232",
-                            "label": "Montant",
-                            "__typename": "NumberChampDescriptor"
-                        }
-                    ]
-                }
-            ],
-            "activeRevision": {
-                "id": "id78260"
-            },
-            "dossiers": {
-                "nodes": [
-                    {
-                        "number": 951753,
-                        "state": "refuse",
-                        "dateDepot": "2022-01-01T00:00:00+01:00",
-                        "dateDerniereModification": "2022-01-01T00:00:00+01:00",
-                        "demarche": {
-                            "revision": {
-                                "id": "id78260"
-                            }
-                        },
-                        "champs": [
-                            {
-                                "label": "Description",
-                                "__typename": "TextChamp",
-                                "stringValue": "Coucou 1"
-                            },
-                            {
-                                "label": "Email",
-                                "__typename": "TextChamp",
-                                "stringValue": "mairie@ici.com"
-                            }
-                        ],
-                        "annotations": [
-                            {
-                                "label": "EJ",
-                                "__typename": "TextChamp",
-                                "stringValue": "25367174"
-                            },
-                            {
-                                "label": "Montant",
-                                "__typename": "IntegerNumberChamp",
-                                "stringValue": "",
-                                "integerNumber": null
-                            }
-                        ],
-                        "demandeur": {
-                            "siret": "91234567890"
-                        }
-                    },
-                    {
-                        "number": 357159,
-                        "state": "accepte",
-                        "dateDepot": "2023-01-01T00:00:00+01:00",
-                        "dateDerniereModification": "2023-01-01T00:00:00+01:00",
-                        "demarche": {
-                            "revision": {
-                                "id": "id78260"
-                            }
-                        },
-                        "champs": [
-                            {
-                                "label": "Description",
-                                "__typename": "TextChamp",
-                                "stringValue": "Coucou 2"
-                            },
-                            {
-                                "label": "Email",
-                                "__typename": "TextChamp",
-                                "stringValue": "mairie@labas.com"
-                            }
-                        ],
-                        "annotations": [
-                            {
-                                "label": "EJ",
-                                "__typename": "TextChamp",
-                                "stringValue": "25367175"
-                            },
-                            {
-                                "label": "Montant",
-                                "__typename": "IntegerNumberChamp",
-                                "stringValue": "",
-                                "integerNumber": null
-                            }
-                        ],
-                        "demandeur": {
-                            "siret": "90987654321"
-                        }
-                    }
-                ]
+            {
+              "id": "id08203",
+              "label": "Email",
+              "__typename": "EmailChampDescriptor"
             }
+          ],
+          "annotationDescriptors": [
+            {
+              "id": "id92231",
+              "label": "EJ",
+              "__typename": "TextChampDescriptor"
+            },
+            {
+              "id": "id92232",
+              "label": "Montant",
+              "__typename": "NumberChampDescriptor"
+            }
+          ]
         }
+      ],
+      "activeRevision": {
+        "id": "id78260"
+      },
+      "dossiers": {
+        "nodes": [
+          {
+            "number": 951753,
+            "state": "refuse",
+            "dateDepot": "2022-01-01T00:00:00+01:00",
+            "dateDerniereModification": "2022-01-01T00:00:00+01:00",
+            "demarche": {
+              "revision": {
+                "id": "id78260"
+              }
+            },
+            "champs": [
+              {
+                "label": "Description",
+                "__typename": "TextChamp",
+                "stringValue": "Coucou 1"
+              },
+              {
+                "label": "Email",
+                "__typename": "TextChamp",
+                "stringValue": "mairie@ici.com"
+              }
+            ],
+            "annotations": [
+              {
+                "label": "EJ",
+                "__typename": "TextChamp",
+                "stringValue": "25367174"
+              },
+              {
+                "label": "Montant",
+                "__typename": "IntegerNumberChamp",
+                "stringValue": "",
+                "integerNumber": null
+              }
+            ],
+            "demandeur": {
+              "siret": "91234567890"
+            }
+          },
+          {
+            "number": 357159,
+            "state": "accepte",
+            "dateDepot": "2023-01-01T00:00:00+01:00",
+            "dateDerniereModification": "2023-01-01T00:00:00+01:00",
+            "demarche": {
+              "revision": {
+                "id": "id78260"
+              }
+            },
+            "champs": [
+              {
+                "label": "Description",
+                "__typename": "TextChamp",
+                "stringValue": "Coucou 2"
+              },
+              {
+                "label": "Email",
+                "__typename": "TextChamp",
+                "stringValue": "mairie@labas.com"
+              }
+            ],
+            "annotations": [
+              {
+                "label": "EJ",
+                "__typename": "TextChamp",
+                "stringValue": "25367175"
+              },
+              {
+                "label": "Montant",
+                "__typename": "IntegerNumberChamp",
+                "stringValue": "",
+                "integerNumber": null
+              }
+            ],
+            "demandeur": {
+              "siret": "90987654321"
+            }
+          }
+        ]
+      }
     }
+  }
 }

@@ -13,7 +13,7 @@ export class TableRowsComponent {
   context = inject(GroupingTableContextService);
 
   onclick(row: RowData) {
-    this.context.clickOnRow(row)
+    this.context.clickOnRow(row);
   }
 
   cellCustomProjection(cellName: string) {

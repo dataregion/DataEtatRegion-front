@@ -2,11 +2,11 @@
   <div class="dialog-title">
     <h2>Grouper les lignes par</h2>
     <button
-      type="button"
-      mat-icon-button
-      mat-dialog-close
       aria-label="Fermer"
+      mat-dialog-close
+      mat-icon-button
       matTooltip="Fermer"
+      type="button"
     >
       <mat-icon>close</mat-icon>
     </button>
@@ -23,21 +23,21 @@
     <div *ngSwitchDefault>
       <p>Cliquer-déposer les colonnes pour réordonner les groupes :</p>
       <div>
-        <div cdkDropList class="column-list" (cdkDropListDropped)="moveGroup($event)">
+        <div (cdkDropListDropped)="moveGroup($event)" cdkDropList class="column-list">
           <div
             *ngFor="let col of groupingColumns; let i = index"
-            class="column-box"
             cdkDrag
+            class="column-box"
           >
-            <mat-icon aria-hidden="true" fontIcon="drag_handle"/>
-            <div>{{col.label}}</div>
+            <mat-icon aria-hidden="true" fontIcon="drag_handle" />
+            <div>{{ col.label }}</div>
             <div>
               <button
-                type="button"
-                mat-icon-button
-                aria-label="Supprimer le groupe"
-                matTooltip="Supprimer le groupe"
                 (click)="removeGroup(i)"
+                aria-label="Supprimer le groupe"
+                mat-icon-button
+                matTooltip="Supprimer le groupe"
+                type="button"
               >
                 <mat-icon>delete</mat-icon>
               </button>
@@ -54,13 +54,13 @@
     <mat-form-field appearance="fill" style="width:50%">
       <mat-label>Grouper les lignes par</mat-label>
       <mat-select (selectionChange)="addGroup($event)">
-        <mat-option *ngFor="let column of remainingColumns" [value]="column">{{column.label}}</mat-option>
+        <mat-option *ngFor="let column of remainingColumns" [value]="column">{{ column.label }}</mat-option>
       </mat-select>
     </mat-form-field>
   </div>
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">
-  <button mat-button color="primary" type="button" (click)="validate()">Appliquer</button>
+  <button (click)="validate()" color="primary" mat-button type="button">Appliquer</button>
   <button mat-button mat-dialog-close type="button">Annuler</button>
 </mat-dialog-actions>

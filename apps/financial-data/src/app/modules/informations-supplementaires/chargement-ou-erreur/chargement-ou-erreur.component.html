@@ -6,7 +6,7 @@
       <span class="fr-icon-info-fill info-main-525"></span>
       <span #erreur_projetee><ng-content select="span.message-erreur-api-distante" /></span>
       <ng-container *ngIf="!erreur_projetee.hasChildNodes()">
-        Le service distant « {{nom_service_distant}} » (API) ne répond pas correctement. Veuillez réessayer
+        Le service distant « {{ nom_service_distant }} » (API) ne répond pas correctement. Veuillez réessayer
         ultérieurement.
       </ng-container>
     </ng-container>
@@ -14,13 +14,13 @@
       <span class="fr-icon-warning-fill warning-main-525"></span>
       <span #erreur_projetee><ng-content select="span.message-erreur-api-distante-limit" /></span>
       <ng-container *ngIf="!erreur_projetee.hasChildNodes()">
-        Limite d'appel atteinte pour le service distant « {{nom_service_distant}} » (API). Veuillez réessayer
+        Limite d'appel atteinte pour le service distant « {{ nom_service_distant }} » (API). Veuillez réessayer
         ultérieurement.
       </ng-container>
     </ng-container>
     <ng-container *ngSwitchCase="'NOT_FOUND'">
       <span class="fr-icon-warning-fill warning-main-525"></span>
-      {{erreur.message}}
+      {{ erreur.message }}
     </ng-container>
 
 
@@ -28,7 +28,7 @@
       <span class="fr-icon-error-fill error-main-525"></span>
       <span #erreur_projetee><ng-content select="span.message-erreur" /></span>
       <ng-container *ngIf="!erreur_projetee.hasChildNodes()">
-        Une erreur inconnue s'est produite lors de l'appel à « {{nom_service_distant}} » (API).
+        Une erreur inconnue s'est produite lors de l'appel à « {{ nom_service_distant }} » (API).
       </ng-container>
     </ng-container>
 
@@ -40,7 +40,7 @@
 <ng-template #chargment>
   <div class="ligne" style="justify-content: center;">
     <div class="colonne">
-      <mat-spinner/>
+      <mat-spinner />
     </div>
   </div>
 </ng-template>

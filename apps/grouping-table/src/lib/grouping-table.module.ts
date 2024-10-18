@@ -22,8 +22,8 @@ import { MatMenuModule } from '@angular/material/menu';
     TableGroupComponent,
     TableGroupHeaderComponent,
     TableRowsComponent,
-    FinancialGroupAggregatePipe,
+    FinancialGroupAggregatePipe
   ],
-  exports: [GroupingTableComponent, ProjectCellDirective, ProjectGroupingDirective],
+  exports: [GroupingTableComponent, ProjectCellDirective, ProjectGroupingDirective]
 })
 export class GroupingTableModule {}

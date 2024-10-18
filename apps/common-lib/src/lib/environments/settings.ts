@@ -45,10 +45,7 @@ export interface NocodbProject<V extends NocodbViews> {
   [k: string]: TableNocodb<V>;
 }
 
-export interface NocodApiProxy<
-  P extends NocodbProject<V>,
-  V extends NocodbViews,
-> {
+export interface NocodApiProxy<P extends NocodbProject<V>, V extends NocodbViews> {
   base_uri: string;
   projects: P;
 }

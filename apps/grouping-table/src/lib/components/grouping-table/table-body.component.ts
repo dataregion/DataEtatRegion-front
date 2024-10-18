@@ -6,8 +6,8 @@ import { GroupingTableContextService } from './grouping-table-context.service';
   selector: 'lib-table-body',
   templateUrl: './table-body.component.html',
   host: {
-    class: 'table-body',
-  },
+    class: 'table-body'
+  }
 })
 export class TableBodyComponent {
   @Input() group!: Group;

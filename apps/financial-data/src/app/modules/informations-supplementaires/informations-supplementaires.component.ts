@@ -5,7 +5,7 @@ import {
   NgSwitch,
   NgSwitchCase,
   NgSwitchDefault,
-  NgTemplateOutlet,
+  NgTemplateOutlet
 } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
@@ -29,7 +29,7 @@ export enum View {
   full_api_entreprise = 'full_api_entreprise',
   full_api_data_subventions = 'full_api_data_subventions',
   full_api_demarche = 'full_api_demarche',
-  full = 'full',
+  full = 'full'
 }
 
 /* eslint-enable no-unused-vars */
@@ -40,7 +40,7 @@ export enum View {
   templateUrl: './informations-supplementaires.component.html',
   styleUrls: [
     './commun-informations-supplementaires.scss',
-    './informations-supplementaires.component.scss',
+    './informations-supplementaires.component.scss'
   ],
   imports: [
     NgIf,
@@ -56,9 +56,9 @@ export enum View {
     DetailApiDataSubventionsComponent,
     DetailApiDemarcheSimplifieComponent,
     DetailCpComponent,
-    OuNonRenseignePipe,
+    OuNonRenseignePipe
   ],
-  providers: [InformationsSupplementairesService],
+  providers: [InformationsSupplementairesService]
 })
 export class InformationsSupplementairesComponent implements OnInit {
   view: View = View.light;
@@ -79,14 +79,13 @@ export class InformationsSupplementairesComponent implements OnInit {
   affichage_dossier$: Observable<AffichageDossier> | undefined;
 
   ngOnInit() {
-    const data: FinancialDataModel =
-      this._route.snapshot.data['financial_data'];
+    const data: FinancialDataModel = this._route.snapshot.data['financial_data'];
     this._init_from_resolver_model(data);
   }
 
   constructor(
     private _route: ActivatedRoute,
-    private _service: InformationsSupplementairesService,
+    private _service: InformationsSupplementairesService
   ) {}
 
   get vService(): InformationSupplementairesViewService {

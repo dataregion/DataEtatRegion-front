@@ -5,7 +5,7 @@ import {
   InfoApiSubvention,
   ModelError,
   RepresentantLegal,
-  Subvention,
+  Subvention
 } from 'apps/clients/apis-externes';
 import { forkJoin, Observable, of } from 'rxjs';
 import { catchError, map, shareReplay } from 'rxjs/operators';
@@ -23,12 +23,10 @@ import { CompagnonDSService } from '../../administration/compagnon-ds/compagnon-
 
 export class InformationSupplementairesViewService {
   private _options = {
-    context: new HttpContext().set(BYPASS_ALERT_INTERCEPTOR, true),
+    context: new HttpContext().set(BYPASS_ALERT_INTERCEPTOR, true)
   };
 
-  private _api_subvention$:
-    | Observable<InfoApiSubvention | undefined>
-    | undefined;
+  private _api_subvention$: Observable<InfoApiSubvention | undefined> | undefined;
   private _api_entreprise_info$: Observable<InfoApiEntreprise> | undefined;
 
   private _dossier_demarche$: Observable<AffichageDossier> | undefined;
@@ -36,7 +34,7 @@ export class InformationSupplementairesViewService {
   constructor(
     private _ae: ExternalAPIsService,
     private _compagnonDS: CompagnonDSService,
-    private _financial: FinancialDataModel,
+    private _financial: FinancialDataModel
   ) {}
 
   open_in_newtab() {
@@ -46,14 +44,11 @@ export class InformationSupplementairesViewService {
 
   _map_subvention_light(
     subvention: Subvention | null,
-    representantLegal: RepresentantLegal | null,
+    representantLegal: RepresentantLegal | null
   ): SubventionLight {
     let objectifs = null;
 
-    if (
-      subvention?.actions_proposees[0] &&
-      subvention?.actions_proposees[0].intitule
-    ) {
+    if (subvention?.actions_proposees[0] && subvention?.actions_proposees[0].intitule) {
       objectifs = subvention.actions_proposees[0].intitule;
     }
 
@@ -61,7 +56,7 @@ export class InformationSupplementairesViewService {
 
     return {
       objectifs,
-      has_more_info,
+      has_more_info
     };
   }
 
@@ -77,7 +72,7 @@ export class InformationSupplementairesViewService {
   _extract_error(err: HttpErrorResponse) {
     const defaultError: ModelError = {
       code: 'UNKNOWN',
-      message: 'Le service API externe répond mal.',
+      message: 'Le service API externe répond mal.'
     };
 
     const actual = err?.error || defaultError;
@@ -88,7 +83,7 @@ export class InformationSupplementairesViewService {
   entreprise_light(): EtablissementLight {
     return {
       siret: this._financial?.siret?.code,
-      nom: this._financial?.siret?.nom_beneficiaire,
+      nom: this._financial?.siret?.nom_beneficiaire
     } as EtablissementLight;
   }
 
@@ -97,13 +92,13 @@ export class InformationSupplementairesViewService {
   api_subvention_light$() {
     const light = forkJoin({
       subvention: this.api_subvention_subvention$,
-      contact: this.api_subvention_president$,
+      contact: this.api_subvention_president$
     }).pipe(
       map((full) => this._map_subvention_light(full.subvention, full.contact)),
       catchError((err) => {
         this.api_subvention_light_error = this._extract_error(err);
         throw err;
-      }),
+      })
     );
     return light;
   }
@@ -112,14 +107,12 @@ export class InformationSupplementairesViewService {
 
   dossier_demarche$(): Observable<AffichageDossier> {
     if (!this._dossier_demarche$) {
-      this._dossier_demarche$ = this._compagnonDS
-        .getAffichage(this._financial.id)
-        .pipe(
-          catchError((err) => {
-            this.api_demarche_error = this._extract_error(err);
-            throw err;
-          }),
-        );
+      this._dossier_demarche$ = this._compagnonDS.getAffichage(this._financial.id).pipe(
+        catchError((err) => {
+          this.api_demarche_error = this._extract_error(err);
+          throw err;
+        })
+      );
     }
     return this._dossier_demarche$;
   }
@@ -130,12 +123,12 @@ export class InformationSupplementairesViewService {
     return forkJoin({
       siret: of(this._financial?.siret?.code!),
       subvention: this.api_subvention_subvention$,
-      contact: this.api_subvention_president$,
+      contact: this.api_subvention_president$
     }).pipe(
       catchError((err) => {
         this.api_subvention_full_error = this._extract_error(err);
         throw err;
-      }),
+      })
     );
   }
 
@@ -147,13 +140,13 @@ export class InformationSupplementairesViewService {
       catchError((err) => {
         this.api_entreprise_full_error = this._extract_error(err);
         throw err;
-      }),
+      })
     );
   }
 
   private get api_subvention_president$() {
     const president = this.api_subvention_representants_legaux$.pipe(
-      map((representants) => this._president(representants)),
+      map((representants) => this._president(representants))
     );
 
     return president;
@@ -165,7 +158,7 @@ export class InformationSupplementairesViewService {
         this._financial.siret?.code!,
         'body',
         false,
-        this._options,
+        this._options
       );
     }
 
@@ -177,13 +170,12 @@ export class InformationSupplementairesViewService {
       return this.api_subvention$.pipe(
         map((subvention) => {
           const ej = this._financial.n_ej;
-          const filtered =
-            subvention?.subventions.filter((s) => s?.ej === ej) || [];
+          const filtered = subvention?.subventions.filter((s) => s?.ej === ej) || [];
           if (filtered.length >= 1) {
             const subvention = filtered[0];
             return subvention;
           } else return null;
-        }),
+        })
       );
     }
     return of(null);
@@ -194,7 +186,7 @@ export class InformationSupplementairesViewService {
       this.api_subvention$.pipe(
         map((subvention) => {
           return subvention?.contacts || [];
-        }),
+        })
       );
     }
     return of([]);

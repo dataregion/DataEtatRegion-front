@@ -1,7 +1,7 @@
 <div mat-dialog-title>
   <div class="dialog-title">
     <h2>Sauvegarde du filtre</h2>
-    <button type="button" mat-icon-button mat-dialog-close aria-label="Fermer" matTooltip="Fermer">
+    <button aria-label="Fermer" mat-dialog-close mat-icon-button matTooltip="Fermer" type="button">
       <mat-icon>close</mat-icon>
     </button>
   </div>
@@ -11,7 +11,7 @@
   <p>Saisir le nom de votre filtre</p>
   <mat-form-field appearance="fill" class="w-full">
     <mat-label>Nom</mat-label>
-    <input matInput type="text" [(ngModel)]="preference.name" required>
+    <input [(ngModel)]="preference.name" matInput required type="text">
     <mat-error *ngIf="preference.name === null ||preference.name === undefined">
       Le nom est obligatoire
     </mat-error>
@@ -23,24 +23,25 @@
   <mat-form-field *ngIf="shared" appearance="fill" class="w-full">
     <mat-label>Saisir les courriels des utilisateurs</mat-label>
     <mat-chip-grid #chipGrid aria-label="Sélection d'utilisateurs">
-      <mat-chip-row *ngFor="let user of preference.shares" (removed)="removeUserSelected(user)">
-        {{user.shared_username_email}}
-        <button matChipRemove [attr.aria-label]="'Supprimer ' + user.shared_username_email">
+      <mat-chip-row (removed)="removeUserSelected(user)" *ngFor="let user of preference.shares">
+        {{ user.shared_username_email }}
+        <button [attr.aria-label]="'Supprimer ' + user.shared_username_email" matChipRemove>
           <mat-icon>cancel</mat-icon>
         </button>
       </mat-chip-row>
     </mat-chip-grid>
-    <input placeholder="Courriels ..." #userInput [(ngModel)]="searchUser" (ngModelChange)="changeSearchUsername()"
-      [matChipInputFor]="chipGrid" [matAutocomplete]="auto" [matChipInputSeparatorKeyCodes]="separatorKeysCodes" />
+    <input #userInput (ngModelChange)="changeSearchUsername()" [(ngModel)]="searchUser" [matAutocomplete]="auto"
+           [matChipInputFor]="chipGrid" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+           placeholder="Courriels ..." />
     <mat-autocomplete #auto="matAutocomplete" (optionSelected)="addUser($event.option.value)">
       <mat-option *ngFor="let user of filterUser" [value]="user.username">
-        {{user.username}}
+        {{ user.username }}
       </mat-option>
     </mat-autocomplete>
   </mat-form-field>
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">
-  <button mat-button color="primary" type="button" (click)="validate()">Enregistrer</button>
+  <button (click)="validate()" color="primary" mat-button type="button">Enregistrer</button>
   <button mat-button mat-dialog-close type="button">Annuler</button>
 </mat-dialog-actions>

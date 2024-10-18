@@ -6,7 +6,7 @@ import { UserHttpService } from 'apps/management/src/lib/services/users-http.ser
 import { catchError, Observable, of } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
-export class UsersResolver  {
+export class UsersResolver {
   constructor(private _service: UserHttpService) {}
 
   resolve(): Observable<UsersPagination | Error> {
@@ -14,7 +14,7 @@ export class UsersResolver  {
       catchError((_error) => {
         return of({
           name: 'Erreur',
-          message: 'Erreurs lors de la récupération des données.',
+          message: 'Erreurs lors de la récupération des données.'
         });
       })
     );
@@ -22,6 +22,6 @@ export class UsersResolver  {
 }
 
 export const resolveUsers: ResolveFn<UsersPagination | Error> = () => {
-  const resolver = inject(UsersResolver)
-  return resolver.resolve()
-}
+  const resolver = inject(UsersResolver);
+  return resolver.resolve();
+};

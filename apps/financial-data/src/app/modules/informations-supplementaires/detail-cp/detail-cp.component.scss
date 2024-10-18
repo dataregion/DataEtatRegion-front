@@ -1,6 +1,7 @@
 .infos-cp {
   display: flex;
 }
+
 .infos-cp > span {
   flex: 0 0 20em;
 }
@@ -8,6 +9,7 @@
 .wrapper-table-detail-cp {
   overflow-x: auto;
 }
+
 .table-detail-cp {
   width: 100%;
   border-spacing: 0px;
@@ -22,6 +24,7 @@
   border: 1px solid black;
   text-align: left;
 }
+
 .table-detail-cp th:not(.last) {
   border-bottom: 0px;
 }
@@ -31,6 +34,7 @@
   border: 1px solid black;
   border-left: 0px;
 }
+
 .table-detail-cp td:not(.last) {
   border-bottom: 0px;
 }

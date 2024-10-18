@@ -8,19 +8,22 @@
     <div class="line">
 
       <div class="col">
-        <input type="file" class="file-input" [accept]="requiredFileType" (change)="fileFrance2030 = getFile($event)" #fileFrance2030Upload>
+        <input #fileFrance2030Upload (change)="fileFrance2030 = getFile($event)" [accept]="requiredFileType"
+               class="file-input"
+               type="file">
         <div class="file-upload">
 
           <span>{{ fileFrance2030 !== null ? fileFrance2030.name : "Sélectionner un fichier csv" }}</span>
 
-          <button mat-mini-fab color="primary" class="upload-btn" *ngIf="fileFrance2030 === null"
-            (click)="fileFrance2030Upload.click()">
+          <button (click)="fileFrance2030Upload.click()" *ngIf="fileFrance2030 === null" class="upload-btn"
+                  color="primary"
+                  mat-mini-fab>
             <mat-icon>attach_file</mat-icon>
           </button>
 
-          <button mat-mini-fab color="warn" class="cancel-upload" *ngIf="fileFrance2030 !== null"
-            (click)="fileFrance2030 = null">
-            <mat-icon class="cancel-upload" (click)="fileFrance2030 = null">delete_forever</mat-icon>
+          <button (click)="fileFrance2030 = null" *ngIf="fileFrance2030 !== null" class="cancel-upload" color="warn"
+                  mat-mini-fab>
+            <mat-icon (click)="fileFrance2030 = null" class="cancel-upload">delete_forever</mat-icon>
           </button>
 
         </div>
@@ -29,17 +32,18 @@
       <div class="col">
         <mat-form-field appearance="fill">
           <mat-label>Année</mat-label>
-          <mat-select required [(ngModel)]="yearSelected">
+          <mat-select [(ngModel)]="yearSelected" required>
             <mat-option *ngFor="let year of years" [value]="year">
-              {{year}}
+              {{ year }}
             </mat-option>
           </mat-select>
           <mat-icon matSuffix>calendar_month</mat-icon>
         </mat-form-field>
       </div>
 
-      <button mat-fab color="primary" *ngIf="fileFrance2030 !== null" (click)="uploadFrance2030File()"
-        (disabled)="uploadInProgress.value === true">
+      <button (click)="uploadFrance2030File()" (disabled)="uploadInProgress.value === true"
+              *ngIf="fileFrance2030 !== null" color="primary"
+              mat-fab>
         <mat-icon fontIcon="upload_file" />
       </button>
 
@@ -49,7 +53,7 @@
 
 <hr>
 
-<mat-card class="mat-card" *ngIf=" dataSource.length> 0">
+<mat-card *ngIf=" dataSource.length> 0" class="mat-card">
   <mat-card-header>
     <mat-card-title-group>
       <mat-card-title>Historique des 10 derniers chargements des données financières</mat-card-title>
@@ -57,27 +61,29 @@
   </mat-card-header>
 
   <mat-card-content class="fr-col-6">
-    <table mat-table [dataSource]="dataSource" class="fr-table fr-table--no-caption">
+    <table [dataSource]="dataSource" class="fr-table fr-table--no-caption" mat-table>
       <caption>Liste des derniers fichiers chargés</caption>
       <ng-container matColumnDef="username">
-        <th mat-header-cell *matHeaderCellDef>Utilisateur</th>
-        <td mat-cell *matCellDef="let element">{{element.username}}</td>
+        <th *matHeaderCellDef mat-header-cell>Utilisateur</th>
+        <td *matCellDef="let element" mat-cell>{{ element.username }}</td>
       </ng-container>
 
       <!-- Name Column -->
       <ng-container matColumnDef="filename">
-        <th mat-header-cell *matHeaderCellDef>Fichier</th>
-        <td mat-cell *matCellDef="let element">{{element.filename}}</td>
+        <th *matHeaderCellDef mat-header-cell>Fichier</th>
+        <td *matCellDef="let element" mat-cell>{{ element.filename }}</td>
       </ng-container>
 
       <!-- Weight Column -->
       <ng-container matColumnDef="date">
-        <th mat-header-cell *matHeaderCellDef>Date</th>
-        <td mat-cell *matCellDef="let element"><lib-display-date [date]="element.date" /></td>
+        <th *matHeaderCellDef mat-header-cell>Date</th>
+        <td *matCellDef="let element" mat-cell>
+          <lib-display-date [date]="element.date" />
+        </td>
       </ng-container>
 
-      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      <tr *matHeaderRowDef="displayedColumns" mat-header-row></tr>
+      <tr *matRowDef="let row; columns: displayedColumns;" mat-row></tr>
     </table>
 
 

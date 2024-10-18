@@ -1,6 +1,6 @@
-import { EventEmitter } from "@angular/core";
-import { RowData } from "./group-utils";
+import { EventEmitter } from '@angular/core';
+import { RowData } from './group-utils';
 
 export interface OutputEvents {
-    'click-on-row': EventEmitter<RowData>;
+  'click-on-row': EventEmitter<RowData>;
 }

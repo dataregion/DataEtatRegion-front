@@ -8,10 +8,13 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
   standalone: true,
   imports: [CommonModule, MatProgressSpinnerModule],
   templateUrl: './chargement-ou-erreur.component.html',
-  styleUrls: ['../commun-informations-supplementaires.scss', './chargement-ou-erreur.component.scss']
+  styleUrls: [
+    '../commun-informations-supplementaires.scss',
+    './chargement-ou-erreur.component.scss'
+  ]
 })
 export class ChargementOuErreurComponent {
-  @Input() erreur: ModelError | null = null
+  @Input() erreur: ModelError | null = null;
 
   @Input() nom_service_distant: string = 'Inconnu';
 }

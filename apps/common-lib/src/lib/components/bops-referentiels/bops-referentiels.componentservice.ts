@@ -9,7 +9,7 @@ export class BopsReferentielsComponentService {
 
   public filterRefs(
     term: string | null,
-    programmes: BopModel[] | null,
+    programmes: BopModel[] | null
   ): Observable<ReferentielProgrammation[]> {
     return this.refs.searchReferentielProgrammation(term, programmes);
   }

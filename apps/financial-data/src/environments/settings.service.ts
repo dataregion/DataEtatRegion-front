@@ -6,7 +6,7 @@ import {
   Keycloak,
   Matomo,
   Ressources,
-  Settings,
+  Settings
 } from 'apps/common-lib/src/public-api';
 
 class Api implements IApi {

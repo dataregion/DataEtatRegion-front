@@ -1,17 +1,15 @@
-import { Injectable, Inject, InjectionToken } from '@angular/core';
+import { Inject, Injectable, InjectionToken } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { UsersPagination } from '../models/users/user.models';
 
-export const API_MANAGEMENT_PATH = new InjectionToken<string>(
-  'Api management path'
-);
+export const API_MANAGEMENT_PATH = new InjectionToken<string>('Api management path');
 
 /**
  * Service for user-related HTTP requests
  */
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class UserHttpService {
   /**
@@ -47,8 +45,7 @@ export class UserHttpService {
    * @returns
    */
   public deleteUsers(uuid: string): Observable<any> {
-    return this.http.delete(
-      `${this._apiPath}/users/${uuid}`);
+    return this.http.delete(`${this._apiPath}/users/${uuid}`);
   }
 
   /**
@@ -57,10 +54,7 @@ export class UserHttpService {
    * @returns Observable containing a confirmation message
    */
   public disableUser(uuid: string): Observable<string> {
-    return this.http.patch<string>(
-      `${this._apiPath}/users/${uuid}/disable`,
-      null
-    );
+    return this.http.patch<string>(`${this._apiPath}/users/${uuid}/disable`, null);
   }
 
   /**
@@ -69,9 +63,6 @@ export class UserHttpService {
    * @returns Observable containing a confirmation message
    */
   public enableUser(uuid: string): Observable<string> {
-    return this.http.patch<string>(
-      `${this._apiPath}/users/${uuid}/enable`,
-      null
-    );
+    return this.http.patch<string>(`${this._apiPath}/users/${uuid}/enable`, null);
   }
 }

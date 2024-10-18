@@ -10,25 +10,25 @@ div.line {
   align-content: center;
   align-items: center;
   flex-wrap: wrap;
-  gap:10px;
+  gap: 10px;
 }
 
 div.col {
   display: flex;
   align-items: center;
-  margin-right : 50px;
+  margin-right: 50px;
 }
 
- .mat-mdc-form-field {
+.mat-mdc-form-field {
   margin-bottom: -1.25em;
 }
 
-div.file-upload{
+div.file-upload {
   display: flex;
   justify-content: flex-start;
   align-items: center;
 
   button {
-    margin-left : 20px;
+    margin-left: 20px;
   }
 }

@@ -1,9 +1,6 @@
 import { Injectable } from '@angular/core';
 import { FinancialDataModel } from '@models/financial/financial-data.models';
-import {
-  ExternalAPIsService,
-  InfoApiEntreprise,
-} from 'apps/clients/apis-externes';
+import { ExternalAPIsService, InfoApiEntreprise } from 'apps/clients/apis-externes';
 import { EntrepriseFull } from '../models/EntrepriseFull';
 import { PersonneMoraleAttributsCorrige } from '../models/correction-api-externes/PersonneMoraleAttributsCorrige';
 import { ActivitePrincipaleCorrige } from '../models/correction-api-externes/ActivitePrincipaleCorrige';
@@ -21,10 +18,8 @@ export function fromInfoApiEntreprise(info: InfoApiEntreprise): EntrepriseFull {
         .activite_principale as ActivitePrincipaleCorrige,
       tranche_effectif: info.donnees_etablissement
         .tranche_effectif_salarie as TrancheEffectifCorrige,
-      ess: (info.donnees_etablissement.unite_legale as any)[
-        'economie_sociale_et_solidaire'
-      ],
-    },
+      ess: (info.donnees_etablissement.unite_legale as any)['economie_sociale_et_solidaire']
+    }
   };
 }
 
@@ -38,14 +33,14 @@ export class InformationsSupplementairesService {
 
   constructor(
     private _ea: ExternalAPIsService,
-    private _compagnonDS: CompagnonDSService,
+    private _compagnonDS: CompagnonDSService
   ) {}
 
   setupViewModelService(financial_data: FinancialDataModel) {
     this._viewService = new InformationSupplementairesViewService(
       this._ea,
       this._compagnonDS,
-      financial_data,
+      financial_data
     );
   }
 }

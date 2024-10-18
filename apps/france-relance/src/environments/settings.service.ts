@@ -1,12 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ISettingsService } from 'apps/common-lib/src/lib/environments/interface-settings.service';
-import {
-  IApi,
-  Keycloak,
-  Matomo,
-  Ressources,
-  Settings,
-} from 'apps/common-lib/src/public-api';
+import { IApi, Keycloak, Matomo, Ressources, Settings } from 'apps/common-lib/src/public-api';
 
 class Api implements IApi {
   franceRelance = '';

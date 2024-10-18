@@ -1,4 +1,4 @@
-<header role="banner" class="fr-header">
+<header class="fr-header" role="banner">
   <div class="fr-header__body">
     <div class="fr-container">
       <div class="fr-header__body-row">
@@ -11,7 +11,7 @@
 
           <div class="fr-header__service">
             <a href="/" title="Accueil - databretagne.fr">
-              <p class="fr-header__service-title">{{title}}</p>
+              <p class="fr-header__service-title">{{ title }}</p>
             </a>
           </div>
           <div class="fr-notice fr-notice--info">
@@ -27,12 +27,13 @@
 
         <div class="fr-header__tools">
           <div class="fr-header__tools-links">
-            <ul class="fr-btns-group" *ngIf="isLoggedIn && user !== null">
+            <ul *ngIf="isLoggedIn && user !== null" class="fr-btns-group">
 
               <li>
-                <button 
-                  routerLink="preference" matTooltip="Mes recherches"
-                  class="fr-btn fr-btn--tertiary-no-outline fr-icon-bookmark-line">Mes recherches</button>
+                <button
+                  class="fr-btn fr-btn--tertiary-no-outline fr-icon-bookmark-line" matTooltip="Mes recherches"
+                  routerLink="preference">Mes recherches
+                </button>
               </li>
 
               <ng-content select="[tags]" />
@@ -42,12 +43,12 @@
               <ng-content select="[administration]" />
 
               <li>
-                <button 
-                  mat-icon-button 
+                <button
+                  (click)="logout()"
                   class="fr-btn fr-btn--tertiary-no-outline fr-icon-logout-box-r-line"
-                  (click)="logout()" 
-                  matTooltip="Déconnexion" 
-                  >
+                  mat-icon-button
+                  matTooltip="Déconnexion"
+                >
                   Déconnexion
                 </button>
               </li>

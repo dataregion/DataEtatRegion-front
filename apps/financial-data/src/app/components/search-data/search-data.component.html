@@ -1,7 +1,7 @@
 <ng-container *ngIf="displayError && error?.name else form">
   <div class="box" data-test-id="search-cmp-error-msg">
     <div class="fr-alert fr-alert--error">
-      <p>{{error?.message}}</p>
+      <p>{{ error?.message }}</p>
     </div>
   </div>
 </ng-container>
@@ -9,70 +9,71 @@
 <ng-template #form>
   <form [formGroup]="searchForm" autocomplete="off">
     <div class="box">
-      
+
       <div class="field-bops-referentiels field-50-width">
         <lib-bops-referentiels
-          [themes]="themes" [(selectedThemes)]="selectedThemes"
-          [bops]="filteredBops" [(selectedBops)]="selectedBops"
-          [referentiels]="filteredReferentiels" [(selectedReferentiels)]="selectedReferentiels" />
+          [(selectedBops)]="selectedBops" [(selectedReferentiels)]="selectedReferentiels"
+          [(selectedThemes)]="selectedThemes" [bops]="filteredBops"
+          [referentiels]="filteredReferentiels" [themes]="themes" />
       </div>
 
       <div class="field-localisation field-30-width">
         <lib-localisation [(selectedNiveau)]="selectedNiveau" [(selectedLocalisation)]="selectedLocation" />
       </div>
 
-      <lib-select-multiple [canFilter]="false" [canSelectAll]="true"
-        [placeholder]="'Année'"
-        [options]="annees"
-        [(selected)]="selectedYear"
-        data-test-id="annees-form-field"
-        class="select-multiple field-15-width"
-        icon="calendar_month"
-        />
+      <lib-select-multiple [(selected)]="selectedYear" [canFilter]="false"
+                           [canSelectAll]="true"
+                           [options]="annees"
+                           [placeholder]="'Année'"
+                           class="select-multiple field-15-width"
+                           data-test-id="annees-form-field"
+                           icon="calendar_month"
+      />
 
       <div class="break"></div>
 
       <lib-advanced-chips-multiselect
-        data-test-id="search-beneficiaires-control"
-        class="field-25-width field-beneficiaire"
-        appearance="fill"
-        label="Bénéficiaire(s)"
-        placeholder=""
-        matTooltipPosition="above"
-        matTooltip="Saisir un nom (sans accent) ou un SIRET (Exemple: Decathlon, Rennes... ou 40447186400433,...)"
-        [options]="(beneficiaireFieldOptions$ | async)!"
         (inputChange)="onBeneficiaireInputChange($event)"
         [(selectedData)]="selectedBeneficiaires"
-        />
+        [options]="(beneficiaireFieldOptions$ | async)!"
+        appearance="fill"
+        class="field-25-width field-beneficiaire"
+        data-test-id="search-beneficiaires-control"
+        label="Bénéficiaire(s)"
+        matTooltip="Saisir un nom (sans accent) ou un SIRET (Exemple: Decathlon, Rennes... ou 40447186400433,...)"
+        matTooltipPosition="above"
+        placeholder=""
+      />
 
-      <lib-select-multiple [canFilter]="false" [canSelectAll]="true"
-        data-test-id="types-beneficiaires-form-field"
-        [placeholder]="'Type de bénéficiaire'"
-        [options]="typesBenef"
-        [(selected)]="selectedTypesBenef"
-        [renderFunction]="renderTypesBenefOption"
-        [renderLabelFunction]="renderTypesBenefLabel"
-        class="select-multiple field-15-width"
-        />
+      <lib-select-multiple [(selected)]="selectedTypesBenef" [canFilter]="false"
+                           [canSelectAll]="true"
+                           [options]="typesBenef"
+                           [placeholder]="'Type de bénéficiaire'"
+                           [renderFunction]="renderTypesBenefOption"
+                           [renderLabelFunction]="renderTypesBenefLabel"
+                           class="select-multiple field-15-width"
+                           data-test-id="types-beneficiaires-form-field"
+      />
 
       <lib-advanced-chips-multiselect
-        class="field-25-width field-tags"
-        appearance="fill"
-        label="Tags"
-        placeholder=""
-        [options]="(tagsFieldOptions$ | async)!"
         (inputChange)="onTagInputChange($event)"
-        [(selectedData)]="selectedTags"/>
+        [(selectedData)]="selectedTags"
+        [options]="(tagsFieldOptions$ | async)!"
+        appearance="fill"
+        class="field-25-width field-tags"
+        label="Tags"
+        placeholder="" />
 
       <div class="spacer"></div>
 
-      <button mat-fab color="primary" (click)="doSearch()" matTooltip="Rechercher" aria-label="Bouton de recherche.">
-        <mat-icon fontIcon="search"/>
+      <button (click)="doSearch()" aria-label="Bouton de recherche." color="primary" mat-fab matTooltip="Rechercher">
+        <mat-icon fontIcon="search" />
       </button>
 
-      <button mat-fab color="warn" (click)="reset()" *ngIf="searchFinish === true" matTooltip="Effacer la recherche"
-        aria-label="Bouton de réinitialisation des critères de recherche">
-        <mat-icon fontIcon="delete"/>
+      <button (click)="reset()" *ngIf="searchFinish === true"
+              aria-label="Bouton de réinitialisation des critères de recherche" color="warn" mat-fab
+              matTooltip="Effacer la recherche">
+        <mat-icon fontIcon="delete" />
       </button>
     </div>
 
@@ -80,7 +81,8 @@
 </ng-template>
 
 <!-- Ajout d'un indicateur pour les paramètres de recherche additionnels qui ne sont pas dans le formulaire  -->
-<ng-container *ngIf="additional_searchparams?.domaines_fonctionnels && additional_searchparams.domaines_fonctionnels.length > 0">
+<ng-container
+  *ngIf="additional_searchparams?.domaines_fonctionnels && additional_searchparams.domaines_fonctionnels.length > 0">
   <div data-test-id="notif-additionnal-search-on-domaines-fonctionnels">
     <mat-icon aria-hidden="false" aria-label="information">information</mat-icon>
     <span>

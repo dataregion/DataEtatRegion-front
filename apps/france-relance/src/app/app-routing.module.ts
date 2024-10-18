@@ -3,7 +3,10 @@ import { RouterModule, Routes } from '@angular/router';
 import { RegisterComponent } from 'apps/common-lib/src/lib/components/register/register.component';
 import { TermOfUseComponent } from 'apps/common-lib/src/lib/components/term-of-use/term-of-use.component';
 import { Profil } from 'apps/common-lib/src/lib/models/profil.enum.model';
-import { keycloakAuthGuardCanActivate, keycloakAuthGuardCanMatchAccordingToRoles } from 'apps/common-lib/src/public-api';
+import {
+  keycloakAuthGuardCanActivate,
+  keycloakAuthGuardCanMatchAccordingToRoles
+} from 'apps/common-lib/src/public-api';
 import { HomeComponent } from './pages/home/home.component';
 import { PreferenceComponent } from './pages/preference/preference.component';
 import { resolveFranceRelance } from './resolvers/france-relance.resolvers';
@@ -15,39 +18,37 @@ const routes: Routes = [
     canActivate: [keycloakAuthGuardCanActivate],
     runGuardsAndResolvers: 'always',
     resolve: {
-      axes: resolveFranceRelance,
-    },
+      axes: resolveFranceRelance
+    }
   },
   {
     path: 'administration',
     canMatch: [keycloakAuthGuardCanMatchAccordingToRoles],
     data: {
-      roles: [Profil.USERS],
+      roles: [Profil.USERS]
     },
     loadChildren: () =>
-      import('./modules/administration/administration.module').then(
-        (m) => m.AdministrationModule
-      ),
+      import('./modules/administration/administration.module').then((m) => m.AdministrationModule)
   },
   {
     path: 'cgu',
     component: TermOfUseComponent,
-    canActivate: [keycloakAuthGuardCanActivate],
+    canActivate: [keycloakAuthGuardCanActivate]
   },
   {
     path: 'preference',
     component: PreferenceComponent,
     canActivate: [keycloakAuthGuardCanActivate],
-    runGuardsAndResolvers: 'always',
+    runGuardsAndResolvers: 'always'
   },
   {
     path: 'register',
-    component: RegisterComponent,
-  },
+    component: RegisterComponent
+  }
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule],
+  exports: [RouterModule]
 })
 export class AppRoutingModule {}

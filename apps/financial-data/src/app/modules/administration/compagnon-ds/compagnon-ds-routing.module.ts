@@ -6,10 +6,10 @@ import { IntegrationDemarcheComponent } from './integration/integration-demarche
 import { ReconciliationDemarcheComponent } from './reconciliation/reconciliation-demarche.component';
 import { AffichageDemarcheComponent } from './affichage/affichage-demarche.component';
 
-export const profiles_required_for_managment_page = [Profil.ADMIN]
-export const profiles_required_for_upload_page = [Profil.ADMIN, Profil.COMPTABLE]
-export const profiles_required_for_tags_page = [Profil.USERS]
-export const profiles_required_for_demarche_integration = [Profil.USERS]
+export const profiles_required_for_managment_page = [Profil.ADMIN];
+export const profiles_required_for_upload_page = [Profil.ADMIN, Profil.COMPTABLE];
+export const profiles_required_for_tags_page = [Profil.USERS];
+export const profiles_required_for_demarche_integration = [Profil.USERS];
 
 const routes: Routes = [
   {
@@ -17,29 +17,29 @@ const routes: Routes = [
     component: IntegrationDemarcheComponent,
     canActivate: [keycloakAuthGuardCanActivate],
     data: {
-      roles: profiles_required_for_demarche_integration,
-    },
+      roles: profiles_required_for_demarche_integration
+    }
   },
   {
     path: 'reconciliation',
     component: ReconciliationDemarcheComponent,
     canActivate: [keycloakAuthGuardCanActivate],
     data: {
-      roles: profiles_required_for_demarche_integration,
-    },
+      roles: profiles_required_for_demarche_integration
+    }
   },
   {
     path: 'affichage',
     component: AffichageDemarcheComponent,
     canActivate: [keycloakAuthGuardCanActivate],
     data: {
-      roles: profiles_required_for_demarche_integration,
+      roles: profiles_required_for_demarche_integration
     }
   }
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule],
+  exports: [RouterModule]
 })
 export class CompagnonDSRoutingModule {}

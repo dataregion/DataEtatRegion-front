@@ -5,7 +5,7 @@ import {
   AlertService,
   GeoModel,
   ReferentielsHttpService,
-  TypeLocalisation,
+  TypeLocalisation
 } from 'apps/common-lib/src/public-api';
 import { CompagnonDSService } from '../compagnon-ds.service';
 import { Demarche, Donnee } from '@models/demarche_simplifie/demarche.model';
@@ -15,16 +15,12 @@ import { combineLatest, Observable } from 'rxjs';
 import { GeoLocalisationComponentService } from '../../../../../../../common-lib/src/lib/components/localisation/geo.localisation.componentservice';
 import { BudgetDataHttpService } from '@services/http/budget-lines-http.service';
 import { ReferentielProgrammation } from '@models/refs/referentiel_programmation.model';
-import {
-  CentreCouts,
-  CodeLabel,
-  DomaineFonctionnel,
-} from '@models/financial/common.models';
+import { CentreCouts, CodeLabel, DomaineFonctionnel } from '@models/financial/common.models';
 
 @Component({
   selector: 'financial-reconciliation-demarche.component',
   templateUrl: './reconciliation-demarche.component.html',
-  providers: [GeoLocalisationComponentService],
+  providers: [GeoLocalisationComponentService]
 })
 export class ReconciliationDemarcheComponent implements OnInit {
   private _destroyRef = inject(DestroyRef);
@@ -39,7 +35,7 @@ export class ReconciliationDemarcheComponent implements OnInit {
   public reconciliationForm = new FormGroup({
     champEJ: new FormControl(''),
     champDS: new FormControl(''),
-    champMontant: new FormControl(''),
+    champMontant: new FormControl('')
   });
 
   public centreCouts: CentreCouts | null = null;
@@ -58,7 +54,7 @@ export class ReconciliationDemarcheComponent implements OnInit {
     private _router: Router,
     private _referentielService: ReferentielsHttpService,
     private _financialService: BudgetDataHttpService,
-    private _geo: GeoLocalisationComponentService,
+    private _geo: GeoLocalisationComponentService
   ) {
     this.checkedId = 'reconciliation-no';
   }
@@ -67,7 +63,7 @@ export class ReconciliationDemarcheComponent implements OnInit {
     // Vérification des query params & de si la démarche est déjà présente en BDD
     combineLatest({
       params: this._route.queryParams,
-      demarche: this._compagnonDS.demarche$,
+      demarche: this._compagnonDS.demarche$
     })
       .pipe(takeUntilDestroyed(this._destroyRef))
       .subscribe((results) => {
@@ -91,19 +87,15 @@ export class ReconciliationDemarcheComponent implements OnInit {
               if (value !== null) {
                 this._initWithDemarche(value);
               } else {
-                this._alertService.openAlertError(
-                  "Cette démarche n'a pas été intégrée.",
-                );
-                this._router.navigate([
-                  '/administration/demarches/integration',
-                ]);
+                this._alertService.openAlertError("Cette démarche n'a pas été intégrée.");
+                this._router.navigate(['/administration/demarches/integration']);
               }
             },
             error: (err: HttpErrorResponse) => {
               if (err.error['message']) {
                 this._alertService.openAlertError(err.error['message']);
               }
-            },
+            }
           });
       });
   }
@@ -124,7 +116,7 @@ export class ReconciliationDemarcheComponent implements OnInit {
           if (err.error['message']) {
             this._alertService.openAlertError(err.error['message']);
           }
-        },
+        }
       });
 
     this._financialService.getAnnees().subscribe((annees) => {
@@ -139,17 +131,17 @@ export class ReconciliationDemarcheComponent implements OnInit {
     if (demarche.reconciliation.champEJ) {
       this.checkedId = 'reconciliation-ej';
       this.reconciliationForm.patchValue({
-        champEJ: demarche.reconciliation.champEJ,
+        champEJ: demarche.reconciliation.champEJ
       });
     } else if (demarche.reconciliation.champDS) {
       this.checkedId = 'reconciliation-ds';
       this.reconciliationForm.patchValue({
-        champDS: demarche.reconciliation.champDS,
+        champDS: demarche.reconciliation.champDS
       });
     } else if (demarche.reconciliation.champMontant) {
       this.checkedId = 'reconciliation-criteres';
       this.reconciliationForm.patchValue({
-        champMontant: demarche.reconciliation.champMontant,
+        champMontant: demarche.reconciliation.champMontant
       });
     }
   }
@@ -178,15 +170,10 @@ export class ReconciliationDemarcheComponent implements OnInit {
       formData.append('champEJ', this.reconciliationForm.value.champEJ);
     } else if (this.checkedId === 'reconciliation-criteres') {
       if (!this.reconciliationForm.value.champMontant) {
-        this._alertService.openAlertError(
-          'Le champ Montant AE est obligatoire',
-        );
+        this._alertService.openAlertError('Le champ Montant AE est obligatoire');
         return;
       }
-      formData.append(
-        'champMontant',
-        this.reconciliationForm.value.champMontant!,
-      );
+      formData.append('champMontant', this.reconciliationForm.value.champMontant!);
       if (this.centreCouts) {
         formData.append('centreCouts', this.centreCouts.code);
       }
@@ -220,14 +207,14 @@ export class ReconciliationDemarcheComponent implements OnInit {
         next: (demarche: Demarche) => {
           this._compagnonDS.setDemarche(demarche);
           this._router.navigate(['/administration/demarches/affichage'], {
-            queryParams: { number: this.demarche?.number },
+            queryParams: { number: this.demarche?.number }
           });
         },
         error: (err: HttpErrorResponse) => {
           if (err.error['message']) {
             this._alertService.openAlertError(err.error['message']);
           }
-        },
+        }
       });
   }
 
@@ -239,15 +226,11 @@ export class ReconciliationDemarcheComponent implements OnInit {
     return this._referentielService.searchCentreCouts(input, null);
   };
 
-  getDomainesFonctionnel = (
-    input: string,
-  ): Observable<DomaineFonctionnel[]> => {
+  getDomainesFonctionnel = (input: string): Observable<DomaineFonctionnel[]> => {
     return this._referentielService.searchDomainesFonctionnel(input, null);
   };
 
-  getReferentielsProgrammation = (
-    input: string,
-  ): Observable<ReferentielProgrammation[]> => {
+  getReferentielsProgrammation = (input: string): Observable<ReferentielProgrammation[]> => {
     return this._referentielService.searchReferentielProgrammation(input, null);
   };
 

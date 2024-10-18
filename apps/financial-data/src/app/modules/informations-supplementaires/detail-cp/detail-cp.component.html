@@ -21,7 +21,7 @@
       </tr>
       <tr>
         <th class="last"><strong>Montant payé</strong></th>
-        <td class="last" *ngFor="let cp of financial.financial_cp">{{ cp.montant | currency:'EUR' }}</td>
+        <td *ngFor="let cp of financial.financial_cp" class="last">{{ cp.montant | currency:'EUR' }}</td>
       </tr>
     </table>
   </div>

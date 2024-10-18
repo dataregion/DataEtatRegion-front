@@ -7,12 +7,10 @@ import { Pipe, PipeTransform } from '@angular/core';
 export class OuNonRenseignePipe implements PipeTransform {
   // eslint-disable-next-line
   transform(value: unknown, ...args: unknown[]): unknown {
-
-    if ( (value === undefined) || (value === null) ) {
-      return `Non renseigné`
+    if (value === undefined || value === null) {
+      return `Non renseigné`;
     } else {
-      return value
+      return value;
     }
   }
-
 }

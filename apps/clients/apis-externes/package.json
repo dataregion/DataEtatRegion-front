@@ -1,7 +1,7 @@
 {
-  "name": "ds-client",
+  "name": "apis-externes",
   "version": "1.0.0",
-  "description": "OpenAPI client for ds-client",
+  "description": "OpenAPI client for apis-externes",
   "author": "OpenAPI-Generator Contributors",
   "repository": {
     "type": "git",

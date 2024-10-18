@@ -14,14 +14,9 @@ import {
   QueryList,
   SimpleChanges,
   ViewChild,
-  ViewEncapsulation,
+  ViewEncapsulation
 } from '@angular/core';
-import {
-  ColumnsMetaData,
-  GroupingColumn,
-  RootGroup,
-  TableData,
-} from './group-utils';
+import { ColumnsMetaData, GroupingColumn, RootGroup, TableData } from './group-utils';
 import { GroupingTableContextService } from './grouping-table-context.service';
 import { OutputEvents } from './output-events';
 import { ProjectCellDirective } from './project-cell.directive';
@@ -33,14 +28,14 @@ import { ProjectGroupingDirective } from './project-grouping.directive';
   encapsulation: ViewEncapsulation.None,
   providers: [GroupingTableContextService],
   host: {
-    class: 'grouping-table-container',
+    class: 'grouping-table-container'
   },
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class GroupingTableComponent implements OnChanges, AfterViewInit {
-
   @ContentChildren(ProjectCellDirective) projectedCells!: QueryList<ProjectCellDirective>;
-  @ContentChildren(ProjectGroupingDirective) projectedGroupings!: QueryList<ProjectGroupingDirective>;
+  @ContentChildren(ProjectGroupingDirective)
+  projectedGroupings!: QueryList<ProjectGroupingDirective>;
 
   @Input() tableData!: TableData;
   @Input() columnsMetaData!: ColumnsMetaData;
@@ -63,7 +58,7 @@ export class GroupingTableComponent implements OnChanges, AfterViewInit {
   constructor() {
     this._outputEvents = {
       'click-on-row': new EventEmitter()
-    }
+    };
 
     this.rowClick = this._outputEvents['click-on-row'];
 
@@ -90,15 +85,12 @@ export class GroupingTableComponent implements OnChanges, AfterViewInit {
 
       // Replie / Déplie les groupes
       for (const group of this.rootGroup?.groups ?? []) {
-        if (group.folded)
-          this.context.fold(group)
-        else
-          this.context.unfold(group)
+        if (group.folded) this.context.fold(group);
+        else this.context.unfold(group);
       }
 
       if (this.columnCssStyle) {
-        this.columnCssStyle.nativeElement.innerHTML =
-          this.context.columnCssStyle;
+        this.columnCssStyle.nativeElement.innerHTML = this.context.columnCssStyle;
       }
       this.groupLevel = this.groupingColumns.length;
     }
@@ -109,12 +101,13 @@ export class GroupingTableComponent implements OnChanges, AfterViewInit {
       this.columnCssStyle.nativeElement.innerHTML = this.context.columnCssStyle;
     }
 
-    setTimeout(() => { // XXX: pour éviter ExpressionChangedAfterItHasBeenChecked
+    setTimeout(() => {
+      // XXX: pour éviter ExpressionChangedAfterItHasBeenChecked
       this.context.cellProjections = this.projectedCells?.toArray();
       this.context.groupingProjections = this.projectedGroupings?.toArray();
-      this.cdRef.markForCheck(); // XXX: Ici, les composants enfants sont déjà rendus. 
-                                // On provoque donc manuellement un cd pour prendre en compte les projections
-    })
+      this.cdRef.markForCheck(); // XXX: Ici, les composants enfants sont déjà rendus.
+      // On provoque donc manuellement un cd pour prendre en compte les projections
+    });
   }
 
   @HostListener('scroll', ['$event.target']) onScroll(target: HTMLElement) {

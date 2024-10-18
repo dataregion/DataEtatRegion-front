@@ -1,5 +1,5 @@
-import { Pipe, PipeTransform } from "@angular/core";
-import { ColumnMetaDataDef, Group } from "./group-utils";
+import { Pipe, PipeTransform } from '@angular/core';
+import { ColumnMetaDataDef, Group } from './group-utils';
 
 /**
  * Affichage des valeurs d'aggrégats (pour les headers de groupes).
@@ -16,9 +16,10 @@ export class FinancialGroupAggregatePipe implements PipeTransform {
       return '';
     }
     const aggregateValue = group.aggregates?.[column.name];
-    return column.aggregateRenderFn
-      && column.aggregateRenderFn(aggregateValue, group, column)
-      || aggregateValue || '';
+    return (
+      (column.aggregateRenderFn && column.aggregateRenderFn(aggregateValue, group, column)) ||
+      aggregateValue ||
+      ''
+    );
   }
-
 }

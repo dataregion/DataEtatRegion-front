@@ -1,4 +1,4 @@
 export interface RefSiret {
-    siret: string,
-    denomination: string,
+  siret: string;
+  denomination: string;
 }

@@ -1,17 +1,16 @@
-import { DatePipe } from '@angular/common';
-import { Component, Input, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
+import { Component, inject, Input } from '@angular/core';
 
 @Component({
   selector: 'lib-display-date',
   standalone: true,
   imports: [CommonModule],
-  template: '{{ formattedDate }}',
+  template: '{{ formattedDate }}'
 })
 export class DisplayDateComponent {
-  private datePipe = inject(DatePipe);
   @Input() date!: string | Date; // Input pour la date au format UTC
   @Input() dateFormat: string = 'dd/MM/yyyy à HH:mm';
+  private datePipe = inject(DatePipe);
 
   get formattedDate(): string {
     if (this.date) {

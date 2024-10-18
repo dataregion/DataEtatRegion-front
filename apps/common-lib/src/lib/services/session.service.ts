@@ -1,26 +1,30 @@
-import { Injectable, inject } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import { User } from 'apps/management/src/lib/models/users/user.models';
 import { Profil } from '../models/profil.enum.model';
 import { AuthUtils } from './auth-utils.service';
+import { Optional } from '../utilities/optional.type';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class SessionService {
   private _userInfo: User | null = null;
-
-  public userInfo$ = new Subject<User | null>();
-
   private auth_utils = inject(AuthUtils);
+
+  public authenticated$ = new Subject<void>();
+  public userInfo$ = new Subject<User | null>();
+  public region_code: Optional<string> = null
 
   constructor() {}
 
   // eslint-disable-next-line no-undef
-  public setAuthentication(info: Keycloak.KeycloakProfile, roles: any): void {
+  public setAuthentication(info: Keycloak.KeycloakProfile, roles: any, region_code?: string): void {
     this._userInfo = info as User;
-    this._userInfo.roles = this.auth_utils.roles_to_uppercase(roles)
+    this._userInfo.roles = this.auth_utils.roles_to_uppercase(roles);
+    this.region_code = region_code;
     this.userInfo$.next(this._userInfo);
+    this.authenticated$.next();
   }
 
   public getUser(): Observable<User | null> {
@@ -35,9 +39,7 @@ export class SessionService {
   }
 
   public isAdmin(): boolean {
-    return (
-      this._userInfo !== null && this._userInfo?.roles.includes(Profil.ADMIN)
-    );
+    return this._userInfo !== null && this._userInfo?.roles.includes(Profil.ADMIN);
   }
 
   /**
@@ -49,9 +51,7 @@ export class SessionService {
     if (this._userInfo === null) return false;
 
     const roles = profiles.map((p) => p.toString());
-    const isIncluded = this._userInfo.roles.some((element) =>
-      roles.includes(element)
-    );
+    const isIncluded = this._userInfo.roles.some((element) => roles.includes(element));
 
     return isIncluded;
   }

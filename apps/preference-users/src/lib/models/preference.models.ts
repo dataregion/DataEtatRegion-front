@@ -1,4 +1,4 @@
-import { JSONValue, JSONObject } from "apps/common-lib/src/lib/models/jsonobject";
+import { JSONValue, JSONObject } from 'apps/common-lib/src/lib/models/jsonobject';
 
 /* eslint-disable no-unused-vars */
 export interface Shared {
