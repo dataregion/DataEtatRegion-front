@@ -10,6 +10,8 @@ import {
   profiles_required_for_tags_page,
   profiles_required_for_upload_page
 } from './modules/administration/administration-routing.module';
+import { ResourceService } from '@services/ressource.service';
+import { Ressources } from '@models/ressource/ressource.models';
 
 export const MULTIREGIONS_SERVICE = new InjectionToken<MultiregionsService>('MultiregionsService');
 
@@ -26,6 +28,8 @@ export class AppComponent implements OnInit {
   public showUploadFinancialDataPage: boolean = false;
   public showUpdateTagsPage: boolean = false;
   public showIntegrationDemarchePage: boolean = false;
+  public ressources!: Ressources;
+  public ressourcesLoaded: boolean = false;
   
   get region() {
     return this._multiregions.getRegionLabel()
@@ -40,6 +44,7 @@ export class AppComponent implements OnInit {
     private _sessionService: SessionService,
     private _gridFullscreen: GridInFullscreenStateService,
     private _multiregions: MultiregionsService,
+    private _resourceService: ResourceService,
     @Inject(SETTINGS) public readonly settings: SettingsService
   ) {}
 
@@ -61,6 +66,16 @@ export class AppComponent implements OnInit {
       this.showIntegrationDemarchePage =
         this._sessionService.hasOneRole(profiles_required_for_demarches) &&
         this.settings.getFeatures().integration_ds;
+
+      this._resourceService.getResources().subscribe(
+        (data: Ressources) => {
+          this.ressources = data;
+          this.ressourcesLoaded = true;
+        },
+        (error) => {
+          console.error('Erreur lors de la récupération des ressources :', error);
+        }
+      );  
     });
   }
 
@@ -73,32 +88,27 @@ export class AppComponent implements OnInit {
   }
 
   public getRessource(key: string): string | undefined {
-    let ressource: string | undefined;
-    switch (key) {
-      case 'visuterritoire':
-        ressource = this.settings.getRessources().visuterritoire;
-        break;
-      case 'relance':
-        ressource = this.settings.getRessources().relance;
-        break;
-      case 'graphiques':
-        ressource = this.settings.getRessources().graphiques;
-        break;
-      case 'api_swagger':
-        ressource = this.settings.getRessources().api_swagger;
-        break;
-      case 'documentation':
-        ressource = this.settings.getRessources().documentation;
-        break;
-      case 'suivi_usage':
-        ressource = this.settings.getRessources().suivi_usage;
-        break;
-      case 'grist':
-        ressource = this.settings.getRessources().grist;
-        break;
-      default:
-        ressource = undefined;
+    if (!this.ressourcesLoaded) {
+      console.warn('Les ressources ne sont pas encore chargées.');
+      return undefined;
     }
-    return ressource;
+    switch (key) {
+        case 'visuterritoire':
+          return this.ressources.visuterritoire;
+        case 'relance':
+          return this.ressources.relance;
+        case 'graphiques':
+          return this.ressources.graphiques;
+        case 'api_swagger':
+          return this.ressources.api_swagger;
+        case 'documentation':
+          return this.ressources.documentation;
+        case 'suivi_usage':
+          return this.ressources.suivi_usage;
+        case 'grist':
+          return this.ressources.grist;
+        default:
+          return undefined;
+    }  
   }
 }

@@ -1,4 +1,4 @@
-import { Keycloak, Matomo, Ressources, Settings } from 'apps/common-lib/src/public-api';
+import { Keycloak, Matomo, Settings } from 'apps/common-lib/src/public-api';
 /* eslint no-unused-vars: 0 */ // --> OFF
 
 export interface ISettingsService {
@@ -7,8 +7,6 @@ export interface ISettingsService {
   getSetting(): Settings;
 
   getKeycloakSettings(): Keycloak;
-
-  getRessources(): Ressources;
 
   getMatomo(): Matomo;
 }
