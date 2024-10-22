@@ -25,7 +25,7 @@
   <div class="fr-container">
 
     <div *ngIf="!isSearchOver()" class="spinner-wrapper">
-      <span class="loading-spinner"></span>
+      <lib-spinner />
     </div>
 
     <div class="fr-grid-row" *ngIf="!isSearchArgsEmpty() && !isSearchResultsEmpty() && isSearchOver()">

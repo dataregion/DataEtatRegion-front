@@ -124,6 +124,7 @@ export class BudgetDataHttpService
             this._sanitize_req_arg(niveau_geo),
             this._sanitize_req_arg(listCode),
             undefined,
+            undefined,
             this._sanitize_req_arg(p_themes),
             this._sanitize_req_arg(siret_beneficiaire),
             this._sanitize_req_arg(p_types_beneficaires),

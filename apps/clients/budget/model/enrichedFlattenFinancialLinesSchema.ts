@@ -27,6 +27,8 @@ export interface EnrichedFlattenFinancialLinesSchema {
     beneficiaire_commune_labelEpci?: string;
     beneficiaire_commune_labelRegion?: string;
     beneficiaire_denomination?: string;
+    beneficiaire_qpv24_code?: string;
+    beneficiaire_qpv24_label?: string;
     beneficiaire_qpv_code?: string;
     beneficiaire_qpv_label?: string;
     centreCouts_code?: string;
@@ -35,6 +37,7 @@ export interface EnrichedFlattenFinancialLinesSchema {
     compte_budgetaire?: string;
     contrat_etat_region?: string;
     created_at?: string;
+    data_source?: string;
     dateDeCreation?: string;
     dateDeDernierPaiement?: string;
     domaineFonctionnel_code?: string;

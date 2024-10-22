@@ -71,6 +71,7 @@ export class TabsMapTableComponent {
       this.mappedResults.push({
         "id": f.id,
         "siret.nom_beneficiaire": f.siret?.nom_beneficiaire,
+        "siret.code": f.siret?.code,
         "libelle": f.programme?.label,
         "montant_ae": f.montant_ae,
         "annee": f.annee,
@@ -85,7 +86,7 @@ export class TabsMapTableComponent {
 
   public columns = [
     {label: 'Nom du porteur de projet', field: 'siret.nom_beneficiaire', sortable: false},
-    {label: 'Libellé', field: 'siret.nom_beneficiaire', sortable: false},
+    {label: 'SIRET', field: 'siret.code', sortable: false},
     {label: 'Montant (AE)', field: 'montant_ae', sortable: false},
     {label: 'Année', field: 'annee'},
     {label: 'Financeur', field: 'centre_couts.code'},

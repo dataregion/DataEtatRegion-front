@@ -12,6 +12,7 @@ import { AdvancedChipsMultiselectComponent } from './components/advanced-chips-m
 import { SelectMultipleComponent } from './components/select-multiple/select-multiple.component';
 import { BopsReferentielsComponent } from './components/bops-referentiels/bops-referentiels.component';
 import { SelectSimpleComponent } from './components/select-simple/select-simple.component';
+import { SpinnerComponent } from './components/spinner/spinner.component';
 
 @NgModule({
   declarations: [AlertSnackBarComponent, FooterComponent, RegisterComponent, TermOfUseComponent],
@@ -26,6 +27,7 @@ import { SelectSimpleComponent } from './components/select-simple/select-simple.
     AdvancedChipsMultiselectComponent,
     SelectMultipleComponent,
     SelectSimpleComponent
+    SpinnerComponent,
   ],
   exports: [
     AlertSnackBarComponent,
@@ -39,6 +41,7 @@ import { SelectSimpleComponent } from './components/select-simple/select-simple.
     AdvancedChipsMultiselectComponent,
     SelectMultipleComponent,
     SelectSimpleComponent
+    SpinnerComponent,
   ]
 })
 export class CommonLibModule {}

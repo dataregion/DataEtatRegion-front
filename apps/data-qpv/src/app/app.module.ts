@@ -51,7 +51,7 @@ import { BudgetDataHttpService } from 'apps/data-qpv/src/app/services/http/budge
 import { MultiregionsService } from 'apps/data-qpv/src/app/services/multiregions.service';
 
 import { SupersetIframeComponent } from './components/superset-iframe/superset-iframe.component'
-import { DsfrTabsModule, DsfrModalModule, DsfrDataTableModule, DsfrAlertModule, DsfrFormFieldsetModule } from '@edugouvfr/ngx-dsfr';
+import { DsfrTabsModule, DsfrModalModule, DsfrDataTableModule, DsfrAlertModule, DsfrFormFieldsetModule, DsfrFormCheckboxModule, DsfrFormInputModule } from '@edugouvfr/ngx-dsfr';
 import { TabsSupersetIframesComponent } from './components/tabs-superset-iframes/tabs-superset-iframes.component';
 import { TabsMapTableComponent } from './components/tabs-map-table/tabs-map-table.component';
 import { ModalAdditionalParamsComponent } from './components/modal-additional-params/modal-additional-params.component';
@@ -114,6 +114,8 @@ registerLocaleData(localeFr);
     DsfrModalModule,
     DsfrDataTableModule,
     DsfrFormFieldsetModule,
+    DsfrFormInputModule,
+    DsfrFormCheckboxModule,
     DsfrAlertModule,
     ApolloModule
   ], providers: [

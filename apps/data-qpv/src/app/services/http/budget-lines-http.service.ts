@@ -92,7 +92,7 @@ export class BudgetDataHttpService implements DataHttpService<EnrichedFlattenFin
 
 
         const req$ = this._budgetApi.getBudgetCtrl(
-            "0", "6500", undefined, undefined, codes_programme,  niveau_geo, listCode, qpv_codes, p_themes, siret_beneficiaire, p_types_beneficaires, annees, undefined, undefined 
+            "0", "6500", undefined, undefined, codes_programme,  niveau_geo, listCode, 2024, qpv_codes, p_themes, siret_beneficiaire, p_types_beneficaires, annees, undefined, undefined 
         ) as unknown as Observable<DataPagination<EnrichedFlattenFinancialLinesSchema> | null>;
 
         return req$

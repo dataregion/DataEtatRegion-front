@@ -1,7 +1,12 @@
-import { Component, Input } from "@angular/core";
-import { FormGroup } from "@angular/forms";
-import { DsfrHeadingLevel, DsfrModalAction, DsfrSize, DsfrSizeConst } from "@edugouvfr/ngx-dsfr";
+import { Component, Input, ViewChild } from "@angular/core";
+import { FormControl, FormGroup } from "@angular/forms";
+import { DsfrHeadingLevel, DsfrModalAction, DsfrModalComponent, DsfrSize, DsfrSizeConst } from "@edugouvfr/ngx-dsfr";
 
+export interface CheckboxMappedData {
+  label: string;
+  description?: string;
+  checked: boolean;
+}
 
 @Component({
   selector: 'modal-additional-params',
@@ -10,23 +15,37 @@ import { DsfrHeadingLevel, DsfrModalAction, DsfrSize, DsfrSizeConst } from "@edu
 })
 export class ModalAdditionalParamsComponent {
 
-  private _titleModal: string = ""
+  private _dialogId: string = ""
+
+  private _titleModal: string = "Test de titre"
   private _size: DsfrSize = DsfrSizeConst.MD
   private _actions: DsfrModalAction[] = []
   private _headingLevel: DsfrHeadingLevel | undefined
   private _autoCloseOnAction: boolean = true
 
-  public data: any[] = [];
+  public data: CheckboxMappedData[] = [];
 
-  public setData(data: any[]) {
+  public setData(data: CheckboxMappedData[]) {
     this.data = data;
   }
 
   @Input()
-  public formModal: FormGroup;
+  public formGroup: FormGroup;
+
+  @Input()
+  public formControl: string = "";
 
   constructor() {
-    this.formModal = new FormGroup({});
+    this.formGroup = new FormGroup({});
+  }
+
+  get dialogId() {
+    return this._dialogId;
+  }
+  
+  @Input()
+  set dialogId(dialogId: string) {
+    this._dialogId = dialogId;
   }
 
   get titleModal() {
@@ -68,5 +87,27 @@ export class ModalAdditionalParamsComponent {
   set autoCloseOnAction(autoCloseOnAction: boolean) {
     this._autoCloseOnAction = autoCloseOnAction;
   }
+
+  @ViewChild('modalFiltres') modalFiltres!: DsfrModalComponent;
+
+  public filteredCheckboxes: CheckboxMappedData[] = []
+
+  public openModal(formControl: string, titre: string, formGroup: FormGroup, data: CheckboxMappedData[]) {
+    this.dialogId = "modal-" + formControl;
+    this.formGroup = formGroup
+    this.titleModal = titre;
+    this.formControl = formControl;
+    this.data = data;
+    this.filteredCheckboxes = data;
+    this.modalFiltres.open()
+  }
+
+  inputFiltre: string = "";
+
+  filterCheckboxes(text?: string): void {
+    this.inputFiltre = text === undefined ? this.inputFiltre : text;
+    this.filteredCheckboxes = this.data.filter(d => d.label.includes(this.inputFiltre))
+  }
+
 
 }

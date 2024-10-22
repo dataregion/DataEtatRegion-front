@@ -54,8 +54,9 @@ import { SearchParameters, SearchParameters_empty } from '../../services/interfa
 import { SavePreferenceDialogComponent } from 'apps/preference-users/src/public-api';
 import { MatDialog } from '@angular/material/dialog';
 import { DsfrModalComponent } from '@edugouvfr/ngx-dsfr';
-import { ModalAdditionalParamsComponent } from '../modal-additional-params/modal-additional-params.component';
+import { CheckboxMappedData, ModalAdditionalParamsComponent } from '../modal-additional-params/modal-additional-params.component';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { RefSiret } from 'apps/common-lib/src/lib/models/refs/RefSiret';
 
 
 
@@ -212,6 +213,9 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
       niveau: new FormControl<TypeLocalisation | null>(null),
       localisations: new FormControl<GeoModel[] | null>({ value: null, disabled: false }, []),
       qpv: new FormControl<any | null>(null),
+      financeurs: new FormControl<CentreCouts[] | null>(null),
+      thematiques: new FormControl<string[] | null>(null),
+      porteurs: new FormControl<Beneficiaire[] | null>(null),
     });
 
     
@@ -221,7 +225,7 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
       if (this._subFilterGeo)
         this._subFilterGeo.unsubscribe();
 
-      this._subFilterGeo = this._geo.filterGeo(term, TypeLocalisation.QPV)
+      this._subFilterGeo = this._geo.filterQPV2024(term)
         .pipe(takeUntilDestroyed(this._destroyRef))
         .subscribe((response: GeoModel[]) => {
           this.filteredQPV = response;
@@ -277,7 +281,7 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this._geo
-      .filterGeo("", TypeLocalisation.QPV)
+      .filterQPV2024("")
       .pipe(takeUntilDestroyed(this._destroyRef))
       .subscribe((response) => {
         this.qpvs = response as GeoModel[]
@@ -443,6 +447,41 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
         label += (bop.code + ' - ' + bop.nom) + (i !== bops.length - 1 ? ', ' : '')
       })
     return label
+  }
+
+  @ViewChild('modalAdditionalParams') modalAdditionalParams!: ModalAdditionalParamsComponent;
+
+  public openModalFinanceurs() {
+    const mappedData: CheckboxMappedData[] = []
+    this.financeurs.forEach(f => {
+      mappedData.push({
+        label: f.label,
+        checked: false
+      })
+    })
+    this.modalAdditionalParams.openModal("financeurs", "Liste des financeurs", this.searchForm, mappedData)
+  }
+
+  public openModalThematiques() {
+    const mappedData: CheckboxMappedData[] = []
+    this.thematiques.forEach(t => {
+      mappedData.push({
+        label: t,
+        checked: false
+      })
+    })
+    this.modalAdditionalParams.openModal("thematiques", "Liste des thématiques", this.searchForm, mappedData)
+  }
+
+  public openModalPorteurs() {
+    const mappedData: CheckboxMappedData[] = []
+    this.porteurs.forEach(p => {
+      mappedData.push({
+        label: p.denomination,
+        checked: false
+      })
+    })
+    this.modalAdditionalParams.openModal("porteurs", "Liste des porteurs de projet", this.searchForm, mappedData)
   }
 
 }
