@@ -12,8 +12,7 @@
     "build:all": "ng build --project=france-relance && ng build --project=financial-data",
     "storybook:common-lib": "ng run common-lib:storybook",
     "test-storybook": "test-storybook --config-dir=apps/common-lib/.storybook",
-    "lint": "ng lint",
-    "codegen": "graphql-codegen --config codegen.ts"
+    "lint": "ng lint"
   },
   "env": {
     "browser": true,
@@ -31,10 +30,7 @@
     "@angular/platform-browser": "^18.2.3",
     "@angular/platform-browser-dynamic": "^18.2.3",
     "@angular/router": "^18.2.3",
-    "@apollo/client": "^3.11.8",
     "@gouvfr/dsfr": "^1.11.2",
-    "apollo-angular": "^7.1.2",
-    "graphql": "^16.8.2",
     "keycloak-angular": "^16.0.1",
     "keycloak-js": "^25.0.4",
     "ngx-logger": "^5.0.12",
@@ -54,11 +50,6 @@
     "@angular/cli": "~18.2.3",
     "@angular/compiler-cli": "^18.2.3",
     "@chromatic-com/storybook": "^1.5.0",
-    "@graphql-codegen/cli": "^3.3.1",
-    "@graphql-codegen/typescript": "3.0.4",
-    "@graphql-codegen/typescript-apollo-angular": "3.5.6",
-    "@graphql-codegen/typescript-operations": "^3.0.4",
-    "@graphql-codegen/typescript-resolvers": "^3.2.1",
     "@playwright/test": "^1.44.1",
     "@storybook/addon-essentials": "^8.2.9",
     "@storybook/addon-interactions": "^8.2.9",

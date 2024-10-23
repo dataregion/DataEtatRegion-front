@@ -1,0 +1,25 @@
+.dialog-title {
+  display: inline-flex;
+  width: 100%;
+  justify-content: space-between;
+}
+
+.dialog-content {
+  min-height: 22rem;
+
+  > * + * {
+    margin-top: .5rem;
+  }
+}
+
+.dialog-title > h2 {
+  margin-top: 24px;
+}
+
+.dialog-title > button {
+  margin-top: 20px;
+}
+
+.w-full {
+  width: 100%;
+}

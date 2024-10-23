@@ -2,10 +2,9 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Component, DestroyRef, inject, OnInit } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AlertService, LoaderService } from 'apps/common-lib/src/public-api';
-import { DemarcheHttpService } from '@services/http/demarche.service';
 import { forkJoin } from 'rxjs';
 import { CompagnonDSService } from '../compagnon-ds.service';
-import { Demarche } from '@models/demarche_simplifie/demarche.model';
+import { Demarche, Token } from '@models/demarche_simplifie/demarche.model';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
@@ -18,10 +17,13 @@ export class IntegrationDemarcheComponent implements OnInit {
 
   public demarche: Demarche | null = null;
 
-  integrationForm = new FormGroup({
-    numeroDemarche: new FormControl('')
+  public integrationForm = new FormGroup({
+    numeroDemarche: new FormControl(''),
+    selectedToken: new FormControl<Token | null>(null)
   });
 
+  public tokens: Token[] = [];
+  public tokenId: number | null = null;
   public numberDemarche: number | null = null;
   public nomDemarche: string | undefined = '';
   public integree: boolean = false;
@@ -32,7 +34,6 @@ export class IntegrationDemarcheComponent implements OnInit {
   constructor(
     private _loaderService: LoaderService,
     private _route: ActivatedRoute,
-    private _demarcheService: DemarcheHttpService,
     private _compagnonDS: CompagnonDSService,
     private _alertService: AlertService
   ) {}
@@ -64,6 +65,15 @@ export class IntegrationDemarcheComponent implements OnInit {
     this._loaderService.isLoading().subscribe((loading) => {
       this.somethingIsLoading = loading;
     });
+
+    this._compagnonDS.getTokens().subscribe((tokens) => {
+      this.tokens = tokens;
+      if (this.tokens.length > 0) {
+        this.integrationForm.patchValue({
+          selectedToken: this.tokens[0]
+        });
+      }
+    });
   }
 
   searchDemarche() {
@@ -84,8 +94,17 @@ export class IntegrationDemarcheComponent implements OnInit {
       return;
     }
 
+    if (!this.integrationForm.value.selectedToken || !this.integrationForm.value.selectedToken.id) {
+      this._alertService.openAlertError('Veuillez choisir un token');
+      return;
+    }
+
+    this.tokenId = this.integrationForm.value.selectedToken.id;
     forkJoin({
-      graphFetch: this._demarcheService.getDemarcheLight(this.numberDemarche),
+      graphFetch: this._compagnonDS.getDemarcheLigthFromApiExterne(
+        this.tokenId,
+        this.numberDemarche
+      ),
       dbFetch: this._compagnonDS.getDemarche(this.numberDemarche)
     })
       .pipe(takeUntilDestroyed(this._destroyRef))
@@ -119,8 +138,13 @@ export class IntegrationDemarcheComponent implements OnInit {
       return;
     }
 
+    if (this.tokenId == null) {
+      this._alertService.openAlertError('Veuillez choisir un token');
+      return;
+    }
+
     this._compagnonDS
-      .saveDemarche(this.numberDemarche)
+      .saveDemarche(this.tokenId, this.numberDemarche)
       .pipe(takeUntilDestroyed(this._destroyRef))
       .subscribe({
         next: (demarche: Demarche) => {
@@ -135,5 +159,9 @@ export class IntegrationDemarcheComponent implements OnInit {
           }
         }
       });
+  }
+
+  renderToken(token: Token) {
+    return token.nom;
   }
 }

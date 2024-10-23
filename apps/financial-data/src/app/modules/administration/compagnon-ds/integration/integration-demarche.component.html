@@ -8,6 +8,17 @@
       <div class="fr-grid-row">
         <div class="fr-col-8">
           <div class="fr-input-group">
+            <label class="fr-label" for="token">Token à utiliser</label>
+            <span class="fr-hint-text"></span>
+            <lib-select-simple [(selected)]="integrationForm.value.selectedToken" [canClear]="false" [canFilter]="false"
+                               [options]="tokens"
+                               [renderLabelFunction]="renderToken"
+                               id="token"
+            />
+            <button class="fr-btn fr-btn--secondary" type="button" [routerLink]="['/administration/demarches/gestion-token']">Gérer mes tokens DS</button>
+          </div>
+
+          <div class="fr-input-group">
             <label class="fr-label" for="numeroDemarche">Saisir le numéro de votre démarche DS</label>
             <span class="fr-hint-text"></span>
             <input class="fr-input" type="text" data-test-id="numeroDemarche" formControlName="numeroDemarche">

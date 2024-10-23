@@ -6,8 +6,10 @@ import { SETTINGS } from 'apps/common-lib/src/lib/environments/settings.http.ser
 import {
   AffichageDossier,
   Demarche,
+  DemarcheLight,
   Donnee,
   Reconciliation,
+  Token,
   ValeurDonnee
 } from '@models/demarche_simplifie/demarche.model';
 import { SettingsService } from 'apps/financial-data/src/environments/settings.service';
@@ -16,6 +18,7 @@ import { SettingsService } from 'apps/financial-data/src/environments/settings.s
   providedIn: 'root'
 })
 export class CompagnonDSService {
+  private _apiExternes: string;
   private _apiDemarches: string;
 
   private _demarche = new BehaviorSubject<Demarche | null>(null);
@@ -36,7 +39,44 @@ export class CompagnonDSService {
     private _http: HttpClient,
     @Inject(SETTINGS) readonly settings: SettingsService //eslint-disable-line
   ) {
+    this._apiExternes = settings.apiExternes;
     this._apiDemarches = settings.apiDemarches;
+  }
+
+  public getDemarcheLigthFromApiExterne(
+    tokenId: number,
+    demarcheNumber: number
+  ): Observable<DemarcheLight> {
+    const demarche = `
+      query getDemarche($demarcheNumber: Int!) {
+        demarche(number: $demarcheNumber) {
+          title
+          id
+        }
+      }
+    `;
+
+    return this._http
+      .post(
+        `${this._apiExternes}/demarche-simplifie`,
+        {
+          operationName: 'getDemarche',
+          query: demarche,
+          variables: {
+            demarcheNumber: demarcheNumber
+          }
+        },
+        {
+          params: {
+            tokenId: tokenId
+          }
+        }
+      )
+      .pipe(
+        map((results) => {
+          return results as DemarcheLight;
+        })
+      );
   }
 
   public getDemarche(id: number): Observable<Demarche> {
@@ -53,8 +93,9 @@ export class CompagnonDSService {
       );
   }
 
-  public saveDemarche(id: number): Observable<any> {
+  public saveDemarche(tokenId: number, id: number): Observable<any> {
     const formData = new FormData();
+    formData.append('tokenId', tokenId.toString());
     formData.append('id', id.toString());
     return this._http.post(`${this._apiDemarches}/demarche`, formData);
   }
@@ -124,6 +165,51 @@ export class CompagnonDSService {
       .pipe(
         map((results) => {
           return results as ValeurDonnee[];
+        })
+      );
+  }
+
+  public getTokens(): Observable<Token[]> {
+    return this._http.get(`${this._apiDemarches}/token`).pipe(
+      map((results) => {
+        return results as Token[];
+      })
+    );
+  }
+
+  public createToken(token: Token): Observable<Token> {
+    const formData = new FormData();
+    formData.append('nom', token.nom);
+    formData.append('token', token.token);
+    return this._http.post(`${this._apiDemarches}/token`, formData).pipe(
+      map((results) => {
+        return results as Token;
+      })
+    );
+  }
+
+  public updateToken(token: Token): Observable<Token> {
+    const formData = new FormData();
+    formData.append('id', token.id!.toString());
+    formData.append('nom', token.nom);
+    formData.append('token', token.token);
+    return this._http.put(`${this._apiDemarches}/token`, formData).pipe(
+      map((results) => {
+        return results as Token;
+      })
+    );
+  }
+
+  public deleteToken(id: number): Observable<Token> {
+    return this._http
+      .delete(`${this._apiDemarches}/token`, {
+        params: {
+          id: id
+        }
+      })
+      .pipe(
+        map((results) => {
+          return results as Token;
         })
       );
   }
