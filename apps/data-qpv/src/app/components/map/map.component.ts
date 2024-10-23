@@ -20,6 +20,7 @@ import {VectorTile as VectorTileLayer} from "ol/layer";
 import {VectorTile as VectorTileSource} from "ol/source";
 import {QpvSearchArgs} from "../../models/qpv-search/qpv-search.models";
 import {Point} from "ol/geom";
+import {TypeLocalisation} from "../../../../../common-lib/src/lib/models/geo.models";
 
 @Component({
   selector: 'data-qpv-map',
@@ -174,20 +175,21 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       const clusterSource = this.clusterLayer.getSource() as Cluster<Feature>; // Get the Cluster source
       const vectorSource = clusterSource.getSource() as VectorSource; // Get the underlying VectorSource
       vectorSource.addFeatures(features_points);
-      this.updateCustomControl(this._searchArgs?.qpv_codes?.map(qpv => qpv.code), this._searchArgs?.annees);
+      this.updateCustomControl(this._searchArgs?.qpv_codes?.map(qpv => qpv.code), this._searchArgs?.annees, this._searchArgs?.niveau);
     });
   }
 
   private updateCustomControl(
     searchedQpvNames: string[] | null | undefined,
-    searchedYears: number[] | null | undefined
+    searchedYears: number[] | null | undefined,
+    localisation: string | null | undefined,
   ): void {
     const clusterSource = this.clusterLayer.getSource() as Cluster<Feature>; // Get the Cluster source
     const vectorSource = clusterSource.getSource() as VectorSource;
 
     let searchedCenter: Point | undefined = this.findFirstFeatureByCodes(vectorSource, searchedQpvNames)?.get('geometry');
 
-    this.mapLevelControl?.updateSelectedQpv(searchedQpvNames, searchedYears, searchedCenter);
+    this.mapLevelControl?.updateSelectedQpv(searchedQpvNames, searchedYears, searchedCenter, localisation);
   }
 
   private findFirstFeatureByCodes(

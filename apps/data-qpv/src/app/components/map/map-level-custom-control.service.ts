@@ -8,6 +8,7 @@ import {Fill, Stroke, Style} from "ol/style";
 import {FeatureLike} from "ol/Feature";
 import { Point } from 'ol/geom';
 import Map from "ol/Map";
+import {TypeLocalisation} from "../../../../../common-lib/src/lib/models/geo.models";
 
 @Injectable({
   providedIn: 'root',
@@ -25,6 +26,7 @@ export enum MapLevel {
   region = 'Région',
   departement = 'Département',
   epci = 'Epci',
+  commune = 'Commune',
   qpv = 'Qpv',
 }
 
@@ -35,7 +37,8 @@ export class LevelControl extends Control {
     'region': 7,
     'departement': 9,
     'epci': 11,
-    'qpv': 13,
+    'commune': 13,
+    'qpv': 15,
   };
 
   private currentCenter: Point | undefined;
@@ -115,8 +118,10 @@ export class LevelControl extends Control {
       selectedLevel = 'region';
     } else if(newZoomLevel && newZoomLevel < (this.zoomByLevel['epci'] - 1)) {
       selectedLevel = 'departement';
-    } else if(newZoomLevel && newZoomLevel < (this.zoomByLevel['qpv'] - 1 )) {
+    } else if(newZoomLevel && newZoomLevel < (this.zoomByLevel['commune'] - 1 )) {
       selectedLevel = 'epci';
+    } else if(newZoomLevel && newZoomLevel < (this.zoomByLevel['qpv'] - 1 )) {
+      selectedLevel = 'commune';
     } else if(newZoomLevel && newZoomLevel >= (this.zoomByLevel['qpv'] - 1)) {
       selectedLevel = 'qpv';
     }
@@ -127,8 +132,8 @@ export class LevelControl extends Control {
   }
 
   handleSelectChange(event: Event): void {
-    const selectedValue = (event.target as HTMLSelectElement).value;
-    this.currentMap?.getView()?.setZoom(this.zoomByLevel[selectedValue]);
+    const selectedValue: string = (event.target as HTMLSelectElement).value;
+    this.updateLevel(selectedValue);
   }
 
   gotoCurrentCenter() {
@@ -140,14 +145,23 @@ export class LevelControl extends Control {
   updateSelectedQpv(
     searchedNames: string[] | null | undefined,
     searchedYears: number[] | null | undefined,
-    searchedCenter: Point | undefined
+    searchedCenter: Point | undefined,
+    localisation: string | null | undefined,
   ) {
     this.updateTitle(searchedNames, searchedYears);
     this.currentCenter = searchedCenter;
+    this.updateLevel(localisation);
     this.gotoCurrentCenter();
   }
 
-  updateTitle(searchedQpvNames: string[] | null | undefined, searchedYears: number[] | null | undefined) {
+  updateLevel(localisation: string | null | undefined): void {
+    if (localisation) {
+      this.selectMapLevel.value = localisation.toLowerCase();
+      this.currentMap?.getView()?.setZoom(this.zoomByLevel[localisation.toLowerCase()]);
+    }
+  }
+
+  updateTitle(searchedQpvNames: string[] | null | undefined, searchedYears: number[] | null | undefined): void {
     let yearsString = "/";
     let namesString = "/";
 
