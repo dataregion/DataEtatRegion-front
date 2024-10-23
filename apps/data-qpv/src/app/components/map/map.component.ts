@@ -1,4 +1,4 @@
-import {Component, Input, AfterViewInit, ViewEncapsulation} from '@angular/core';
+import {Component, Input, AfterViewInit, ViewEncapsulation, OnDestroy} from '@angular/core';
 import Map from 'ol/Map';
 import View from 'ol/View';
 import TileLayer from 'ol/layer/Tile';
@@ -19,6 +19,7 @@ import { MapLevelCustomControlService, LevelControl } from './map-level-custom-c
 import {VectorTile as VectorTileLayer} from "ol/layer";
 import {VectorTile as VectorTileSource} from "ol/source";
 import {QpvSearchArgs} from "../../models/qpv-search/qpv-search.models";
+import {Point} from "ol/geom";
 
 @Component({
   selector: 'data-qpv-map',
@@ -26,7 +27,7 @@ import {QpvSearchArgs} from "../../models/qpv-search/qpv-search.models";
   styleUrls: ['./map.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
-export class MapComponent implements AfterViewInit {
+export class MapComponent implements AfterViewInit, OnDestroy {
 
   public map: Map | undefined;
   public mapId: string;
@@ -37,6 +38,10 @@ export class MapComponent implements AfterViewInit {
 
   colorDarkBlue: string = '0, 0, 145';
   colorNavyBlue: string = '0, 30, 168';
+  colorLightBlue: string = '169, 191, 255';
+
+  colorSelected: string = '255, 183, 70';
+
   colorLavande: string = '154, 154, 255';
 
   clusterZoomThreshold = 12;
@@ -69,7 +74,7 @@ export class MapComponent implements AfterViewInit {
       }),
       // declutter: true,
       style: this.clusterStyleFunction.bind(this),
-      zIndex: 3,
+      zIndex: 9,
     });
 
     //this.clusterStyleFunction = this.clusterStyleFunction.bind(this);
@@ -114,7 +119,7 @@ export class MapComponent implements AfterViewInit {
         projection: 'EPSG:3857',
       })
     });
-    this.mapLevelControl.setCurrentMap(this.map);
+    this.mapLevelControl.initCurrentMap(this.map);
 
     this.map.addControl(this.mapLevelControl);
 
@@ -174,18 +179,18 @@ export class MapComponent implements AfterViewInit {
   }
 
   private updateCustomControl(
-    searchedQpv: string[] | null | undefined,
+    searchedQpvNames: string[] | null | undefined,
     searchedYears: number[] | null | undefined
   ): void {
     const clusterSource = this.clusterLayer.getSource() as Cluster<Feature>; // Get the Cluster source
     const vectorSource = clusterSource.getSource() as VectorSource;
-    const qpvFeature = this.findFeatureByCode(vectorSource, searchedQpv);
-    if (qpvFeature) {
-      this.mapLevelControl?.updateSelectedQpv(qpvFeature, searchedYears);
-    }
+
+    let searchedCenter: Point | undefined = this.findFirstFeatureByCodes(vectorSource, searchedQpvNames)?.get('geometry');
+
+    this.mapLevelControl?.updateSelectedQpv(searchedQpvNames, searchedYears, searchedCenter);
   }
 
-  private findFeatureByCode(
+  private findFirstFeatureByCodes(
     vectorSource: VectorSource,
     code: string[] | null | undefined
   ): Feature | undefined {
@@ -204,57 +209,71 @@ export class MapComponent implements AfterViewInit {
     const size = feature.get('features').length; // Get number of features in the cluster
 
     if(size > 1) {
-      return this.multiFeaturesStyleFunction(size);
+      return this.multiFeaturesStyleFunction(feature.get('features'), size);
     } else {
-      return this.singleFeatureStyleFunction(feature);
+      return this.singleFeatureStyleFunction(feature.get('features')?.[0]);
     }
   }
 
-  private multiFeaturesStyleFunction(size: number): Style {
+  private multiFeaturesStyleFunction(features: FeatureLike[], size: number): Style {
+    let circleColor = this.colorDarkBlue;
+    if(this.doesSelectedInFeatures(features)) {
+      circleColor = this.colorSelected;
+    }
     return new Style({
       image: new CircleStyle({
         radius: Math.min(30, 10 + size * 3),
-        fill: new Fill({ color: `rgba( ${this.colorDarkBlue}, 1)` }),
+        fill: new Fill({ color: `rgba( ${circleColor}, 1)` }),
       }),
       text: new Text({
         text: size.toString(),
         fill: new Fill({ color: 'white' }),
         font: 'bold 16px Marianne, Calibri,sans-serif',
       }),
+      zIndex: 1,
     });
   }
 
   private singleFeatureStyleFunction(feature: FeatureLike): Style {
-    const featureName = feature.get('features')?.[0]?.get('name') ?? '';
+    const featureName = feature?.get('name') ?? '';
     let zoomLevel: number | undefined;
 
     // Check if `this.map` is defined and has the necessary methods
     if (this.map && this.map.getView && typeof this.map.getView === 'function') {
       zoomLevel = this.map.getView().getZoom();
     }
+    let circleColor = this.colorLavande;
+    if(this.doesSelectedInFeature(feature)) {
+      circleColor = this.colorSelected;
+    }
 
     return new Style({
       image: new CircleStyle({
         radius: (zoomLevel && zoomLevel > this.clusterZoomThreshold) ? 50 : 10,
-        fill: new Fill({ color: `rgba( ${this.colorLavande}, 0.2)` }),
+        fill: new Fill({ color: `rgba( ${circleColor}, 0.2)` }),
         stroke: new Stroke({
-          color: `rgba( ${this.colorLavande}, 1)`,
+          color: `rgba( ${circleColor}, 1)`,
           width: 3
         })
       }),
       text: new Text({
+        backgroundStroke: new Stroke({ color: `rgba( 255, 255, 255, 1)`, width: 16, lineCap: 'round', lineJoin: 'round', }),
+        backgroundFill: new Fill({ color: `rgba( 255, 255, 255, 1)` }),
         text: featureName,
         fill: new Fill({ color: `rgba( ${this.colorDarkBlue}, 1)` }),
         font: 'bold 16px Marianne, Calibri,sans-serif',
         offsetX: 0,
-        // offsetY: 0,
-        offsetY: (zoomLevel && zoomLevel > this.clusterZoomThreshold) ? 65 : 25,
+        offsetY: (zoomLevel && zoomLevel > this.clusterZoomThreshold) ? 75 : 35,
       }),
+      zIndex:100
     });
   }
 
   private contourStyleFuction() {
     return new Style({
+      fill: new Fill({
+        color: `rgba( ${this.colorLightBlue}, 0.2)`
+      }),
       stroke: new Stroke({
         color: `rgba(${this.colorNavyBlue}, 0.8)`,
         width: 2
@@ -265,13 +284,35 @@ export class MapComponent implements AfterViewInit {
   private selectedContourStyleFuction() {
     return new Style({
       fill: new Fill({
-        color: `rgba( ${this.colorNavyBlue}, 0.2)`
+        color: `rgba( ${this.colorSelected}, 0.2)`
       }),
       stroke: new Stroke({
-        color: `rgba(${this.colorNavyBlue}, 0.8)`,
+        color: `rgba(${this.colorSelected}, 0.8)`,
         width: 2
       })
     })
+  }
+
+  private doesSelectedInFeatures(features: FeatureLike[]): boolean {
+    const selectedCodes: string[] | undefined= this._searchArgs?.qpv_codes?.map(qpv => qpv.code);
+    if (selectedCodes) {
+      for (const feature of features) {
+        if (selectedCodes?.includes(feature.get('code'))) {
+          return true;
+        }
+      }
+    }
+
+    return false
+  }
+
+  private doesSelectedInFeature(feature: FeatureLike): boolean {
+    const selectedCodes: string[] | undefined= this._searchArgs?.qpv_codes?.map(qpv => qpv.code);
+    return !!selectedCodes?.includes(feature.get('code'));
+  }
+
+  ngOnDestroy(): void {
+    this.mapLevelControl.onDestroy();
   }
 
 }

@@ -30,7 +30,6 @@ export enum MapLevel {
 
 export class LevelControl extends Control {
 
-  private nodeElement: HTMLDivElement;
   private currentMap: Map | undefined;
   private zoomByLevel: { [key: string]: number } = {
     'region': 7,
@@ -40,6 +39,10 @@ export class LevelControl extends Control {
   };
 
   private currentCenter: Point | undefined;
+
+  private selectMapLevel: HTMLSelectElement;
+  private zoomToCurrentElementBtn: HTMLButtonElement;
+  private titleElement: HTMLDivElement;
 
   constructor(opt_options?: any) {
     const options = opt_options || {};
@@ -82,14 +85,45 @@ export class LevelControl extends Control {
       target: options.target,
     });
 
-    this.nodeElement = element;
-
-    selectElement.addEventListener('change', this.handleSelectChange.bind(this), false);
-    zoomToCurrentBtn.addEventListener('click', this.gotoCurrentCenter.bind(this), false);
+    this.titleElement = title;
+    this.selectMapLevel = selectElement;
+    this.zoomToCurrentElementBtn = zoomToCurrentBtn;
   }
 
-  setCurrentMap(map: Map): void {
+  initCurrentMap(map: Map): void {
     this.currentMap = map;
+
+    this.selectMapLevel.addEventListener('change', this.handleSelectChange.bind(this), false);
+    this.zoomToCurrentElementBtn.addEventListener('click', this.gotoCurrentCenter.bind(this), false);
+
+    // Add currentZoom listener to update the MapLevel dynamically
+    this.currentMap?.getView().on('change:resolution', () => this.onZoomChange());
+  }
+
+
+  onDestroy(): void {
+    this.currentMap?.getView().un('change:resolution', () => {});
+    this.selectMapLevel.removeEventListener('change', this.handleSelectChange.bind(this), false);
+    this.zoomToCurrentElementBtn.removeEventListener('click', this.gotoCurrentCenter.bind(this), false);
+  }
+
+  onZoomChange(): void {
+    const newZoomLevel = this.currentMap?.getView().getZoom();
+    let selectedLevel: string | undefined = undefined;
+
+    if(newZoomLevel && newZoomLevel < (this.zoomByLevel['departement']) - 1) {
+      selectedLevel = 'region';
+    } else if(newZoomLevel && newZoomLevel < (this.zoomByLevel['epci'] - 1)) {
+      selectedLevel = 'departement';
+    } else if(newZoomLevel && newZoomLevel < (this.zoomByLevel['qpv'] - 1 )) {
+      selectedLevel = 'epci';
+    } else if(newZoomLevel && newZoomLevel >= (this.zoomByLevel['qpv'] - 1)) {
+      selectedLevel = 'qpv';
+    }
+
+    if (selectedLevel !== undefined) {
+      this.selectMapLevel.value = selectedLevel;
+    }
   }
 
   handleSelectChange(event: Event): void {
@@ -103,23 +137,28 @@ export class LevelControl extends Control {
     }
   }
 
-  updateSelectedQpv(searchedQpv: FeatureLike, searchedYears: number[] | null | undefined) {
-    this.updateTitle(searchedQpv.get('name'), searchedYears);
-    this.currentCenter = searchedQpv.get('geometry');
+  updateSelectedQpv(
+    searchedNames: string[] | null | undefined,
+    searchedYears: number[] | null | undefined,
+    searchedCenter: Point | undefined
+  ) {
+    this.updateTitle(searchedNames, searchedYears);
+    this.currentCenter = searchedCenter;
     this.gotoCurrentCenter();
   }
 
-  updateTitle(searchedQpvName: string, searchedYears: number[] | null | undefined) {
-    const titleElements = this.nodeElement.getElementsByClassName('map-level-control-title');
+  updateTitle(searchedQpvNames: string[] | null | undefined, searchedYears: number[] | null | undefined) {
+    let yearsString = "/";
+    let namesString = "/";
 
-    if (titleElements && titleElements.length > 0) {
-      const titleElement = titleElements[0];
-      if (searchedYears) {
-        titleElement.innerHTML = `${searchedQpvName} - ${searchedYears.join('; ')}`;
-      } else {
-        titleElement.innerHTML = `${searchedQpvName}`;
-      }
-
+    if (searchedYears) {
+      yearsString = `${searchedYears.join(', ')}`;
     }
+
+    if (searchedQpvNames) {
+      namesString = `${searchedQpvNames.join(', ')}`;
+    }
+
+    this.titleElement.innerHTML = `${namesString} - ${yearsString}`;
   }
 }
