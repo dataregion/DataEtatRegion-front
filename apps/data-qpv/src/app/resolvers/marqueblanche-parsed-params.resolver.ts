@@ -70,7 +70,7 @@ function _resolver(route: ActivatedRouteSnapshot): Observable<{ data: MarqueBlan
     .pipe(
       map(previous => annees_min_max(previous, handlerCtx)),
       mergeMap(previous => localisation(previous, handlerCtx)),
-      mergeMap(previous => qpv_codes(previous, handlerCtx)),
+      mergeMap(previous => code_qpv(previous, handlerCtx)),
       map(result => {
         return { data: result }
       })
@@ -80,19 +80,19 @@ function _resolver(route: ActivatedRouteSnapshot): Observable<{ data: MarqueBlan
 }
 
 /** Gère le préfiltre des codes QPV */
-function qpv_codes(
+function code_qpv(
   previous: MarqueBlancheParsedParams,
   { api_geo, route, logger }: _HandlerContext,
 ): Observable<MarqueBlancheParsedParams> {
 
-  const codes_qpv = route.queryParamMap.get(FinancialQueryParam.QPV);
+  const code_qpv = route.queryParamMap.get(FinancialQueryParam.QPV);
 
-  if (codes_qpv === null)
+  if (code_qpv === null)
     return of(previous);
 
   function handle_geo(geo: GeoModel[]) {
     if (geo.length !== 1)
-      throw new Error(`Impossible de trouver une localisation pour QPV: ${codes_qpv}`);
+      throw new Error(`Impossible de trouver une localisation pour QPV: ${code_qpv}`);
     const _preFilters: PreFilters = {
       ...previous.preFilters,
       qpv: [geo[0]] as unknown as JSONObject[] // XXX: Ici, on ne gère qu'un seul code_geo
@@ -103,8 +103,10 @@ function qpv_codes(
     };
   }
 
-  logger.debug(`Application des paramètres QPV et ${FinancialQueryParam.Code_geo}: ${codes_qpv}`);
-  const result = filterGeo(api_geo, codes_qpv ? codes_qpv : "", TypeLocalisation.QPV)
+  logger.debug(`Application des paramètres QPV et ${FinancialQueryParam.Code_geo}: ${code_qpv}`);
+  if (code_qpv.includes(","))
+    throw new Error(`Impossible de trouver une localisation pour QPV: ${code_qpv}`);
+  const result = filterGeo(api_geo, code_qpv ? code_qpv : "", TypeLocalisation.QPV)
     .pipe(
       map(geo => handle_geo(geo))
     );

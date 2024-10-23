@@ -9,7 +9,7 @@ export enum FinancialQueryParam {
     Niveau_geo = 'niveau_geo',
     Code_geo = 'code_geo',
 
-    QPV = 'codes_qpv',
+    QPV = 'code_qpv',
 }
 const values_FinancialQueryParam = Object.values(FinancialQueryParam);
 

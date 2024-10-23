@@ -455,7 +455,8 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
     const mappedData: CheckboxMappedData[] = []
     this.financeurs.forEach(f => {
       mappedData.push({
-        label: f.label,
+        label: f.code,
+        description: f.label,
         checked: false
       })
     })
@@ -477,11 +478,23 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
     const mappedData: CheckboxMappedData[] = []
     this.porteurs.forEach(p => {
       mappedData.push({
-        label: p.denomination,
+        label: p.siret,
+        description: p.denomination,
         checked: false
       })
     })
     this.modalAdditionalParams.openModal("porteurs", "Liste des porteurs de projet", this.searchForm, mappedData)
+  }
+
+  public openModalTypesPorteur() {
+    const mappedData: CheckboxMappedData[] = [
+      { label: "Collectivité", checked: false },
+      { label: "Association", checked: false },
+      { label: "Entreprise", checked: false },
+      { label: "État", checked: false },
+      { label: "Autres", checked: false }
+    ];
+    this.modalAdditionalParams.openModal("porteurs", "Liste des types de porteur de projet", this.searchForm, mappedData)
   }
 
 }

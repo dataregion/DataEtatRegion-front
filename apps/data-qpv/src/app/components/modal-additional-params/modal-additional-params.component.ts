@@ -1,6 +1,7 @@
 import { Component, Input, ViewChild } from "@angular/core";
-import { FormControl, FormGroup } from "@angular/forms";
+import { FormControl, FormGroup, FormsModule } from "@angular/forms";
 import { DsfrHeadingLevel, DsfrModalAction, DsfrModalComponent, DsfrSize, DsfrSizeConst } from "@edugouvfr/ngx-dsfr";
+import { Subject } from "rxjs";
 
 export interface CheckboxMappedData {
   label: string;
@@ -18,7 +19,7 @@ export class ModalAdditionalParamsComponent {
   private _dialogId: string = ""
 
   private _titleModal: string = "Test de titre"
-  private _size: DsfrSize = DsfrSizeConst.MD
+  private _size: DsfrSize = DsfrSizeConst.LG
   private _actions: DsfrModalAction[] = []
   private _headingLevel: DsfrHeadingLevel | undefined
   private _autoCloseOnAction: boolean = true
@@ -102,11 +103,11 @@ export class ModalAdditionalParamsComponent {
     this.modalFiltres.open()
   }
 
-  inputFiltre: string = "";
+  input: string = "";
 
   filterCheckboxes(text?: string): void {
-    this.inputFiltre = text === undefined ? this.inputFiltre : text;
-    this.filteredCheckboxes = this.data.filter(d => d.label.includes(this.inputFiltre))
+    this.input = text === undefined ? this.input : text;
+    this.filteredCheckboxes = this.data.filter(d => d.label.toLowerCase().includes(this.input) || d.description?.toLowerCase().includes(this.input))
   }
 
 

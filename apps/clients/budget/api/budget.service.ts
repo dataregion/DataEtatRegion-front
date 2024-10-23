@@ -156,7 +156,7 @@ export class BudgetService implements BudgetServiceInterface {
         }
         if (codesQpv) {
             localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
-                [...codesQpv].join(COLLECTION_FORMATS['csv']), 'codes_qpv');
+                [...codesQpv].join(COLLECTION_FORMATS['csv']), 'code_qpv');
         }
         if (theme) {
             localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,

@@ -7,32 +7,24 @@
   [autoCloseOnAction]="autoCloseOnAction"
   [controlMode]="'dynamic'"
 >
-    <!-- <dsfr-form-input
-      [type]="'text'"
-      [label]="'Rechercher un élément'"
-      [autoCorrect]="false"
-      [(ngModel)]="inputFiltre"
-      (ngModelChange)="filteCheckboxes($event)"
-      ></dsfr-form-input> -->
 
   <dsfr-form-input
     [type]="'text'"
     [label]="'Rechercher un élément'"
     [autoCorrect]="false"
+    [(ngModel)]="input"
+    (ngModelChange)="filterCheckboxes($event)"
     ></dsfr-form-input>
-  <span>{{data.length}}</span>
-  <div *ngFor="let item of data">
-    {{item.label}}
-    </div>
 
   <dsfr-form-fieldset [id]="dialogId + '-checkboxes'">
-    {{data.length}}
-    <div *ngFor="let item of data">
-      {{item.label}}
-      <!-- <dsfr-form-checkbox
+    <ng-container *ngFor="let item of filteredCheckboxes">
+      <dsfr-form-checkbox
+        *fieldsetElement
         [label]="item.label"
-        style="margin: 15px 0px;"></dsfr-form-checkbox> -->
-    </div>
+        [hint]="item.description"
+        style="margin: 10px 0px;">
+      </dsfr-form-checkbox>
+    </ng-container>
   </dsfr-form-fieldset>
 
 </dsfr-modal>
