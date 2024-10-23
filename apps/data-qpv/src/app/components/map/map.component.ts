@@ -187,24 +187,18 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     const clusterSource = this.clusterLayer.getSource() as Cluster<Feature>; // Get the Cluster source
     const vectorSource = clusterSource.getSource() as VectorSource;
 
-    let searchedCenter: Point | undefined = this.findFirstFeatureByCodes(vectorSource, searchedQpvNames)?.get('geometry');
+    let selectedFeatures: Feature[] | null | undefined = this.findFeaturesByCodes(vectorSource, searchedQpvNames);
 
-    this.mapLevelControl?.updateSelectedQpv(searchedQpvNames, searchedYears, searchedCenter, localisation);
+    this.mapLevelControl?.updateSelectedQpv(searchedQpvNames, searchedYears, localisation, selectedFeatures);
   }
 
-  private findFirstFeatureByCodes(
+  private findFeaturesByCodes(
     vectorSource: VectorSource,
-    code: string[] | null | undefined
-  ): Feature | undefined {
-    const features = vectorSource.getFeatures();
-
-    for (const feature of features) {
-      if (code?.includes(feature.get('code'))) {
-        return feature;
-      }
-    }
-
-    return undefined;
+    codes: string[] | null | undefined
+  ): Feature[] | null | undefined {
+    return vectorSource.getFeatures().filter(function(feature) {
+      return codes?.includes(feature.get('code'));
+    });
   }
 
   private clusterStyleFunction(feature: FeatureLike, resolution: number): Style {

@@ -1,14 +1,9 @@
 import { Injectable } from '@angular/core';
 import {Attribution, Control} from 'ol/control';
-import {Tile as TileLayer, VectorTile as VectorTileLayer} from 'ol/layer';
-import {VectorTile as VectorTileSource} from 'ol/source';
-import {MVT} from "ol/format";
-import {applyStyle} from 'ol-mapbox-style';
-import {Fill, Stroke, Style} from "ol/style";
-import {FeatureLike} from "ol/Feature";
-import { Point } from 'ol/geom';
 import Map from "ol/Map";
-import {TypeLocalisation} from "../../../../../common-lib/src/lib/models/geo.models";
+import {Feature} from "ol";
+import { extend as olExtend, createEmpty as olCreateEmptyExtend } from 'ol/extent';
+import {Coordinate} from "ol/coordinate";
 
 @Injectable({
   providedIn: 'root',
@@ -41,7 +36,7 @@ export class LevelControl extends Control {
     'qpv': 15,
   };
 
-  private currentCenter: Point | undefined;
+  private currentCenter: Coordinate | undefined;
 
   private selectMapLevel: HTMLSelectElement;
   private zoomToCurrentElementBtn: HTMLButtonElement;
@@ -138,20 +133,34 @@ export class LevelControl extends Control {
 
   gotoCurrentCenter() {
     if (this.currentCenter) {
-      this.currentMap?.getView()?.setCenter(this.currentCenter.getCoordinates());
+      this.currentMap?.getView()?.setCenter(this.currentCenter);
     }
   }
 
   updateSelectedQpv(
     searchedNames: string[] | null | undefined,
     searchedYears: number[] | null | undefined,
-    searchedCenter: Point | undefined,
     localisation: string | null | undefined,
+    searchedFeatures: Feature[] | null | undefined,
   ) {
     this.updateTitle(searchedNames, searchedYears);
-    this.currentCenter = searchedCenter;
     this.updateLevel(localisation);
+    this.fitViewForFeatures(searchedFeatures);
     this.gotoCurrentCenter();
+  }
+
+  fitViewForFeatures(searchedFeatures: Feature[] | null | undefined): void {
+    if (searchedFeatures) {
+      let selectedExtent = olCreateEmptyExtend();
+      searchedFeatures.forEach(function(feature) {
+        const geom = feature?.getGeometry();
+        if (geom) {
+          olExtend(selectedExtent, geom.getExtent());
+        }
+      });
+      this.currentMap?.getView().fit(selectedExtent, { size: this.currentMap?.getSize(), padding: [50, 50, 50, 50] });
+      this.currentCenter = this.currentMap?.getView().getCenter();
+    }
   }
 
   updateLevel(localisation: string | null | undefined): void {
