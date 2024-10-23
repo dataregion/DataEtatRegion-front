@@ -144,12 +144,10 @@ export class LevelControl extends Control {
     searchedFeatures: Feature[] | null | undefined,
   ) {
     this.updateTitle(searchedNames, searchedYears);
-    this.updateLevel(localisation);
-    this.fitViewForFeatures(searchedFeatures);
-    this.gotoCurrentCenter();
+    this.fitViewForFeatures(searchedFeatures, localisation);
   }
 
-  fitViewForFeatures(searchedFeatures: Feature[] | null | undefined): void {
+  fitViewForFeatures(searchedFeatures: Feature[] | null | undefined, localisation: string | null | undefined): void {
     if (searchedFeatures) {
       let selectedExtent = olCreateEmptyExtend();
       searchedFeatures.forEach(function(feature) {
@@ -160,6 +158,9 @@ export class LevelControl extends Control {
       });
       this.currentMap?.getView().fit(selectedExtent, { size: this.currentMap?.getSize(), padding: [50, 50, 50, 50] });
       this.currentCenter = this.currentMap?.getView().getCenter();
+      if (localisation && searchedFeatures.length === 1) {
+        this.updateLevel(localisation);
+      }
     }
   }
 
