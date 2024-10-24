@@ -119,10 +119,7 @@ export class IntegrationDemarcheComponent implements OnInit {
           this.nomDemarche = '';
           this.integree = false;
           this.dejaIntegree = false;
-          if (err.error && err.error.code === 'INVALID_TOKEN')
-            this._alertService.openAlertError(
-              "Le token sélectionné ne permet pas d'accéder à cette démarche"
-            );
+          if (err.error?.message) this._alertService.openAlertError(err.error.message);
           else this._alertService.openAlertError(err.message);
         }
       });
