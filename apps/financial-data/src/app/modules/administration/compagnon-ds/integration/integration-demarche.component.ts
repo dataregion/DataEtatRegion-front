@@ -18,11 +18,11 @@ export class IntegrationDemarcheComponent implements OnInit {
   public demarche: Demarche | null = null;
 
   public integrationForm = new FormGroup({
-    numeroDemarche: new FormControl(''),
-    selectedToken: new FormControl<Token | null>(null)
+    numeroDemarche: new FormControl('')
   });
 
   public tokens: Token[] = [];
+  public selectedToken: Token | null = null;
   public tokenId: number | null = null;
   public numberDemarche: number | null = null;
   public nomDemarche: string | undefined = '';
@@ -69,9 +69,7 @@ export class IntegrationDemarcheComponent implements OnInit {
     this._compagnonDS.getTokens().subscribe((tokens) => {
       this.tokens = tokens;
       if (this.tokens.length > 0) {
-        this.integrationForm.patchValue({
-          selectedToken: this.tokens[0]
-        });
+        this.selectedToken = this.tokens[0];
       }
     });
   }
@@ -94,12 +92,12 @@ export class IntegrationDemarcheComponent implements OnInit {
       return;
     }
 
-    if (!this.integrationForm.value.selectedToken || !this.integrationForm.value.selectedToken.id) {
+    if (!this.selectedToken || !this.selectedToken.id) {
       this._alertService.openAlertError('Veuillez choisir un token');
       return;
     }
 
-    this.tokenId = this.integrationForm.value.selectedToken.id;
+    this.tokenId = this.selectedToken.id;
     forkJoin({
       graphFetch: this._compagnonDS.getDemarcheLigthFromApiExterne(
         this.tokenId,
@@ -117,15 +115,13 @@ export class IntegrationDemarcheComponent implements OnInit {
             this.dateIntegration = results.dbFetch.date_import;
           }
         },
-        error: (err: Error) => {
+        error: (err: HttpErrorResponse) => {
           this.nomDemarche = '';
           this.integree = false;
           this.dejaIntegree = false;
-          if (err.message === 'Demarche not found')
-            this._alertService.openAlertError('Numéro de démarche inconnu');
-          else if (err.message === 'An object of type Demarche was hidden due to permissions')
+          if (err.error && err.error.code === 'INVALID_TOKEN')
             this._alertService.openAlertError(
-              "Vous n'avez pas les droits pour récupérer les données de cette démarche"
+              "Le token sélectionné ne permet pas d'accéder à cette démarche"
             );
           else this._alertService.openAlertError(err.message);
         }

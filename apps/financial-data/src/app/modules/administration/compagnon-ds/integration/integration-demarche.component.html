@@ -10,27 +10,28 @@
           <div class="fr-input-group">
             <label class="fr-label" for="token">Token à utiliser</label>
             <span class="fr-hint-text"></span>
-            <lib-select-simple [(selected)]="integrationForm.value.selectedToken" [canClear]="false" [canFilter]="false"
+            <lib-select-simple [(selected)]="selectedToken" [canClear]="false" [canFilter]="false"
                                [options]="tokens"
                                [renderLabelFunction]="renderToken"
                                id="token"
             />
-            <button class="fr-btn fr-btn--secondary" type="button" [routerLink]="['/administration/demarches/gestion-token']">Gérer mes tokens DS</button>
+            <button class="fr-btn fr-btn--secondary" type="button"
+                    [routerLink]="['/administration/demarches/gestion-token']">Gérer mes tokens DS
+            </button>
           </div>
 
           <div class="fr-input-group">
             <label class="fr-label" for="numeroDemarche">Saisir le numéro de votre démarche DS</label>
             <span class="fr-hint-text"></span>
-            <input class="fr-input" type="text" data-test-id="numeroDemarche" formControlName="numeroDemarche">
+            <input id="numeroDemarche" class="fr-input" type="text" data-test-id="numeroDemarche"
+                   formControlName="numeroDemarche">
           </div>
           <div class="fr-alert fr-alert--warning" *ngIf="nomDemarche === ''">
             <h3 class="fr-alert__title">Attention</h3>
-            <p>Cette fonctionnalité est <b>expérimentale</b>, par conséquent il est actuellement possible d'intégrer
-              <b>uniquement</b> les Démarches Simplifiées qui ont pour administrateur Julien Kounowski, l'administrateur
-              des données de l'Etat en Bretagne (ex: DETR, DSIL...).</p>
-            <br />
-            <p>Si vous souhaitez intégrer une autre démarche, vous pouvez contacter l'équipe projet Data Etat ou
-              julien.kounowski&#64;bretagne.gouv.fr pour nous faire part de cette demande.</p>
+            <p>Cette fonctionnalité est <b>expérimentale</b>. Le token que vous
+              saisissez et les démarches qui y sont liées ne seront consultables que par vous. </p>
+            <p>Cependant, le résultat des
+              réconciliations des dossiers DS et des lignes Chorus sera visible de tous.</p>
           </div>
         </div>
         <div class="fr-col-4" style="display:flex; align-items: flex-end; justify-content: flex-end;">
