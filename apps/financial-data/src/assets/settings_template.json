@@ -16,16 +16,9 @@
     "administration": "<url api administration>",
     "geo": "url api geo",
     "referentiel": "url api referentiel",
-    "apis_externes": "url api externes"
-  },
-  "ressources": {
-    "visuterritoire": "<url visuterritoire>",
-    "relance": "<url france relance>",
-    "graphiques": "<url superset>",
-    "api_swagger": "<url swagger referentiel>",
-    "documentation": "<url doc utilisateur>",
-    "suivi_usage": "<url superset suivi>",
-    "grist": "<url grist>"
+    "apis_externes": "url api externes",
+    "demarches": "http://localhost:5000/data-demarches",
+    "ressource": "http://localhost:5000/ressource/liste"
   },
   "features": {
     "integration_ds": false

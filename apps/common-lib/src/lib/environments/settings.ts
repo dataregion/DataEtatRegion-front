@@ -12,16 +12,6 @@ export class Keycloak {
   hostname_client_id_mappings: HostnameClientIdMappings = {};
 }
 
-export class Ressources {
-  visuterritoire = '';
-  graphiques = '';
-  relance = '';
-  api_swagger = '';
-  documentation = '';
-  suivi_usage = '';
-  grist = '';
-}
-
 export class Features {
   integration_ds = true;
 }
@@ -54,7 +44,6 @@ export class Settings {
   production = false;
   apis: IApi | undefined = undefined;
   keycloak: Keycloak = new Keycloak();
-  ressources: Ressources = new Ressources();
   features: Features = new Features();
   matomo: Matomo = new Matomo();
   contact: string | undefined = undefined;

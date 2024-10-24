@@ -5,7 +5,6 @@ import {
   IApi,
   Keycloak,
   Matomo,
-  Ressources,
   Settings
 } from 'apps/common-lib/src/public-api';
 
@@ -18,6 +17,7 @@ class Api implements IApi {
   referentiel = '';
   apis_externes = '';
   demarches = '';
+  ressource = '';
 }
 
 class FinancialSettings extends Settings {
@@ -32,7 +32,6 @@ export class SettingsService implements ISettingsService {
     this.settings = new FinancialSettings();
     this.settings.apis = new Api();
     this.settings.keycloak = new Keycloak();
-    this.settings.ressources = new Ressources();
     this.settings.features = new Features();
     this.settings.matomo = new Matomo();
   }
@@ -43,10 +42,6 @@ export class SettingsService implements ISettingsService {
 
   getKeycloakSettings(): Keycloak {
     return this.settings.keycloak;
-  }
-
-  getRessources(): Ressources {
-    return this.settings.ressources;
   }
 
   getFeatures(): Features {
@@ -91,5 +86,8 @@ export class SettingsService implements ISettingsService {
 
   public get apiDemarches(): string {
     return (this.settings.apis as Api).demarches;
+  }
+  public get apiRessource(): string {
+    return (this.settings.apis as Api).ressource;
   }
 }
