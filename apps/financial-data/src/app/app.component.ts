@@ -12,6 +12,7 @@ import {
 } from './modules/administration/administration-routing.module';
 import { ResourceService } from '@services/ressource.service';
 import { Ressources } from '@models/ressource/ressource.models';
+import { Observable } from 'rxjs';
 
 export const MULTIREGIONS_SERVICE = new InjectionToken<MultiregionsService>('MultiregionsService');
 
@@ -28,8 +29,7 @@ export class AppComponent implements OnInit {
   public showUploadFinancialDataPage: boolean = false;
   public showUpdateTagsPage: boolean = false;
   public showIntegrationDemarchePage: boolean = false;
-  public ressources!: Ressources;
-  public ressourcesLoaded: boolean = false;
+  public ressources$!: Observable<Ressources>;  // Remplacement du subscribe() par un Observable
   
   get region() {
     return this._multiregions.getRegionLabel()
@@ -63,19 +63,11 @@ export class AppComponent implements OnInit {
         profiles_required_for_upload_page
       );
       this.showUpdateTagsPage = this._sessionService.hasOneRole(profiles_required_for_tags_page);
-      this.showIntegrationDemarchePage =
+      this.showIntegrationDemarchePage = 
         this._sessionService.hasOneRole(profiles_required_for_demarches) &&
         this.settings.getFeatures().integration_ds;
 
-      this._resourceService.getResources().subscribe(
-        (data: Ressources) => {
-          this.ressources = data;
-          this.ressourcesLoaded = true;
-        },
-        (error) => {
-          console.error('Erreur lors de la récupération des ressources :', error);
-        }
-      );  
+      this.ressources$ = this._resourceService.getResources();
     });
   }
 
@@ -87,28 +79,24 @@ export class AppComponent implements OnInit {
     return this.settings.getSetting().help_pdf;
   }
 
-  public getRessource(key: string): string | undefined {
-    if (!this.ressourcesLoaded) {
-      console.warn('Les ressources ne sont pas encore chargées.');
-      return undefined;
-    }
+  public getRessource(key: string, ressources: Ressources): string | undefined {
     switch (key) {
-        case 'visuterritoire':
-          return this.ressources.visuterritoire;
-        case 'relance':
-          return this.ressources.relance;
-        case 'graphiques':
-          return this.ressources.graphiques;
-        case 'api_swagger':
-          return this.ressources.api_swagger;
-        case 'documentation':
-          return this.ressources.documentation;
-        case 'suivi_usage':
-          return this.ressources.suivi_usage;
-        case 'grist':
-          return this.ressources.grist;
-        default:
-          return undefined;
+      case 'visuterritoire':
+        return ressources.visuterritoire;
+      case 'relance':
+        return ressources.relance;
+      case 'graphiques':
+        return ressources.graphiques;
+      case 'api_swagger':
+        return ressources.api_swagger;
+      case 'documentation':
+        return ressources.documentation;
+      case 'suivi_usage':
+        return ressources.suivi_usage;
+      case 'grist':
+        return ressources.grist;
+      default:
+        return undefined;
     }  
   }
 }

@@ -7,23 +7,20 @@
     </button>
   </li>
 
-  <li ressources *ngIf="ressourcesLoaded;">
-    <button [matMenuTriggerFor]="ressources" class="fr-btn fr-btn--tertiary-no-outline fr-icon-book-2-line"
+  <li ressources *ngIf="ressources$ | async as ressources;">
+    <button [matMenuTriggerFor]="ressourcesMenu" class="fr-btn fr-btn--tertiary-no-outline fr-icon-book-2-line"
             id="ressources"
             matTooltip="Ressources">Ressources
     </button>
-    <mat-menu #ressources="matMenu">
-      <a *ngIf="getRessource('visuterritoire')" [href]="getRessource('visuterritoire')" mat-menu-item
+    <mat-menu #ressourcesMenu="matMenu">
+      <a *ngIf="ressources.visuterritoire" [href]="ressources.visuterritoire" mat-menu-item
          target="_blank">VisuTerritoire</a>
-      <a *ngIf="getRessource('relance')" [href]="getRessource('relance')" mat-menu-item target="_blank">France 2030
-        et Relance</a>
-      <a *ngIf="getRessource('graphiques')" [href]="getRessource('graphiques')" mat-menu-item target="_blank">Graphiques</a>
-      <a *ngIf="getRessource('api_swagger')" [href]="getRessource('api_swagger')" mat-menu-item target="_blank">API
-        Swagger</a>
-      <a *ngIf="getRessource('documentation')" [href]="getRessource('documentation')" mat-menu-item target="_blank">Documentation</a>
-      <a *ngIf="getRessource('suivi_usage')" [href]="getRessource('suivi_usage')" mat-menu-item target="_blank">Suivi
-        usage</a>
-      <a *ngIf="getRessource('grist')" [href]="getRessource('grist')" mat-menu-item target="_blank">Grist</a>
+      <a *ngIf="ressources.relance" [href]="ressources.relance" mat-menu-item target="_blank">France 2030 et Relance</a>
+      <a *ngIf="ressources.graphiques" [href]="ressources.graphiques" mat-menu-item target="_blank">Graphiques</a>
+      <a *ngIf="ressources.api_swagger" [href]="ressources.api_swagger" mat-menu-item target="_blank">API Swagger</a>
+      <a *ngIf="ressources.documentation" [href]="ressources.documentation" mat-menu-item target="_blank">Documentation</a>
+      <a *ngIf="ressources.suivi_usage" [href]="ressources.suivi_usage" mat-menu-item target="_blank">Suivi usage</a>
+      <a *ngIf="ressources.grist" [href]="ressources.grist" mat-menu-item target="_blank">Grist</a>
     </mat-menu>
   </li>
   
