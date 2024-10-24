@@ -8,7 +8,7 @@ import { CompagnonDSService } from '../compagnon-ds.service';
 import { Token } from '@models/demarche_simplifie/demarche.model';
 
 @Component({
-  selector: 'gestion-token',
+  selector: 'financial-gestion-token',
   templateUrl: './gestion-token.component.html'
 })
 export class GestionTokenComponent implements OnInit {
