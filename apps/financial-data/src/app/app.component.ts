@@ -10,6 +10,9 @@ import {
   profiles_required_for_tags_page,
   profiles_required_for_upload_page
 } from './modules/administration/administration-routing.module';
+import { ResourceService } from '@services/ressource.service';
+import { Ressources } from '@models/ressource/ressource.models';
+import { Observable } from 'rxjs';
 
 export const MULTIREGIONS_SERVICE = new InjectionToken<MultiregionsService>('MultiregionsService');
 
@@ -26,6 +29,7 @@ export class AppComponent implements OnInit {
   public showUploadFinancialDataPage: boolean = false;
   public showUpdateTagsPage: boolean = false;
   public showIntegrationDemarchePage: boolean = false;
+  public ressources$!: Observable<Ressources>;  // Remplacement du subscribe() par un Observable
   
   get region() {
     return this._multiregions.getRegionLabel()
@@ -40,6 +44,7 @@ export class AppComponent implements OnInit {
     private _sessionService: SessionService,
     private _gridFullscreen: GridInFullscreenStateService,
     private _multiregions: MultiregionsService,
+    private _resourceService: ResourceService,
     @Inject(SETTINGS) public readonly settings: SettingsService
   ) {}
 
@@ -58,9 +63,11 @@ export class AppComponent implements OnInit {
         profiles_required_for_upload_page
       );
       this.showUpdateTagsPage = this._sessionService.hasOneRole(profiles_required_for_tags_page);
-      this.showIntegrationDemarchePage =
+      this.showIntegrationDemarchePage = 
         this._sessionService.hasOneRole(profiles_required_for_demarches) &&
         this.settings.getFeatures().integration_ds;
+
+      this.ressources$ = this._resourceService.getResources();
     });
   }
 
@@ -72,33 +79,24 @@ export class AppComponent implements OnInit {
     return this.settings.getSetting().help_pdf;
   }
 
-  public getRessource(key: string): string | undefined {
-    let ressource: string | undefined;
+  public getRessource(key: string, ressources: Ressources): string | undefined {
     switch (key) {
       case 'visuterritoire':
-        ressource = this.settings.getRessources().visuterritoire;
-        break;
+        return ressources.visuterritoire;
       case 'relance':
-        ressource = this.settings.getRessources().relance;
-        break;
+        return ressources.relance;
       case 'graphiques':
-        ressource = this.settings.getRessources().graphiques;
-        break;
+        return ressources.graphiques;
       case 'api_swagger':
-        ressource = this.settings.getRessources().api_swagger;
-        break;
+        return ressources.api_swagger;
       case 'documentation':
-        ressource = this.settings.getRessources().documentation;
-        break;
+        return ressources.documentation;
       case 'suivi_usage':
-        ressource = this.settings.getRessources().suivi_usage;
-        break;
+        return ressources.suivi_usage;
       case 'grist':
-        ressource = this.settings.getRessources().grist;
-        break;
+        return ressources.grist;
       default:
-        ressource = undefined;
-    }
-    return ressource;
+        return undefined;
+    }  
   }
 }
