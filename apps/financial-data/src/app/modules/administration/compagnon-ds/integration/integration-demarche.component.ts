@@ -155,6 +155,9 @@ export class IntegrationDemarcheComponent implements OnInit {
   }
 
   renderToken(token: Token) {
+    if (!token) {
+      return '';
+    }
     return token.nom;
   }
 }
