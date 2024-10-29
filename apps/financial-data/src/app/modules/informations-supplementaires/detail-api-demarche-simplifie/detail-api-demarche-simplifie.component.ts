@@ -42,6 +42,10 @@ export class DetailApiDemarcheSimplifieComponent {
   }
 
   public getMontant(label: string) {
-    return this.moneyFormat.format(Number(label));
+    if (!label) {
+      return 'Non renseigné';
+    }
+    const montant = label.replace(',', '.').replace(/[^0-9.,]/, '');
+    return this.moneyFormat.format(Number(montant));
   }
 }
