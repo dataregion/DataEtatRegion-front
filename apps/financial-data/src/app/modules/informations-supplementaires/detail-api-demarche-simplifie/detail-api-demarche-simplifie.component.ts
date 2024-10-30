@@ -4,8 +4,8 @@ import { ChargementOuErreurComponent } from '../chargement-ou-erreur/chargement-
 import { InformationsSupplementairesService } from '../services/informations-supplementaires.service';
 import { OuNonRenseignePipe } from 'apps/common-lib/src/public-api';
 import { AffichageDossier } from '@models/demarche_simplifie/demarche.model';
-import { SETTINGS } from '../../../../../../common-lib/src/lib/environments/settings.http.service';
-import { ISettingsService } from '../../../../../../common-lib/src/lib/environments/interface-settings.service';
+import { SETTINGS } from 'apps/common-lib/src/lib/environments/settings.http.service';
+import { ISettingsService } from 'apps/common-lib/src/lib/environments/interface-settings.service';
 
 @Component({
   standalone: true,
