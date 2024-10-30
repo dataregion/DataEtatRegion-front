@@ -2,10 +2,9 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Component, DestroyRef, inject, OnInit } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AlertService, LoaderService } from 'apps/common-lib/src/public-api';
-import { DemarcheHttpService } from '@services/http/demarche.service';
 import { forkJoin } from 'rxjs';
 import { CompagnonDSService } from '../compagnon-ds.service';
-import { Demarche } from '@models/demarche_simplifie/demarche.model';
+import { Demarche, Token } from '@models/demarche_simplifie/demarche.model';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
@@ -18,10 +17,13 @@ export class IntegrationDemarcheComponent implements OnInit {
 
   public demarche: Demarche | null = null;
 
-  integrationForm = new FormGroup({
+  public integrationForm = new FormGroup({
     numeroDemarche: new FormControl('')
   });
 
+  public tokens: Token[] = [];
+  public selectedToken: Token | null = null;
+  public tokenId: number | null = null;
   public numberDemarche: number | null = null;
   public nomDemarche: string | undefined = '';
   public integree: boolean = false;
@@ -32,7 +34,6 @@ export class IntegrationDemarcheComponent implements OnInit {
   constructor(
     private _loaderService: LoaderService,
     private _route: ActivatedRoute,
-    private _demarcheService: DemarcheHttpService,
     private _compagnonDS: CompagnonDSService,
     private _alertService: AlertService
   ) {}
@@ -64,6 +65,13 @@ export class IntegrationDemarcheComponent implements OnInit {
     this._loaderService.isLoading().subscribe((loading) => {
       this.somethingIsLoading = loading;
     });
+
+    this._compagnonDS.getTokens().subscribe((tokens) => {
+      this.tokens = tokens;
+      if (this.tokens.length > 0) {
+        this.selectedToken = this.tokens[0];
+      }
+    });
   }
 
   searchDemarche() {
@@ -84,8 +92,17 @@ export class IntegrationDemarcheComponent implements OnInit {
       return;
     }
 
+    if (!this.selectedToken || !this.selectedToken.id) {
+      this._alertService.openAlertError('Veuillez choisir un token');
+      return;
+    }
+
+    this.tokenId = this.selectedToken.id;
     forkJoin({
-      graphFetch: this._demarcheService.getDemarcheLight(this.numberDemarche),
+      graphFetch: this._compagnonDS.getDemarcheLigthFromApiExterne(
+        this.tokenId,
+        this.numberDemarche
+      ),
       dbFetch: this._compagnonDS.getDemarche(this.numberDemarche)
     })
       .pipe(takeUntilDestroyed(this._destroyRef))
@@ -98,16 +115,11 @@ export class IntegrationDemarcheComponent implements OnInit {
             this.dateIntegration = results.dbFetch.date_import;
           }
         },
-        error: (err: Error) => {
+        error: (err: HttpErrorResponse) => {
           this.nomDemarche = '';
           this.integree = false;
           this.dejaIntegree = false;
-          if (err.message === 'Demarche not found')
-            this._alertService.openAlertError('Numéro de démarche inconnu');
-          else if (err.message === 'An object of type Demarche was hidden due to permissions')
-            this._alertService.openAlertError(
-              "Vous n'avez pas les droits pour récupérer les données de cette démarche"
-            );
+          if (err.error?.message) this._alertService.openAlertError(err.error.message);
           else this._alertService.openAlertError(err.message);
         }
       });
@@ -119,8 +131,13 @@ export class IntegrationDemarcheComponent implements OnInit {
       return;
     }
 
+    if (this.tokenId == null) {
+      this._alertService.openAlertError('Veuillez choisir un token');
+      return;
+    }
+
     this._compagnonDS
-      .saveDemarche(this.numberDemarche)
+      .saveDemarche(this.tokenId, this.numberDemarche)
       .pipe(takeUntilDestroyed(this._destroyRef))
       .subscribe({
         next: (demarche: Demarche) => {
@@ -135,5 +152,12 @@ export class IntegrationDemarcheComponent implements OnInit {
           }
         }
       });
+  }
+
+  renderToken(token: Token) {
+    if (!token) {
+      return '';
+    }
+    return token.nom;
   }
 }

@@ -1,5 +1,10 @@
 import { Nullable } from 'apps/common-lib/src/lib/utilities/optional.type';
 
+export interface DemarcheLight {
+  id: number;
+  title: string;
+}
+
 export interface Demarche {
   number: number;
   title: string;
@@ -68,4 +73,10 @@ export interface Affichage {
   montantAccorde: string | undefined;
   dateFinProjet: string | undefined;
   contact: string | undefined;
+}
+
+export interface Token {
+  id: number | undefined;
+  nom: string;
+  token: string;
 }

@@ -33,15 +33,12 @@ import {
 import { ManagementModule } from 'apps/management/src/public-api';
 import { API_MANAGEMENT_PATH } from 'apps/management/src/lib/services/users-http.service';
 import { GroupingTableModule } from 'apps/grouping-table/src/public-api';
-import { APOLLO_OPTIONS, ApolloModule } from 'apollo-angular';
-import { HttpLink } from 'apollo-angular/http';
 
 import {
   aeApiModule,
   aeConfiguration,
   aeConfigurationParameters
 } from 'apps/clients/apis-externes';
-import { InMemoryCache } from '@apollo/client';
 import { DATA_HTTP_SERVICE } from '@services/budget.service';
 
 import { budgetApiModule, budgetConfiguration } from 'apps/clients/budget';
@@ -90,7 +87,6 @@ registerLocaleData(localeFr);
     ManagementModule,
     aeApiModule,
     budgetApiModule,
-    ApolloModule,
     MatomoModule.forRoot({
       mode: 'deferred'
     }),
@@ -161,19 +157,6 @@ registerLocaleData(localeFr);
       useFactory: apiBudgetConfigFactory,
       deps: [SETTINGS],
       multi: false
-    },
-    {
-      provide: APOLLO_OPTIONS,
-      useFactory(httpLink: HttpLink, settings: SettingsService) {
-        const apiDs = settings.apiExternes + '/demarche-simplifie';
-        return {
-          cache: new InMemoryCache(),
-          link: httpLink.create({
-            uri: apiDs
-          })
-        };
-      },
-      deps: [HttpLink, SETTINGS]
     },
     provideHttpClient(withInterceptorsFromDi())
   ]
