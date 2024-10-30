@@ -27,5 +27,6 @@
     "disabled": true
   },
   "contact": "http://contact.fr",
-  "help_pdf": "https://www.africau.edu/images/default/sample.pdf"
+  "help_pdf": "https://www.africau.edu/images/default/sample.pdf",
+  "url_dossier_ds": "https://www.demarches-simplifiees.fr/dossiers/"
 }

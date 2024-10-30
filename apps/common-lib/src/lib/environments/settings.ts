@@ -48,4 +48,5 @@ export class Settings {
   matomo: Matomo = new Matomo();
   contact: string | undefined = undefined;
   url_github: string | undefined = undefined;
+  url_dossier_ds: string | undefined = undefined;
 }
