@@ -2,7 +2,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Component, DestroyRef, inject, OnInit } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AlertService, LoaderService } from 'apps/common-lib/src/public-api';
-import { forkJoin } from 'rxjs';
+import { combineLatest, forkJoin } from 'rxjs';
 import { CompagnonDSService } from '../compagnon-ds.service';
 import { Demarche, Token } from '@models/demarche_simplifie/demarche.model';
 import { FormControl, FormGroup } from '@angular/forms';
@@ -39,39 +39,39 @@ export class IntegrationDemarcheComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // Vérification des query params
-    this._route.queryParams.pipe(takeUntilDestroyed(this._destroyRef)).subscribe((params) => {
-      if (!('number' in params)) {
-        // Vérification si la démarche a déjà été récupérée et stockée dans le service
-        this._compagnonDS.demarche$
-          .pipe(takeUntilDestroyed(this._destroyRef))
-          .subscribe((value) => {
-            this.demarche = value;
-            if (value !== null) {
-              this.integrationForm.patchValue({
-                numeroDemarche: value.number.toString()
-              });
-              this.nomDemarche = value.title;
-              this.dejaIntegree = true;
-              this.dateIntegration = value.date_import;
-            }
-          });
-      } else {
-        this.integrationForm.patchValue({ numeroDemarche: params['number'] });
-        this.searchDemarche();
-      }
-    });
-
     this._loaderService.isLoading().subscribe((loading) => {
       this.somethingIsLoading = loading;
     });
 
-    this._compagnonDS.getTokens().subscribe((tokens) => {
-      this.tokens = tokens;
-      if (this.tokens.length > 0) {
-        this.selectedToken = this.tokens[0];
-      }
-    });
+    combineLatest({ queryParams: this._route.queryParams, tokens: this._compagnonDS.getTokens() })
+      .pipe(takeUntilDestroyed(this._destroyRef))
+      .subscribe((result) => {
+        this.tokens = result.tokens;
+        if (this.tokens.length > 0) {
+          this.selectedToken = this.tokens[0];
+        }
+
+        const params = result.queryParams;
+        if (!('number' in params)) {
+          // Vérification si la démarche a déjà été récupérée et stockée dans le service
+          this._compagnonDS.demarche$
+            .pipe(takeUntilDestroyed(this._destroyRef))
+            .subscribe((value) => {
+              this.demarche = value;
+              if (value !== null) {
+                this.integrationForm.patchValue({
+                  numeroDemarche: value.number.toString()
+                });
+                this.nomDemarche = value.title;
+                this.dejaIntegree = true;
+                this.dateIntegration = value.date_import;
+              }
+            });
+        } else {
+          this.integrationForm.patchValue({ numeroDemarche: params['number'] });
+          this.searchDemarche();
+        }
+      });
   }
 
   searchDemarche() {
@@ -111,6 +111,7 @@ export class IntegrationDemarcheComponent implements OnInit {
           this.nomDemarche = results.graphFetch?.demarche.title;
           if (results.dbFetch !== null && results.dbFetch.number === this.numberDemarche) {
             this._compagnonDS.setDemarche(results.dbFetch);
+            this.demarche = results.dbFetch;
             this.dejaIntegree = true;
             this.dateIntegration = results.dbFetch.date_import;
           }
