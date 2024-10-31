@@ -46,7 +46,9 @@ export class CompagnonDSService {
   public getDemarcheLigthFromApiExterne(
     tokenId: number,
     demarcheNumber: number
-  ): Observable<DemarcheLight> {
+  ): Observable<{
+    demarche: DemarcheLight;
+  }> {
     const demarche = `
       query getDemarche($demarcheNumber: Int!) {
         demarche(number: $demarcheNumber) {
@@ -74,7 +76,7 @@ export class CompagnonDSService {
       )
       .pipe(
         map((results) => {
-          return results as DemarcheLight;
+          return results as { demarche: DemarcheLight };
         })
       );
   }

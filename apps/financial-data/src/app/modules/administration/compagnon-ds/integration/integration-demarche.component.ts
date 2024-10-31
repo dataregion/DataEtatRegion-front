@@ -108,7 +108,7 @@ export class IntegrationDemarcheComponent implements OnInit {
       .pipe(takeUntilDestroyed(this._destroyRef))
       .subscribe({
         next: (results) => {
-          this.nomDemarche = results.graphFetch?.title;
+          this.nomDemarche = results.graphFetch?.demarche.title;
           if (results.dbFetch !== null && results.dbFetch.number === this.numberDemarche) {
             this._compagnonDS.setDemarche(results.dbFetch);
             this.dejaIntegree = true;
