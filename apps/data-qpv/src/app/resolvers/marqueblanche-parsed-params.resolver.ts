@@ -18,6 +18,7 @@ import { QueryParam } from 'apps/common-lib/src/lib/models/marqueblanche/query-p
 import { HandlerContext } from 'apps/common-lib/src/lib/models/marqueblanche/handler-context.model';
 import { passing_errors } from 'apps/common-lib/src/lib/resolvers/marqueblanche/utils';
 import { synonymes_from_types_localisation, to_type_localisation } from '@models/marqueblanche/niveau-localisation.model';
+import { to_types_categories_juridiques } from '@models/marqueblanche/type-etablissement.model';
 
 export interface MarqueBlancheParsedParams extends Params {
   preFilters: PreFilters,
@@ -71,6 +72,7 @@ function _resolver(route: ActivatedRouteSnapshot): Observable<{ data: MarqueBlan
       map(previous => annees_min_max(previous, handlerCtx)),
       mergeMap(previous => localisation(previous, handlerCtx)),
       mergeMap(previous => code_qpv(previous, handlerCtx)),
+      mergeMap(previous => types_porteur(previous, handlerCtx)),
       map(result => {
         return { data: result }
       })
@@ -163,6 +165,27 @@ function localisation(
 
   return result;
 }
+
+function types_porteur(
+  previous: MarqueBlancheParsedParams,
+  ctx: _HandlerContext
+): Observable<MarqueBlancheParsedParams> {
+
+  const types_porteur = 
+    _extract_multiple_queryparams(previous, ctx, FinancialQueryParam.TypesPorteur)
+    ?.map(x => to_types_categories_juridiques(x))
+
+  if (!types_porteur)
+    return of(previous)
+
+  const preFilters: PreFilters = {
+    ...previous.preFilters,
+    types_porteur: types_porteur as unknown as JSONObject[]
+  }
+
+  return of({ ... previous, preFilters })
+}
+
 
 /** Gère le préfiltre des années */
 function annees_min_max(

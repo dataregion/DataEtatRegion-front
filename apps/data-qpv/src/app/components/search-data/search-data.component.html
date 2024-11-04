@@ -9,13 +9,13 @@
 <ng-template #form>
   <form [formGroup]="searchForm" autocomplete="off">
     <div class="box fr-grid-row">
-      <div class="fr-col-2" style="padding-right:8px">
+      <div class="fr-col-2 wrapper-select">
         <lib-select-multiple [canFilter]="false" [canSelectAll]="true" [placeholder]="'Année'" [options]="annees" [(selected)]="selectedAnnees" data-test-id="annees-form-field" class="select-multiple" icon="calendar_month"/>
       </div>
-      <div class="field-localisation fr-col-5" style="padding-right:8px">
-        <lib-localisation [(selectedNiveau)]="selectedNiveau" [(selectedLocalisation)]="selectedLocalisations" [niveauxExcludeFilter]="['QPV']"/>
+      <div class="field-localisation fr-col-5 wrapper-select">
+        <lib-localisation [(selectedNiveau)]="selectedNiveau" [(selectedLocalisation)]="selectedLocalisations" [niveauxExcludeFilter]="['CRTE', 'Arrondissement', 'QPV']"/>
       </div>
-      <div class="fr-col-3" style="padding-right:8px">
+      <div class="fr-col-3 wrapper-select">
         <lib-select-multiple  [canFilter]="true"
                               [canSelectAll]="false"
                               [placeholder]="'QPV'"
@@ -29,10 +29,10 @@
       <div class="col-fr-2">
         <ul class="fr-btns-group fr-btns-group--inline">
           <li>
-            <button class="fr-btn fr-icon-search-line" (click)="doSearch()" aria-label="Bouton de recherche." style="width: 3.5rem; height: 3.5rem; max-width: 3.5rem; max-height: 3.5rem; padding-left: 1rem;"></button>
+            <button class="fr-btn fr-icon-search-line btn-form-action" (click)="doSearch()" aria-label="Bouton de recherche."></button>
           </li>
           <li>
-            <button class="fr-btn fr-btn--secondary fr-icon-delete-line" (click)="reset()" aria-label="Bouton de réinitialisation des critères de recherche" style="width: 3.5rem; height: 3.5rem; max-width: 3.5rem; max-height: 3.5rem; padding-left: 1rem;"></button>
+            <button class="fr-btn fr-btn--secondary fr-icon-delete-line btn-form-action" (click)="reset()" aria-label="Bouton de réinitialisation"></button>
           </li>
         </ul>
       </div>
@@ -42,25 +42,83 @@
       <div class="fr-col-10">
         <ul class="fr-btns-group fr-btns-group--inline">
           <li>
-            <button (click)="openModalFinanceurs()" class="fr-btn fr-btn--tertiary fr-btn--icon-right fr-icon-arrow-right-s-line" style="max-width: max-content; padding: 1rem; font-size: .9rem;">Financeur</button>
+            <button data-fr-opened="false" aria-controls="modal-financeurs"
+                    class="fr-btn fr-btn--icon-right fr-icon-arrow-right-s-line btn-open-modal"
+                    [ngClass]="{
+                      'fr-btn--primary': selectedFinanceurs !== null && selectedFinanceurs.length !== 0,
+                      'fr-btn--tertiary': selectedFinanceurs === null || selectedFinanceurs.length === 0
+                    }">
+                    <p *ngIf="selectedFinanceurs !== null && selectedFinanceurs.length !== 0" class="fr-tag">{{selectedFinanceurs.length}}</p>
+                    Financeur
+            </button>
           </li>
           <li>
-            <button (click)="openModalThematiques()" class="fr-btn fr-btn--tertiary fr-btn--icon-right fr-icon-arrow-right-s-line" style="max-width: max-content; padding: 1rem; font-size: .9rem;">Thématique</button>
+            <button data-fr-opened="false" aria-controls="modal-thematiques"
+                    class="fr-btn fr-btn--icon-right fr-icon-arrow-right-s-line btn-open-modal"
+                    [ngClass]="{
+                      'fr-btn--primary': selectedThematiques !== null && selectedThematiques.length !== 0,
+                      'fr-btn--tertiary': selectedThematiques === null || selectedThematiques.length === 0
+                    }">
+                    <p *ngIf="selectedThematiques !== null && selectedThematiques.length !== 0" class="fr-tag">{{selectedThematiques.length}}</p>
+                    Thématique
+            </button>
           </li>
           <li>
-            <button (click)="openModalPorteurs()" class="fr-btn fr-btn--tertiary fr-btn--icon-right fr-icon-arrow-right-s-line" style="max-width: max-content; padding: 1rem; font-size: .9rem;">Nom du porteur de projet</button>
+            <button data-fr-opened="false" aria-controls="modal-porteurs"
+                    class="fr-btn fr-btn--icon-right fr-icon-arrow-right-s-line btn-open-modal"
+                    [ngClass]="{
+                      'fr-btn--primary': selectedPorteurs !== null && selectedPorteurs.length !== 0,
+                      'fr-btn--tertiary': selectedPorteurs === null || selectedPorteurs.length === 0
+                    }">
+                    <p *ngIf="selectedPorteurs !== null && selectedPorteurs.length !== 0" class="fr-tag">{{selectedPorteurs.length}}</p>
+                    Nom du porteur de projet
+            </button>
           </li>
           <li>
-            <button (click)="openModalTypesPorteur()" class="fr-btn fr-btn--tertiary fr-btn--icon-right fr-icon-arrow-right-s-line" style="max-width: max-content; padding: 1rem; font-size: .9rem;">Type de porteur de projet</button>
+            <button data-fr-opened="false" aria-controls="modal-types"
+                    class="fr-btn fr-btn--icon-right fr-icon-arrow-right-s-line btn-open-modal"
+                    [ngClass]="{
+                      'fr-btn--primary': selectedTypesPorteur !== null && selectedTypesPorteur.length !== 0,
+                      'fr-btn--tertiary': selectedTypesPorteur === null || selectedTypesPorteur.length === 0
+                    }">
+                    <p *ngIf="selectedTypesPorteur !== null && selectedTypesPorteur.length !== 0" class="fr-tag">{{selectedTypesPorteur.length}}</p>
+                    Type de porteur de projet
+            </button>
           </li>
         </ul>
       </div>
       <div class="fr-col-2">
-        <a class="fr-link" href="#" (click)="openSaveFilterDialog()">Sauvegarder la recherche</a>
+        <!-- <a class="fr-link" href="#" (click)="openSaveFilterDialog()">Sauvegarder la recherche</a> -->
       </div>
     </div>
 
-    <modal-additional-params #modalAdditionalParams [formGroup]="searchForm"></modal-additional-params>
+    <data-qpv-modal-additional-params #modalFinanceurs
+          [title]="'Liste des financeurs'"
+          [idModal]="'modal-financeurs'"
+          [checkboxes]="filteredFinanceurs"
+          [(selected)]="selectedFinanceurs"
+          [filterFunction]="filterFinanceurCheckbox" 
+          [renderFunction]="renderFinanceurCheckbox" />
+
+    <data-qpv-modal-additional-params #modalThematiques
+          [title]="'Liste des thématiques'"
+          [idModal]="'modal-thematiques'"
+          [checkboxes]="thematiques"
+          [(selected)]="selectedThematiques" />
+
+    <data-qpv-modal-additional-params #modalPorteurs
+          [title]="'Liste des porteurs de projet'"
+          [idModal]="'modal-porteurs'"
+          [checkboxes]="filteredPorteurs"
+          [(selected)]="selectedPorteurs"
+          [filterFunction]="filterPorteurCheckbox" 
+          [renderFunction]="renderPorteurCheckbox" />
+
+    <data-qpv-modal-additional-params #modalTypesPorteur
+          [title]="'Liste des types de porteur de projet'"
+          [idModal]="'modal-types'"
+          [checkboxes]="typesPorteur"
+          [(selected)]="selectedTypesPorteur" />
 
   </form>
 </ng-template>

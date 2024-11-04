@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {Attribution, Control} from 'ol/control';
+import { Control} from 'ol/control';
 import Map from "ol/Map";
 import {Feature} from "ol";
 import { extend as olExtend, createEmpty as olCreateEmptyExtend } from 'ol/extent';
@@ -17,6 +17,7 @@ export class MapLevelCustomControlService {
   }
 }
 
+/* eslint-disable no-unused-vars */
 export enum MapLevel {
   region = 'Région',
   departement = 'Département',
@@ -59,12 +60,12 @@ export class LevelControl extends Control {
 
     // Loop over the enum to create options for selectElement
     for (const level in MapLevel) {
-      if (MapLevel.hasOwnProperty(level)) {
+      // if (Object.values(MapLevel).includes(level)) {
         const option = document.createElement('option');
         option.value = level;
         option.textContent = `${MapLevel[level as keyof typeof MapLevel]}`;
         selectElement.appendChild(option);
-      }
+      // }
     }
 
     const zoomToCurrentBtn = document.createElement('button');
@@ -149,7 +150,7 @@ export class LevelControl extends Control {
 
   fitViewForFeatures(searchedFeatures: Feature[] | null | undefined, localisation: string | null | undefined): void {
     if (searchedFeatures) {
-      let selectedExtent = olCreateEmptyExtend();
+      const selectedExtent = olCreateEmptyExtend();
       searchedFeatures.forEach(function(feature) {
         const geom = feature?.getGeometry();
         if (geom) {

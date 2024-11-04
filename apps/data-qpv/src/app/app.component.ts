@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject, InjectionToken } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { MultiregionsService } from '@services/multiregions.service';
 import { SETTINGS } from 'apps/common-lib/src/lib/environments/settings.http.service';
 import { GridInFullscreenStateService } from 'apps/common-lib/src/lib/services/grid-in-fullscreen-state.service';
@@ -15,10 +15,6 @@ export class AppComponent implements OnInit {
   public progressBarVisible: boolean = false;
   public isAuthenticated: boolean = false;
 
-  // public showManageUsersPage: boolean = false;
-  // public showUploadFinancialDataPage: boolean = false;
-  // public showUpdateTagsPage: boolean = false;
-  // public showIntegrationDemarchePage: boolean = false;
   public region: string = "";
 
   get grid_fullscreen() {
@@ -40,11 +36,6 @@ export class AppComponent implements OnInit {
 
     this._sessionService.getUser().subscribe((user) => {
       this.isAuthenticated = user !== null;
-
-      // this.showManageUsersPage = this._sessionService.hasOneRole(profiles_required_for_managment_page);
-      // this.showUploadFinancialDataPage = this._sessionService.hasOneRole(profiles_required_for_upload_page);
-      // this.showUpdateTagsPage = this._sessionService.hasOneRole(profiles_required_for_tags_page);
-      // this.showIntegrationDemarchePage = this._sessionService.hasOneRole(profiles_required_for_demarches) && this.settings.getFeatures().integration_ds;
     });
 
     this.region = this._multiregions.getRegionByHostname();

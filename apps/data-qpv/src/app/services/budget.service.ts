@@ -180,9 +180,11 @@ export class BudgetService {
     );
   }
 
-  public getCentreCouts(): Observable<CentreCouts[]> {
-    const url = `${this._apiRef}/centre-couts`;
-    return this.http.get<DataPagination<CentreCouts>>(url)
+  public getCentreCouts(query: string | null): Observable<CentreCouts[]> {
+    let params = '';
+    if (query)
+      params += '?query=' + query
+    return this.http.get<DataPagination<CentreCouts>>(`${this._apiRef}/centre-couts${params}`)
       .pipe(
         map(response => {
           return response.items as CentreCouts[]
@@ -190,9 +192,11 @@ export class BudgetService {
     );
   }
 
-  public getBeneficiaires(): Observable<Beneficiaire[]> {
-    const url = `${this._apiRef}/beneficiaire`;
-    return this.http.get<DataPagination<Beneficiaire>>(url)
+  public getBeneficiaires(query: string | null): Observable<Beneficiaire[]> {
+    let params = '';
+    if (query)
+      params += '?query=' + query
+    return this.http.get<DataPagination<Beneficiaire>>(`${this._apiRef}/beneficiaire${params}`)
       .pipe(
         map(response => {
           return response.items as Beneficiaire[]

@@ -1,114 +1,160 @@
-import { Component, Input, ViewChild } from "@angular/core";
-import { FormControl, FormGroup, FormsModule } from "@angular/forms";
+import { Component, DestroyRef, EventEmitter, inject, Input, OnChanges, Output, SimpleChanges, ViewChild } from "@angular/core";
 import { DsfrHeadingLevel, DsfrModalAction, DsfrModalComponent, DsfrSize, DsfrSizeConst } from "@edugouvfr/ngx-dsfr";
-import { Subject } from "rxjs";
+import { Subject, Subscription } from "rxjs";
 
-export interface CheckboxMappedData {
-  label: string;
-  description?: string;
-  checked: boolean;
-}
 
 @Component({
-  selector: 'modal-additional-params',
+  selector: 'data-qpv-modal-additional-params',
   templateUrl: './modal-additional-params.component.html',
   styleUrls: ['./modal-additional-params.component.scss'],
 })
-export class ModalAdditionalParamsComponent {
+export class ModalAdditionalParamsComponent<T> implements OnChanges {
 
-  private _dialogId: string = ""
+  private _destroyRef = inject(DestroyRef)
 
-  private _titleModal: string = "Test de titre"
-  private _size: DsfrSize = DsfrSizeConst.LG
-  private _actions: DsfrModalAction[] = []
-  private _headingLevel: DsfrHeadingLevel | undefined
-  private _autoCloseOnAction: boolean = true
-
-  public data: CheckboxMappedData[] = [];
-
-  public setData(data: CheckboxMappedData[]) {
-    this.data = data;
-  }
+  public size: DsfrSize = DsfrSizeConst.LG
+  public headingLevel: DsfrHeadingLevel | undefined
+  public autoCloseOnAction: boolean = true
+  public actions: DsfrModalAction[] = []
 
   @Input()
-  public formGroup: FormGroup;
+  public title: string = ""
+  @Input()
+  public idModal: string = ""
 
   @Input()
-  public formControl: string = "";
+  public checkboxes: T[] | null = [];
+  public filteredCheckboxes: T[] | null = []
 
-  constructor() {
-    this.formGroup = new FormGroup({});
+  private _selected: T[] | null = null;
+  public get selected(): T[] | null {
+    return this._selected;
   }
-
-  get dialogId() {
-    return this._dialogId;
-  }
-  
   @Input()
-  set dialogId(dialogId: string) {
-    this._dialogId = dialogId;
+  public set selected(value: T[] | null) {
+    this._selected = value ?? null;
   }
-
-  get titleModal() {
-    return this._titleModal;
-  }
-  
-  set titleModal(titleModal: string) {
-    this._titleModal = titleModal;
-  }
-
-  get size() {
-    return this._size;
-  }
-  
-  set size(size: DsfrSize) {
-    this._size = size;
-  }
-
-  get actions() {
-    return this._actions;
-  }
-  
-  set actions(actions: DsfrModalAction[]) {
-    this._actions = actions;
-  }
-
-  get headingLevel() {
-    return this._headingLevel;
-  }
-  
-  set headingLevel(headingLevel: DsfrHeadingLevel | undefined) {
-    this._headingLevel = headingLevel;
-  }
-
-  get autoCloseOnAction() {
-    return this._autoCloseOnAction;
-  }
-  
-  set autoCloseOnAction(autoCloseOnAction: boolean) {
-    this._autoCloseOnAction = autoCloseOnAction;
-  }
+  @Output() selectedChange = new EventEmitter<T[] | null>();
 
   @ViewChild('modalFiltres') modalFiltres!: DsfrModalComponent;
 
-  public filteredCheckboxes: CheckboxMappedData[] = []
+  filterInput: string = "";
+  inputFiltre: Subject<string> = new Subject<string>();
+  private _subFilterGeo: Subscription | null = null;
 
-  public openModal(formControl: string, titre: string, formGroup: FormGroup, data: CheckboxMappedData[]) {
-    this.dialogId = "modal-" + formControl;
-    this.formGroup = formGroup
-    this.titleModal = titre;
-    this.formControl = formControl;
-    this.data = data;
-    this.filteredCheckboxes = data;
-    this.modalFiltres.open()
+  constructor() {
+    
   }
 
-  input: string = "";
-
-  filterCheckboxes(text?: string): void {
-    this.input = text === undefined ? this.input : text;
-    this.filteredCheckboxes = this.data.filter(d => d.label.toLowerCase().includes(this.input) || d.description?.toLowerCase().includes(this.input))
+  /**
+   * Actions au changement des inputs
+   * @param changes 
+   */
+  ngOnChanges(changes: SimpleChanges) {
+    // Mise à jour des options
+    if ('checkboxes' in changes) {
+      this.checkboxes = changes['checkboxes'].currentValue
+      this.filteredCheckboxes = this.checkboxes;
+      
+      if (changes['checkboxes'].firstChange) {
+        const that = this
+        this.actions.push({
+          label: "Appliquer ce filtre",
+          callback() {
+            that.selectedChange.emit(that.selected ?? null);
+            that.modalFiltres.close()
+          }
+        })
+      }
+    }
+    if ('selected' in changes ) {
+      this.selected = changes['selected'].currentValue ?? []
+    }
   }
+
+    /**
+   * Fonction de filtrage par défaut, peut-être remplacée par injection
+   * @param text input utilisateur utilisé pour filtrer
+   */
+    @Input()
+    filterFunction(text: string): T[] {
+      // Filtre par défaut : options considérées comme des string
+      this.filteredCheckboxes = this.checkboxes ? this.checkboxes?.filter((checkbox) => {
+        const optStr = checkbox ? (checkbox as string).toLowerCase() : '';
+        return optStr.includes(text.toLowerCase());
+      }) : [];
+      return this.filteredCheckboxes;
+    }
+    
+    /**
+     * Fonction de rendu d'une option par défaut, peut-être remplacée par injection
+     * @param option 
+     */
+    @Input()
+    renderFunction(option: T): string {
+      // Affichage par défaut : option telle quelle
+      return option as string;
+    }
+  
+    /**
+     * Fonction de rendu des options sélectionnées par défaut, peut-être remplacée par injection
+     * @param selected 
+     * @returns 
+     */
+    @Input()
+    renderLabelFunction(selected: T[] | null): string {
+      // Affichage par défaut : options jointes par des virgules
+      return selected != null ? (selected as string[]).join(', ') : ''
+    }
+
+    /**
+   * Filtrage des option par défaut OU spécifique des options
+   * @param text
+   * @returns 
+   */
+    filter(text?: string): void {
+      // Sauvegarde du texte
+      this.filterInput = text === undefined ? this.filterInput : text;
+      // Filtre
+      const newOptions = this.filterFunction(text ? text : '');
+      if (newOptions == null || newOptions.length === 0)
+        return
+  
+      this.filteredCheckboxes = newOptions;
+      // Concaténation des éléments sélectionnés avec les éléments filtrés (en supprimant les doublons éventuels)
+      this.filteredCheckboxes = this.selected != null ?
+        [
+          ...this.selected,
+          ...this.filteredCheckboxes.filter((el) => !this.selected?.includes(el))
+        ]
+        : this.filteredCheckboxes
+    }
+  
+    /**
+     * Affichage textuel par défaut OU spécifique d'une option
+     * @param option 
+     * @returns 
+     */
+    render(option: T): string {
+      return this.renderFunction(option);
+    }
+  
+    /**
+     * Affichage textuel des options sélectionnées en label
+     * @returns 
+     */
+     renderLabel(): string {
+      return this.renderLabelFunction(this.selected);
+    }
+
+    onCheckboxChange(value: T): void {
+      if (this.selected?.includes(value)) {
+        this.selected = this.selected.filter((item) => item !== value);
+      } else {
+        this.selected?.push(value);
+      }
+      console.log(this.selected)
+    }
 
 
 }

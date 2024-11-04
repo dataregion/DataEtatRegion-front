@@ -3,7 +3,7 @@ import { QpvSearchArgs } from '../../models/qpv-search/qpv-search.models';
 import { FinancialDataModel } from '../../models/financial/financial-data.models';
 
 @Component({
-  selector: 'tabs-superset-iframes',
+  selector: 'data-qpv-tabs-superset-iframes',
   templateUrl: './tabs-superset-iframes.component.html',
   styleUrls: ['./tabs-superset-iframes.component.scss'],
   providers: []

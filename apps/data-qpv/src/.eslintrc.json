@@ -22,7 +22,7 @@
           "error",
           {
             "type": "attribute",
-            "prefix": "financial",
+            "prefix": "data-qpv",
             "style": "camelCase"
           }
         ],
@@ -30,7 +30,7 @@
           "error",
           {
             "type": "element",
-            "prefix": "financial",
+            "prefix": "data-qpv",
             "style": "kebab-case"
           }
         ]

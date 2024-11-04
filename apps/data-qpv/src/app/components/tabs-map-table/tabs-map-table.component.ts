@@ -5,7 +5,7 @@ import { DsfrOption, DsfrTableComponent, DsfrTableState } from "@edugouvfr/ngx-d
 
 
 @Component({
-  selector: 'tabs-map-table',
+  selector: 'data-qpv-tabs-map-table',
   templateUrl: './tabs-map-table.component.html',
   styleUrls: ['./tabs-map-table.component.scss'],
 })
@@ -71,6 +71,7 @@ export class TabsMapTableComponent {
       this.mappedResults.push({
         "id": f.id,
         "siret.nom_beneficiaire": f.siret?.nom_beneficiaire,
+        "siret.categorie_juridique": f.siret?.categorie_juridique,
         "siret.code": f.siret?.code,
         "libelle": f.programme?.label,
         "montant_ae": f.montant_ae,
@@ -86,6 +87,7 @@ export class TabsMapTableComponent {
 
   public columns = [
     {label: 'Nom du porteur de projet', field: 'siret.nom_beneficiaire', sortable: false},
+    {label: 'Type de porteur de projet', field: 'siret.categorie_juridique', sortable: false},
     {label: 'SIRET', field: 'siret.code', sortable: false},
     {label: 'Montant (AE)', field: 'montant_ae', sortable: false},
     {label: 'Année', field: 'annee'},

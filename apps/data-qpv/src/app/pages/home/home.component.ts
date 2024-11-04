@@ -1,36 +1,14 @@
-import { Component, inject, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 
-import { MatDialog } from '@angular/material/dialog';
-import {
-  PreferenceUsersHttpService,
-  SavePreferenceDialogComponent,
-} from 'apps/preference-users/src/public-api';
-import {
-  Preference,
-} from 'apps/preference-users/src/lib/models/preference.models';
+import { PreferenceUsersHttpService } from 'apps/preference-users/src/public-api';
 import { ActivatedRoute, Data } from '@angular/router';
-import { AlertService, GeoModel } from 'apps/common-lib/src/public-api';
-import { GridInFullscreenStateService } from 'apps/common-lib/src/lib/services/grid-in-fullscreen-state.service';
-import {
-  DisplayedOrderedColumn,
-  GroupingColumn,
-  RowData,
-  TableData,
-  ParameterizedColumnsMetaData,
-  ColumnsMetaData,
-} from 'apps/grouping-table/src/lib/components/grouping-table/group-utils';
-import { AuditHttpService } from '@services/http/audit.service';
+import { AlertService } from 'apps/common-lib/src/public-api';
 import { MarqueBlancheParsedParamsResolverModel } from '../../resolvers/marqueblanche-parsed-params.resolver';
-import { NGXLogger } from 'ngx-logger';
 import { BehaviorSubject, delay } from 'rxjs';
 import { PreFilters } from 'apps/data-qpv/src/app/models/search/prefilters.model';
-import { colonnes, FinancialColumnMetaDataDef, groupingOrder } from '@models/tableau/colonnes.model';
 import { QueryParam } from 'apps/common-lib/src/lib/models/marqueblanche/query-params.enum';
 import { SearchDataComponent } from 'apps/data-qpv/src/app/components/search-data/search-data.component';
-import { BudgetService } from 'apps/data-qpv/src/app/services/budget.service';
-import { DatePipe } from '@angular/common';
-import { ExportDataService } from 'apps/appcommon/src/lib/export-data.service';
-import {QpvSearchArgs} from "apps/data-qpv/src/app/models/qpv-search/qpv-search.models";
+import { QpvSearchArgs } from "apps/data-qpv/src/app/models/qpv-search/qpv-search.models";
 import { FinancialDataModel } from '../../models/financial/financial-data.models';
 
 @Component({
@@ -39,11 +17,6 @@ import { FinancialDataModel } from '../../models/financial/financial-data.models
   styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent implements OnInit {
-
-  columnsMetaData: ParameterizedColumnsMetaData<FinancialColumnMetaDataDef>;
-  get genericColumnsMetadata(): ColumnsMetaData {
-    return this.columnsMetaData as ColumnsMetaData;
-  }
 
   currentSearchArgs: QpvSearchArgs | null = null;
   currentSearchResults: FinancialDataModel[] | null = [];
@@ -97,9 +70,7 @@ export class HomeComponent implements OnInit {
     private _route: ActivatedRoute,
     private _alertService: AlertService,
     private _preferenceService: PreferenceUsersHttpService,
-    private _gridFullscreen: GridInFullscreenStateService,
   ) {
-    this.columnsMetaData = new ParameterizedColumnsMetaData<FinancialColumnMetaDataDef>(colonnes);
     this.preFilter = undefined;
   }
 

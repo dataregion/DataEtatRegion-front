@@ -1,16 +1,12 @@
 import {
-  AfterViewInit,
   Component,
-  EventEmitter, Inject, InjectionToken,
+  Inject,
   Input,
   OnInit,
   OnChanges,
   SimpleChanges,
-  Output,
 } from '@angular/core';
-import { ActivatedRoute, Data } from '@angular/router';
 import {DomSanitizer, SafeResourceUrl} from '@angular/platform-browser';
-import {TableData} from "../../../../../grouping-table/src/lib/components/grouping-table/group-utils";
 import { SETTINGS } from 'apps/common-lib/src/lib/environments/settings.http.service';
 import {SettingsService} from "../../../environments/settings.service";
 import {Superset} from "../../../../../common-lib/src/lib/environments/settings";
@@ -37,13 +33,9 @@ export class SupersetIframeComponent implements OnInit, OnChanges {
 
   public sanitizedUrl: SafeResourceUrl | undefined;
 
-  private height: number = 0;
-
-
   constructor(
-    private domSanitizer: DomSanitizer,
-    // eslint-disable-next-line
-    @Inject(SETTINGS) readonly settings: SettingsService,
+    private _domSanitizer: DomSanitizer,
+    @Inject(SETTINGS) readonly settings: SettingsService, // eslint-disable-line
   ) {
     this._supersetSettings = settings.getSuperset();
   }
@@ -91,7 +83,7 @@ export class SupersetIframeComponent implements OnInit, OnChanges {
   }
 
   public updateSanitizedUrl():  void {
-    this.sanitizedUrl =  this.domSanitizer.bypassSecurityTrustResourceUrl(`${this._supersetBaseDashboardUrl}/${this.getDashboardSlug()}/${this.getCurrentDashboardArgsString()}`);
+    this.sanitizedUrl =  this._domSanitizer.bypassSecurityTrustResourceUrl(`${this._supersetBaseDashboardUrl}/${this.getDashboardSlug()}/${this.getCurrentDashboardArgsString()}`);
     console.log(this.sanitizedUrl)
   }
 

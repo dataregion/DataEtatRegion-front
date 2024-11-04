@@ -48,7 +48,7 @@ export class GeoLocalisationComponentService {
     public filterQPV2024(term: string | null): Observable<GeoModel[]> {
 
         const limit_handler: LimitHandler = (search) => {
-            let limit = 100
+            const limit = 100
             return { ...search, limit }
         }
 

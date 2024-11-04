@@ -85,14 +85,13 @@ export class BudgetDataHttpService implements DataHttpService<EnrichedFlattenFin
         const niveau_geo = this._sanitize_req_arg(this._searchUtils.normalize_type_geo(niveau))
         const listCode = this._sanitize_req_arg(locations?.map((l) => l.code) ?? undefined)
         const qpv_codes = this._sanitize_req_arg(qpvs?.map((q) => q.code) ?? undefined)
-        const codes_cc = this._sanitize_req_arg(centre_couts?.map(cc => cc.code) ?? [])
+        // const codes_cc = this._sanitize_req_arg(centre_couts?.map(cc => cc.code) ?? [])
         const p_themes = this._sanitize_req_arg(themes ?? undefined)
         const siret_beneficiaire: string[] | undefined = this._sanitize_req_arg(beneficiaires?.map(x => x.siret) ?? [])
         const p_types_beneficaires = this._sanitize_req_arg(types_beneficiaires ?? undefined)
 
-
         const req$ = this._budgetApi.getBudgetCtrl(
-            "0", "6500", undefined, undefined, codes_programme,  niveau_geo, listCode, 2024, qpv_codes, p_themes, siret_beneficiaire, p_types_beneficaires, annees, undefined, undefined 
+            "0", "6500", undefined, undefined, codes_programme,  niveau_geo, listCode, qpv_codes ? 2024 : undefined, qpv_codes, p_themes, siret_beneficiaire, p_types_beneficaires, annees, undefined, undefined 
         ) as unknown as Observable<DataPagination<EnrichedFlattenFinancialLinesSchema> | null>;
 
         return req$

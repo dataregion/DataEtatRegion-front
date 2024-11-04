@@ -2,11 +2,11 @@ import {Component, Input, AfterViewInit, ViewEncapsulation, OnDestroy} from '@an
 import Map from 'ol/Map';
 import View from 'ol/View';
 import TileLayer from 'ol/layer/Tile';
-import {FullScreen, defaults as defaultControls, Control} from 'ol/control';
+import {FullScreen, defaults as defaultControls } from 'ol/control';
 import XYZ from 'ol/source/XYZ';
 import { fromLonLat } from 'ol/proj';
 import {BudgetService} from "apps/data-qpv/src/app/services/budget.service";
-import {GeoJSON, MVT, WKT} from "ol/format";
+import { MVT, WKT} from "ol/format";
 import {Fill, Stroke, Style} from "ol/style";
 import CircleStyle from "ol/style/Circle";
 import VectorSource from "ol/source/Vector";
@@ -19,8 +19,6 @@ import { MapLevelCustomControlService, LevelControl } from './map-level-custom-c
 import {VectorTile as VectorTileLayer} from "ol/layer";
 import {VectorTile as VectorTileSource} from "ol/source";
 import {QpvSearchArgs} from "../../models/qpv-search/qpv-search.models";
-import {Point} from "ol/geom";
-import {TypeLocalisation} from "../../../../../common-lib/src/lib/models/geo.models";
 
 @Component({
   selector: 'data-qpv-map',
@@ -37,13 +35,13 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   contourLayer: VectorLayer;
   clusterLayer: VectorLayer;
 
-  colorDarkBlue: string = '0, 0, 145';
-  colorNavyBlue: string = '0, 30, 168';
-  colorLightBlue: string = '169, 191, 255';
+  colorDarkBlue: string = '0,0,145';
+  colorNavyBlue: string = '0,30,168';
+  colorLightBlue: string = '169,191,255';
 
-  colorSelected: string = '255, 183, 70';
+  colorSelected: string = '252,198,58';
 
-  colorLavande: string = '154, 154, 255';
+  colorLavande: string = '154,154,255';
 
   clusterZoomThreshold = 12;
 
@@ -55,12 +53,12 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   }
 
   constructor(
-    private budgetService: BudgetService,
-    private mapLevelControlService: MapLevelCustomControlService,
+    private _budgetService: BudgetService,
+    private _mapLevelControlService: MapLevelCustomControlService,
   ) {
     this.mapId = `ol-map-${Math.floor(Math.random() * 100)}`;
 
-    this.mapLevelControl = this.mapLevelControlService.createLevelControl();
+    this.mapLevelControl = this._mapLevelControlService.createLevelControl();
 
     this.contourLayer = new VectorLayer({
       source: new VectorSource(),
@@ -131,7 +129,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   }
 
   public fetchQpvs() {
-    this.budgetService.getQpvs$().subscribe( qpvsData => {
+    this._budgetService.getQpvs$().subscribe( qpvsData => {
       const features_countours: Feature[] = [];
       const features_points: Feature[] = [];
 
@@ -186,8 +184,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   ): void {
     const clusterSource = this.clusterLayer.getSource() as Cluster<Feature>; // Get the Cluster source
     const vectorSource = clusterSource.getSource() as VectorSource;
-
-    let selectedFeatures: Feature[] | null | undefined = this.findFeaturesByCodes(vectorSource, searchedQpvNames);
+    const selectedFeatures: Feature[] | null | undefined = this.findFeaturesByCodes(vectorSource, searchedQpvNames);
 
     this.mapLevelControl?.updateSelectedQpv(searchedQpvNames, searchedYears, localisation, selectedFeatures);
   }
@@ -201,7 +198,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     });
   }
 
-  private clusterStyleFunction(feature: FeatureLike, resolution: number): Style {
+  private clusterStyleFunction(feature: FeatureLike): Style {
     const size = feature.get('features').length; // Get number of features in the cluster
 
     if(size > 1) {

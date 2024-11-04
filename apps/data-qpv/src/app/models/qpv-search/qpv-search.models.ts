@@ -6,4 +6,5 @@ export interface QpvSearchArgs {
   niveau: TypeLocalisation | null;
   localisations: GeoModel[] | null;
   qpv_codes: GeoModel[] | null;
+  types_porteur: string[] | null;
 }

@@ -33,10 +33,10 @@
         <span class="search-resume" [innerText]="searchArgsToText()"></span>
       </div>
       <div class="fr-col-6" style="margin-bottom: 50px;">
-        <tabs-superset-iframes [searchArgs]="currentSearchArgs" [searchResults]="currentSearchResults" [(selectedTabIndex)]="selectedTabIndex" />
+        <data-qpv-tabs-superset-iframes [searchArgs]="currentSearchArgs" [searchResults]="currentSearchResults" [(selectedTabIndex)]="selectedTabIndex" />
       </div>
       <div class="fr-col-6" style="margin-bottom: 50px;">
-        <tabs-map-table [searchArgs]="currentSearchArgs" [searchResults]="currentSearchResults" [selectedTabIndexCredits]="selectedTabIndex" />
+        <data-qpv-tabs-map-table [searchArgs]="currentSearchArgs" [searchResults]="currentSearchResults" [selectedTabIndexCredits]="selectedTabIndex" />
       </div>
     </div>
 
@@ -48,8 +48,7 @@
           [ariaRoleValue]="'alert'"
           [size]="'MD'"
           [hasAriaRole]="false"
-          [closeable]="false"
-        ></dsfr-alert>
+          [closeable]="false" />
       </div>
     </div>
 
@@ -61,8 +60,7 @@
           [ariaRoleValue]="'alert'"
           [size]="'MD'"
           [hasAriaRole]="false"
-          [closeable]="false"
-        ></dsfr-alert>
+          [closeable]="false" />
       </div>
     </div>
 

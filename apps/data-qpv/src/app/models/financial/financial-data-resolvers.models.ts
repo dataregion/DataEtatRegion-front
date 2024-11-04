@@ -1,5 +1,5 @@
 import { TOrError } from 'apps/common-lib/src/lib/models/marqueblanche/t-or-error.model';
-import { CentreCouts, TypeCategorieJuridique } from './common.models';
+import { CentreCouts } from './common.models';
 import { Beneficiaire } from 'apps/data-qpv/src/app/models/qpv-search/beneficiaire.model';
 import { BopModel } from 'apps/data-qpv/src/app/models/refs/bop.models';
 

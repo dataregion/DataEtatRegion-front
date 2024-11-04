@@ -9,7 +9,7 @@ import { AppComponent } from './app.component';
 import { SearchDataComponent } from './components/search-data/search-data.component';
 import { HomeComponent } from './pages/home/home.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DatePipe, registerLocaleData } from '@angular/common';
 import localeFr from '@angular/common/locales/fr';
 import { MatDialogModule } from '@angular/material/dialog';
@@ -33,15 +33,12 @@ import {
 import { ManagementModule } from 'apps/management/src/public-api';
 import { API_MANAGEMENT_PATH } from 'apps/management/src/lib/services/users-http.service';
 import { GroupingTableModule } from 'apps/grouping-table/src/public-api';
-import { APOLLO_OPTIONS, ApolloModule } from 'apollo-angular';
-import { HttpLink } from 'apollo-angular/http';
 
 import {
   aeApiModule,
   aeConfiguration,
   aeConfigurationParameters,
 } from 'apps/clients/apis-externes';
-import { InMemoryCache } from '@apollo/client';
 import { DATA_HTTP_SERVICE } from 'apps/data-qpv/src/app/services/budget.service';
 
 import {
@@ -55,6 +52,7 @@ import { DsfrTabsModule, DsfrModalModule, DsfrDataTableModule, DsfrAlertModule, 
 import { TabsSupersetIframesComponent } from './components/tabs-superset-iframes/tabs-superset-iframes.component';
 import { TabsMapTableComponent } from './components/tabs-map-table/tabs-map-table.component';
 import { ModalAdditionalParamsComponent } from './components/modal-additional-params/modal-additional-params.component';
+import {MapComponent} from "./components/map/map.component";
 
 export function apiExternesConfigFactory(
   settingsService: SettingsService
@@ -91,6 +89,7 @@ registerLocaleData(localeFr);
     TabsSupersetIframesComponent,
     TabsMapTableComponent,
     ModalAdditionalParamsComponent,
+    MapComponent
   ],
   bootstrap: [AppComponent],
   imports: [
@@ -110,15 +109,16 @@ registerLocaleData(localeFr);
     ManagementModule,
     aeApiModule,
     budgetApiModule,
+    FormsModule,
     DsfrTabsModule,
     DsfrModalModule,
     DsfrDataTableModule,
     DsfrFormFieldsetModule,
     DsfrFormInputModule,
     DsfrFormCheckboxModule,
-    DsfrAlertModule,
-    ApolloModule
-  ], providers: [
+    DsfrAlertModule
+  ],
+  providers: [
     {
         provide: SETTINGS,
         useClass: SettingsService,
