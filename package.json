@@ -33,7 +33,7 @@
     "@angular/platform-browser": "^18.2.3",
     "@angular/platform-browser-dynamic": "^18.2.3",
     "@angular/router": "^18.2.3",
-    "@gouvfr/dsfr": "^1.12.4",
+    "@gouvfr/dsfr": "^1.12.1",
     "@edugouvfr/ngx-dsfr": "^1.12.4",
     "geoportal-extensions-openlayers": "^3.4.4",
     "keycloak-angular": "^16.0.1",
