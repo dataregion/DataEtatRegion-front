@@ -11,7 +11,7 @@
     "start:data-qpv-dev": "ng serve --project=data-qpv --proxy-config proxy.conf.json",
     "build:financial-data": "ng build --project=financial-data",
     "build:france-relance": "ng build --project=france-relance",
-    "build:data-qpv": "ng build --project=france-relance",
+    "build:data-qpv": "ng build --project=data-qpv",
     "build:all": "ng build --project=france-relance && ng build --project=financial-data && ng build --project=data-qpv",
     "storybook:common-lib": "ng run common-lib:storybook",
     "test-storybook": "test-storybook --config-dir=apps/common-lib/.storybook",
