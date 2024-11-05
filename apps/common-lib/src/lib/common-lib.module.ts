@@ -26,7 +26,7 @@ import { SpinnerComponent } from './components/spinner/spinner.component';
     DisplayDateComponent,
     AdvancedChipsMultiselectComponent,
     SelectMultipleComponent,
-    SelectSimpleComponent
+    SelectSimpleComponent,
     SpinnerComponent,
   ],
   exports: [
@@ -40,7 +40,7 @@ import { SpinnerComponent } from './components/spinner/spinner.component';
     RegisterComponent,
     AdvancedChipsMultiselectComponent,
     SelectMultipleComponent,
-    SelectSimpleComponent
+    SelectSimpleComponent,
     SpinnerComponent,
   ]
 })

@@ -7,6 +7,7 @@ import {
   Ressources,
   Superset,
   Features,
+  Matomo,
 } from 'apps/common-lib/src/public-api';
 
 
@@ -34,6 +35,7 @@ export class SettingsService implements ISettingsService {
     this.settings = new FinancialSettings();
     this.settings.apis = new Api();
     this.settings.keycloak = new Keycloak();
+    this.settings.matomo = new Matomo();
     this.settings.ressources = new Ressources();
     this.settings.superset = new Superset();
     this.settings.features = new Features();
@@ -45,6 +47,10 @@ export class SettingsService implements ISettingsService {
 
   getKeycloakSettings(): Keycloak {
     return this.settings.keycloak;
+  }
+  
+  getMatomo(): Matomo {
+    return this.settings.matomo;
   }
 
   getRessources(): Ressources {

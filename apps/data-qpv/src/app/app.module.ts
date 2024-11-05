@@ -53,6 +53,7 @@ import { TabsSupersetIframesComponent } from './components/tabs-superset-iframes
 import { TabsMapTableComponent } from './components/tabs-map-table/tabs-map-table.component';
 import { ModalAdditionalParamsComponent } from './components/modal-additional-params/modal-additional-params.component';
 import {MapComponent} from "./components/map/map.component";
+import { MatomoModule } from 'ngx-matomo-client';
 
 export function apiExternesConfigFactory(
   settingsService: SettingsService
@@ -116,7 +117,10 @@ registerLocaleData(localeFr);
     DsfrFormFieldsetModule,
     DsfrFormInputModule,
     DsfrFormCheckboxModule,
-    DsfrAlertModule
+    DsfrAlertModule,
+    MatomoModule.forRoot({
+      mode: 'deferred'
+    }),
   ],
   providers: [
     {

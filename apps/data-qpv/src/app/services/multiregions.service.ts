@@ -15,23 +15,16 @@ export class MultiregionsService {
 
   private _synonymes: { [key in Region]: string[] } = {
     [Region.BRETAGNE]: [
-      "bretagne.nocode.csm.ovh",
-      "budget.bretagne.preprod.dataregion.fr",
-      "budget.bretagne.dataregion.fr",
-      "budget.preprod.databretagne.fr",
-      "budget.databretagne.fr",
+      "qpv-bretagne.nocode.csm.ovh",
+      "qpv-bretagne.preprod.dataregion.fr",
+      "qpv-bretagne.dataregion.fr",
     ],
     [Region.PDL]: [
-      "pdl.nocode.csm.ovh",
-      "budget.paysdelaloire.dataregion.fr",
-      "budget.paysdelaloire.preprod.dataregion.fr",
+      "qpv-pdl.nocode.csm.ovh",
+      "qpv-paysdelaloire.dataregion.fr",
+      "qpv-paysdelaloire.preprod.dataregion.fr",
     ],
-    [Region.HDF]: [
-      "hdf.nocode.csm.ovh",
-      "budget.hautsdefrance.dataregion.fr",
-      "budget.hautsdefrance.preprod.dataregion.fr",
-      "budget-hautsdefrance.preprod.dataregion.fr",
-    ]
+    [Region.HDF]: []
   };
 
   public getRegionByHostname(): string {
