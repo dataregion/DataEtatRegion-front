@@ -60,12 +60,10 @@ export class LevelControl extends Control {
 
     // Loop over the enum to create options for selectElement
     for (const level in MapLevel) {
-      // if (Object.values(MapLevel).includes(level)) {
-        const option = document.createElement('option');
-        option.value = level;
-        option.textContent = `${MapLevel[level as keyof typeof MapLevel]}`;
-        selectElement.appendChild(option);
-      // }
+      const option = document.createElement('option');
+      option.value = level;
+      option.textContent = `${MapLevel[level as keyof typeof MapLevel]}`;
+      selectElement.appendChild(option);
     }
 
     const zoomToCurrentBtn = document.createElement('button');

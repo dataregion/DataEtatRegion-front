@@ -71,12 +71,10 @@ export class MapComponent implements AfterViewInit, OnDestroy {
         source: new VectorSource(),
         distance: 75, // Distance in pixels to cluster
       }),
-      // declutter: true,
       style: this.clusterStyleFunction.bind(this),
       zIndex: 9,
     });
 
-    //this.clusterStyleFunction = this.clusterStyleFunction.bind(this);
     this.contourStyleFuction = this.contourStyleFuction.bind(this);
     this.selectedContourStyleFuction = this.selectedContourStyleFuction.bind(this);
   }
@@ -97,7 +95,6 @@ export class MapComponent implements AfterViewInit, OnDestroy {
           source: new VectorTileSource({
             format: new MVT(),
             url: 'https://data.geopf.fr/tms/1.0.0/ADMIN_EXPRESS/{z}/{x}/{y}.pbf',
-            // maxZoom: 15,
           }),
           style: new Style({
             fill: new Fill({

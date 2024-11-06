@@ -54,8 +54,7 @@ export class LocalisationComponent implements OnInit {
   @Input() niveauxExcludeFilter: string[] | null = null;
 
   // Liste des niveaux de localisation
-  public niveaux: string[] | null = null;
-  // public niveaux = Object.values(TypeLocalisation);
+  public niveaux = Object.values(TypeLocalisation);
 
   // Liste des Geomodel
   public geomodels: GeoModel[] | null = null;
