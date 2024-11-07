@@ -1,0 +1,29 @@
+<dsfr-modal #modalFiltres
+  [dialogId]="idModal"
+  [titleModal]="title"
+  [headingLevel]="headingLevel"
+  [actions]="actions"
+  [autoCloseOnAction]="autoCloseOnAction"
+>
+
+  <dsfr-form-input
+    [type]="'text'"
+    [label]="'Rechercher un élément'"
+    [autoCorrect]="false"
+    [(ngModel)]="filterInput"
+    (ngModelChange)="filter($event)" />
+
+  <fieldset class="fr-fieldset" style="margin-top:20px;">
+    <ng-container *ngFor="let item of filteredCheckboxes; let index = index">
+      <div class="fr-fieldset__element">
+        <div class="fr-checkbox-group">
+            <input [checked]="selected?.includes(item)" name="checkboxes-1" [id]="idModal + '-checkboxes-' + index" type="checkbox" (change)="onCheckboxChange(item)">
+            <label class="fr-label" [for]="idModal + '-checkboxes-' + index">
+                {{render(item)}}
+            </label>
+        </div>
+      </div>
+    </ng-container> 
+  </fieldset>
+
+</dsfr-modal>

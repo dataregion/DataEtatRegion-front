@@ -7,9 +7,12 @@
     "start:financial-dev": "ng serve --project=financial-data --proxy-config proxy.conf.json",
     "start:france-relance": "ng serve --project=france-relance",
     "start:france-relance-dev": "ng serve --project=france-relance --proxy-config proxy.conf.json --port=5006",
+    "start:data-qpv": "ng serve --project=data-qpv",
+    "start:data-qpv-dev": "ng serve --project=data-qpv --proxy-config proxy.conf.json",
     "build:financial-data": "ng build --project=financial-data",
     "build:france-relance": "ng build --project=france-relance",
-    "build:all": "ng build --project=france-relance && ng build --project=financial-data",
+    "build:data-qpv": "ng build --project=data-qpv",
+    "build:all": "ng build --project=france-relance && ng build --project=financial-data && ng build --project=data-qpv",
     "storybook:common-lib": "ng run common-lib:storybook",
     "test-storybook": "test-storybook --config-dir=apps/common-lib/.storybook",
     "lint": "ng lint"
@@ -30,12 +33,17 @@
     "@angular/platform-browser": "^18.2.3",
     "@angular/platform-browser-dynamic": "^18.2.3",
     "@angular/router": "^18.2.3",
-    "@gouvfr/dsfr": "^1.11.2",
+    "@gouvfr/dsfr": "^1.12.1",
+    "@edugouvfr/ngx-dsfr": "^1.12.4",
+    "geoportal-extensions-openlayers": "^3.4.4",
     "keycloak-angular": "^16.0.1",
     "keycloak-js": "^25.0.4",
     "ngx-logger": "^5.0.12",
     "ngx-matomo-client": "^6.3.1",
+    "ol": "^10.2.1",
+    "ol-mapbox-style": "^12.3.5",
     "rxjs": "~7.5.0",
+    "topojson-client": "^3.1.0",
     "tslib": "^2.3.0",
     "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.1/xlsx-0.20.1.tgz",
     "zone.js": "~0.14.10"
@@ -58,7 +66,9 @@
     "@storybook/blocks": "^8.2.9",
     "@storybook/test": "^8.2.9",
     "@storybook/test-runner": "^0.18.2",
+    "@types/arcgis-rest-api": "^10.4.8",
     "@types/jasmine": "~4.0.0",
+    "@types/topojson-specification": "^1.0.5",
     "@typescript-eslint/eslint-plugin": "^7.2.0",
     "@typescript-eslint/parser": "^7.2.0",
     "eslint": "^8.57.0",
@@ -66,5 +76,8 @@
     "ng-packagr": "^18.2.1",
     "storybook": "^8.2.9",
     "typescript": "^5.5.4"
+  },
+  "overrides": {
+    "browser-sync": "^3.0.2"
   }
 }

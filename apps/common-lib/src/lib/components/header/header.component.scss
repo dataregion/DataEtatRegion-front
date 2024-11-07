@@ -3,6 +3,13 @@
   align-items: center;
 }
 
+.fr-header__service-subtitle {
+  display: flex;
+  align-items: center;
+  color: var(--text-default-grey);
+}
+
+
 .fr-header__logo {
   display: flex;
 

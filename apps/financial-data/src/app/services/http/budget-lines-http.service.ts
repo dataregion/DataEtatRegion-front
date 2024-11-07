@@ -117,20 +117,22 @@ export class BudgetDataHttpService
     const p_refprod: string[] | undefined = referentiels_programmation?.map((rp) => rp.code) ?? [];
     const p_tags: string[] | undefined = tags ?? [];
 
-    const query_params = [
-      this._sanitize_req_arg(numeros_ej),
-      this._sanitize_req_arg(data_source),
-      this._sanitize_req_arg(codes_programme),
-      this._sanitize_req_arg(niveau_geo),
-      this._sanitize_req_arg(listCode),
-      this._sanitize_req_arg(p_themes),
-      this._sanitize_req_arg(siret_beneficiaire),
-      this._sanitize_req_arg(p_types_beneficaires),
-      this._sanitize_req_arg(annees),
-      this._sanitize_req_arg(p_domaines_fonctionnels),
-      this._sanitize_req_arg(p_refprod),
-      this._sanitize_req_arg(p_tags)
-    ] as const;
+        const query_params = [
+            this._sanitize_req_arg(numeros_ej),
+            this._sanitize_req_arg(data_source),
+            this._sanitize_req_arg(codes_programme),
+            this._sanitize_req_arg(niveau_geo),
+            this._sanitize_req_arg(listCode),
+            undefined,
+            undefined,
+            this._sanitize_req_arg(p_themes),
+            this._sanitize_req_arg(siret_beneficiaire),
+            this._sanitize_req_arg(p_types_beneficaires),
+            this._sanitize_req_arg(annees),
+            this._sanitize_req_arg(p_domaines_fonctionnels),
+            this._sanitize_req_arg(p_refprod),
+            this._sanitize_req_arg(p_tags)
+        ] as const;
 
     const req$ = this._budgetApi.getBudgetCtrl(
       '0',
