@@ -6,7 +6,9 @@ import { SessionService } from 'apps/common-lib/src/public-api';
 export enum Region {
   BRETAGNE = 'Bretagne',
   PDL = 'Pays de la Loire',
-  HDF = 'Hauts-de-France'
+  HDF = 'Hauts-de-France',
+  NORMANDIE = 'Normandie',
+  BOURGOGNE_FRANCHE_COMTE = 'Bourgogne-Franche-Comte'
 }
 
 @Injectable({
@@ -32,6 +34,12 @@ export class MultiregionsService {
     ],
     [Region.HDF]: [
       "032",
+    ],
+    [Region.NORMANDIE]: [
+      "028",
+    ],
+    [Region.BOURGOGNE_FRANCHE_COMTE]: [
+      "027",
     ]
   };
   
