@@ -125,8 +125,11 @@ export class BudgetService {
       );
   }
 
-  public getQpvs$(): Observable<DataPagination<RefQpv>> {
-    const params = `limit=1000`;
+  public getQpvs$(annee?: number): Observable<DataPagination<RefQpv>> {
+    let params = `limit=1000`;
+    if (annee) {
+      params += `&annee_decoupage=${annee}`;
+    }
     const url = `${this._apiRef}/qpv?${params}`;
     return this.http
       .get<DataPagination<RefQpv>>(url)

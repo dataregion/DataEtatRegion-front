@@ -29,6 +29,8 @@ export interface Siret extends Code {
   categorie_juridique: Optional<TypeCategorieJuridique>
   code_qpv: Optional<string>
   label_qpv: Optional<string>
+  code_qpv24: Optional<string>
+  label_qpv24: Optional<string>
 }
 
 export interface Commune extends CodeLabel {

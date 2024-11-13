@@ -105,23 +105,22 @@ export class LevelControl extends Control {
   }
 
   onZoomChange(): void {
-    const newZoomLevel = this.currentMap?.getView().getZoom();
-    let selectedLevel: string | undefined = undefined;
+    let newZoomLevel = this.currentMap?.getView().getZoom();
+    if (!newZoomLevel)
+      return
+
+    newZoomLevel = Math.min(newZoomLevel, 16);
 
     if(newZoomLevel && newZoomLevel < (this.zoomByLevel['departement']) - 1) {
-      selectedLevel = 'region';
+      this.selectMapLevel.value = 'region';
     } else if(newZoomLevel && newZoomLevel < (this.zoomByLevel['epci'] - 1)) {
-      selectedLevel = 'departement';
+      this.selectMapLevel.value = 'departement';
     } else if(newZoomLevel && newZoomLevel < (this.zoomByLevel['commune'] - 1 )) {
-      selectedLevel = 'epci';
+      this.selectMapLevel.value = 'epci';
     } else if(newZoomLevel && newZoomLevel < (this.zoomByLevel['qpv'] - 1 )) {
-      selectedLevel = 'commune';
+      this.selectMapLevel.value = 'commune';
     } else if(newZoomLevel && newZoomLevel >= (this.zoomByLevel['qpv'] - 1)) {
-      selectedLevel = 'qpv';
-    }
-
-    if (selectedLevel !== undefined) {
-      this.selectMapLevel.value = selectedLevel;
+      this.selectMapLevel.value = 'qpv';
     }
   }
 
@@ -155,7 +154,7 @@ export class LevelControl extends Control {
           olExtend(selectedExtent, geom.getExtent());
         }
       });
-      this.currentMap?.getView().fit(selectedExtent, { size: this.currentMap?.getSize(), padding: [50, 50, 50, 50] });
+      this.currentMap?.getView().fit(selectedExtent, { size: this.currentMap?.getSize(), padding: [100, 100, 100, 100] });
       this.currentCenter = this.currentMap?.getView().getCenter();
       if (localisation && searchedFeatures.length === 1) {
         this.updateLevel(localisation);
@@ -174,14 +173,14 @@ export class LevelControl extends Control {
     let yearsString = "/";
     let namesString = "/";
 
-    if (searchedYears) {
-      yearsString = `${searchedYears.join(', ')}`;
-    }
+    // if (searchedYears) {
+    //   yearsString = `${searchedYears.join(', ')}`;
+    // }
 
     if (searchedQpvNames) {
       namesString = `${searchedQpvNames.join(', ')}`;
     }
 
-    this.titleElement.innerHTML = `${namesString} - ${yearsString}`;
+    this.titleElement.innerHTML = `${namesString}`;
   }
 }

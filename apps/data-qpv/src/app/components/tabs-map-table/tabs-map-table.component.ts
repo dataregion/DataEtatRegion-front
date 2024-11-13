@@ -77,7 +77,7 @@ export class TabsMapTableComponent {
         "centre_couts.code": f.centre_couts?.code,
         "thematique.libelle": f.programme?.theme,
         "programme.code": f.programme?.label,
-        "qpv.code": f.siret?.code_qpv,
+        "qpv.code": f.siret?.code_qpv24,
         "commune.label": f.commune?.label,
         "commune.label_departement": f.commune?.label_departement,
         "commune.label_region": f.commune?.label_region,

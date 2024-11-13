@@ -19,6 +19,7 @@ import { MapLevelCustomControlService, LevelControl } from './map-level-custom-c
 import {VectorTile as VectorTileLayer} from "ol/layer";
 import {VectorTile as VectorTileSource} from "ol/source";
 import {QpvSearchArgs} from "../../models/qpv-search/qpv-search.models";
+import { CacheQPVService } from './cache-qpv.service';
 
 @Component({
   selector: 'data-qpv-map',
@@ -54,6 +55,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
   constructor(
     private _budgetService: BudgetService,
+    private _cacheQPVService: CacheQPVService,
     private _mapLevelControlService: MapLevelCustomControlService,
   ) {
     this.mapId = `ol-map-${Math.floor(Math.random() * 100)}`;
@@ -88,7 +90,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       layers: [
         new TileLayer({ // Fond de carte
           source:  new XYZ({
-            url: 'http://{a-c}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png',
+            url: 'https://{a-c}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png',
           })
         }),
         new VectorTileLayer({ // contours des territoires
@@ -126,7 +128,20 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   }
 
   public fetchQpvs() {
-    this._budgetService.getQpvs$().subscribe( qpvsData => {
+    
+    const cachedContours = this._cacheQPVService.get("map-qpv-contours");
+    const cachedPoints = this._cacheQPVService.get("map-qpv-points");
+
+    if (cachedContours && cachedPoints) {
+      this.contourLayer.getSource()?.addFeatures(cachedContours);
+      const clusterSource = this.clusterLayer.getSource() as Cluster<Feature>; // Get the Cluster source
+      const vectorSource = clusterSource.getSource() as VectorSource; // Get the underlying VectorSource
+      vectorSource.addFeatures(cachedPoints);
+      this.updateCustomControl(this._searchArgs?.qpv_codes?.map(qpv => qpv.code), this._searchArgs?.annees, this._searchArgs?.niveau);
+      return;
+    }
+
+    this._budgetService.getQpvs$(2024).subscribe( qpvsData => {
       const features_countours: Feature[] = [];
       const features_points: Feature[] = [];
 
@@ -164,6 +179,8 @@ export class MapComponent implements AfterViewInit, OnDestroy {
         features_countours.push(feature_countour);
         features_points.push(feature_point);
       });
+      this._cacheQPVService.set("map-qpv-contours", features_countours);
+      this._cacheQPVService.set("map-qpv-points", features_points);
 
       this.contourLayer.getSource()?.addFeatures(features_countours);
 

@@ -1,8 +1,8 @@
-import { CentreCouts, Commune, DomaineFonctionnel, GroupeMarchandise, LocalisationInterministerielle, Programme, Siret, SourceFinancialData, TypeCategorieJuridique } from "@models/financial/common.models";
+import { CentreCouts, Commune, DomaineFonctionnel, GroupeMarchandise, LocalisationInterministerielle, Programme, Siret, SourceFinancialData, TypeCategorieJuridique } from "../../models/financial/common.models";
 import { FinancialDataModel } from "apps/data-qpv/src/app/models/financial/financial-data.models";
 import { ReferentielProgrammation } from "apps/data-qpv/src/app/models/refs/referentiel_programmation.model";
 import { Tag, tag_fullname } from "apps/data-qpv/src/app/models/refs/tag.model";
-import { ColonneLibelles } from "@services/colonnes.service";
+import { ColonneLibelles } from "../colonnes.service";
 import { EnrichedFlattenFinancialLinesSchema, TagsSchema } from "apps/clients/budget";
 import { Optional } from "apps/common-lib/src/lib/utilities/optional.type";
 import { JSONObject } from "apps/common-lib/src/lib/models/jsonobject";
@@ -116,6 +116,9 @@ export class BudgetLineHttpMapper {
             categorie_juridique: this._map_beneficiaire_categorie_juridique(object),
             code_qpv: object.beneficiaire_qpv_code,
             label_qpv: object.beneficiaire_qpv_label,
+            code_qpv24: object.beneficiaire_qpv24_code,
+            label_qpv24: object.beneficiaire_qpv24_label,
+
         };
     }
     private _map_loc_interministerielle(object: EnrichedFlattenFinancialLinesSchema): Optional<LocalisationInterministerielle> {
