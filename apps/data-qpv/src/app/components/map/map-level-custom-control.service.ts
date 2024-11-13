@@ -173,14 +173,14 @@ export class LevelControl extends Control {
     let yearsString = "/";
     let namesString = "/";
 
-    // if (searchedYears) {
-    //   yearsString = `${searchedYears.join(', ')}`;
-    // }
+    if (searchedYears) {
+      yearsString = `${searchedYears.join(', ')}`;
+    }
 
     if (searchedQpvNames) {
       namesString = `${searchedQpvNames.join(', ')}`;
     }
 
-    this.titleElement.innerHTML = `${namesString}`;
+    this.titleElement.innerHTML = `${namesString} - ${yearsString}`;
   }
 }
