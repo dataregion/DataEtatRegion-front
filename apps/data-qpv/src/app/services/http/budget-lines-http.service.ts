@@ -111,7 +111,7 @@ export class BudgetDataHttpService implements DataHttpService<EnrichedFlattenFin
 
         const req$ = this._budgetApi.getBudgetQpvCtrl(
             "0",
-            "6500",
+            "6500", // XXX : Magic number, valeur défaut côté back
             ...query_params 
         ) as unknown as Observable<DataPagination<EnrichedFlattenFinancialLinesSchema> | null>;
 
