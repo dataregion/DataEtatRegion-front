@@ -45,7 +45,11 @@ export class HomeComponent implements OnInit {
             (this.currentSearchArgs.annees === null || this.currentSearchArgs.annees.length === 0) &&
             (this.currentSearchArgs.niveau === null) &&
             (this.currentSearchArgs.localisations === null || this.currentSearchArgs.localisations.length === 0) &&
-            (this.currentSearchArgs.qpv_codes === null || this.currentSearchArgs.qpv_codes.length === 0)
+            (this.currentSearchArgs.qpv_codes === null || this.currentSearchArgs.qpv_codes.length === 0) &&
+            (this.currentSearchArgs.financeurs === null || this.currentSearchArgs.financeurs.length === 0) &&
+            (this.currentSearchArgs.thematiques === null || this.currentSearchArgs.thematiques.length === 0) &&
+            (this.currentSearchArgs.porteurs === null || this.currentSearchArgs.porteurs.length === 0) &&
+            (this.currentSearchArgs.types_porteur === null || this.currentSearchArgs.types_porteur.length === 0)
           ) 
   }
 

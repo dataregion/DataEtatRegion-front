@@ -137,7 +137,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       const clusterSource = this.clusterLayer.getSource() as Cluster<Feature>; // Get the Cluster source
       const vectorSource = clusterSource.getSource() as VectorSource; // Get the underlying VectorSource
       vectorSource.addFeatures(cachedPoints);
-      this.updateCustomControl(this._searchArgs?.qpv_codes?.map(qpv => qpv.code), this._searchArgs?.annees, this._searchArgs?.niveau);
+      this.updateCustomControl();
       return;
     }
 
@@ -187,27 +187,28 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       const clusterSource = this.clusterLayer.getSource() as Cluster<Feature>; // Get the Cluster source
       const vectorSource = clusterSource.getSource() as VectorSource; // Get the underlying VectorSource
       vectorSource.addFeatures(features_points);
-      this.updateCustomControl(this._searchArgs?.qpv_codes?.map(qpv => qpv.code), this._searchArgs?.annees, this._searchArgs?.niveau);
+      this.updateCustomControl();
     });
   }
 
-  private updateCustomControl(
-    searchedQpvNames: string[] | null | undefined,
-    searchedYears: number[] | null | undefined,
-    localisation: string | null | undefined,
-  ): void {
+  private updateCustomControl(): void {
+
+   const selectedQpv = this._searchArgs?.qpv_codes?.map(qpv => qpv.code)
+   const selectedAnnees = this._searchArgs?.annees
+   const selectedNiveau = this._searchArgs?.niveau
+
     const clusterSource = this.clusterLayer.getSource() as Cluster<Feature>; // Get the Cluster source
     const vectorSource = clusterSource.getSource() as VectorSource;
-    const selectedFeatures: Feature[] | null | undefined = this.findFeaturesByCodes(vectorSource, searchedQpvNames);
+    const selectedFeatures: Feature[] | null | undefined = this.findFeaturesByCodes(vectorSource.getFeatures(), selectedQpv);
 
-    this.mapLevelControl?.updateSelectedQpv(searchedQpvNames, searchedYears, localisation, selectedFeatures);
+    this.mapLevelControl?.updateSelectedQpv(selectedQpv, selectedAnnees, selectedNiveau, selectedFeatures);
   }
 
   private findFeaturesByCodes(
-    vectorSource: VectorSource,
+    features: Feature[],
     codes: string[] | null | undefined
   ): Feature[] | null | undefined {
-    return vectorSource.getFeatures().filter(function(feature) {
+    return features.filter(function(feature) {
       return codes?.includes(feature.get('code'));
     });
   }

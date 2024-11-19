@@ -153,7 +153,6 @@ export class ModalAdditionalParamsComponent<T> implements OnChanges {
       } else {
         this.selected?.push(value);
       }
-      console.log(this.selected)
     }
 
 
