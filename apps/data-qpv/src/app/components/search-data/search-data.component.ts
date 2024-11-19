@@ -438,7 +438,6 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
           : this.filteredQPV
       });
       this.currentFilter = this._buildPreference(this.searchForm.value as JSONObject);
-      console.log('ok')
   }
 
   ngAfterViewInit(): void {
@@ -467,6 +466,9 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
       niveau: this.selectedNiveau,
       localisations: this.selectedLocalisations,
       qpv_codes: this.selectedQpv, 
+      financeurs: this.selectedFinanceurs, 
+      thematiques: this.selectedThematiques, 
+      porteurs: this.selectedPorteurs, 
       types_porteur: this.selectedTypesPorteur, 
     };
 
@@ -478,6 +480,9 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
       niveau: formValue.niveau || null,
       locations: formValue.localisations || null,
       qpvs: formValue.qpv || null,
+      centre_couts: formValue.financeurs || null,
+      themes: formValue.thematiques || null,
+      beneficiaires: formValue.porteurs || null,
       types_beneficiaires: formValue.types_porteur || null,
     }
 
@@ -519,7 +524,6 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
         preference.filters[key] = object[key];
       }
     });
-    console.log(preference)
     return preference;
   }
 
@@ -573,7 +577,6 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
     if (this.currentFilter) {
       this.currentFilter.name = '';
     }
-    console.log(this.currentFilter)
 
     const dialogRef = this.dialog.open(SavePreferenceDialogComponent, {
       data: this.currentFilter,

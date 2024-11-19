@@ -123,12 +123,13 @@ export class BudgetDataHttpService
             this._sanitize_req_arg(codes_programme),
             this._sanitize_req_arg(niveau_geo),
             this._sanitize_req_arg(listCode),
-            undefined,
-            undefined,
+            undefined, // Année découpage QPV
+            undefined, // Codes QPV
             this._sanitize_req_arg(p_themes),
             this._sanitize_req_arg(siret_beneficiaire),
             this._sanitize_req_arg(p_types_beneficaires),
             this._sanitize_req_arg(annees),
+            undefined, // Centres de couts
             this._sanitize_req_arg(p_domaines_fonctionnels),
             this._sanitize_req_arg(p_refprod),
             this._sanitize_req_arg(p_tags)
