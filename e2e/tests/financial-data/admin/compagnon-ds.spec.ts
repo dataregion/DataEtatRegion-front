@@ -18,16 +18,11 @@ test.describe('Compagnon DS', () => {
   });
 
   test("L'utilisateur a accès au compagnon DS", async ({ page }) => {
-    // Présence du menu d'admin et vérification du contenu
-    await expect(page.locator('#administration')).toBeVisible();
-    await page.locator('#administration').click();
-    await expect(page.getByRole('menuitem', { name: 'Gestion des utilisateurs' })).toBeVisible();
-    await expect(page.getByRole('menuitem', { name: 'Charger des données' })).toBeVisible();
-    await expect(page.getByRole('menuitem', { name: 'Compagnon DS' })).toBeVisible();
+    // Présence du bouton compagnon DS dans le header
+    await expect(page.locator('#compagnonDS')).toBeVisible();
 
     // Navigate by click => Intégration d'une démarche
-    await expect(page.getByRole('menuitem', { name: 'Compagnon DS' })).toBeVisible();
-    await page.getByRole('menuitem', { name: 'Compagnon DS' }).click();
+    await page.locator('#compagnonDS').click();
     await expect(page.getByTestId('stepperTitle')).toContainText('Intégrer ma démarche');
   });
 });
