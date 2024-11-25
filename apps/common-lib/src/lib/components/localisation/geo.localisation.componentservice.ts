@@ -32,15 +32,33 @@ export class GeoLocalisationComponentService {
           break;
       }
 
-      return { ...search, limit };
-    };
+            return { ...search, limit }
+        }
 
-    const builder = new FuzzySearchParamsBuilder()
-      .withDefaultLimit(100)
-      .withLimitHandler(limit_handler);
 
-    const search_params = builder.search(term, type);
+        const builder = new FuzzySearchParamsBuilder()
+            .withDefaultLimit(100)
+            .withLimitHandler(limit_handler);
 
-    return this.geo.search(type, search_params);
-  }
+        const search_params = builder.search(term, type);
+
+        return this.geo.search(type, search_params);
+    }
+
+    public filterQPV2024(term: string | null): Observable<GeoModel[]> {
+
+        const limit_handler: LimitHandler = (search) => {
+            const limit = 100
+            return { ...search, limit }
+        }
+
+        const builder = new FuzzySearchParamsBuilder()
+            .withDefaultLimit(100)
+            .withLimitHandler(limit_handler);
+
+        const search_params = builder.search(term, TypeLocalisation.QPV);
+        search_params["annee_decoupage"] = "2024";
+
+        return this.geo.search(TypeLocalisation.QPV, search_params)
+    }
 }

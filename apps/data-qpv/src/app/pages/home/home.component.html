@@ -1,0 +1,68 @@
+<div style="background-color:#fff;">
+  <div class="fr-container">
+    <div class="fr-grid-row">
+
+      <div class="fr-col-12">
+        <h3 style="margin-top:50px; margin-bottom:10px;">Rechercher des données financières à l'échelle des QPV</h3>
+        <p>Affiche les données des territoires et leurs crédits</p>
+      </div>
+
+
+      <div class="fr-col-12" style="margin-bottom:30px;">
+        <data-qpv-search-data (searchArgsEventEmitter)="currentSearchArgs = $event"
+                            [preFilter]="preFilter"
+                            [(searchFinish)]="searchFinish"
+                            [(searchInProgress)]="searchInProgress"
+                            (searchResultsEventEmitter)="currentSearchResults = $event"
+                            />
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div style="background-color:#f5f5fe;">
+  <div class="fr-container">
+
+    <div *ngIf="!isSearchOver()" class="spinner-wrapper">
+      <lib-spinner />
+    </div>
+
+    <div class="fr-grid-row" *ngIf="!isSearchArgsEmpty() && !isSearchResultsEmpty() && isSearchOver()">
+      <div class="fr-col-12">
+        <span class="search-resume" [innerText]="searchArgsToText()"></span>
+      </div>
+      <div class="fr-col-6" style="margin-bottom: 50px;">
+        <data-qpv-tabs-superset-iframes [searchArgs]="currentSearchArgs" [searchResults]="currentSearchResults" [(selectedTabIndex)]="selectedTabIndex" />
+      </div>
+      <div class="fr-col-6" style="margin-bottom: 50px;">
+        <data-qpv-tabs-map-table [searchArgs]="currentSearchArgs" [searchResults]="currentSearchResults" [selectedTabIndexCredits]="selectedTabIndex" />
+      </div>
+    </div>
+
+    <div class="fr-grid-row" *ngIf="isSearchArgsEmpty() && !isSearchResultsEmpty() && isSearchOver()">
+      <div class="fr-col-12" style="padding-top: 50px; padding-bottom: 50px;">
+        <dsfr-alert
+          [message]="'Veuillez effectuer une recherche pour afficher des données '"
+          [severity]="'info'"
+          [ariaRoleValue]="'alert'"
+          [size]="'MD'"
+          [hasAriaRole]="false"
+          [closeable]="false" />
+      </div>
+    </div>
+
+    <div class="fr-grid-row" *ngIf="!isSearchArgsEmpty() && isSearchResultsEmpty() && isSearchOver()">
+      <div class="fr-col-12" style="padding-top: 50px; padding-bottom: 50px;">
+        <dsfr-alert
+          [message]="'Aucune subvention pour cette recherche'"
+          [severity]="'info'"
+          [ariaRoleValue]="'alert'"
+          [size]="'MD'"
+          [hasAriaRole]="false"
+          [closeable]="false" />
+      </div>
+    </div>
+
+  </div>
+</div>

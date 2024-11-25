@@ -1,11 +1,13 @@
 import { Injectable } from '@angular/core';
 import { ISettingsService } from 'apps/common-lib/src/lib/environments/interface-settings.service';
 import {
-  Features,
   IApi,
+  Settings,
   Keycloak,
+  Ressources,
+  Superset,
+  Features,
   Matomo,
-  Settings
 } from 'apps/common-lib/src/public-api';
 
 class Api implements IApi {
@@ -34,6 +36,8 @@ export class SettingsService implements ISettingsService {
     this.settings.keycloak = new Keycloak();
     this.settings.features = new Features();
     this.settings.matomo = new Matomo();
+    this.settings.superset = new Superset();
+    this.settings.ressources = new Ressources();
   }
 
   setSettings(settings: Settings): void {
@@ -42,6 +46,10 @@ export class SettingsService implements ISettingsService {
 
   getKeycloakSettings(): Keycloak {
     return this.settings.keycloak;
+  }
+
+  getSuperset(): Superset {
+    return this.settings.superset;
   }
 
   getFeatures(): Features {
@@ -54,6 +62,10 @@ export class SettingsService implements ISettingsService {
 
   getSetting(): FinancialSettings {
     return this.settings as FinancialSettings;
+  }
+
+  getRessources(): Ressources {
+    return this.settings.ressources as Ressources;
   }
 
   public get apiGeo(): string {

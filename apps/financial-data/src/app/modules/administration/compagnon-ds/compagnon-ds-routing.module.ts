@@ -5,6 +5,7 @@ import { keycloakAuthGuardCanActivate } from 'apps/common-lib/src/public-api';
 import { IntegrationDemarcheComponent } from './integration/integration-demarche.component';
 import { ReconciliationDemarcheComponent } from './reconciliation/reconciliation-demarche.component';
 import { AffichageDemarcheComponent } from './affichage/affichage-demarche.component';
+import { GestionTokenComponent } from './gestion-token/gestion-token.component';
 
 export const profiles_required_for_managment_page = [Profil.ADMIN];
 export const profiles_required_for_upload_page = [Profil.ADMIN, Profil.COMPTABLE];
@@ -31,6 +32,14 @@ const routes: Routes = [
   {
     path: 'affichage',
     component: AffichageDemarcheComponent,
+    canActivate: [keycloakAuthGuardCanActivate],
+    data: {
+      roles: profiles_required_for_demarche_integration
+    }
+  },
+  {
+    path: 'gestion-token',
+    component: GestionTokenComponent,
     canActivate: [keycloakAuthGuardCanActivate],
     data: {
       roles: profiles_required_for_demarche_integration

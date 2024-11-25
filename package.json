@@ -7,13 +7,15 @@
     "start:financial-dev": "ng serve --project=financial-data --proxy-config proxy.conf.json",
     "start:france-relance": "ng serve --project=france-relance",
     "start:france-relance-dev": "ng serve --project=france-relance --proxy-config proxy.conf.json --port=5006",
+    "start:data-qpv": "ng serve --project=data-qpv",
+    "start:data-qpv-dev": "ng serve --project=data-qpv --proxy-config proxy.conf.json",
     "build:financial-data": "ng build --project=financial-data",
     "build:france-relance": "ng build --project=france-relance",
-    "build:all": "ng build --project=france-relance && ng build --project=financial-data",
+    "build:data-qpv": "ng build --project=data-qpv",
+    "build:all": "ng build --project=france-relance && ng build --project=financial-data && ng build --project=data-qpv",
     "storybook:common-lib": "ng run common-lib:storybook",
     "test-storybook": "test-storybook --config-dir=apps/common-lib/.storybook",
-    "lint": "ng lint",
-    "codegen": "graphql-codegen --config codegen.ts"
+    "lint": "ng lint"
   },
   "env": {
     "browser": true,
@@ -31,15 +33,17 @@
     "@angular/platform-browser": "^18.2.3",
     "@angular/platform-browser-dynamic": "^18.2.3",
     "@angular/router": "^18.2.3",
-    "@apollo/client": "^3.11.8",
-    "@gouvfr/dsfr": "^1.11.2",
-    "apollo-angular": "^7.1.2",
-    "graphql": "^16.8.2",
+    "@gouvfr/dsfr": "^1.12.1",
+    "@edugouvfr/ngx-dsfr": "^1.12.4",
+    "geoportal-extensions-openlayers": "^3.4.4",
     "keycloak-angular": "^16.0.1",
     "keycloak-js": "^25.0.4",
     "ngx-logger": "^5.0.12",
     "ngx-matomo-client": "^6.3.1",
+    "ol": "^10.2.1",
+    "ol-mapbox-style": "^12.3.5",
     "rxjs": "~7.5.0",
+    "topojson-client": "^3.1.0",
     "tslib": "^2.3.0",
     "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.1/xlsx-0.20.1.tgz",
     "zone.js": "~0.14.10"
@@ -54,11 +58,6 @@
     "@angular/cli": "~18.2.3",
     "@angular/compiler-cli": "^18.2.3",
     "@chromatic-com/storybook": "^1.5.0",
-    "@graphql-codegen/cli": "^3.3.1",
-    "@graphql-codegen/typescript": "3.0.4",
-    "@graphql-codegen/typescript-apollo-angular": "3.5.6",
-    "@graphql-codegen/typescript-operations": "^3.0.4",
-    "@graphql-codegen/typescript-resolvers": "^3.2.1",
     "@playwright/test": "^1.44.1",
     "@storybook/addon-essentials": "^8.2.9",
     "@storybook/addon-interactions": "^8.2.9",
@@ -67,7 +66,9 @@
     "@storybook/blocks": "^8.2.9",
     "@storybook/test": "^8.2.9",
     "@storybook/test-runner": "^0.18.2",
+    "@types/arcgis-rest-api": "^10.4.8",
     "@types/jasmine": "~4.0.0",
+    "@types/topojson-specification": "^1.0.5",
     "@typescript-eslint/eslint-plugin": "^7.2.0",
     "@typescript-eslint/parser": "^7.2.0",
     "eslint": "^8.57.0",
@@ -75,5 +76,8 @@
     "ng-packagr": "^18.2.1",
     "storybook": "^8.2.9",
     "typescript": "^5.5.4"
+  },
+  "overrides": {
+    "browser-sync": "^3.0.2"
   }
 }

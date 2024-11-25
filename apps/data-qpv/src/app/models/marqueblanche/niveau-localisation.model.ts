@@ -1,0 +1,30 @@
+import { TypeLocalisation } from "apps/common-lib/src/public-api"
+/* eslint-disable no-unused-vars */
+
+const synonymes: { [key in TypeLocalisation]: string[] } = {
+    [TypeLocalisation.REGION]: ['region'],
+    [TypeLocalisation.DEPARTEMENT]: ['departement'],
+    [TypeLocalisation.ARRONDISSEMENT]: ['arrondissement'],
+    [TypeLocalisation.COMMUNE]: ['commune'],
+    [TypeLocalisation.CRTE]: ['crte'],
+    [TypeLocalisation.EPCI]: ['epci'],
+    [TypeLocalisation.QPV]: ['qpv'],
+};
+
+export function synonymes_from_types_localisation(types: TypeLocalisation[]): string[] {
+    return types.flatMap(type => synonymes[type]);
+}
+
+/* eslint-enable no-unused-vars */
+
+export function to_type_localisation(name: string): TypeLocalisation {
+    for (const key in synonymes) {
+        const k = key as TypeLocalisation;
+        const elements = synonymes[k];
+        if (elements.includes(name)) {
+            return k;
+        }
+    }
+
+    throw new Error(`Impossible de convertir ${name} en niveau de localisation.`);
+}

@@ -1,0 +1,74 @@
+.map-container {
+  width: 100%;
+  height: 500px;
+
+  .ol-rotate {
+    display: none;
+  }
+
+  .ol-full-screen {
+    position: absolute;
+    right: 15px;
+    top: 15px;
+  }
+
+  .ol-zoom {
+    position: absolute;
+    right: 15px;
+    bottom: 15px;
+  }
+
+  .ol-zoom, .ol-full-screen, .map-level-control {
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+
+    button {
+      width: 35px;
+      height: 35px;
+      background-color: white;
+      color: #000091;
+      font-size: 22px;
+      margin-top: 2px;
+      margin-bottom: 2px;
+      box-shadow: -1px -1px 20px -6px rgba(0, 0, 0, 0.5);
+      -webkit-box-shadow: -1px -1px 20px -6px rgba(0, 0, 0, 0.5);
+      -moz-box-shadow: -1px -1px 20px -6px rgba(0, 0, 0, 0.5);
+    }
+  }
+
+}
+
+.map-level-control {
+
+  position: absolute;
+  left: 15px;
+  top: 15px;
+
+  .map-level-control-title {
+    margin-bottom: 5px;
+    height: 45px;
+    min-height: 45px;
+  }
+
+  .map-level-control-select {
+    margin-top: 5px;
+    margin-bottom: 5px;
+  }
+
+  .map-zoom-to-current-btn {
+    margin-top: 5px;
+    width: 35px;
+    height: 35px;
+    font-size: 22px;
+  }
+
+  .map-level-control-title, .map-level-control-select, .map-zoom-to-current-btn {
+    padding: 10px;
+    background-color: white;
+    color: #000091;
+    box-shadow: -1px -1px 20px -6px rgba(0, 0, 0, 0.5);
+    -webkit-box-shadow: -1px -1px 20px -6px rgba(0, 0, 0, 0.5);
+    -moz-box-shadow: -1px -1px 20px -6px rgba(0, 0, 0, 0.5);
+  }
+}

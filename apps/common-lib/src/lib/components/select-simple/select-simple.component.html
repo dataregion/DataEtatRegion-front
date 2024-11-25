@@ -19,7 +19,7 @@
   </mat-select>
 
   <mat-icon *ngIf="icon" matSuffix>{{ icon }}</mat-icon>
-  <button (click)="emptySelected()" *ngIf="!icon && hasSelected()" mat-icon-button matSuffix>
+  <button (click)="emptySelected()" *ngIf="canClear && !icon && hasSelected()" mat-icon-button matSuffix>
     <mat-icon>close</mat-icon>
   </button>
 

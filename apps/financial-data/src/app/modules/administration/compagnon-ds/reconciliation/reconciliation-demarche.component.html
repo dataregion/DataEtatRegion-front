@@ -128,14 +128,10 @@
             </div>
             <div class="fr-input-group">
               <label class="fr-label">Année d'engagement</label>
-              <mat-form-field class="select-single" style="width: 100%">
-                <mat-select [(ngModel)]="annee" [ngModelOptions]="{standalone: true}">
-                  <mat-option *ngFor="let annee of annees" [value]="annee">{{ annee }}</mat-option>
-                </mat-select>
-                <button *ngIf="annee !== null" (click)="annee = null" matSuffix mat-icon-button>
-                  <mat-icon>close</mat-icon>
-                </button>
-              </mat-form-field>
+              <lib-select-simple [(selected)]="annee" [canFilter]="false"
+                                 [options]="annees"
+                                 id="annee"
+              />
             </div>
           </div>
           <div class="fr-col-lg-6 fr-col-12" style="padding:0 30px;">

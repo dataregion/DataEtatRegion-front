@@ -355,6 +355,131 @@
         }
       }
     },
+    "data-qpv": {
+      "projectType": "application",
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "scss"
+        }
+      },
+      "root": "apps/data-qpv",
+      "sourceRoot": "apps/data-qpv/src",
+      "prefix": "app",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:application",
+          "options": {
+            "outputPath": {
+              "base": "dist/data-qpv"
+            },
+            "index": "apps/data-qpv/src/index.html",
+            "polyfills": [
+              "apps/data-qpv/src/polyfills.ts"
+            ],
+            "tsConfig": "apps/data-qpv/tsconfig.app.json",
+            "inlineStyleLanguage": "scss",
+            "assets": [
+              "apps/data-qpv/src/favicon.ico",
+              "apps/data-qpv/src/assets",
+              {
+                "glob": "**/*",
+                "input": "./node_modules/@gouvfr/dsfr/dist",
+                "output": "/@gouvfr"
+              },
+              {
+                "glob": "**/*",
+                "input": "./apps/shared-assets/img",
+                "output": "assets/img"
+              }
+            ],
+            "styles": [
+              "./node_modules/@angular/material/prebuilt-themes/indigo-pink.css",
+              "./node_modules/@gouvfr/dsfr/dist/dsfr/dsfr.css",
+              "./node_modules/@gouvfr/dsfr/dist/utility/utility.css",
+              "apps/data-qpv/src/styles.scss"
+            ],
+            "scripts": [
+              "./node_modules/@gouvfr/dsfr/dist/dsfr/dsfr.module.js"
+            ],
+            "allowedCommonJsDependencies": [
+              "js-sha256",
+              "base64-js"
+            ],
+            "browser": "apps/data-qpv/src/main.ts"
+          },
+          "configurations": {
+            "production": {
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "3mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "2kb",
+                  "maximumError": "4kb"
+                }
+              ],
+              "outputHashing": "all"
+            },
+            "development": {
+              "optimization": false,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "namedChunks": true
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "configurations": {
+            "production": {
+              "buildTarget": "data-qpv:build:production"
+            },
+            "development": {
+              "buildTarget": "data-qpv:build:development"
+            }
+          },
+          "defaultConfiguration": "development"
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "buildTarget": "data-qpv:build"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "polyfills": [
+              "zone.js",
+              "zone.js/testing"
+            ],
+            "tsConfig": "apps/data-qpv/tsconfig.spec.json",
+            "inlineStyleLanguage": "scss",
+            "assets": [
+              "apps/data-qpv/src/favicon.ico",
+              "apps/data-qpv/src/assets"
+            ],
+            "styles": [
+              "apps/data-qpv/src/styles.scss"
+            ],
+            "scripts": []
+          }
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": [
+              "apps/data-qpv/**/*.ts",
+              "apps/data-qpv/**/*.html"
+            ]
+          }
+        }
+      }
+    },
     "management": {
       "projectType": "library",
       "root": "apps/management",

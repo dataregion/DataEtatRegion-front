@@ -9,7 +9,25 @@ export class Keycloak {
   realm = '';
   clientId? = null;
   multi_region = false;
-  hostname_client_id_mappings: HostnameClientIdMappings = {};
+  hostname_client_id_mappings: HostnameClientIdMappings = {}
+}
+
+export class Ressources {
+  visuterritoire = '';
+  graphiques = '';
+  relance = '';
+  api_swagger = '';
+  documentation = '';
+  suivi_usage = '';
+}
+
+export interface DashboardsSlugsMappings {
+  [key: string]: string
+}
+
+export class Superset {
+  baseDashboardUrl = '';
+  dashboardsSlugs : DashboardsSlugsMappings = {};
 }
 
 export class Features {
@@ -46,6 +64,9 @@ export class Settings {
   keycloak: Keycloak = new Keycloak();
   features: Features = new Features();
   matomo: Matomo = new Matomo();
+  superset: Superset = new Superset();
+  ressources: Ressources = new Ressources();
   contact: string | undefined = undefined;
   url_github: string | undefined = undefined;
+  url_dossier_ds: string | undefined = undefined;
 }

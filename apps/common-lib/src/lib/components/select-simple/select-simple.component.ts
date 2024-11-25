@@ -38,13 +38,16 @@ export class SelectSimpleComponent<T> implements OnInit, OnChanges {
   // Filtre sur les options ?
   @Input() canFilter: boolean = true;
 
+  @Input() canClear: boolean = true;
+
   // Attributes
   @Input() class: string = '';
   @Input() placeholder: string = '';
   @Input() error: ValidationErrors | null = null;
 
   // Options
-  @Input() filteredOptions: T[] | null = [];
+  @Input() options: T[] | null = [];
+  filteredOptions: T[] | null = [];
   @Output() selectedChange = new EventEmitter<T | null>();
   filterInput: string = '';
   // Icon prefix
@@ -70,13 +73,13 @@ export class SelectSimpleComponent<T> implements OnInit, OnChanges {
   getFilteredOptions(text: string): Observable<T[]> {
     // Filtre par défaut
     return new Observable((subscriber) => {
-      this.filteredOptions = this.filteredOptions
-        ? this.filteredOptions?.filter((opt) => {
+      const filteredOptions = this.options
+        ? this.options?.filter((opt) => {
             const optStr = opt ? opt.toString().toLowerCase() : '';
             return optStr.includes(text.toLowerCase());
           })
         : [];
-      subscriber.next(this.filteredOptions);
+      subscriber.next(filteredOptions);
     });
   }
 
@@ -99,7 +102,7 @@ export class SelectSimpleComponent<T> implements OnInit, OnChanges {
   }
 
   ngOnInit() {
-    this.filter('');
+    this.filter(this.filterInput);
   }
 
   /**
@@ -108,8 +111,9 @@ export class SelectSimpleComponent<T> implements OnInit, OnChanges {
    */
   ngOnChanges(changes: SimpleChanges) {
     // Mise à jour des options
-    if ('filteredOptions' in changes) {
-      this.filteredOptions = changes['filteredOptions'].currentValue;
+    if ('options' in changes) {
+      this.options = changes['options'].currentValue;
+      this.filter(this.filterInput);
     }
     if ('selected' in changes) {
       this.selectedChange.emit(changes['selected'].currentValue ?? null);
@@ -150,8 +154,8 @@ export class SelectSimpleComponent<T> implements OnInit, OnChanges {
     // Filtre
     this.getFilteredOptions(text ? text : '')
       .pipe(debounceTime(300))
-      .subscribe((newOptions) => {
-        this.filteredOptions = newOptions;
+      .subscribe((filteredOptions) => {
+        this.filteredOptions = filteredOptions;
         // Concaténation des éléments sélectionnés avec les éléments filtrés (en supprimant les doublons éventuels)
         this.filteredOptions =
           this.selected != null

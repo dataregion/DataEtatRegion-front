@@ -7,6 +7,14 @@
     </button>
   </li>
 
+  <li *ngIf="showIntegrationDemarchePage" compagnonDS>
+    <button
+      class="fr-btn fr-btn--tertiary-no-outline fr-icon-bank-card-line" matTooltip="Compagnon DS"
+      id="compagnonDS"
+      routerLink="administration/demarches/integration">Compagnon DS
+    </button>
+  </li>
+
   <li ressources *ngIf="ressources$ | async as ressources;">
     <button [matMenuTriggerFor]="ressourcesMenu" class="fr-btn fr-btn--tertiary-no-outline fr-icon-book-2-line"
             id="ressources"
@@ -18,12 +26,13 @@
       <a *ngIf="ressources.relance" [href]="ressources.relance" mat-menu-item target="_blank">France 2030 et Relance</a>
       <a *ngIf="ressources.graphiques" [href]="ressources.graphiques" mat-menu-item target="_blank">Graphiques</a>
       <a *ngIf="ressources.api_swagger" [href]="ressources.api_swagger" mat-menu-item target="_blank">API Swagger</a>
-      <a *ngIf="ressources.documentation" [href]="ressources.documentation" mat-menu-item target="_blank">Documentation</a>
+      <a *ngIf="ressources.documentation" [href]="ressources.documentation" mat-menu-item
+         target="_blank">Documentation</a>
       <a *ngIf="ressources.suivi_usage" [href]="ressources.suivi_usage" mat-menu-item target="_blank">Suivi usage</a>
       <a *ngIf="ressources.grist" [href]="ressources.grist" mat-menu-item target="_blank">Grist</a>
     </mat-menu>
   </li>
-  
+
 
   <li *ngIf="showManageUsersPage || showUploadFinancialDataPage" administration>
     <button [matMenuTriggerFor]="administration" class="fr-btn fr-btn--tertiary-no-outline fr-icon-settings-5-fill"
@@ -35,9 +44,6 @@
         utilisateurs
       </button>
       <button *ngIf="showUploadFinancialDataPage" mat-menu-item routerLink='administration/upload'>Charger des données
-      </button>
-      <button *ngIf="showIntegrationDemarchePage" mat-menu-item routerLink='administration/demarches/integration'>
-        Compagnon DS
       </button>
     </mat-menu>
   </li>

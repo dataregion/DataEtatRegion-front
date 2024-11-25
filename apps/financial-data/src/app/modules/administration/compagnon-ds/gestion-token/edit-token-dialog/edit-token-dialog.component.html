@@ -1,0 +1,31 @@
+<div mat-dialog-title>
+  <div class="dialog-title">
+    <h2>{{title}}</h2>
+    <button
+      aria-label="Fermer"
+      mat-dialog-close
+      mat-icon-button
+      matTooltip="Fermer"
+      type="button"
+    >
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+</div>
+
+<mat-dialog-content style="padding-bottom: 0">
+  <mat-form-field appearance="fill" class="w-full">
+    <mat-label>Nom</mat-label>
+    <input matInput required type="text" [(ngModel)]="token.nom">
+  </mat-form-field>
+
+  <mat-form-field appearance="fill" class="w-full">
+    <mat-label>Token</mat-label>
+    <input matInput required type="text" [(ngModel)]="token.token">
+  </mat-form-field>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button color="primary" mat-button type="button" (click)="save()">Confirmer</button>
+  <button mat-button mat-dialog-close type="button">Annuler</button>
+</mat-dialog-actions>

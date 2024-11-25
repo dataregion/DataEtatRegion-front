@@ -1,0 +1,25 @@
+.btn-form-action {
+    width: 3.5rem !important;
+    height: 3.5rem !important;
+    max-width: 3.5rem !important;
+    max-height: 3.5rem !important;
+    padding-left: 1rem !important;
+}
+
+.wrapper-select {
+    padding-right: 8px !important;
+}
+
+ul.fr-btns-group > li > button.btn-open-modal {
+
+    max-width: max-content !important;
+    padding: 1rem !important;
+    font-size: .9rem !important;
+
+    p {
+        min-width: 1.5rem;
+        min-height: 1.5rem;
+        margin-right:10px;
+        padding:0px;
+    }
+}
