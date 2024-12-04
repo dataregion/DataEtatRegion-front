@@ -8,7 +8,11 @@ export enum Region {
   PDL = 'Pays de la Loire',
   HDF = 'Hauts-de-France',
   NORMANDIE = 'Normandie',
-  BOURGOGNE_FRANCHE_COMTE = 'Bourgogne-Franche-Comte'
+  BOURGOGNE_FRANCHE_COMTE = 'Bourgogne-Franche-Comte',
+  CORSE = 'Corse',
+  OCCITANIE = 'Occitanie',
+  CENTRE_VALDELOIRE = 'Centre-Val de loire',
+  GRAND_EST = 'Grand-Est'
 }
 
 @Injectable({
@@ -40,6 +44,18 @@ export class MultiregionsService {
     ],
     [Region.BOURGOGNE_FRANCHE_COMTE]: [
       "027",
+    ],
+    [Region.CORSE]: [
+      "094",
+    ],
+    [Region.CENTRE_VALDELOIRE]: [
+      "024",
+    ],
+    [Region.OCCITANIE]: [
+      "076",
+    ],
+    [Region.GRAND_EST]: [
+      "044",
     ]
   };
   
