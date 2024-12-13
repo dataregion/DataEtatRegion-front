@@ -32,7 +32,7 @@ Voici les paramètres pris en charge:
 
 | Paramètre           | Description         | Valeurs acceptées                                                                                                                                                                                          | Exemple                                                                                    |
 | ------------------- | ------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
-| code_qpv            | Code QPV   | [Référentiel 2024](https://www.data.gouv.fr/fr/datasets/quartiers-prioritaires-de-la-politique-de-la-ville-qpv/#/resources) | [`code_geo=200000172`](https://budget.databretagne.fr/?niveau_geo=epci&code_geo=200000172) |
+| code_qpv            | Code QPV   | [Référentiel 2024](https://www.data.gouv.fr/fr/datasets/quartiers-prioritaires-de-la-politique-de-la-ville-qpv/#/resources) | [`code_geo=200000172`](https://qpv-bretagne.dataregion.fr/?niveau_geo=epci&code_geo=200000172) |
 
 ##### A écrire : financeurs & thématiques
 
@@ -40,10 +40,10 @@ Voici les paramètres pris en charge:
 
 | Paramètre     | Description                             | Valeurs acceptées          | Exemple                                                                                                                    |
 | ------------- | --------------------------------------- | -------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
-| Bénéficiaires | Les sirets à inclure dans la rechercher | siret du/des bénéficiaires | [beneficiaires=19141687400011,34305956400959](https://budget.databretagne.fr/?beneficiaires=19141687400011,34305956400959) |
+| Bénéficiaires | Les sirets à inclure dans la rechercher | siret du/des bénéficiaires | [beneficiaires=19141687400011,34305956400959](https://qpv-bretagne.dataregion.fr/?beneficiaires=19141687400011,34305956400959) |
 
 - Types de porteur de projet
 
 | Paramètre             | Description                      | Valeurs acceptées                                             | Exemple                                                                                                                  |
 | --------------------- | -------------------------------- | ------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
-| Type de bénéficiaires | Le(s) type(s) de bénéficiaire(s) | `entreprise`, `association`, `etat`, `collectivite`, `autres` | [types_beneficiaires=entreprise,association](https://budget.databretagne.fr/?types_beneficiaires=entreprise,association) |
+| Type de bénéficiaires | Le(s) type(s) de bénéficiaire(s) | `entreprise`, `association`, `etat`, `collectivite`, `autres` | [types_beneficiaires=entreprise,association](https://qpv-bretagne.dataregion.fr/?types_beneficiaires=entreprise,association) |
