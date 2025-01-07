@@ -38,9 +38,10 @@ import { DatePipe } from '@angular/common';
 import { ExportDataService } from 'apps/appcommon/src/lib/export-data.service';
 
 @Component({
-  selector: 'financial-home',
-  templateUrl: './home.component.html',
-  styleUrls: ['./home.component.scss']
+    selector: 'financial-home',
+    templateUrl: './home.component.html',
+    styleUrls: ['./home.component.scss'],
+    standalone: false
 })
 export class HomeComponent implements OnInit {
   private dialog = inject(MatDialog);

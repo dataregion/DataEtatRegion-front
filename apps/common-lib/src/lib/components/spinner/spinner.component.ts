@@ -3,7 +3,6 @@ import { Component } from "@angular/core";
 
 @Component({
     selector: 'lib-spinner',
-    standalone: true,
     imports: [CommonModule],
     template: '<span class="loadingspinner"></span>',
     styles: [`
@@ -29,7 +28,7 @@ import { Component } from "@angular/core";
                 transform: rotate(360deg)
             }
         }
-    `],
+    `]
 })
 export class SpinnerComponent {
 }

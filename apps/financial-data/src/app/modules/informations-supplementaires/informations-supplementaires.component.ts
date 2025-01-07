@@ -35,30 +35,28 @@ export enum View {
 /* eslint-enable no-unused-vars */
 
 @Component({
-  standalone: true,
-  selector: 'financial-informations-supplementaires',
-  templateUrl: './informations-supplementaires.component.html',
-  styleUrls: [
-    './commun-informations-supplementaires.scss',
-    './informations-supplementaires.component.scss'
-  ],
-  imports: [
-    NgIf,
-    NgFor,
-    AsyncPipe,
-    NgTemplateOutlet,
-    NgSwitch,
-    NgSwitchCase,
-    NgSwitchDefault,
-
-    ChargementOuErreurComponent,
-    DetailApiEntrepriseComponent,
-    DetailApiDataSubventionsComponent,
-    DetailApiDemarcheSimplifieComponent,
-    DetailCpComponent,
-    OuNonRenseignePipe
-  ],
-  providers: [InformationsSupplementairesService]
+    selector: 'financial-informations-supplementaires',
+    templateUrl: './informations-supplementaires.component.html',
+    styleUrls: [
+        './commun-informations-supplementaires.scss',
+        './informations-supplementaires.component.scss'
+    ],
+    imports: [
+        NgIf,
+        NgFor,
+        AsyncPipe,
+        NgTemplateOutlet,
+        NgSwitch,
+        NgSwitchCase,
+        NgSwitchDefault,
+        ChargementOuErreurComponent,
+        DetailApiEntrepriseComponent,
+        DetailApiDataSubventionsComponent,
+        DetailApiDemarcheSimplifieComponent,
+        DetailCpComponent,
+        OuNonRenseignePipe
+    ],
+    providers: [InformationsSupplementairesService]
 })
 export class InformationsSupplementairesComponent implements OnInit {
   view: View = View.light;

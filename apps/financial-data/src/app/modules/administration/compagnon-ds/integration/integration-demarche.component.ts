@@ -9,8 +9,9 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({
-  selector: 'financial-integration-demarche.component',
-  templateUrl: './integration-demarche.component.html'
+    selector: 'financial-integration-demarche.component',
+    templateUrl: './integration-demarche.component.html',
+    standalone: false
 })
 export class IntegrationDemarcheComponent implements OnInit {
   private _destroyRef = inject(DestroyRef);

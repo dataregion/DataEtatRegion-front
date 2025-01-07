@@ -17,9 +17,10 @@ import { Observable } from 'rxjs';
 export const MULTIREGIONS_SERVICE = new InjectionToken<MultiregionsService>('MultiregionsService');
 
 @Component({
-  selector: 'financial-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+    selector: 'financial-root',
+    templateUrl: './app.component.html',
+    styleUrls: ['./app.component.scss'],
+    standalone: false
 })
 export class AppComponent implements OnInit {
   public progressBarVisible: boolean = false;

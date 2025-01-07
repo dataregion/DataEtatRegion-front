@@ -12,13 +12,14 @@ import { AlertService } from 'apps/common-lib/src/public-api';
 import { SavePreferenceDialogComponent } from './save-filter/save-preference-dialog.component';
 
 @Component({
-  selector: 'lib-preference-users',
-  templateUrl: './preference-users.component.html',
-  styles: [
-    '.mat-column-filters { width: 55%; } ',
-    '.mat-column-shares { width: 20% }',
-    '.mat-column-name { width: 10% }'
-  ]
+    selector: 'lib-preference-users',
+    templateUrl: './preference-users.component.html',
+    styles: [
+        '.mat-column-filters { width: 55%; } ',
+        '.mat-column-shares { width: 20% }',
+        '.mat-column-name { width: 10% }'
+    ],
+    standalone: false
 })
 export class PreferenceUsersComponent implements OnInit {
   /**

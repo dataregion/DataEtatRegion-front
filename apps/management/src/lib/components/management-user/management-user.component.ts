@@ -11,9 +11,10 @@ import { UserHttpService } from '../../services/users-http.service';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 
 @Component({
-  selector: 'lib-management-user',
-  templateUrl: './management-user.component.html',
-  providers: [{ provide: MatPaginatorIntl, useValue: getFrenchPaginatorIntl() }]
+    selector: 'lib-management-user',
+    templateUrl: './management-user.component.html',
+    providers: [{ provide: MatPaginatorIntl, useValue: getFrenchPaginatorIntl() }],
+    standalone: false
 })
 export class ManagementUserComponent implements OnInit {
   public displayedColumns: string[] = [
@@ -132,8 +133,8 @@ export class ManagementUserComponent implements OnInit {
 }
 
 @Component({
-  selector: 'lib-management-confirm',
-  template: `
+    selector: 'lib-management-confirm',
+    template: `
     <h2 mat-dialog-title>Confirmation</h2>
 
     <div mat-dialog-content>
@@ -145,7 +146,8 @@ export class ManagementUserComponent implements OnInit {
       </button>
       <button mat-button mat-dialog-close type="button">Non</button>
     </mat-dialog-actions>
-  `
+  `,
+    standalone: false
 })
 /* eslint no-unused-vars: 0 */ // --> OFF
 export class ConfirmationDialogComponent {

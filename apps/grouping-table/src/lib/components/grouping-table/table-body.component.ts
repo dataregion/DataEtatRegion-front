@@ -3,11 +3,12 @@ import { Group } from './group-utils';
 import { GroupingTableContextService } from './grouping-table-context.service';
 
 @Component({
-  selector: 'lib-table-body',
-  templateUrl: './table-body.component.html',
-  host: {
-    class: 'table-body'
-  }
+    selector: 'lib-table-body',
+    templateUrl: './table-body.component.html',
+    host: {
+        class: 'table-body'
+    },
+    standalone: false
 })
 export class TableBodyComponent {
   @Input() group!: Group;

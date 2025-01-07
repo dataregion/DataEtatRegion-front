@@ -5,9 +5,10 @@ import { DsfrOption, DsfrTableComponent, DsfrTableState } from "@edugouvfr/ngx-d
 
 
 @Component({
-  selector: 'data-qpv-tabs-map-table',
-  templateUrl: './tabs-map-table.component.html',
-  styleUrls: ['./tabs-map-table.component.scss'],
+    selector: 'data-qpv-tabs-map-table',
+    templateUrl: './tabs-map-table.component.html',
+    styleUrls: ['./tabs-map-table.component.scss'],
+    standalone: false
 })
 export class TabsMapTableComponent {
 

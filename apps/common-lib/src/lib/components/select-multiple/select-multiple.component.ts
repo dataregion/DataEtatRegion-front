@@ -14,24 +14,23 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
  * Select multiple paramétrable
  */
 @Component({
-  selector: 'lib-select-multiple',
-  standalone: true,
-  templateUrl: './select-multiple.component.html',
-  styleUrls: ['./select-multiple.component.scss'],
-  imports: [
-    CommonModule,
-    MatIconModule,
-    MatAutocompleteModule,
-    MatFormFieldModule,
-    MatSelectModule,
-    FormsModule,
-    ReactiveFormsModule,
-    MatTooltipModule,
-    NgFor,
-    MatInputModule,
-    MatButtonModule,
-    MatCheckboxModule
-  ]
+    selector: 'lib-select-multiple',
+    templateUrl: './select-multiple.component.html',
+    styleUrls: ['./select-multiple.component.scss'],
+    imports: [
+        CommonModule,
+        MatIconModule,
+        MatAutocompleteModule,
+        MatFormFieldModule,
+        MatSelectModule,
+        FormsModule,
+        ReactiveFormsModule,
+        MatTooltipModule,
+        NgFor,
+        MatInputModule,
+        MatButtonModule,
+        MatCheckboxModule
+    ]
 })
 export class SelectMultipleComponent<T> implements OnChanges {
   // Select all ?

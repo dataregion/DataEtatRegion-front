@@ -10,9 +10,10 @@ import { BudgetDataHttpService } from '@services/http/budget-lines-http.service'
 import { ColonneLibelles, ColonnesService } from '@services/colonnes.service';
 
 @Component({
-  selector: 'financial-update-tags.component',
-  templateUrl: './update-tags.component.html',
-  styleUrls: ['../common-for-pages-with-uploads.scss']
+    selector: 'financial-update-tags.component',
+    templateUrl: './update-tags.component.html',
+    styleUrls: ['../common-for-pages-with-uploads.scss'],
+    standalone: false
 })
 export class UpdateTagsComponent {
   /** Indique si la recherche est en cours */

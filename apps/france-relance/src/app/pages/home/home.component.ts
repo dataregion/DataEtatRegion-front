@@ -31,9 +31,10 @@ import { SousAxePlanRelance } from '../../models/axe.models';
 import { SlugifyPipe } from 'apps/common-lib/src/lib/pipes/slugify.pipe';
 
 @Component({
-  selector: 'france-relance-home',
-  templateUrl: './home.component.html',
-  styleUrls: ['./home.component.scss']
+    selector: 'france-relance-home',
+    templateUrl: './home.component.html',
+    styleUrls: ['./home.component.scss'],
+    standalone: false
 })
 export class HomeComponent implements OnInit {
   private dialog = inject(MatDialog);

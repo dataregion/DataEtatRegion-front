@@ -3,7 +3,8 @@ import { Directive, Input, TemplateRef } from '@angular/core';
 /* eslint no-unused-vars: 0 */ // --> OFF
 
 @Directive({
-  selector: '[libProjectGrouping]'
+    selector: '[libProjectGrouping]',
+    standalone: false
 })
 export class ProjectGroupingDirective {
   constructor(public templateRef: TemplateRef<unknown>) {}

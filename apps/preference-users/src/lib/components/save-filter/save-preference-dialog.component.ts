@@ -10,8 +10,9 @@ import { PreferenceUsersHttpService } from '../../services/preference-users-http
  * Dialog box for selecting table columns to group data by.
  */
 @Component({
-  templateUrl: './save-preference-dialog.component.html',
-  styleUrls: ['./save-preference-dialog.component.scss']
+    templateUrl: './save-preference-dialog.component.html',
+    styleUrls: ['./save-preference-dialog.component.scss'],
+    standalone: false
 })
 export class SavePreferenceDialogComponent {
   public separatorKeysCodes: number[] = [ENTER, COMMA];

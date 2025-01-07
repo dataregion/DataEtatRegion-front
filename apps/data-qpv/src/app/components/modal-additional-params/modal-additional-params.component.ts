@@ -4,9 +4,10 @@ import { Subject, Subscription } from "rxjs";
 
 
 @Component({
-  selector: 'data-qpv-modal-additional-params',
-  templateUrl: './modal-additional-params.component.html',
-  styleUrls: ['./modal-additional-params.component.scss'],
+    selector: 'data-qpv-modal-additional-params',
+    templateUrl: './modal-additional-params.component.html',
+    styleUrls: ['./modal-additional-params.component.scss'],
+    standalone: false
 })
 export class ModalAdditionalParamsComponent<T> implements OnChanges {
 

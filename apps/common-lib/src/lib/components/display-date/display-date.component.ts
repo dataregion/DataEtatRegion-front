@@ -2,10 +2,9 @@ import { CommonModule, DatePipe } from '@angular/common';
 import { Component, inject, Input } from '@angular/core';
 
 @Component({
-  selector: 'lib-display-date',
-  standalone: true,
-  imports: [CommonModule],
-  template: '{{ formattedDate }}'
+    selector: 'lib-display-date',
+    imports: [CommonModule],
+    template: '{{ formattedDate }}'
 })
 export class DisplayDateComponent {
   @Input() date!: string | Date; // Input pour la date au format UTC

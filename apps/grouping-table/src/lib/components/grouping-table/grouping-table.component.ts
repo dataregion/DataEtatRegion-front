@@ -23,14 +23,15 @@ import { ProjectCellDirective } from './project-cell.directive';
 import { ProjectGroupingDirective } from './project-grouping.directive';
 
 @Component({
-  selector: 'lib-grouping-table',
-  templateUrl: './grouping-table.component.html',
-  encapsulation: ViewEncapsulation.None,
-  providers: [GroupingTableContextService],
-  host: {
-    class: 'grouping-table-container'
-  },
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: 'lib-grouping-table',
+    templateUrl: './grouping-table.component.html',
+    encapsulation: ViewEncapsulation.None,
+    providers: [GroupingTableContextService],
+    host: {
+        class: 'grouping-table-container'
+    },
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class GroupingTableComponent implements OnChanges, AfterViewInit {
   @ContentChildren(ProjectCellDirective) projectedCells!: QueryList<ProjectCellDirective>;
