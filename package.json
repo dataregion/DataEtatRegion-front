@@ -33,11 +33,11 @@
     "@angular/platform-browser": "^19.0.5",
     "@angular/platform-browser-dynamic": "^19.0.5",
     "@angular/router": "^19.0.5",
-    "@gouvfr/dsfr": "^1.12.1",
     "@edugouvfr/ngx-dsfr": "^1.12.4",
+    "@gouvfr/dsfr": "^1.12.1",
     "geoportal-extensions-openlayers": "^3.4.4",
-    "keycloak-angular": "^16.0.1",
-    "keycloak-js": "^25.0.4",
+    "keycloak-angular": "^19.0.2",
+    "keycloak-js": "^25.0.6",
     "ngx-logger": "^5.0.12",
     "ngx-matomo-client": "^6.3.1",
     "ol": "^10.2.1",
@@ -77,10 +77,10 @@
     "storybook": "^8.4.7",
     "typescript": "^5.5.4"
   },
+  "_comment": "TODO: Le temps que ngx-matomo-client ai une release compatible avec angular 19",
   "overrides": {
     "browser-sync": "^3.0.2",
     "ngx-matomo-client": {
-      "_comment": "XXX: Le temps que ngx-matomo-client ai une release compatible avec angular 19",
       "@angular/common@": ">=18.0.0",
       "@angular/core@": ">=18.0.0"
     }
