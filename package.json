@@ -78,6 +78,11 @@
     "typescript": "^5.5.4"
   },
   "overrides": {
-    "browser-sync": "^3.0.2"
+    "browser-sync": "^3.0.2",
+    "ngx-matomo-client": {
+      "_comment": "XXX: Le temps que ngx-matomo-client ai une release compatible avec angular 19",
+      "@angular/common@": ">=18.0.0",
+      "@angular/core@": ">=18.0.0"
+    }
   }
 }
