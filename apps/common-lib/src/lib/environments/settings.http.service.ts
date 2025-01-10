@@ -120,6 +120,7 @@ export class SettingsHttpService {
       });
 
       return initialization;
+    // eslint-disable-next-line no-unused-vars
     } catch (error) {
       throw new Error("Une erreur s'est déroulée durant l'initialisation de keycloak");
     }

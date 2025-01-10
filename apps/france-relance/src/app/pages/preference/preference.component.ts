@@ -7,8 +7,9 @@ import {
 import { JSONObject } from 'apps/common-lib/src/lib/models/jsonobject';
 
 @Component({
-  selector: 'france-relance-preference',
-  templateUrl: './preference.component.html'
+    selector: 'france-relance-preference',
+    templateUrl: './preference.component.html',
+    standalone: false
 })
 export class PreferenceComponent {
   constructor(private _router: Router) {}

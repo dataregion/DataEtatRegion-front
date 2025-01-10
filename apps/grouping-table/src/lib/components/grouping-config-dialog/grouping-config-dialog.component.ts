@@ -18,18 +18,17 @@ export type GroupingConfigDialogData = {
  * Boite de dialogue pour la sélection des colonnes du tableau selon lesquelles regrouper les données.
  */
 @Component({
-  standalone: true,
-  templateUrl: './grouping-config-dialog.component.html',
-  styleUrls: ['./grouping-config-dialog.component.scss'],
-  imports: [
-    CommonModule,
-    MatDialogModule,
-    MatIconModule,
-    MatButtonModule,
-    MatTooltipModule,
-    MatSelectModule,
-    DragDropModule
-  ]
+    templateUrl: './grouping-config-dialog.component.html',
+    styleUrls: ['./grouping-config-dialog.component.scss'],
+    imports: [
+        CommonModule,
+        MatDialogModule,
+        MatIconModule,
+        MatButtonModule,
+        MatTooltipModule,
+        MatSelectModule,
+        DragDropModule
+    ]
 })
 export class GroupingConfigDialogComponent {
   readonly allColumns: ColumnMetaDataDef[];

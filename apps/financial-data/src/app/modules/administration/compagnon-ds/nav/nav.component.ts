@@ -2,10 +2,9 @@ import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: 'financial-nav-compagnon-ds',
-  templateUrl: './nav.component.html',
-  standalone: true,
-  imports: [CommonModule]
+    selector: 'financial-nav-compagnon-ds',
+    templateUrl: './nav.component.html',
+    imports: [CommonModule]
 })
 export class NavCompagnonDSComponent {
   @Input()

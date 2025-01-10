@@ -11,9 +11,10 @@ export type EditTokenDialogData = {
 };
 
 @Component({
-  selector: 'financial-edit-token-dialog',
-  templateUrl: './edit-token-dialog.component.html',
-  styleUrls: ['./edit-token-dialog.component.scss']
+    selector: 'financial-edit-token-dialog',
+    templateUrl: './edit-token-dialog.component.html',
+    styleUrls: ['./edit-token-dialog.component.scss'],
+    standalone: false
 })
 export class EditTokenDialogComponent {
   dialogType: EditTokenDialogType;

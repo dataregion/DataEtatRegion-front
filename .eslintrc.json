@@ -29,6 +29,7 @@
         "plugin:@angular-eslint/template/process-inline-templates"
       ],
       "rules": {
+        "@angular-eslint/prefer-standalone": "off",
         "no-irregular-whitespace": [
           "error",
           {

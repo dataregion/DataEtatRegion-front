@@ -3,11 +3,10 @@ import { Component, Input } from '@angular/core';
 import { FinancialDataModel } from '@models/financial/financial-data.models';
 
 @Component({
-  standalone: true,
-  selector: 'financial-informations-supplementaires-detail-cp',
-  templateUrl: './detail-cp.component.html',
-  styleUrls: ['../commun-informations-supplementaires.scss', './detail-cp.component.scss'],
-  imports: [NgIf, NgFor, CurrencyPipe]
+    selector: 'financial-informations-supplementaires-detail-cp',
+    templateUrl: './detail-cp.component.html',
+    styleUrls: ['../commun-informations-supplementaires.scss', './detail-cp.component.scss'],
+    imports: [NgIf, NgFor, CurrencyPipe]
 })
 export class DetailCpComponent {
   private _financial: FinancialDataModel | undefined = undefined;

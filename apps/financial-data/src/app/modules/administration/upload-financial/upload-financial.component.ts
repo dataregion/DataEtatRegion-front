@@ -9,9 +9,10 @@ import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.compone
 import { BudgetDataHttpService } from '@services/http/budget-lines-http.service';
 
 @Component({
-  selector: 'financial-upload-financial-component',
-  templateUrl: './upload-financial.component.html',
-  styleUrls: ['../common-for-pages-with-uploads.scss']
+    selector: 'financial-upload-financial-component',
+    templateUrl: './upload-financial.component.html',
+    styleUrls: ['../common-for-pages-with-uploads.scss'],
+    standalone: false
 })
 export class UploadFinancialComponent implements OnInit {
   public readonly requiredFileType: string = '.csv';

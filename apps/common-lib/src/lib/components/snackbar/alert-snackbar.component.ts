@@ -16,9 +16,10 @@ export interface AlertMessage {
 /* eslint-enable no-unused-vars */
 
 @Component({
-  selector: 'lib-snackbar',
-  templateUrl: './alert-snackbar.component.html',
-  styles: ['h3 {font-size: 1.25rem; line-height: 1.75rem; font-weight: 700}']
+    selector: 'lib-snackbar',
+    templateUrl: './alert-snackbar.component.html',
+    styles: ['h3 {font-size: 1.25rem; line-height: 1.75rem; font-weight: 700}'],
+    standalone: false
 })
 export class AlertSnackBarComponent {
   public classAlert: string;

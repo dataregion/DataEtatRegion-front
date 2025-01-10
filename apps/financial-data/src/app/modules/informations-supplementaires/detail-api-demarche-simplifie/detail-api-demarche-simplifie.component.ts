@@ -8,22 +8,19 @@ import { SETTINGS } from 'apps/common-lib/src/lib/environments/settings.http.ser
 import { ISettingsService } from 'apps/common-lib/src/lib/environments/interface-settings.service';
 
 @Component({
-  standalone: true,
-  selector: 'financial-informations-demarche-simplifie',
-  templateUrl: './detail-api-demarche-simplifie.component.html',
-  styleUrls: ['../commun-informations-supplementaires.scss'],
-  imports: [
-    ChargementOuErreurComponent,
-
-    NgIf,
-    AsyncPipe,
-    NgFor,
-    CurrencyPipe,
-    NgTemplateOutlet,
-
-    DatePipe,
-    OuNonRenseignePipe
-  ]
+    selector: 'financial-informations-demarche-simplifie',
+    templateUrl: './detail-api-demarche-simplifie.component.html',
+    styleUrls: ['../commun-informations-supplementaires.scss'],
+    imports: [
+        ChargementOuErreurComponent,
+        NgIf,
+        AsyncPipe,
+        NgFor,
+        CurrencyPipe,
+        NgTemplateOutlet,
+        DatePipe,
+        OuNonRenseignePipe
+    ]
 })
 export class DetailApiDemarcheSimplifieComponent {
   public affichageDossier!: AffichageDossier;

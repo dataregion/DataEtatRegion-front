@@ -3,9 +3,10 @@ import { ISettingsService } from '../../environments/interface-settings.service'
 import { SETTINGS } from '../../environments/settings.http.service';
 
 @Component({
-  selector: 'lib-footer',
-  templateUrl: './footer.component.html',
-  styleUrls: ['./footer.component.scss']
+    selector: 'lib-footer',
+    templateUrl: './footer.component.html',
+    styleUrls: ['./footer.component.scss'],
+    standalone: false
 })
 export class FooterComponent {
   public contact?: string;

@@ -24,22 +24,21 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { debounceTime, Subject, Subscription } from 'rxjs';
 
 @Component({
-  selector: 'lib-localisation',
-  standalone: true,
-  templateUrl: './localisation.component.html',
-  styleUrls: ['./localisation.component.scss'],
-  imports: [
-    MatSelectModule,
-    CommonModule,
-    MatIconModule,
-    FormsModule,
-    MatInputModule,
-    MatFormFieldModule,
-    MatTooltipModule,
-    ReactiveFormsModule,
-    SelectMultipleComponent
-  ],
-  providers: [GeoLocalisationComponentService]
+    selector: 'lib-localisation',
+    templateUrl: './localisation.component.html',
+    styleUrls: ['./localisation.component.scss'],
+    imports: [
+        MatSelectModule,
+        CommonModule,
+        MatIconModule,
+        FormsModule,
+        MatInputModule,
+        MatFormFieldModule,
+        MatTooltipModule,
+        ReactiveFormsModule,
+        SelectMultipleComponent
+    ],
+    providers: [GeoLocalisationComponentService]
 })
 export class LocalisationComponent implements OnInit {
 

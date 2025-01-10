@@ -17,22 +17,21 @@ import { ReferentielProgrammation } from '@models/refs/referentiel_programmation
 import { BopModel } from '@models/refs/bop.models';
 
 @Component({
-  selector: 'lib-bops-referentiels',
-  standalone: true,
-  templateUrl: './bops-referentiels.component.html',
-  styleUrls: ['./bops-referentiels.component.scss'],
-  imports: [
-    MatSelectModule,
-    CommonModule,
-    MatIconModule,
-    FormsModule,
-    MatInputModule,
-    MatFormFieldModule,
-    MatTooltipModule,
-    ReactiveFormsModule,
-    SelectMultipleComponent
-  ],
-  providers: [BopsReferentielsComponentService]
+    selector: 'lib-bops-referentiels',
+    templateUrl: './bops-referentiels.component.html',
+    styleUrls: ['./bops-referentiels.component.scss'],
+    imports: [
+        MatSelectModule,
+        CommonModule,
+        MatIconModule,
+        FormsModule,
+        MatInputModule,
+        MatFormFieldModule,
+        MatTooltipModule,
+        ReactiveFormsModule,
+        SelectMultipleComponent
+    ],
+    providers: [BopsReferentielsComponentService]
 })
 export class BopsReferentielsComponent {
   @Input()

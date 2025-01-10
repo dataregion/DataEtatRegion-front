@@ -8,8 +8,9 @@ import { CompagnonDSService } from '../compagnon-ds.service';
 import { Token } from '@models/demarche_simplifie/demarche.model';
 
 @Component({
-  selector: 'financial-gestion-token',
-  templateUrl: './gestion-token.component.html'
+    selector: 'financial-gestion-token',
+    templateUrl: './gestion-token.component.html',
+    standalone: false
 })
 export class GestionTokenComponent implements OnInit {
   private dialog = inject(MatDialog);

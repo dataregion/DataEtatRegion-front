@@ -3,9 +3,10 @@ import { RowData } from './group-utils';
 import { GroupingTableContextService } from './grouping-table-context.service';
 
 @Component({
-  selector: 'lib-table-rows',
-  templateUrl: './table-rows.component.html',
-  styleUrls: ['./table-rows.component.scss']
+    selector: 'lib-table-rows',
+    templateUrl: './table-rows.component.html',
+    styleUrls: ['./table-rows.component.scss'],
+    standalone: false
 })
 export class TableRowsComponent {
   @Input() rows!: RowData[];

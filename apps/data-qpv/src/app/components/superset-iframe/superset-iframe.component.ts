@@ -14,10 +14,11 @@ import {QpvSearchArgs} from "../../models/qpv-search/qpv-search.models";
 
 
 @Component({
-  selector: 'data-qpv-superset-iframe',
-  templateUrl: './superset-iframe.component.html',
-  styleUrls: ['./superset-iframe.component.scss'],
-  providers: []
+    selector: 'data-qpv-superset-iframe',
+    templateUrl: './superset-iframe.component.html',
+    styleUrls: ['./superset-iframe.component.scss'],
+    providers: [],
+    standalone: false
 })
 export class SupersetIframeComponent implements OnInit, OnChanges {
 
