@@ -30,8 +30,6 @@ import {
   SETTINGS,
   SettingsHttpService,
 } from 'apps/common-lib/src/lib/environments/settings.http.service';
-import { ManagementModule } from 'apps/management/src/public-api';
-import { API_MANAGEMENT_PATH } from 'apps/management/src/lib/services/users-http.service';
 import { GroupingTableModule } from 'apps/grouping-table/src/public-api';
 
 import {
@@ -107,7 +105,6 @@ registerLocaleData(localeFr);
     MatProgressSpinnerModule,
     PreferenceUsersModule,
     CommonLibModule,
-    ManagementModule,
     aeApiModule,
     budgetApiModule,
     FormsModule,
@@ -166,13 +163,6 @@ registerLocaleData(localeFr);
         provide: API_REF_PATH,
         useFactory: (settings: SettingsService) => {
             return settings.apiReferentiel;
-        },
-        deps: [SETTINGS],
-    },
-    {
-        provide: API_MANAGEMENT_PATH,
-        useFactory: (settings: SettingsService) => {
-            return settings.apiAdministration;
         },
         deps: [SETTINGS],
     },
