@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
-import { User } from 'apps/management/src/lib/models/users/user.models';
+import { User } from '../models/user.model';
 import { Profil } from '../models/profil.enum.model';
 import { AuthUtils } from './auth-utils.service';
 import { Optional } from '../utilities/optional.type';

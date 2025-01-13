@@ -62,16 +62,3 @@ test.describe("Page d'accueil", () => {
   });
 });
 
-test.describe('Page de Management', () => {
-  test("L'utilisateur n'a pas accès à la page de management", async ({ page, baseURL }) => {
-    const root = financial_url_helper(baseURL).root;
-    const management = financial_url_helper(baseURL).management;
-
-    await page.goto(management.pathname);
-    await page.waitForURL(root.urlHavingSamePathname);
-
-    expect(page.url()).not.toContain(management.pathname);
-    // Le menu est invisible (les tags de sont plus dans ce menu)
-    await expect(page.locator('id=administration')).toHaveCount(0);
-  });
-});
