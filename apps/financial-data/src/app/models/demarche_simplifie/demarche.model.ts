@@ -35,6 +35,7 @@ export interface AffichageDossier {
 export interface Donnee {
   id: number;
   label: string;
+  id_ds: string;
 }
 
 export interface ValeurDonnee {
