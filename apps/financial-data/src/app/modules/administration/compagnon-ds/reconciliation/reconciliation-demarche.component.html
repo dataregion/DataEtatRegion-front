@@ -53,7 +53,7 @@
               <label class="fr-label" for="champ-ej">Numéro EJ *</label>
               <select class="fr-select" id="champ-ej" formControlName="champEJ">
                 <option value="" selected disabled hidden>Sélectionner le champ dans la démarche</option>
-                <option *ngFor="let donnee of donnees" [value]="donnee.id">{{ donnee.label }}</option>
+                <option *ngFor="let donnee of donnees" [value]="donnee.id_ds">{{ donnee.label }}</option>
               </select>
             </div>
           </div>
@@ -65,7 +65,7 @@
               <label class="fr-label" for="champ-ds">Numéro de dossier DS *</label>
               <select class="fr-select" id="champ-ds" formControlName="champDS">
                 <option value="" selected disabled hidden>Sélectionner le champ dans la démarche</option>
-                <option *ngFor="let donnee of donnees" [value]="donnee.id">{{ donnee.label }}</option>
+                <option *ngFor="let donnee of donnees" [value]="donnee.id_ds">{{ donnee.label }}</option>
               </select>
             </div>
           </div>
@@ -86,7 +86,7 @@
               <label class="fr-label" for="champ-montant">Montant AE *</label>
               <select class="fr-select" id="champ-montant" formControlName="champMontant" required>
                 <option value="" selected disabled hidden>Sélectionner le champ dans la démarche</option>
-                <option *ngFor="let donnee of donnees" [value]="donnee.id">{{ donnee.label }}</option>
+                <option *ngFor="let donnee of donnees" [value]="donnee.id_ds">{{ donnee.label }}</option>
               </select>
             </div>
           </div>
