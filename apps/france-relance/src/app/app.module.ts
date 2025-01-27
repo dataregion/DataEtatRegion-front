@@ -26,8 +26,6 @@ import {
   SettingsHttpService
 } from 'apps/common-lib/src/lib/environments/settings.http.service';
 import { AppComponent } from './app.component';
-import { API_MANAGEMENT_PATH } from 'apps/management/src/lib/services/users-http.service';
-import { ManagementModule } from 'apps/management/src/public-api';
 import { GroupingTableModule } from 'apps/grouping-table/src/public-api';
 import { HomeComponent } from './pages/home/home.component';
 import { PreferenceComponent } from './pages/preference/preference.component';
@@ -56,7 +54,6 @@ registerLocaleData(localeFr);
     PreferenceUsersModule,
     GroupingTableModule,
     CommonLibModule,
-    ManagementModule,
     MatomoModule.forRoot({
       mode: 'deferred'
     }),
@@ -102,13 +99,6 @@ registerLocaleData(localeFr);
       provide: API_REF_PATH,
       useFactory: (settings: SettingsService) => {
         return settings.apiReferentiel;
-      },
-      deps: [SETTINGS]
-    },
-    {
-      provide: API_MANAGEMENT_PATH,
-      useFactory: (settings: SettingsService) => {
-        return settings.apiAdministration;
       },
       deps: [SETTINGS]
     },

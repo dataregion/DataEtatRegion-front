@@ -54,12 +54,13 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 
 @Component({
-  selector: 'data-qpv-search-data',
-  templateUrl: './search-data.component.html',
-  styleUrls: ['./search-data.component.scss'],
-  providers: [
-    GeoLocalisationComponentService,
-  ]
+    selector: 'data-qpv-search-data',
+    templateUrl: './search-data.component.html',
+    styleUrls: ['./search-data.component.scss'],
+    providers: [
+        GeoLocalisationComponentService,
+    ],
+    standalone: false
 })
 export class SearchDataComponent implements OnInit, AfterViewInit {
   public readonly TypeLocalisation = TypeLocalisation;

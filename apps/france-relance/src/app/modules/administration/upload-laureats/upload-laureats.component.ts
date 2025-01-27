@@ -8,9 +8,10 @@ import { BudgetDataHttpService } from '@services/http/budget-lines-http.service'
 import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
-  selector: 'france-relance-upload-laureats-component',
-  templateUrl: './upload-laureats.component.html',
-  styleUrls: ['../common-for-pages-with-uploads.scss']
+    selector: 'france-relance-upload-laureats-component',
+    templateUrl: './upload-laureats.component.html',
+    styleUrls: ['../common-for-pages-with-uploads.scss'],
+    standalone: false
 })
 export class UploadLaureatsComponent implements OnInit {
   public readonly requiredFileType: string = '.csv';

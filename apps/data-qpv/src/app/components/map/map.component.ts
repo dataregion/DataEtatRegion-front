@@ -22,10 +22,11 @@ import {QpvSearchArgs} from "../../models/qpv-search/qpv-search.models";
 import { CacheQPVService } from './cache-qpv.service';
 
 @Component({
-  selector: 'data-qpv-map',
-  templateUrl: './map.component.html',
-  styleUrls: ['./map.component.scss'],
-  encapsulation: ViewEncapsulation.None
+    selector: 'data-qpv-map',
+    templateUrl: './map.component.html',
+    styleUrls: ['./map.component.scss'],
+    encapsulation: ViewEncapsulation.None,
+    standalone: false
 })
 export class MapComponent implements AfterViewInit, OnDestroy {
 

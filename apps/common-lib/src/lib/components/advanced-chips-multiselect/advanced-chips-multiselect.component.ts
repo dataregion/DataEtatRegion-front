@@ -20,21 +20,20 @@ export interface SelectedData {
  * Multiselect avec autocompletion et chips
  */
 @Component({
-  selector: 'lib-advanced-chips-multiselect',
-  standalone: true,
-  templateUrl: './advanced-chips-multiselect.component.html',
-  styleUrls: ['./advanced-chips-multiselect.component.css'],
-  imports: [
-    CommonModule,
-    MatIconModule,
-    MatChipsModule,
-    MatAutocompleteModule,
-    MatFormFieldModule,
-    MatSelectModule,
-    FormsModule,
-    ReactiveFormsModule,
-    NgFor
-  ]
+    selector: 'lib-advanced-chips-multiselect',
+    templateUrl: './advanced-chips-multiselect.component.html',
+    styleUrls: ['./advanced-chips-multiselect.component.css'],
+    imports: [
+        CommonModule,
+        MatIconModule,
+        MatChipsModule,
+        MatAutocompleteModule,
+        MatFormFieldModule,
+        MatSelectModule,
+        FormsModule,
+        ReactiveFormsModule,
+        NgFor
+    ]
 })
 export class AdvancedChipsMultiselectComponent {
   @ViewChild('selectionInput', { static: false }) input!: ElementRef<HTMLInputElement>;

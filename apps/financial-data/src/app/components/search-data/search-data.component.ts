@@ -49,10 +49,11 @@ import {
 } from '@services/interface-data.service';
 
 @Component({
-  selector: 'financial-search-data',
-  templateUrl: './search-data.component.html',
-  styleUrls: ['./search-data.component.scss'],
-  providers: [AutocompleteBeneficiaireService, AutocompleteTagsService]
+    selector: 'financial-search-data',
+    templateUrl: './search-data.component.html',
+    styleUrls: ['./search-data.component.scss'],
+    providers: [AutocompleteBeneficiaireService, AutocompleteTagsService],
+    standalone: false
 })
 export class SearchDataComponent implements OnInit, AfterViewInit {
   public readonly TypeLocalisation = TypeLocalisation;

@@ -15,24 +15,23 @@ import { debounceTime, Observable } from 'rxjs';
  * Select simple paramétrable
  */
 @Component({
-  selector: 'lib-select-simple',
-  standalone: true,
-  templateUrl: './select-simple.component.html',
-  styleUrls: ['./select-simple.component.scss'],
-  imports: [
-    CommonModule,
-    MatIconModule,
-    MatAutocompleteModule,
-    MatFormFieldModule,
-    MatSelectModule,
-    FormsModule,
-    ReactiveFormsModule,
-    MatTooltipModule,
-    NgFor,
-    MatInputModule,
-    MatButtonModule,
-    MatCheckboxModule
-  ]
+    selector: 'lib-select-simple',
+    templateUrl: './select-simple.component.html',
+    styleUrls: ['./select-simple.component.scss'],
+    imports: [
+        CommonModule,
+        MatIconModule,
+        MatAutocompleteModule,
+        MatFormFieldModule,
+        MatSelectModule,
+        FormsModule,
+        ReactiveFormsModule,
+        MatTooltipModule,
+        NgFor,
+        MatInputModule,
+        MatButtonModule,
+        MatCheckboxModule
+    ]
 })
 export class SelectSimpleComponent<T> implements OnInit, OnChanges {
   // Filtre sur les options ?

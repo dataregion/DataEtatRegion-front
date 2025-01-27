@@ -12,9 +12,10 @@ import { QpvSearchArgs } from "apps/data-qpv/src/app/models/qpv-search/qpv-searc
 import { FinancialDataModel } from '../../models/financial/financial-data.models';
 
 @Component({
-  selector: 'data-qpv-home',
-  templateUrl: './home.component.html',
-  styleUrls: ['./home.component.scss'],
+    selector: 'data-qpv-home',
+    templateUrl: './home.component.html',
+    styleUrls: ['./home.component.scss'],
+    standalone: false
 })
 export class HomeComponent implements OnInit {
 

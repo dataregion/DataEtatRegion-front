@@ -6,23 +6,20 @@ import { SubventionFull } from '../models/SubventionFull';
 import { OuNonRenseignePipe } from 'apps/common-lib/src/public-api';
 
 @Component({
-  standalone: true,
-  selector: 'financial-informations-supplementaires-detail-subventions',
-  templateUrl: './detail-api-data-subventions.component.html',
-  styleUrls: [
-    '../commun-informations-supplementaires.scss',
-    './detail-api-data-subventions.component.scss'
-  ],
-  imports: [
-    ChargementOuErreurComponent,
-
-    NgIf,
-    AsyncPipe,
-    CurrencyPipe,
-    NgTemplateOutlet,
-
-    OuNonRenseignePipe
-  ]
+    selector: 'financial-informations-supplementaires-detail-subventions',
+    templateUrl: './detail-api-data-subventions.component.html',
+    styleUrls: [
+        '../commun-informations-supplementaires.scss',
+        './detail-api-data-subventions.component.scss'
+    ],
+    imports: [
+        ChargementOuErreurComponent,
+        NgIf,
+        AsyncPipe,
+        CurrencyPipe,
+        NgTemplateOutlet,
+        OuNonRenseignePipe
+    ]
 })
 export class DetailApiDataSubventionsComponent {
   public info: SubventionFull | null = null;

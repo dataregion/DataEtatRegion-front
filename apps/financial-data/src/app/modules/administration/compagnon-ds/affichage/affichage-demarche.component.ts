@@ -28,8 +28,9 @@ interface AffichageFormData {
 }
 
 @Component({
-  selector: 'financial-afficher-demarche.component',
-  templateUrl: './affichage-demarche.component.html'
+    selector: 'financial-afficher-demarche.component',
+    templateUrl: './affichage-demarche.component.html',
+    standalone: false
 })
 export class AffichageDemarcheComponent implements OnInit {
   private _destroyRef = inject(DestroyRef);

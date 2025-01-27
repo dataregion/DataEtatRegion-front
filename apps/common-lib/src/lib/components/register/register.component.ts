@@ -2,8 +2,9 @@ import { Component } from '@angular/core';
 import { KeycloakService } from 'keycloak-angular';
 
 @Component({
-  selector: 'lib-register',
-  template: ''
+    selector: 'lib-register',
+    template: '',
+    standalone: false
 })
 /* eslint no-unused-vars: 0 */ // --> OFF
 export class RegisterComponent {

@@ -6,14 +6,13 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { User } from 'apps/management/src/lib/models/users/user.models';
+import { User } from '../../models/user.model';
 
 @Component({
-  selector: 'lib-header',
-  standalone: true,
-  templateUrl: './header.component.html',
-  styleUrls: ['./header.component.scss'],
-  imports: [MatIconModule, MatTooltipModule, CommonModule, RouterModule, MatMenuModule]
+    selector: 'lib-header',
+    templateUrl: './header.component.html',
+    styleUrls: ['./header.component.scss'],
+    imports: [MatIconModule, MatTooltipModule, CommonModule, RouterModule, MatMenuModule]
 })
 export class HeaderComponent implements OnInit {
   public isLoggedIn = false;

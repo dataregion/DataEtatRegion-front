@@ -7,8 +7,9 @@ import { ColumnMetaDataDef, Group } from './group-utils';
  * Utilisation: `{{group | financialGroupAggregate: column}}`
  */
 @Pipe({
-  name: 'financialGroupAggregate',
-  pure: true
+    name: 'financialGroupAggregate',
+    pure: true,
+    standalone: false
 })
 export class FinancialGroupAggregatePipe implements PipeTransform {
   transform(group: Group, column: ColumnMetaDataDef | undefined): string {

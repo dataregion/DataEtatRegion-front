@@ -22,12 +22,10 @@ export class UrlUtil {
 
 export class FinancialAppUrlUtilHolder {
   public root: UrlUtil;
-  public management: UrlUtil;
   public preference: UrlUtil;
 
   constructor(private base_url: string) {
     this.root = new UrlUtil(base_url, '/');
-    this.management = new UrlUtil(base_url, '/administration/management');
     this.preference = new UrlUtil(base_url, '/preference');
   }
 }

@@ -35,9 +35,10 @@ import { ExportDataService } from 'apps/appcommon/src/lib/export-data.service';
 import { Optional } from 'apps/common-lib/src/lib/utilities/optional.type';
 
 @Component({
-  selector: 'france-relance-search-data',
-  templateUrl: './search-data.component.html',
-  styleUrls: ['./search-data.component.scss']
+    selector: 'france-relance-search-data',
+    templateUrl: './search-data.component.html',
+    styleUrls: ['./search-data.component.scss'],
+    standalone: false
 })
 export class SearchDataComponent implements OnInit, OnChanges {
   public separatorKeysCodes: number[] = [ENTER, COMMA];

@@ -40,9 +40,6 @@
             matTooltip="Administration">Admin
     </button>
     <mat-menu #administration="matMenu">
-      <button *ngIf="showManageUsersPage" mat-menu-item routerLink='administration/management'>Gestion des
-        utilisateurs
-      </button>
       <button *ngIf="showUploadFinancialDataPage" mat-menu-item routerLink='administration/upload'>Charger des données
       </button>
     </mat-menu>

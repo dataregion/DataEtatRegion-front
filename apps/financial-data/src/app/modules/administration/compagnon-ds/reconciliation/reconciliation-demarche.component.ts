@@ -18,9 +18,10 @@ import { ReferentielProgrammation } from '@models/refs/referentiel_programmation
 import { CentreCouts, CodeLabel, DomaineFonctionnel } from '@models/financial/common.models';
 
 @Component({
-  selector: 'financial-reconciliation-demarche.component',
-  templateUrl: './reconciliation-demarche.component.html',
-  providers: [GeoLocalisationComponentService]
+    selector: 'financial-reconciliation-demarche.component',
+    templateUrl: './reconciliation-demarche.component.html',
+    providers: [GeoLocalisationComponentService],
+    standalone: false
 })
 export class ReconciliationDemarcheComponent implements OnInit {
   private _destroyRef = inject(DestroyRef);

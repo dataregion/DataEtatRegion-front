@@ -139,6 +139,7 @@ function localisation(
 
     if (!niveauxLocalisationLegaux.includes(niveau_geo))
       throw Error(`Le niveau géographique doit être une de ces valeurs ${niveauxLocalisationLegaux}`)
+  // eslint-disable-next-line no-unused-vars
   } catch(e) {
     const niveaux_valides = synonymes_from_types_localisation(niveauxLocalisationLegaux)
     throw Error(`Le niveau géographique doit être une de ces valeurs ${niveaux_valides}`)

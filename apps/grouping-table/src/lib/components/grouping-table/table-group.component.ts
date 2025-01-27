@@ -3,8 +3,9 @@ import { Group } from './group-utils';
 import { GroupingTableContextService } from './grouping-table-context.service';
 
 @Component({
-  selector: 'lib-table-group',
-  templateUrl: './table-group.component.html'
+    selector: 'lib-table-group',
+    templateUrl: './table-group.component.html',
+    standalone: false
 })
 export class TableGroupComponent implements OnInit {
   @Input() group!: Group;

@@ -6,25 +6,22 @@ import { OuNonRenseignePipe } from 'apps/common-lib/src/public-api';
 import { EntrepriseFull } from '../models/EntrepriseFull';
 
 @Component({
-  standalone: true,
-  selector: 'financial-informations-supplementaires-detail-entreprise',
-  templateUrl: './detail-api-entreprise.component.html',
-  styleUrls: [
-    '../commun-informations-supplementaires.scss',
-    './detail-api-entreprise.component.scss'
-  ],
-  imports: [
-    ChargementOuErreurComponent,
-
-    NgIf,
-    AsyncPipe,
-    NgFor,
-    CurrencyPipe,
-    NgTemplateOutlet,
-
-    DatePipe,
-    OuNonRenseignePipe
-  ]
+    selector: 'financial-informations-supplementaires-detail-entreprise',
+    templateUrl: './detail-api-entreprise.component.html',
+    styleUrls: [
+        '../commun-informations-supplementaires.scss',
+        './detail-api-entreprise.component.scss'
+    ],
+    imports: [
+        ChargementOuErreurComponent,
+        NgIf,
+        AsyncPipe,
+        NgFor,
+        CurrencyPipe,
+        NgTemplateOutlet,
+        DatePipe,
+        OuNonRenseignePipe
+    ]
 })
 export class DetailApiEntrepriseComponent {
   public info: EntrepriseFull | null = null;
