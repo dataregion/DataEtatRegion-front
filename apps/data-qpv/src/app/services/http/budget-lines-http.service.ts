@@ -133,7 +133,7 @@ export class BudgetDataHttpService implements DataHttpService<EnrichedFlattenFin
         formData.append('fichierAe', fileAe);
         formData.append('fichierCp', fileCp);
         formData.append('annee', annee);
-        return this.http.post(`${this._financialApiUrl}/ae-cp`, formData);
+        return this.http.post(`${this._financialApiUrl}/region`, formData);
     }
 
     public loadFinancialFrance2030(file: any, annee: string): Observable<any> {
