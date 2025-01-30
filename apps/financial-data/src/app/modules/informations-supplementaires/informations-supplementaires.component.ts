@@ -1,10 +1,8 @@
 import {
   AsyncPipe,
-  NgFor,
   NgIf,
   NgSwitch,
   NgSwitchCase,
-  NgSwitchDefault,
   NgTemplateOutlet
 } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
@@ -43,12 +41,10 @@ export enum View {
     ],
     imports: [
         NgIf,
-        NgFor,
         AsyncPipe,
         NgTemplateOutlet,
         NgSwitch,
         NgSwitchCase,
-        NgSwitchDefault,
         ChargementOuErreurComponent,
         DetailApiEntrepriseComponent,
         DetailApiDataSubventionsComponent,

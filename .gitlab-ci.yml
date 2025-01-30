@@ -46,7 +46,7 @@ workflow:
     - if: '$CI_PIPELINE_SOURCE == "schedule"'
 
 .build-docker:
-  image: docker:stable-dind
+  image: docker:27.5.1-dind
   stage: 🔨 docker-build
   variables:
     IMAGE: ""
@@ -75,7 +75,7 @@ workflow:
 
 #BUILD APP
 build angular financial data app:
-  image: node:lts
+  image: node:22.13.1
   stage: build-angular
   script:
     - npm ci --cache ${CI_PROJECT_DIR}/.npm --prefer-offline --quiet --force
@@ -98,7 +98,7 @@ build angular financial data app:
         - "apps/financial-data/**/*"
 
 build angular francerelance app:
-  image: node:lts
+  image: node:22.13.1
   stage: build-angular
   script:
     - npm ci --cache ${CI_PROJECT_DIR}/.npm --prefer-offline --quiet --force
@@ -121,7 +121,7 @@ build angular francerelance app:
         - "apps/france-relance/**/*"
 
 build angular dataqpv app:
-  image: node:lts
+  image: node:22.13.1
   stage: build-angular
   script:
     - npm ci --cache ${CI_PROJECT_DIR}/.npm --prefer-offline --quiet --force

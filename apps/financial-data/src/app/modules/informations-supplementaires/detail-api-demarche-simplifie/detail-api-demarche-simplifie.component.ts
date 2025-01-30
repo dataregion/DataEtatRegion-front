@@ -1,4 +1,4 @@
-import { AsyncPipe, CurrencyPipe, DatePipe, NgFor, NgIf, NgTemplateOutlet } from '@angular/common';
+import { NgIf, NgTemplateOutlet } from '@angular/common';
 import { Component, Inject } from '@angular/core';
 import { ChargementOuErreurComponent } from '../chargement-ou-erreur/chargement-ou-erreur.component';
 import { InformationsSupplementairesService } from '../services/informations-supplementaires.service';
@@ -14,11 +14,7 @@ import { ISettingsService } from 'apps/common-lib/src/lib/environments/interface
     imports: [
         ChargementOuErreurComponent,
         NgIf,
-        AsyncPipe,
-        NgFor,
-        CurrencyPipe,
         NgTemplateOutlet,
-        DatePipe,
         OuNonRenseignePipe
     ]
 })

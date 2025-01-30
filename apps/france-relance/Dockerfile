@@ -1,4 +1,4 @@
-FROM nginx:stable
+FROM nginx:1.27.3
 RUN rm /etc/nginx/conf.d/default.conf
 
 COPY --chown=nginx:root ./nginx/ /etc/nginx/

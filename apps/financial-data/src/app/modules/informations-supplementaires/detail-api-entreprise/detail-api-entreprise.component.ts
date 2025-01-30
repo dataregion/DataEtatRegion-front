@@ -1,4 +1,4 @@
-import { AsyncPipe, CurrencyPipe, DatePipe, NgFor, NgIf, NgTemplateOutlet } from '@angular/common';
+import { DatePipe, NgFor, NgIf, NgTemplateOutlet } from '@angular/common';
 import { Component } from '@angular/core';
 import { ChargementOuErreurComponent } from '../chargement-ou-erreur/chargement-ou-erreur.component';
 import { InformationsSupplementairesService } from '../services/informations-supplementaires.service';
@@ -15,9 +15,7 @@ import { EntrepriseFull } from '../models/EntrepriseFull';
     imports: [
         ChargementOuErreurComponent,
         NgIf,
-        AsyncPipe,
         NgFor,
-        CurrencyPipe,
         NgTemplateOutlet,
         DatePipe,
         OuNonRenseignePipe
