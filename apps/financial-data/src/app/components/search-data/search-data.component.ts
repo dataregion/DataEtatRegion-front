@@ -374,6 +374,7 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
           this.currentFilter.next(this._buildPreference(formValue as JSONObject));
           this.searchResultsEventEmitter.next(this._searchResult);
           this._alertService.openAlert('error', err, 8);
+          throw err;
         }
       });
   }
