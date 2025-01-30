@@ -5,7 +5,7 @@ import { forkJoin, map, Observable } from 'rxjs';
 import { SettingsService } from '../../environments/settings.service';
 import { SETTINGS } from 'apps/common-lib/src/lib/environments/settings.http.service';
 import { HttpClient } from '@angular/common/http';
-import { DataPagination } from 'apps/common-lib/src/lib/models/pagination/pagination.models';
+import { DataIncrementalPagination, DataPagination } from 'apps/common-lib/src/lib/models/pagination/pagination.models';
 import { SourceFinancialData } from '@models/financial/common.models';
 import { Tag } from '@models/refs/tag.model';
 import { ReferentielProgrammation } from '@models/refs/referentiel_programmation.model';
@@ -32,14 +32,13 @@ export class BudgetService {
   public search(search_params: SearchParameters): Observable<FinancialDataModel[]> {
     const search$: Observable<FinancialDataModel[]>[] = this._services.map((service) => {
       return service.search(search_params).pipe(
-        map((resultPagination: DataPagination<any> | null) => {
-          if (resultPagination === null || resultPagination.pageInfo === undefined) return [];
-          if (resultPagination.pageInfo.totalRows > resultPagination.pageInfo.pageSize) {
-            throw new Error(
-              `La limite de lignes de résultat est atteinte. Veuillez affiner vos filtres afin d'obtenir un résultat complet.`
-            );
+        map((resultIncPagination) => {
+
+          if (resultIncPagination === null) return [];
+          if (resultIncPagination.pagination.hasNext) {
+            throw new Error(`La limite de lignes de résultat est atteinte. Veuillez affiner vos filtres afin d'obtenir un résultat complet.`);
           }
-          return resultPagination.items;
+          return resultIncPagination.items;
         }),
         map((items) => items.map((data) => service.mapToGeneric(data)))
       );

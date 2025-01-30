@@ -5,9 +5,9 @@ import { FinancialCp, FinancialDataModel } from "apps/data-qpv/src/app/models/fi
 import { BudgetService as GeneratedBudgetApiService } from "apps/clients/budget";
 import { EnrichedFlattenFinancialLinesSchema } from "apps/clients/budget/model/enrichedFlattenFinancialLinesSchema";
 import { SETTINGS } from "apps/common-lib/src/lib/environments/settings.http.service";
-import { DataPagination } from "apps/common-lib/src/lib/models/pagination/pagination.models";
+import { DataIncrementalPagination, DataPagination, to_incremental } from "apps/common-lib/src/lib/models/pagination/pagination.models";
 import { SettingsService } from "apps/data-qpv/src/environments/settings.service";
-import { Observable, of } from "rxjs";
+import { map, Observable, of } from "rxjs";
 import { BudgetLineHttpMapper } from "./budget-lines-http.mapper.service";
 import { Optional } from "apps/common-lib/src/lib/utilities/optional.type";
 import { DataHttpService, SearchParameters } from "apps/data-qpv/src/app/services/interface-data.service";
@@ -66,7 +66,7 @@ export class BudgetDataHttpService implements DataHttpService<EnrichedFlattenFin
      */
     public search(
         { bops, years, niveau, locations, qpvs, centre_couts, themes, beneficiaires, types_beneficiaires }: SearchParameters
-    ): Observable<DataPagination<EnrichedFlattenFinancialLinesSchema> | null> {
+    ): Observable<DataIncrementalPagination<EnrichedFlattenFinancialLinesSchema> | null> {
         if (
             bops == null &&
             years == null &&
@@ -113,7 +113,9 @@ export class BudgetDataHttpService implements DataHttpService<EnrichedFlattenFin
             "0",
             "6500", // XXX : Magic number, valeur défaut côté back
             ...query_params 
-        ) as unknown as Observable<DataPagination<EnrichedFlattenFinancialLinesSchema> | null>;
+        ).pipe(
+            map(pagination => to_incremental(pagination as DataPagination<EnrichedFlattenFinancialLinesSchema>))
+        )
 
         return req$
     }

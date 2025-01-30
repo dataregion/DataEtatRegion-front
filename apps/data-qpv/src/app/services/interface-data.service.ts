@@ -1,5 +1,5 @@
 import { Observable } from 'rxjs';
-import { DataPagination } from 'apps/common-lib/src/lib/models/pagination/pagination.models';
+import { DataIncrementalPagination } from 'apps/common-lib/src/lib/models/pagination/pagination.models';
 import { BopModel } from 'apps/data-qpv/src/app/models/refs/bop.models';
 import { GeoModel, TypeLocalisation } from 'apps/common-lib/src/lib/models/geo.models';
 import { CentreCouts, SourceFinancialData, TypeCategorieJuridique } from 'apps/data-qpv/src/app/models/financial/common.models';
@@ -42,7 +42,7 @@ export const SearchParameters_empty: SearchParameters = {
  */
 export interface DataHttpService<T, M> {
 
-  search(search_parameters: SearchParameters): Observable<DataPagination<T> | null>;
+  search(search_parameters: SearchParameters): Observable<DataIncrementalPagination<T> | null>;
 
   getById(source: SourceFinancialData, id: any, ...options: any[]): Observable<T>;
 

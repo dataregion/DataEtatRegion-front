@@ -5,9 +5,9 @@ import { FinancialCp, FinancialDataModel } from '@models/financial/financial-dat
 import { BudgetService as GeneratedBudgetApiService } from 'apps/clients/budget';
 import { EnrichedFlattenFinancialLinesSchema } from 'apps/clients/budget/model/enrichedFlattenFinancialLinesSchema';
 import { SETTINGS } from 'apps/common-lib/src/lib/environments/settings.http.service';
-import { DataPagination } from 'apps/common-lib/src/lib/models/pagination/pagination.models';
+import { DataIncrementalPagination, DataPagination, to_incremental } from 'apps/common-lib/src/lib/models/pagination/pagination.models';
 import { SettingsService } from 'apps/financial-data/src/environments/settings.service';
-import { Observable, of } from 'rxjs';
+import { map, Observable, of } from 'rxjs';
 import { BudgetLineHttpMapper } from './budget-lines-http.mapper.service';
 import { Optional } from 'apps/common-lib/src/lib/utilities/optional.type';
 import { DataHttpService, SearchParameters } from '@services/interface-data.service';
@@ -86,7 +86,7 @@ export class BudgetDataHttpService
     referentiels_programmation,
     source_region,
     tags
-  }: SearchParameters): Observable<DataPagination<EnrichedFlattenFinancialLinesSchema> | null> {
+  }: SearchParameters): Observable<DataIncrementalPagination<EnrichedFlattenFinancialLinesSchema> | null> {
     if (
       n_ej == null &&
       source == null &&
@@ -135,11 +135,13 @@ export class BudgetDataHttpService
             this._sanitize_req_arg(p_tags)
         ] as const;
 
-    const req$ = this._budgetApi.getBudgetCtrl(
-      '0',
-      '6500',
-      ...query_params
-    ) as unknown as Observable<DataPagination<EnrichedFlattenFinancialLinesSchema> | null>;
+        const req$ = this._budgetApi.getBudgetQpvCtrl(
+            "0",
+            "6500", // XXX : Magic number, valeur défaut côté back
+            ...query_params 
+        ).pipe(
+            map(pagination => to_incremental(pagination as DataPagination<EnrichedFlattenFinancialLinesSchema>))
+        )
 
     return req$;
   }

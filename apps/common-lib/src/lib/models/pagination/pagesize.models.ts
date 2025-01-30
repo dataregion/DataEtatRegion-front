@@ -5,3 +5,7 @@ export interface PageSize {
   isFirstPage?: boolean;
   isLastPage?: boolean;
 }
+
+export interface HasNext {
+  hasNext: boolean;
+}
