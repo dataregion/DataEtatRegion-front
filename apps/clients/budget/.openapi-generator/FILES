@@ -10,6 +10,7 @@ encoder.ts
 git_push.sh
 index.ts
 model/enrichedFlattenFinancialLinesSchema.ts
+model/incrementalPagination.ts
 model/models.ts
 model/paginatedBudgetLines.ts
 model/pagination.ts

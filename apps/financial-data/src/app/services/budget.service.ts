@@ -5,7 +5,7 @@ import { forkJoin, map, Observable } from 'rxjs';
 import { SettingsService } from '../../environments/settings.service';
 import { SETTINGS } from 'apps/common-lib/src/lib/environments/settings.http.service';
 import { HttpClient } from '@angular/common/http';
-import { DataIncrementalPagination, DataPagination } from 'apps/common-lib/src/lib/models/pagination/pagination.models';
+import { DataPagination } from 'apps/common-lib/src/lib/models/pagination/pagination.models';
 import { SourceFinancialData } from '@models/financial/common.models';
 import { Tag } from '@models/refs/tag.model';
 import { ReferentielProgrammation } from '@models/refs/referentiel_programmation.model';

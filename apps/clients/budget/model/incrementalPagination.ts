@@ -9,10 +9,7 @@
  */
 
 
-export interface TagsSchema { 
-    description?: string;
-    display_name: string;
-    type: string;
-    value?: string;
+export interface IncrementalPagination { 
+    hasNext: boolean;
 }
 
