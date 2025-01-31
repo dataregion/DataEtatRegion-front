@@ -14,8 +14,8 @@ export interface DataIncrementalPagination<T> {
 
 export function from_page_of_budget_lines(payload: PaginatedBudgetLines): DataIncrementalPagination<EnrichedFlattenFinancialLinesSchema> {
   return {
-    items: payload.items ?? [],
-    pagination: payload.pagination ?? { hasNext: false }
+    items: payload?.items ?? [],
+    pagination: payload?.pagination ?? { hasNext: false }
   }
 }
 
