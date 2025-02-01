@@ -46,7 +46,7 @@ workflow:
     - if: '$CI_PIPELINE_SOURCE == "schedule"'
 
 .build-docker:
-  image: docker:27.5.1-dind
+  image: docker:27.5.1-dind@sha256:3ab005a2e4872f0b10fb9c00d4230334043f1281f29299bd3de94a8f14a05e69
   stage: 🔨 docker-build
   variables:
     IMAGE: ""
@@ -75,7 +75,7 @@ workflow:
 
 #BUILD APP
 build angular financial data app:
-  image: node:22.13.1
+  image: node:22.13.1@sha256:ae2f3d4cc65d251352eca01ba668824f651a2ee4d2a37e2efb22649521a483fd
   stage: build-angular
   script:
     - npm ci --cache ${CI_PROJECT_DIR}/.npm --prefer-offline --quiet --force
@@ -98,7 +98,7 @@ build angular financial data app:
         - "apps/financial-data/**/*"
 
 build angular francerelance app:
-  image: node:22.13.1
+  image: node:22.13.1@sha256:ae2f3d4cc65d251352eca01ba668824f651a2ee4d2a37e2efb22649521a483fd
   stage: build-angular
   script:
     - npm ci --cache ${CI_PROJECT_DIR}/.npm --prefer-offline --quiet --force
@@ -121,7 +121,7 @@ build angular francerelance app:
         - "apps/france-relance/**/*"
 
 build angular dataqpv app:
-  image: node:22.13.1
+  image: node:22.13.1@sha256:ae2f3d4cc65d251352eca01ba668824f651a2ee4d2a37e2efb22649521a483fd
   stage: build-angular
   script:
     - npm ci --cache ${CI_PROJECT_DIR}/.npm --prefer-offline --quiet --force
@@ -281,7 +281,7 @@ deploy-integ-dataqpv:
 #TESTS E2E
 run-tests-e2e:
   stage: test-e2e
-  image: mcr.microsoft.com/playwright:v1.45.3-focal
+  image: mcr.microsoft.com/playwright:v1.45.3-focal@sha256:b192fc2de51a106e18daf3e917cb8c0a8f9c060c763225223cf865fddfed5bab
   script:
     - cd e2e/
     - npm ci
