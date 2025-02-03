@@ -281,7 +281,7 @@ deploy-integ-dataqpv:
 #TESTS E2E
 run-tests-e2e:
   stage: test-e2e
-  image: mcr.microsoft.com/playwright:v1.45.3-focal@sha256:b192fc2de51a106e18daf3e917cb8c0a8f9c060c763225223cf865fddfed5bab
+  image: mcr.microsoft.com/playwright:v1.48.2-focal@sha256:c37bcb50b237e975f3fe80013ab1b3958946db1b24aba39b52be8b3123b8a3df
   script:
     - cd e2e/
     - npm ci
