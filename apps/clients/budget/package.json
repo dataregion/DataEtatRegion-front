@@ -25,7 +25,7 @@
     "@angular/compiler-cli": "^19.0.0",
     "@angular/core": "^19.0.0",
     "@angular/platform-browser": "^19.0.0",
-    "ng-packagr": "^15.0.2",
+    "ng-packagr": "^19.0.0",
     "reflect-metadata": "^0.2.0",
     "rxjs": "^7.5.5",
     "typescript": "<5.7.4",
