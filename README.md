@@ -52,7 +52,7 @@ Pour lancer les tests sur l'environnement d'intégration
 npx playwright test
 ```
 
-Pour lancer les tests depuis votre environnement locale
+Pour lancer les tests depuis votre environnement local
 ```
 npx playwright test --config=playwright.dev.config.ts
 ```
