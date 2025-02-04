@@ -161,7 +161,7 @@ export class BudgetService implements BudgetServiceInterface {
         }
         if (theme) {
             localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
-                [...theme].join(COLLECTION_FORMATS['csv']), 'theme');
+                [...theme].join(COLLECTION_FORMATS['pipes']), 'theme');
         }
         if (siretBeneficiaire) {
             localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
@@ -310,7 +310,7 @@ export class BudgetService implements BudgetServiceInterface {
         }
         if (theme) {
             localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
-                [...theme].join(COLLECTION_FORMATS['csv']), 'theme');
+                [...theme].join(COLLECTION_FORMATS['pipes']), 'theme');
         }
         if (siretBeneficiaire) {
             localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
