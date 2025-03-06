@@ -36,8 +36,17 @@ export class IntegrationDemarcheComponent implements OnInit {
     private _loaderService: LoaderService,
     private _route: ActivatedRoute,
     private _compagnonDS: CompagnonDSService,
-    private _alertService: AlertService
-  ) {}
+    private _alertService: AlertService,
+  ) {
+    this.integrationForm.get('numeroDemarche')?.valueChanges.subscribe(value => {
+      this.numberDemarche = value ? parseInt(value) : null
+      if (this.integrationForm.value.numeroDemarche && this.numberDemarche !== parseInt(this.integrationForm.value.numeroDemarche)) {
+        this.nomDemarche = '';
+        this.integree = false;
+        this.dejaIntegree = false;
+      }
+    });
+  }
 
   ngOnInit(): void {
     this._loaderService.isLoading().subscribe((loading) => {
