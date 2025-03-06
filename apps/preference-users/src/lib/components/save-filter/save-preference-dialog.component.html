@@ -1,6 +1,6 @@
 <div mat-dialog-title>
   <div class="dialog-title">
-    <h2>Sauvegarde du filtre</h2>
+    <h2>Sauvegarde de la recherche</h2>
     <button aria-label="Fermer" mat-dialog-close mat-icon-button matTooltip="Fermer" type="button">
       <mat-icon>close</mat-icon>
     </button>
@@ -8,7 +8,7 @@
 </div>
 
 <mat-dialog-content>
-  <p>Saisir le nom de votre filtre</p>
+  <p>Saisir le nom de votre recherche</p>
   <mat-form-field appearance="fill" class="w-full">
     <mat-label>Nom</mat-label>
     <input [(ngModel)]="preference.name" matInput required type="text">
@@ -17,7 +17,7 @@
     </mat-error>
   </mat-form-field>
 
-  <mat-checkbox [(ngModel)]="shared">Partager le filtre</mat-checkbox>
+  <mat-checkbox [(ngModel)]="shared">Partager la recherche</mat-checkbox>
 
 
   <mat-form-field *ngIf="shared" appearance="fill" class="w-full">
