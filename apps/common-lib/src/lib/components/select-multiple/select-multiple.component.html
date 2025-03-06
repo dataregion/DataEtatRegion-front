@@ -1,12 +1,12 @@
 <mat-form-field apperance="fill" class="field-100-width select-multiple">
   <mat-label>{{ placeholder }}</mat-label>
-  <mat-select (selectionChange)="onChange($event.value)" [(ngModel)]="selected" multiple>
+  <mat-select (openedChange)="onOpened($event)" (selectionChange)="onChange($event.value)" [(ngModel)]="selected" multiple>
 
     <mat-select-trigger>{{ renderLabel() }}</mat-select-trigger>
 
     <mat-form-field *ngIf="canFilter" appearance="fill" class="field-100-width filter-input">
       <mat-label>Rechercher</mat-label>
-      <input (keydown)="$event.stopPropagation()" (ngModelChange)="filter($event)" [(ngModel)]="filterInput"
+      <input #champRecherche (keydown)="$event.stopPropagation()" (ngModelChange)="filter($event)" [(ngModel)]="filterInput"
              class="fr-input" matInput
              type="text">
     </mat-form-field>

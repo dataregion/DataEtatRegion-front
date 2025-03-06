@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { CommonModule, NgFor } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, ValidationErrors } from '@angular/forms';
 import { MatTooltipModule } from '@angular/material/tooltip';
@@ -32,7 +32,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
         MatCheckboxModule
     ]
 })
-export class SelectMultipleComponent<T> implements OnChanges {
+export class SelectMultipleComponent<T> implements OnChanges, AfterViewInit {
   // Select all ?
   @Input() canSelectAll: boolean = false;
 
@@ -52,6 +52,21 @@ export class SelectMultipleComponent<T> implements OnChanges {
   searching: boolean = false;
   // Icon prefix
   @Input() icon: string = '';
+  
+  @ViewChild('champRecherche') 
+  rechercheComponent: any;
+  
+  public ngAfterViewInit() {
+    if (this.rechercheComponent)
+      this.rechercheComponent.nativeElement.focus();
+  }
+
+  onOpened($event: boolean) {
+    if (!$event)
+      return
+    if (this.rechercheComponent && this.canFilter)
+      this.rechercheComponent.nativeElement.focus();
+  }
 
   // Options sélectionnées
   private _selected: T[] | null = null;
