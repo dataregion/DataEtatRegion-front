@@ -161,12 +161,14 @@ export const colonnes: FinancialColumnMetaDataDef[] = [
   {
     name: ColonneCodes.PROGRAMME,
     label: ColonneLibelles.PROGRAMME,
+    grouping: true,
     displayed: false,
     renderFn: (row, _col) => _print_code_label(row.programme?.code, row.programme?.label)
   },
   {
     name: ColonneCodes.REFERENTIEL_PROGRAMMATION,
     label: ColonneLibelles.REFERENTIEL_PROGRAMMATION,
+    grouping: true,
     displayed: false,
     renderFn: (row, _col) =>
       _print_code_label(row.referentiel_programmation?.code, row.referentiel_programmation?.label)
@@ -197,6 +199,7 @@ export const colonnes: FinancialColumnMetaDataDef[] = [
   {
     name: ColonneCodes.TYPE_ETABLISSEMENT,
     label: ColonneLibelles.TYPE_ETABLISSEMENT,
+    grouping: true,
     displayed: false,
     renderFn: (row, _col) => {
       if (!row.siret?.categorie_juridique) return 'Non renseigné';
