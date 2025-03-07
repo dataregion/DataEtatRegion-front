@@ -1,0 +1,69 @@
+include:
+  - component: $CI_SERVER_FQDN/csm/gitlab-components/docker-build@4.0.4
+    inputs:
+      image-name: ${REGISTRY}nocode/financial-data
+      image-tag: ${DATA_FRONT_VER}
+      build-context: ./
+      dockerfile-name: ./apps/financial-data/Dockerfile
+      do-login: true
+      registry: ${REGISTRY}
+      registry-login: ${REGISTRY_USER}
+      do-push: true
+      # enable-debug: true
+
+  - component: $CI_SERVER_FQDN/csm/gitlab-components/docker-build@4.0.4
+    inputs:
+      image-name: ${REGISTRY}nocode/france-relance
+      image-tag: ${DATA_FRONT_VER}
+      build-context: ./
+      dockerfile-name: ./apps/france-relance/Dockerfile
+      do-login: true
+      registry: ${REGISTRY}
+      registry-login: ${REGISTRY_USER}
+      do-push: true
+      # enable-debug: true
+
+  - component: $CI_SERVER_FQDN/csm/gitlab-components/docker-build@4.0.4
+    inputs:
+      image-name: ${REGISTRY}nocode/data-qpv
+      image-tag: ${DATA_FRONT_VER}
+      build-context: ./
+      dockerfile-name: ./apps/data-qpv/Dockerfile
+      do-login: true
+      registry: ${REGISTRY}
+      registry-login: ${REGISTRY_USER}
+      do-push: true
+      # enable-debug: true
+
+"🐳 dockerizing financial-data":
+  extends: ".dockerize-${REGISTRY}nocode/financial-data"
+  stage: 🐳 dockerize
+  rules:
+    - if: '$DO_DOCKERIZE == "✅"'
+    - if: '$CI_COMMIT_REF_NAME' # always
+      when: manual
+    - when: never
+  needs:
+    - job: "🔨 build financial app"
+
+"🐳 dockerizing france-relance":
+  extends: ".dockerize-${REGISTRY}nocode/france-relance"
+  stage: 🐳 dockerize
+  rules:
+    - if: '$DO_DOCKERIZE == "✅"'
+    - if: '$CI_COMMIT_REF_NAME' # always
+      when: manual
+    - when: never
+  needs:
+    - job: "🔨 build france-relance app"
+
+"🐳 dockerizing data-qpv":
+  extends: ".dockerize-${REGISTRY}nocode/data-qpv"
+  stage: 🐳 dockerize
+  rules:
+    - if: '$DO_DOCKERIZE == "✅"'
+    - if: '$CI_COMMIT_REF_NAME' # always
+      when: manual
+    - when: never
+  needs:
+    - job: "🔨 build data-qpv app"
