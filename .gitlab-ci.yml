@@ -30,16 +30,16 @@ workflow:
         _ENABLE_DEPLOY_FOR_PP_AND_P: "✅"
         DO_DOCKERIZE: "✅"
         DO_INTEG_TESTS: "✅"
-        DATA_FRONT_VER: $_TAG_VER
-        DO_DEPLOY_extra_vars: DATA_FRONT_VER=$DATA_FRONT_VER
-        DO_UPDATE_DATA_FRONT_VER: "$DATA_FRONT_VER"
+        FRONTS_VER: $_TAG_VER
+        DO_DEPLOY_extra_vars: FRONTS_VER=$FRONTS_VER
+        DO_UPDATE_FRONTS_VER: "$FRONTS_VER"
     - if: '$CI_COMMIT_REF_NAME == "main" || $CI_COMMIT_REF_NAME == "develop"'  # Specify your protected branches
       variables:
-        DATA_FRONT_VER: "$_SNAP_VER"
-        DO_DEPLOY_extra_vars: 'DATA_FRONT_VER="$DATA_FRONT_VER"'
+        FRONTS_VER: "$_SNAP_VER"
+        DO_DEPLOY_extra_vars: 'FRONTS_VER="$FRONTS_VER"'
         DO_DOCKERIZE: "✅"
         DO_INTEG_TESTS: "✅"
     - if: "$CI_COMMIT_REF_NAME" # always passing
       variables:
-        DATA_FRONT_VER: "$_SNAP_VER"
-        DO_DEPLOY_extra_vars: 'DATA_FRONT_VER="$DATA_FRONT_VER"'
+        FRONTS_VER: "$_SNAP_VER"
+        DO_DEPLOY_extra_vars: 'FRONTS_VER="$FRONTS_VER"'

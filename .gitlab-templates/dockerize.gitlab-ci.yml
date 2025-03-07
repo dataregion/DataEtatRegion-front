@@ -2,7 +2,7 @@ include:
   - component: $CI_SERVER_FQDN/csm/gitlab-components/docker-build@4.0.4
     inputs:
       image-name: ${REGISTRY}nocode/financial-data
-      image-tag: ${DATA_FRONT_VER}
+      image-tag: ${FRONTS_VER}
       build-context: ./
       dockerfile-name: ./apps/financial-data/Dockerfile
       do-login: true
@@ -14,7 +14,7 @@ include:
   - component: $CI_SERVER_FQDN/csm/gitlab-components/docker-build@4.0.4
     inputs:
       image-name: ${REGISTRY}nocode/france-relance
-      image-tag: ${DATA_FRONT_VER}
+      image-tag: ${FRONTS_VER}
       build-context: ./
       dockerfile-name: ./apps/france-relance/Dockerfile
       do-login: true
@@ -26,7 +26,7 @@ include:
   - component: $CI_SERVER_FQDN/csm/gitlab-components/docker-build@4.0.4
     inputs:
       image-name: ${REGISTRY}nocode/data-qpv
-      image-tag: ${DATA_FRONT_VER}
+      image-tag: ${FRONTS_VER}
       build-context: ./
       dockerfile-name: ./apps/data-qpv/Dockerfile
       do-login: true
