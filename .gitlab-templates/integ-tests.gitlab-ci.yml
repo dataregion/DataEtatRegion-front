@@ -18,7 +18,7 @@ run-tests-e2e:
       - test-results/*
       - playwright-report/*
   needs:
-    - job: "🐣 deploy data-transform on integration"
+    - job: "🐣 deploy fronts on integration"
   rules:
     - if: '$DO_INTEG_TESTS == "✅"'
     - when: never

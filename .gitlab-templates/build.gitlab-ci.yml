@@ -1,19 +1,7 @@
-.x-image: &image
+"🔨 build angular apps":
   image: node:22.13.1@sha256:ae2f3d4cc65d251352eca01ba668824f651a2ee4d2a37e2efb22649521a483fd
-
-variables:
-  NPM_CI_CMD: "npm ci --prefer-offline --quiet"
-
-"🔨 npm ci":
-  <<: *image
   stage: 🔨 build
-  script:
-    - |
-      set -x
-      if [ ! -d "./node_modules" ]; then
-        echo >&2 'node_modules cache not available. run ci.'
-        ${NPM_CI_CMD}
-      fi
+
   cache:
     key:
       files:
@@ -23,61 +11,30 @@ variables:
       - node_modules/
     policy: pull-push
 
-".🔨 build angular app":
-  <<: *image
-  stage: 🔨 build
-  cache:
-    key:
-      files:
-        - package-lock.json
-        - package.json
-    paths:
-      - node_modules/
-    policy: pull
   before_script:
     - |
       set -x
       if [ ! -d "./node_modules" ]; then
         echo >&2 'node_modules cache not available. run ci.'
-        ${NPM_CI_CMD}
+        npm ci --prefer-offline --quiet
       fi
+
+  script:
+    - |
       npm run lint
+      echo >&2 "🔨 Building financial-data"
+      npm run build:financial-data
+      echo >&2 "🔨 Building france-relance"
+      npm run build:france-relance
+      echo >&2 "🔨 Building data-qpv"
+      npm run build:data-qpv
       set +x
+
+  artifacts:
+    expire_in: 30 mins
+    paths:
+      - dist/
+
   rules:
     - if: '$DO_BUILD == "✅"'
     - when: never
-  needs:
-    - job: "🔨 npm ci"
-
-"🔨 build financial app":
-  extends: ".🔨 build angular app"
-  script:
-    - npm run build:financial-data
-  artifacts:
-    expire_in: 30 mins
-    paths:
-      - dist/financial-data
-
-"🔨 build france-relance app":
-  extends: ".🔨 build angular app"
-  script:
-    - npm run build:france-relance
-  artifacts:
-    expire_in: 30 mins
-    paths:
-      - dist/france-relance
-  needs: # XXX: to ensure cache is available (not available for parallel jobs I dunno why)
-    - job: "🔨 build financial app" 
-  dependencies: []
-
-"🔨 build data-qpv app":
-  extends: ".🔨 build angular app"
-  script:
-    - npm run build:data-qpv
-  artifacts:
-    expire_in: 30 mins
-    paths:
-      - dist/data-qpv
-  needs: # XXX: to ensure cache is available (not available for parallel jobs I dunno why)
-    - job: "🔨 build france-relance app"
-  dependencies: []

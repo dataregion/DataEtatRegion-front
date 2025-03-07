@@ -35,6 +35,7 @@ include:
       do-push: true
       # enable-debug: true
 
+
 "🐳 dockerizing financial-data":
   extends: ".dockerize-${REGISTRY}nocode/financial-data"
   stage: 🐳 dockerize
@@ -44,7 +45,7 @@ include:
       when: manual
     - when: never
   needs:
-    - job: "🔨 build financial app"
+    - job: "🔨 build angular apps"
 
 "🐳 dockerizing france-relance":
   extends: ".dockerize-${REGISTRY}nocode/france-relance"
@@ -55,7 +56,7 @@ include:
       when: manual
     - when: never
   needs:
-    - job: "🔨 build france-relance app"
+    - job: "🔨 build angular apps"
 
 "🐳 dockerizing data-qpv":
   extends: ".dockerize-${REGISTRY}nocode/data-qpv"
@@ -66,4 +67,4 @@ include:
       when: manual
     - when: never
   needs:
-    - job: "🔨 build data-qpv app"
+    - job: "🔨 build angular apps"

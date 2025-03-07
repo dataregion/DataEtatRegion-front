@@ -1,4 +1,4 @@
-"🐣 deploy data-transform on integration":
+"🐣 deploy fronts on integration":
   stage: "🐣 deploy"
   trigger:
     project: SIBSGAR/DataRegateNum/stack
@@ -11,7 +11,7 @@
     DO_DEPLOY_environment: "integ"
   when: manual
 
-"🚨 deploy data-transform on preprod":
+"🚨 deploy fronts on preprod":
   stage: "🐣 deploy"
   trigger:
     project: SIBSGAR/DataRegateNum/stack
@@ -27,7 +27,7 @@
       when: manual
     - when: never
 
-"🚨 deploy data-transform on prod":
+"🚨 deploy fronts on prod":
   stage: "🐣 deploy"
   trigger:
     project: SIBSGAR/DataRegateNum/stack
