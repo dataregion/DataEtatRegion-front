@@ -16,7 +16,7 @@ import {
   ViewChild,
   ViewEncapsulation
 } from '@angular/core';
-import { ColumnsMetaData, GroupingColumn, RootGroup, TableData } from './group-utils';
+import { ColumnsMetaData, GroupingColumn, RootGroup, TableData, VirtualGroup } from './group-utils';
 import { GroupingTableContextService } from './grouping-table-context.service';
 import { OutputEvents } from './output-events';
 import { ProjectCellDirective } from './project-cell.directive';
@@ -41,6 +41,8 @@ export class GroupingTableComponent implements OnChanges, AfterViewInit {
   @Input() tableData!: TableData;
   @Input() columnsMetaData!: ColumnsMetaData;
   @Input() groupingColumns: GroupingColumn[] = [];
+  
+  @Input() virtualGroupFn?: (_: TableData) => VirtualGroup;
 
   private _outputEvents: OutputEvents;
   @Output() rowClick;
@@ -83,6 +85,11 @@ export class GroupingTableComponent implements OnChanges, AfterViewInit {
       );
 
       this.rootGroup = this.context.rootGroup;
+
+      if (this.virtualGroupFn) {
+        const vg = this.virtualGroupFn(this.tableData)
+        this.rootGroup.addVirtualGroup(vg)
+      }
 
       // Replie / Déplie les groupes
       for (const group of this.rootGroup?.groups ?? []) {

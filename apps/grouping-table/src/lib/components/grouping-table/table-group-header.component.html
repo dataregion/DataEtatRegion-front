@@ -2,12 +2,16 @@
   *ngFor="let col of context.displayedColumns; index as i; first as isFirst"
 >
   <ng-container [ngSwitch]="isFirst">
-    <div *ngSwitchCase="true" class="grouping-table-cell">
-      <div>
+    <div 
+      *ngSwitchCase="true" 
+      class="grouping-table-cell"
+      [ngStyle]="groupingTableCellStyles(isFirst)" >
+
+      <div *ngIf="!group.isVirtual">
         <div class="{{folded ? 'arrow-right' : 'arrow-down'}}"></div>
       </div>
-      <div>
 
+      <div>
         <div>{{ group.column?.label }}</div>
 
         <ng-container
@@ -17,14 +21,14 @@
         <ng-template #defaultCellDisplay>
           <div><strong>{{ group.columnValue !== "" ? group.columnValue : "Non renseigné" }}</strong></div>
         </ng-template>
-
       </div>
-      <div class="group-size">
+
+      <div [ngClass]="{ 'group-size': !group.isVirtual, 'group-virtual-size': group.isVirtual}">
         {{ group.count }}
       </div>
     </div>
 
-    <div *ngSwitchDefault class="grouping-table-cell col-{{i}}">
+    <div *ngSwitchDefault class="grouping-table-cell col-{{i}}" [ngStyle]="groupingTableCellStyles(isFirst)">
       {{ group | financialGroupAggregate: col }}
     </div>
   </ng-container>

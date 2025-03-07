@@ -21,4 +21,11 @@ export class TableGroupHeaderComponent {
     const projection = this.context.projectionForGrouping(columnName);
     return projection;
   }
+  
+  groupingTableCellStyles(isFirst: boolean) {
+    return {
+      'justify-content': ( this.group.isVirtual && isFirst )? 'right': 'left',
+      'color': this.group.isVirtual? '#00008B': 'inherit'
+    }
+  }
 }

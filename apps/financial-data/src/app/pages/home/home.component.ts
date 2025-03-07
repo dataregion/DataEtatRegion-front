@@ -15,7 +15,8 @@ import {
   GroupingColumn,
   ParameterizedColumnsMetaData,
   RowData,
-  TableData
+  TableData,
+  VirtualGroup
 } from 'apps/grouping-table/src/lib/components/grouping-table/group-utils';
 import { GroupingConfigDialogComponent } from 'apps/grouping-table/src/lib/components/grouping-config-dialog/grouping-config-dialog.component';
 import { StructureColumnsDialogComponent } from 'apps/grouping-table/src/lib/components/structure-columns-dialog/structure-columns-dialog.component';
@@ -53,6 +54,7 @@ export class HomeComponent implements OnInit {
   }
 
   tableData?: TableData;
+  virtualGroupFn?: (_: TableData) => VirtualGroup;
 
   @ViewChild(SearchDataComponent) searchData!: SearchDataComponent;
 
@@ -109,6 +111,17 @@ export class HomeComponent implements OnInit {
     // Ordre et affichage de base des colonnes
     this.displayedOrderedColumns = this._getDefaultOrder();
     this.groupingColumns = this._getDefaultOrderGrouping();
+    
+    this.virtualGroupFn = (tableData: TableData) => {
+      const initial: number[] = [0, 0]
+      const [sum_ae, sum_cp] = tableData.reduce((acc: number[], curr, _0, _1) => {
+        const [sum_ae, sum_cp] = acc
+        const n = [sum_ae + curr['montant_ae'], sum_cp + curr['montant_cp']];
+        return n
+      }, initial)
+      const vg = new VirtualGroup("Total", tableData.length, { "montant_ae": sum_ae, "montant_cp": sum_cp })
+      return vg
+    }
 
     this.columnsMetaData = new ParameterizedColumnsMetaData<FinancialColumnMetaDataDef>(colonnes);
     this.preFilter = undefined;

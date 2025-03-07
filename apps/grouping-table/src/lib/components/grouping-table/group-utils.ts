@@ -156,11 +156,16 @@ export type DisplayedOrderedColumn = {
  * Un groupe, qui peut contenir soit des groupes enfants, soit des lignes de données.
  */
 export class Group {
-  private _count = 0;
+  protected _isVirtual = false;
+  protected _count = 0;
   private groupsMap?: Map<any, Group>;
   aggregates?: Record<string, any>;
   rows?: RowData[];
   folded: boolean = true;
+
+  get isVirtual() {
+    return this._isVirtual;
+  }
 
   /** Nombre total d'éléments (= nombre d'éléments + nombre d'éléments dans les sous-groupes). */
   get count() {
@@ -168,6 +173,7 @@ export class Group {
   }
 
   _group_desc(a: Group, b: Group) {
+    if (a.isVirtual) return -1; // XXX Le groupe virtuel remonte toujours
     if (a.columnValue < b.columnValue) return 1;
     if (a.columnValue > b.columnValue) return -1;
     return 0;
@@ -190,6 +196,10 @@ export class Group {
     public readonly parent?: Group,
     private _columnsAggregateFns?: Record<string, AggregateReducer<any>>
   ) {}
+
+  addVirtualGroup(group: VirtualGroup) {
+    this.groupsMap?.set(undefined, group)
+  } 
 
   getOrCreateGroup(
     column: ColumnMetaDataDef,
@@ -243,6 +253,20 @@ export class Group {
 export class RootGroup extends Group {
   constructor(aggregateReducers: Record<string, AggregateReducer<any>>) {
     super(undefined, undefined, undefined, aggregateReducers);
+  }
+}
+
+/**
+ * Groupe virtuel. 
+ * Utilisé pour de l'affichage arbitraire
+ */
+export class VirtualGroup extends Group {
+
+  constructor(label: string, count: number, aggregates: Record<string, any> | undefined) {
+    super({} as ColumnMetaDataDef, label, undefined, undefined);
+    this._isVirtual = true
+    this.aggregates = aggregates;
+    this._count = count;
   }
 }
 
