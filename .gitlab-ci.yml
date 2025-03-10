@@ -24,6 +24,7 @@ variables:
   DO_TEST: "❌"
   DO_ANALYZE: "❌"
 
+
 workflow:
   rules:
     - if: "$CI_COMMIT_TAG"
