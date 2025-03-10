@@ -6,6 +6,7 @@
     forward:
       yaml_variables: true
       pipeline_variables: false
+    strategy: depend
   variables: 
     DO_DEPLOY: "✅"
     DO_DEPLOY_environment: "integ"
