@@ -9,7 +9,10 @@
   variables: 
     DO_DEPLOY: "✅"
     DO_DEPLOY_environment: "integ"
-  when: manual
+  rules:
+    - if: '$_ENABLE_DEPLOY_FOR_INTEG == "✅"'
+      when: always
+    - when: manual
 
 "🚨 deploy fronts on preprod":
   stage: "🐣 deploy"

@@ -21,4 +21,4 @@ run-tests-e2e:
     - job: "🐣 deploy fronts on integration"
   rules:
     - if: '$DO_INTEG_TESTS == "✅"'
-    - when: never
+    - when: manual

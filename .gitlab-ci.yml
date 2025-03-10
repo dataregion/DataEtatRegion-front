@@ -15,6 +15,7 @@ variables:
   _SNAP_VER: ${CI_COMMIT_SHORT_SHA}-snapshot
   DO_DEPLOY_tags: "fronts"
   _ENABLE_DEPLOY_FOR_PP_AND_P: "❌"
+  _ENABLE_DEPLOY_FOR_INTEG: "❌"
   # XXX shadowing template variables as it is unused as user input in pipeline
   DO_BUILD: "✅"
   DO_INTEG_TESTS: "❌"
@@ -30,7 +31,6 @@ workflow:
         _ENABLE_DEPLOY_FOR_PP_AND_P: "✅"
         DO_BUILD: "✅"
         DO_DOCKERIZE: "✅"
-        DO_INTEG_TESTS: "✅"
         FRONTS_VER: $_TAG_VER
         DO_DEPLOY_extra_vars: FRONTS_VER=$FRONTS_VER
         DO_UPDATE_FRONTS_VER: "$FRONTS_VER"
@@ -38,9 +38,9 @@ workflow:
       variables:
         FRONTS_VER: "$_SNAP_VER"
         DO_DEPLOY_extra_vars: 'FRONTS_VER="$FRONTS_VER"'
+        _ENABLE_DEPLOY_FOR_INTEG: "✅"
         DO_BUILD: "✅"
         DO_DOCKERIZE: "✅"
-        DO_INTEG_TESTS: "✅"
     - if: "$CI_COMMIT_REF_NAME" # always passing
       variables:
         FRONTS_VER: "$_SNAP_VER"
