@@ -75,21 +75,19 @@ export class GroupingTableComponent implements OnChanges, AfterViewInit {
       'groupingColumns' in changes ||
       'foldRootGroups' in changes
     ) {
+      const vg = this.virtualGroupFn && this.virtualGroupFn!(this.tableData)
+
       // Si les paramètres en entrée changent, on les propage.
       // (on passe également ici au chargement du composant).
-      this.context.initContext(
+      const offset_group_level = this.context.initContext(
         this.tableData,
         this.columnsMetaData,
         this.groupingColumns,
-        'tableData' in changes
+        'tableData' in changes,
+        vg
       );
 
       this.rootGroup = this.context.rootGroup;
-
-      if (this.virtualGroupFn) {
-        const vg = this.virtualGroupFn(this.tableData)
-        this.rootGroup.addVirtualGroup(vg)
-      }
 
       // Replie / Déplie les groupes
       for (const group of this.rootGroup?.groups ?? []) {
@@ -100,7 +98,7 @@ export class GroupingTableComponent implements OnChanges, AfterViewInit {
       if (this.columnCssStyle) {
         this.columnCssStyle.nativeElement.innerHTML = this.context.columnCssStyle;
       }
-      this.groupLevel = this.groupingColumns.length;
+      this.groupLevel = this.groupingColumns.length + offset_group_level;
     }
   }
 
