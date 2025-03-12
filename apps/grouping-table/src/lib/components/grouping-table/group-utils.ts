@@ -158,7 +158,7 @@ export type DisplayedOrderedColumn = {
 export class Group {
   protected _isVirtual = false;
   protected _count = 0;
-  private groupsMap?: Map<any, Group>;
+  private groupsMap: Map<any, Group> = new Map<any, Group>();
   aggregates?: Record<string, any>;
   rows?: RowData[];
   folded: boolean = true;
@@ -180,9 +180,6 @@ export class Group {
   }
 
   get groups() {
-    if (!this.groupsMap) {
-      return [];
-    }
     return [...this.groupsMap.values()];
   }
 
@@ -198,7 +195,7 @@ export class Group {
   ) {}
 
   addVirtualGroup(group: VirtualGroup) {
-    this.groupsMap?.set(undefined, group)
+    this.groupsMap.set("_virtual", group)
   } 
 
   getOrCreateGroup(
@@ -206,9 +203,6 @@ export class Group {
     groupColumnGroupingKey: any,
     groupColumnValue: any
   ): Group {
-    if (!this.groupsMap) {
-      this.groupsMap = new Map();
-    }
     let group = this.groupsMap.get(groupColumnGroupingKey);
     if (!group) {
       group = new Group(column, groupColumnValue, this, this._columnsAggregateFns);
@@ -251,8 +245,9 @@ export class Group {
  * Groupe racine.
  */
 export class RootGroup extends Group {
-  constructor(aggregateReducers: Record<string, AggregateReducer<any>>) {
+  constructor(aggregateReducers: Record<string, AggregateReducer<any>>, is_virtual: boolean = false) {
     super(undefined, undefined, undefined, aggregateReducers);
+    this._isVirtual = is_virtual;
   }
 }
 

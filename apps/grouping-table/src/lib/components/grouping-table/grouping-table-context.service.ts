@@ -7,12 +7,14 @@ import {
   GroupingColumn,
   RootGroup,
   RowData,
-  TableData
+  TableData,
+  VirtualGroup
 } from './group-utils';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { OutputEvents } from './output-events';
 import { ProjectCellDirective } from './project-cell.directive';
 import { ProjectGroupingDirective } from './project-grouping.directive';
+import { Optional } from 'apps/common-lib/src/lib/utilities/optional.type';
 
 @Injectable()
 export class GroupingTableContextService {
@@ -33,15 +35,32 @@ export class GroupingTableContextService {
     data: TableData,
     columnsMetaData: ColumnsMetaData,
     groupingColumns: GroupingColumn[],
-    dataChanges: boolean
-  ) {
+    dataChanges: boolean,
+    virtualGroup: Optional<VirtualGroup> = null,
+  ): number {
+    let offsetGroupLevel = 0
     this.data = data;
     this.columnsMetaData = columnsMetaData;
     this.groupingColumns = groupingColumns;
 
-    this.rootGroup = this.calculateGroups(dataChanges);
+    if (groupingColumns.length > 0)
+      this.rootGroup = this.calculateGroups(dataChanges);
+    else if (virtualGroup) { 
+      // XXX Si aucun groupe définit par l'utilisateur, on utilise un rootGroup virtuel 
+      // qui n'apparait pas en tant que tel
+      this.rootGroup = new RootGroup({}, true)
+      for (const row of this.data)
+        this.rootGroup.addRow(row)
+      offsetGroupLevel = 1
+    }
+
+    if (virtualGroup)
+      this.rootGroup.addVirtualGroup(virtualGroup);
+
     this.displayedColumns = this.calculateDisplayedColumns();
     this.columnCssStyle = this.calculateColumnStyle();
+    
+    return offsetGroupLevel;
   }
 
   private calculateGroups(dataChanges: boolean): RootGroup {

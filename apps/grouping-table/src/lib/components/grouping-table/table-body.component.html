@@ -1,6 +1,13 @@
-<ng-container [ngSwitch]="groupLevel > 0">
+<ng-container [ngSwitch]="(groupLevel > 0) || group.isVirtual">
   <ng-container *ngSwitchCase="true">
     <lib-table-group *ngFor="let g of group.groups_desc" [groupLevel]="groupLevel - 1" [group]="g" />
+      
+    <br />
+
+    <div *ngIf="group.isVirtual" [class.has-group]="false" class="grouping-table level-{{groupLevel - 1}}">
+      <lib-table-rows [rows]="group.rows || []" />
+    </div>
+
   </ng-container>
 
   <ng-container *ngSwitchDefault>
