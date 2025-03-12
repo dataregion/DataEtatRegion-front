@@ -37,7 +37,8 @@ export enum ColonneCodes {
   CODE_CENTRE_COUTS = 'code_centre_couts',
   LABEL_CENTRE_COUTS = 'centre_couts_label',
   CENTRE_COUTS = 'centre_couts',
-  TAGS = 'tags'
+  TAGS = 'tags',
+  DATA_SOURCE = "data_source"
 }
 
 export enum ColonneLibelles {
@@ -75,7 +76,8 @@ export enum ColonneLibelles {
   CODE_CENTRE_COUTS = 'Code centre coûts',
   LABEL_CENTRE_COUTS = 'Label centre coûts',
   CENTRE_COUTS = 'Centre coûts',
-  TAGS = 'Tags'
+  TAGS = 'Tags',
+  DATA_SOURCE = "Source Chorus"
 }
 
 @Injectable({ providedIn: 'root' })
@@ -115,7 +117,8 @@ export class ColonnesService {
     [ColonneCodes.CODE_CENTRE_COUTS]: [ColonneLibelles.CODE_CENTRE_COUTS],
     [ColonneCodes.LABEL_CENTRE_COUTS]: [ColonneLibelles.LABEL_CENTRE_COUTS],
     [ColonneCodes.CENTRE_COUTS]: [ColonneLibelles.CENTRE_COUTS],
-    [ColonneCodes.TAGS]: [ColonneLibelles.TAGS]
+    [ColonneCodes.TAGS]: [ColonneLibelles.TAGS],
+    [ColonneCodes.DATA_SOURCE]: [ColonneLibelles.DATA_SOURCE]
   };
 
   public getLibellesByCode(code: ColonneCodes): ColonneLibelles[] {

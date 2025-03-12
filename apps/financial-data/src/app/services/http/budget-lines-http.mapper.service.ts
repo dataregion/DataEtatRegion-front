@@ -64,6 +64,7 @@ export class BudgetLineHttpMapper {
       localisation_interministerielle: this._map_loc_interministerielle(object),
 
       annee: object.annee!,
+      data_source: object.data_source,
 
       siret: this._map_beneficiaire_siret(object),
 

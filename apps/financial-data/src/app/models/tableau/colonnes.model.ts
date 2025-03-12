@@ -250,7 +250,13 @@ export const colonnes: FinancialColumnMetaDataDef[] = [
             day: 'numeric'
           })
         : ''
-  }
+  },
+  {
+    name: ColonneCodes.DATA_SOURCE,
+    label: ColonneLibelles.DATA_SOURCE,
+    grouping: false,
+    displayed: false,
+  },
 ];
 
 function _print_code_label(c: Optional<string>, l: Optional<string>): string {

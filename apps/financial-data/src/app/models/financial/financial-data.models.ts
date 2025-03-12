@@ -44,6 +44,7 @@ export interface FinancialDataModel extends ExportableAsJson {
   date_replication: Optional<string>;
 
   tags: Tag[];
+  data_source: Optional<string>;
 
   // Les CP associées à la donnée financière.
   // XXX: Présente uniquement si requêtée
