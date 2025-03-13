@@ -35,7 +35,7 @@ workflow:
         FRONTS_VER: $_TAG_VER
         DO_DEPLOY_extra_vars: FRONTS_VER=$FRONTS_VER
         DO_UPDATE_FRONTS_VER: "$FRONTS_VER"
-    - if: '$CI_COMMIT_REF_NAME == "main" || $CI_COMMIT_REF_NAME == "develop" || $CI_PIPELINE_SOURCE == "merge_request_event"'
+    - if: '( $CI_COMMIT_REF_NAME == "main" || $CI_COMMIT_REF_NAME == "develop" || $CI_PIPELINE_SOURCE == "merge_request_event" ) && $GITLAB_USER_LOGIN != "Renovate"'
       variables:
         FRONTS_VER: "$_SNAP_VER"
         DO_DEPLOY_extra_vars: 'FRONTS_VER="$FRONTS_VER"'
@@ -43,6 +43,11 @@ workflow:
         DO_INTEG_TESTS: "✅"
         DO_BUILD: "✅"
         DO_DOCKERIZE: "✅"
+    - if: '$GITLAB_USER_LOGIN == "Renovate" && $CI_PIPELINE_SOURCE == "merge_request_event"'
+      variables:
+        FRONTS_VER: "$_SNAP_VER"
+        DO_DEPLOY_extra_vars: 'FRONTS_VER="$FRONTS_VER"'
+        DO_BUILD: "✅"
     - if: "$CI_COMMIT_REF_NAME" # always passing
       variables:
         FRONTS_VER: "$_SNAP_VER"
