@@ -3,7 +3,7 @@ import { CustomHttpParameterCodec } from './encoder';
 import { budgetConfiguration } from './configuration';
 
 export class BaseService {
-    protected basePath = 'http://localhost/financial-data/api/v2';
+    protected basePath = '';
     public defaultHeaders = new HttpHeaders();
     public configuration: budgetConfiguration;
     public encoder: HttpParameterCodec;
@@ -31,7 +31,7 @@ export class BaseService {
     protected addToHttpParams(httpParams: HttpParams, value: any, key?: string): HttpParams {
         // If the value is an object (but not a Date), recursively add its keys.
         if (typeof value === 'object' && !(value instanceof Date)) {
-            return this.addToHttpParamsRecursive(httpParams, value);
+            return this.addToHttpParamsRecursive(httpParams, value, key);
         }
         return this.addToHttpParamsRecursive(httpParams, value, key);
     }

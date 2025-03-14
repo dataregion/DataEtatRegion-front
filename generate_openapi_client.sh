@@ -170,7 +170,7 @@ fix_swagger_json_replace_oauth "$temp_swagger"
 #
 docker run --rm \
   --user 1000:1000 \
-  -v "$target_abs":/local -v "$temp_swagger":/tmp/swagger.json openapitools/openapi-generator-cli generate \
+  -v "$target_abs":/local -v "$temp_swagger":/tmp/swagger.json openapitools/openapi-generator-cli:v7.12.0 generate \
   -i "/tmp/swagger.json" \
   -g typescript-angular \
   -o "/local/$nom_api" \

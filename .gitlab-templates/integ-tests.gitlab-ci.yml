@@ -1,6 +1,9 @@
 run-tests-e2e:
   stage: 🧪 post-deploy tests
   image: mcr.microsoft.com/playwright:v1.50.1-noble@sha256:ac7053180325ef75d31774c458d0bb9b55ac153ae1be3d104b80c6c1bb6a067c
+  before_script:
+    - printf 'yy' | ./generate_openapi_client.sh -p ae -s "https://api.nocode.csm.ovh/apis-externes/swagger.json" -t $(pwd)/apps/clients/ -n apis-externes
+    - printf 'yy' | ./generate_openapi_client.sh -p budget -s "https://api.nocode.csm.ovh/financial-data/api/v2/swagger.json" -t $(pwd)/apps/clients/ -n budget
   script:
     - cd e2e/
     - npm ci
