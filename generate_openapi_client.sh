@@ -113,6 +113,22 @@ fix_swagger_json_take_firstof_type() {
 }
 
 #
+# XXX: Fix pour l'utilisation de Bearer au lieu de OAuth2AuthorizationCodeBearer 
+#
+fix_swagger_json_replace_oauth() {
+  json_f="$1"
+  temp_f=$(mktemp)
+
+  echo >&2 "Corrige le fichier swagger en remplaçant l'utilisation de 'OAuth2AuthorizationCodeBearer' par 'Bearer'"
+
+  cp -a "$json_f" "$temp_f"
+  sed -i 's/"OAuth2AuthorizationCodeBearer": \[\]/"Bearer": \[\]/g' "$temp_f"
+  cp "$temp_f" "$json_f"
+
+  echo >&2 "Fichier sauvegardé ici: '$json_f'"
+}
+
+#
 # Prépare le dossier target
 #
 mkdir -p "$target/$nom_api" || true
@@ -145,6 +161,7 @@ fi
 #
 fix_swagger_json_remove_additionalProperties "$temp_swagger"
 fix_swagger_json_take_firstof_type "$temp_swagger"
+fix_swagger_json_replace_oauth "$temp_swagger"
 
 # /tmp/tmp.43nywMtczG/swagger.json
 # temp_swagger="/home/rog/DEV_SGAR/front-data/tmp-swagger.json"
@@ -157,4 +174,4 @@ docker run --rm \
   -i "/tmp/swagger.json" \
   -g typescript-angular \
   -o "/local/$nom_api" \
-  --additional-properties npmName=$nom_api,npmVersion=1.0.0,snapshot=false,ngVersion="15.0.1",apiModulePrefix="$prefix",configurationPrefix="$prefix,withInterfaces=true"
+  --additional-properties npmName=$nom_api,npmVersion=1.0.0,snapshot=false,ngVersion="19.0.0",rxjsVersion="7.5.5",tsVersion="<5.7.4",apiModulePrefix="$prefix",configurationPrefix="$prefix,withInterfaces=true"

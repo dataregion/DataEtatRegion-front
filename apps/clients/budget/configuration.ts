@@ -1,4 +1,4 @@
-import { HttpParameterCodec } from '@angular/common/http';
+import { HttpHeaders, HttpParams, HttpParameterCodec } from '@angular/common/http';
 import { Param } from './param';
 
 export interface budgetConfigurationParameters {
@@ -87,14 +87,12 @@ export class budgetConfiguration {
             this.credentials = {};
         }
 
-        // init default Bearer credential
-        if (!this.credentials['Bearer']) {
-            this.credentials['Bearer'] = () => {
-                if (this.apiKeys === null || this.apiKeys === undefined) {
-                    return undefined;
-                } else {
-                    return this.apiKeys['Bearer'] || this.apiKeys['Authorization'];
-                }
+        // init default OAuth2AuthorizationCodeBearer credential
+        if (!this.credentials['OAuth2AuthorizationCodeBearer']) {
+            this.credentials['OAuth2AuthorizationCodeBearer'] = () => {
+                return typeof this.accessToken === 'function'
+                    ? this.accessToken()
+                    : this.accessToken;
             };
         }
     }
@@ -157,6 +155,20 @@ export class budgetConfiguration {
         return typeof value === 'function'
             ? value()
             : value;
+    }
+
+    public addCredentialToHeaders(credentialKey: string, headerName: string, headers: HttpHeaders, prefix?: string): HttpHeaders {
+        const value = this.lookupCredential(credentialKey);
+        return value
+            ? headers.set(headerName, (prefix ?? '') + value)
+            : headers;
+    }
+
+    public addCredentialToQuery(credentialKey: string, paramName: string, query: HttpParams): HttpParams {
+        const value = this.lookupCredential(credentialKey);
+        return value
+            ? query.set(paramName, value)
+            : query;
     }
 
     private defaultEncodeParam(param: Param): string {

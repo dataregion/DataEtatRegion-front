@@ -33,6 +33,10 @@ export interface Siret extends Code {
   label_qpv24: Optional<string>
 }
 
+export interface LieuAction {
+  code_qpv: Optional<string>
+}
+
 export interface Commune extends CodeLabel {
   label_crte: Optional<string>;
   code_crte: Optional<string>;

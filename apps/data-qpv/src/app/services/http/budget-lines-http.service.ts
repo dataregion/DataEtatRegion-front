@@ -85,9 +85,9 @@ export class BudgetDataHttpService implements DataHttpService<EnrichedFlattenFin
         const niveau_geo = this._searchUtils.normalize_type_geo(niveau)
         const listCode = locations?.map((l) => l.code) ?? undefined
         const qpv_codes = qpvs?.map((q) => q.code) ?? undefined
-        const annee_decoupage = qpv_codes ? 2024 : undefined
+        const annee_decoupage = 2024
         const codes_cc = centre_couts?.map(cc => cc.code) ?? []
-        const p_themes = themes ?? undefined
+        const p_themes = themes?.join('|') ?? undefined
         const siret_beneficiaire: string[] | undefined = beneficiaires?.map(x => x.siret) ?? []
         const p_types_beneficaires = types_beneficiaires ?? undefined
 
@@ -109,7 +109,7 @@ export class BudgetDataHttpService implements DataHttpService<EnrichedFlattenFin
             undefined  // Tags
         ] as const;
 
-        const req$ = this._budgetApi.getBudgetQpvCtrl(
+        const req$ = this._budgetApi.getBudgetCtrl(
             "0",
             "6500", // XXX : Magic number, valeur défaut côté back
             ...query_params 

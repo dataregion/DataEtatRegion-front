@@ -109,7 +109,7 @@ export class BudgetDataHttpService
     const codes_programme = bops?.filter((bop) => bop.code).map((bop) => bop.code);
     const niveau_geo = this._searchUtils.normalize_type_geo(niveau);
     const listCode = locations?.map((l) => l.code) ?? undefined;
-    const p_themes = themes ?? undefined;
+    const p_themes = themes?.join('|') ?? undefined;
     const siret_beneficiaire: string[] | undefined = beneficiaires?.map((x) => x.siret) ?? [];
     const p_types_beneficaires = types_beneficiaires ?? undefined;
     const annees = years ?? undefined;

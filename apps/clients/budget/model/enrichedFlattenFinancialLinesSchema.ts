@@ -44,7 +44,8 @@ export interface EnrichedFlattenFinancialLinesSchema {
     domaineFonctionnel_label?: string;
     groupeMarchandise_code?: string;
     groupeMarchandise_label?: string;
-    id?: number;
+    id: number;
+    lieu_action_code_qpv?: string;
     localisationInterministerielle_code?: string;
     localisationInterministerielle_codeDepartement?: string;
     localisationInterministerielle_commune_arrondissement_code?: string;
