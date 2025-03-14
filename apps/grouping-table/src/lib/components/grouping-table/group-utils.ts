@@ -29,6 +29,8 @@ export type ParameterizedColumnMetaDataDef<T> = {
 
   /** La colonne est-elle affichée dans le tableau de données (undefined => true) */
   grouping?: boolean | undefined;
+  /** L'ordre de grouping */
+  grouping_order?: number | undefined;
 
   /**
    * Fonction de rendu permettant d'adapter la valeur de la cellule avant affichage.

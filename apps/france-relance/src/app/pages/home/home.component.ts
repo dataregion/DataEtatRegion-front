@@ -277,6 +277,11 @@ export class HomeComponent implements OnInit {
   private _getDefaultOrderGrouping(): GroupingColumn[] {
     return colonnes
       .filter((c) => c.grouping != null && c.grouping)
+      .sort((a, b) => {
+        const a_n = a?.grouping_order ?? 0;
+        const b_n = b?.grouping_order ?? 0;
+        return a_n - b_n;
+      })
       .map((c) => {
         const col: GroupingColumn = { columnName: c.name };
         return col;

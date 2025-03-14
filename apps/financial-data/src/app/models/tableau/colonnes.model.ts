@@ -67,6 +67,7 @@ export const colonnes: FinancialColumnMetaDataDef[] = [
     name: ColonneCodes.ANNEE_ENGAGEMENT,
     label: ColonneLibelles.ANNEE_ENGAGEMENT,
     grouping: true,
+    grouping_order: 300,
     columnStyle: {
       'min-width': '22ex',
       'flex-grow': '0'
@@ -162,6 +163,7 @@ export const colonnes: FinancialColumnMetaDataDef[] = [
     name: ColonneCodes.PROGRAMME,
     label: ColonneLibelles.PROGRAMME,
     grouping: true,
+    grouping_order: 100,
     displayed: false,
     renderFn: (row, _col) => _print_code_label(row.programme?.code, row.programme?.label)
   },
@@ -169,6 +171,7 @@ export const colonnes: FinancialColumnMetaDataDef[] = [
     name: ColonneCodes.REFERENTIEL_PROGRAMMATION,
     label: ColonneLibelles.REFERENTIEL_PROGRAMMATION,
     grouping: true,
+    grouping_order: 200,
     displayed: false,
     renderFn: (row, _col) =>
       _print_code_label(row.referentiel_programmation?.code, row.referentiel_programmation?.label)
@@ -200,6 +203,7 @@ export const colonnes: FinancialColumnMetaDataDef[] = [
     name: ColonneCodes.TYPE_ETABLISSEMENT,
     label: ColonneLibelles.TYPE_ETABLISSEMENT,
     grouping: true,
+    grouping_order: 400,
     displayed: false,
     renderFn: (row, _col) => {
       if (!row.siret?.categorie_juridique) return 'Non renseigné';
