@@ -1,4 +1,4 @@
-FROM nginx:1.27.3@sha256:0a399eb16751829e1af26fea27b20c3ec28d7ab1fb72182879dcae1cca21206a
+FROM nginx:1.27.4@sha256:9d6b58feebd2dbd3c56ab5853333d627cc6e281011cfd6050fa4bcf2072c9496
 RUN rm /etc/nginx/conf.d/default.conf
 
 COPY --chown=nginx:root ./nginx/ /etc/nginx/
