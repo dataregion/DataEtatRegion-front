@@ -182,7 +182,7 @@ export class Group {
   }
 
   _group_desc(a: Group, b: Group) {
-    if (a.isVirtual) return -1; // XXX Le groupe virtuel remonte toujours
+    if (a.isVirtual) return -2; // XXX Le groupe virtuel remonte toujours
     if (a.columnValue < b.columnValue) return 1;
     if (a.columnValue > b.columnValue) return -1;
     return 0;
@@ -193,7 +193,8 @@ export class Group {
   }
 
   get groups_desc() {
-    return this.groups.sort(this._group_desc);
+    const sorted = this.groups.sort(this._group_desc);
+    return sorted
   }
 
   constructor(
