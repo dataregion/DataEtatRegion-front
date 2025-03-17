@@ -161,7 +161,7 @@ fi
 #
 fix_swagger_json_remove_additionalProperties "$temp_swagger"
 fix_swagger_json_take_firstof_type "$temp_swagger"
-fix_swagger_json_replace_oauth "$temp_swagger"
+# fix_swagger_json_replace_oauth "$temp_swagger"
 
 # /tmp/tmp.43nywMtczG/swagger.json
 # temp_swagger="/home/rog/DEV_SGAR/front-data/tmp-swagger.json"
