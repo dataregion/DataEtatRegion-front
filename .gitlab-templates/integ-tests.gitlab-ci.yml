@@ -3,7 +3,9 @@
   image: docker:28.0-dind
   script:
     - pwd
-    - ls
+    - ls -la
+    - chmod +x generate_openapi_client.sh
+    - ls -la
     - printf 'yy' | ./generate_openapi_client.sh -p ae -s "https://api.nocode.csm.ovh/apis-externes/swagger.json" -t $(pwd)/apps/clients/ -n apis-externes
     - printf 'yy' | ./generate_openapi_client.sh -p budget -s "https://api.nocode.csm.ovh/financial-data/api/v2/swagger.json" -t $(pwd)/apps/clients/ -n budget
   needs:
