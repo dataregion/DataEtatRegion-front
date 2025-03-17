@@ -168,7 +168,7 @@ fix_swagger_json_replace_oauth "$temp_swagger"
 #
 # Génère l'api
 #
-docker run --rm \
+docker run \
   --user 1000:1000 \
   -v "$target_abs":/local -v "$temp_swagger":/tmp/swagger.json openapitools/openapi-generator-cli:v7.12.0 generate \
   -i "/tmp/swagger.json" \
