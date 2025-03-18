@@ -168,6 +168,7 @@ fix_swagger_json_replace_oauth "$temp_swagger"
 mkdir -p /tmp/workdir/
 mv "$temp_swagger" /tmp/workdir/
 temp_swagger="/tmp/workdir/swagger.json"
+echo >&2 "Fichier sauvegardé ici: '$temp_swagger'"
 
 #
 # Génère l'api
