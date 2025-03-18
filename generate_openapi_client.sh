@@ -122,8 +122,7 @@ fix_swagger_json_replace_oauth() {
   echo >&2 "Corrige le fichier swagger en remplaçant l'utilisation de 'OAuth2AuthorizationCodeBearer' par 'Bearer'"
 
   cp -a "$json_f" "$temp_f"
-  sed -i 's/"OAuth2AuthorizationCodeBearer": \[\]/"Bearer": \[\]/g' "$temp_f"
-  cp "$temp_f" "$json_f"
+  jq 'walk(if type == "object" then with_entries(if .value == [] and .key == "OAuth2AuthorizationCodeBearer" then .key = "Bearer" else . end) else . end)' "$temp_f" > "$json_f"
 
   echo >&2 "Fichier sauvegardé ici: '$json_f'"
 }
@@ -161,7 +160,7 @@ fi
 #
 fix_swagger_json_remove_additionalProperties "$temp_swagger"
 fix_swagger_json_take_firstof_type "$temp_swagger"
-# fix_swagger_json_replace_oauth "$temp_swagger"
+fix_swagger_json_replace_oauth "$temp_swagger"
 
 # /tmp/tmp.43nywMtczG/swagger.json
 # temp_swagger="/home/rog/DEV_SGAR/front-data/tmp-swagger.json"
