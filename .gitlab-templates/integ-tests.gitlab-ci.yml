@@ -1,15 +1,15 @@
-"generate-openapi-clients":
-  stage: 🧪 post-deploy tests
-  image: docker:28.0-dind
-  script:
-    - apk add --no-cache bash curl jq
-    - printf 'yy' | ./generate_openapi_client.sh -p ae -s "https://api.nocode.csm.ovh/apis-externes/swagger.json" -t $(pwd)/apps/clients/ -n apis-externes
-    - printf 'yy' | ./generate_openapi_client.sh -p budget -s "https://api.nocode.csm.ovh/financial-data/api/v2/swagger.json" -t $(pwd)/apps/clients/ -n budget
-  needs:
-    - job: "🐣 deploy fronts on integration"
-  rules:
-    - if: '$DO_INTEG_TESTS == "✅"'
-    - when: manual
+# "generate-openapi-clients":
+#   stage: 🧪 post-deploy tests
+#   image: docker:28.0-dind
+#   script:
+#     - apk add --no-cache bash curl jq
+#     - printf 'yy' | ./generate_openapi_client.sh -p ae -s "https://api.nocode.csm.ovh/apis-externes/swagger.json" -t $(pwd)/apps/clients/ -n apis-externes
+#     - printf 'yy' | ./generate_openapi_client.sh -p budget -s "https://api.nocode.csm.ovh/financial-data/api/v2/swagger.json" -t $(pwd)/apps/clients/ -n budget
+#   needs:
+#     - job: "🐣 deploy fronts on integration"
+#   rules:
+#     - if: '$DO_INTEG_TESTS == "✅"'
+#     - when: manual
 
 run-tests-e2e:
   stage: 🧪 post-deploy tests
