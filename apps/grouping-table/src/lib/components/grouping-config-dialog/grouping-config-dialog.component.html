@@ -48,12 +48,14 @@
     </div>
   </ng-container>
 
-  <div *ngIf="groupingColumns.length < 4 && (groupingColumns.length + 1) < allColumns.length">
-    <p>Ajouter une colonne de groupement supplémentaire :</p>
-
+  <div *ngIf="(groupingColumns.length + 1) < allColumns.length">
+    <div>
+      <p *ngIf="groupingColumns.length < 4" class="margin-label">Ajouter une colonne de groupement supplémentaire :</p>
+      <p *ngIf="groupingColumns.length >= 4" class="margin-label">Vous ne pouvez pas sélectionner plus de 4 colonnes de groupement</p>
+    </div>
     <mat-form-field appearance="fill" style="width:50%">
       <mat-label>Grouper les lignes par</mat-label>
-      <mat-select (selectionChange)="addGroup($event)">
+      <mat-select (selectionChange)="addGroup($event)" [disabled]="groupingColumns.length >= 4">
         <mat-option *ngFor="let column of remainingColumns" [value]="column">{{ column.label }}</mat-option>
       </mat-select>
     </mat-form-field>
