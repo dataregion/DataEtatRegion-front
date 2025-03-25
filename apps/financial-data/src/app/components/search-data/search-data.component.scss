@@ -24,7 +24,7 @@ form .mat-fab {
 }
 
 .spacer {
-  flex-grow: 1;
+  flex-grow: 0;
 }
 
 .break {
@@ -70,5 +70,5 @@ form .mat-fab {
 /* Fine tuning for form fields layout */
 .field-beneficiaire {
   margin-right: 8px;
-  width: 40em;
+  width: 35em;
 }
