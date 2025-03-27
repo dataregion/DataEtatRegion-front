@@ -54,6 +54,7 @@ export class SelectMultipleComponent<T> implements OnChanges, AfterViewInit {
   @Input() icon: string = '';
   
   @ViewChild('champRecherche') 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   rechercheComponent: any;
   
   public ngAfterViewInit() {

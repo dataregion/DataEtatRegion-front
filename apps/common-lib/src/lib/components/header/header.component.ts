@@ -28,7 +28,7 @@ export class HeaderComponent implements OnInit {
   logo: string = 'DataEtat.svg';
 
   constructor(
-    protected session: SessionService, // eslint-disable-line
+    protected session: SessionService,  
     private _keycloak: KeycloakService
   ) {}
 

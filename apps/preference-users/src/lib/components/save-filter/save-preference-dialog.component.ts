@@ -18,11 +18,11 @@ export class SavePreferenceDialogComponent {
   public separatorKeysCodes: number[] = [ENTER, COMMA];
   public preference: Preference;
 
-  public shared: Boolean = false;
+  public shared: boolean = false;
 
   public searchUser: string = '';
 
-  public filterUser: any = null;
+  public filterUser: { username: string }[] | null = null;
 
   public searchUserChanged = new Subject<string>();
 

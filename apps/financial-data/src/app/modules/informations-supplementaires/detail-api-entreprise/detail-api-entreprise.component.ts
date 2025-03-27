@@ -32,7 +32,7 @@ export class DetailApiEntrepriseComponent {
     service.viewService.api_entreprise_full$().subscribe((info) => (this.info = info));
   }
 
-  stringify(data: any) {
+  stringify(data: unknown) {
     return JSON.stringify(data);
   }
 

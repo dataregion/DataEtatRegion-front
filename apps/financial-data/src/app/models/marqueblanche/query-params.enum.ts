@@ -3,7 +3,7 @@ import {
   QueryParam_values as common_values
 } from 'apps/common-lib/src/lib/models/marqueblanche/query-params.enum';
 
-/* eslint-disable no-unused-vars */
+ 
 /** Nom des paramètres supportés par financial */
 export enum FinancialQueryParam {
   Programmes = 'programmes',

@@ -44,6 +44,7 @@ export interface DataHttpService<T, M> {
 
   search(search_parameters: SearchParameters): Observable<DataIncrementalPagination<T> | null>;
 
+   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   getById(source: SourceFinancialData, id: any, ...options: any[]): Observable<T>;
 
   mapToGeneric(object: T): M;

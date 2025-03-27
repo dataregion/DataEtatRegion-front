@@ -69,7 +69,7 @@ export class PreferenceComponent {
       queryParams: { uuid: uuid }
     });
   };
-
+  // eslint-disable-next-line  @typescript-eslint/no-explicit-any
   private _ppBeneficiaire(json: any) {
     if (json['denomination']) {
       return `${json['denomination']} (${json['siret']})`;
@@ -77,6 +77,7 @@ export class PreferenceComponent {
     return `Siret : (${json['siret']})`;
   }
 
+  // eslint-disable-next-line  @typescript-eslint/no-explicit-any
   private _ppTags(json: any) {
     return `${json['item']}`;
   }

@@ -67,7 +67,6 @@ export function apiExternesConfigFactory(
 export function apiBudgetConfigFactory(
   settingsService: SettingsService
 ): aeConfiguration {
-  settingsService
   const params: aeConfigurationParameters = {
     withCredentials: false,
     basePath: settingsService.apiFinancialDataV2
@@ -185,6 +184,6 @@ export class AppModule {}
 
 export function app_Init(
   settingsHttpService: SettingsHttpService
-): () => Promise<any> {
+): () => Promise<unknown> {
   return () => settingsHttpService.initializeApp();
 }

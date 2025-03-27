@@ -36,7 +36,7 @@ export class SupersetIframeComponent implements OnInit, OnChanges {
 
   constructor(
     private _domSanitizer: DomSanitizer,
-    @Inject(SETTINGS) readonly settings: SettingsService, // eslint-disable-line
+    @Inject(SETTINGS) readonly settings: SettingsService,  
   ) {
     this._supersetSettings = settings.getSuperset();
   }

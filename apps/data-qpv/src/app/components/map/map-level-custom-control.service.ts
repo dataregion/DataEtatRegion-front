@@ -17,7 +17,7 @@ export class MapLevelCustomControlService {
   }
 }
 
-/* eslint-disable no-unused-vars */
+ 
 export enum MapLevel {
   region = 'Région',
   departement = 'Département',
@@ -42,7 +42,7 @@ export class LevelControl extends Control {
   private selectMapLevel: HTMLSelectElement;
   private zoomToCurrentElementBtn: HTMLButtonElement;
   private titleElement: HTMLDivElement;
-
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   constructor(opt_options?: any) {
     const options = opt_options || {};
 

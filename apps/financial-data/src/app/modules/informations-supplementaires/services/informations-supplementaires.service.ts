@@ -18,6 +18,7 @@ export function fromInfoApiEntreprise(info: InfoApiEntreprise): EntrepriseFull {
         .activite_principale as ActivitePrincipaleCorrige,
       tranche_effectif: info.donnees_etablissement
         .tranche_effectif_salarie as TrancheEffectifCorrige,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       ess: (info.donnees_etablissement.unite_legale as any)['economie_sociale_et_solidaire']
     }
   };

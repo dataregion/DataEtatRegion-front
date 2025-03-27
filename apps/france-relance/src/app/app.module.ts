@@ -107,6 +107,6 @@ registerLocaleData(localeFr);
 })
 export class AppModule {}
 
-export function app_Init(settingsHttpService: SettingsHttpService): () => Promise<any> {
+export function app_Init(settingsHttpService: SettingsHttpService): () => Promise<unknown> {
   return () => settingsHttpService.initializeApp();
 }

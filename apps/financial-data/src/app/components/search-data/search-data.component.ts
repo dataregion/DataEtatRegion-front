@@ -217,6 +217,7 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
    * Affiche une erreur
    */
   public displayError = false;
+   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   public error: Error | any | null = null;
 
   /**

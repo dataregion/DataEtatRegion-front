@@ -37,7 +37,7 @@ export class CompagnonDSService {
 
   constructor(
     private _http: HttpClient,
-    @Inject(SETTINGS) readonly settings: SettingsService //eslint-disable-line
+    @Inject(SETTINGS) readonly settings: SettingsService  
   ) {
     this._apiExternes = settings.apiExternes;
     this._apiDemarches = settings.apiDemarches;
@@ -94,7 +94,7 @@ export class CompagnonDSService {
         })
       );
   }
-
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   public saveDemarche(tokenId: number, id: number): Observable<any> {
     const formData = new FormData();
     formData.append('tokenId', tokenId.toString());
@@ -115,7 +115,7 @@ export class CompagnonDSService {
         })
       );
   }
-
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   public saveReconciliation(formData: FormData): Observable<any> {
     return this._http.post(`${this._apiDemarches}/reconciliation`, formData);
   }
@@ -134,6 +134,7 @@ export class CompagnonDSService {
       );
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   public saveAffichage(formData: FormData): Observable<any> {
     return this._http.post(`${this._apiDemarches}/affichage`, formData);
   }

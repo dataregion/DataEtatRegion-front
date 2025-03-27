@@ -21,12 +21,13 @@ export class TabsSupersetIframesComponent {
     this.selectedTabIndexChange.emit(this._selectedTabIndex);
   }
   @Output() selectedTabIndexChange = new EventEmitter<number>();
-
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
   private _tabs: any = {
     "tab-iframe-1": 0,
     "tab-iframe-2": 1,
     "tab-iframe-3": 2,
   }
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   public emitSelectedTab(event: any) {
     this.selectedTabIndexChange.emit(this._tabs[event]);
   }

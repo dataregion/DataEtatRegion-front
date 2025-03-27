@@ -18,7 +18,7 @@ export class SessionService {
 
   constructor() {}
 
-  // eslint-disable-next-line no-undef
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   public setAuthentication(info: Keycloak.KeycloakProfile, roles: any, region_code?: string): void {
     this._userInfo = info as User;
     this._userInfo.roles = this.auth_utils.roles_to_uppercase(roles);

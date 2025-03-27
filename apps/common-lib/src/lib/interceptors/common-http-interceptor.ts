@@ -21,7 +21,7 @@ export class CommonHttpInterceptor implements HttpInterceptor {
     private _loader: LoaderService,
     private _alertService: AlertService
   ) {}
-
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     this._loader.startLoader();
     const handler = next.handle(req).pipe(

@@ -8,6 +8,7 @@ export interface SearchForm {
   annees: FormControl<number[] | null>;
   niveau: FormControl<TypeLocalisation | null>;
   localisations: FormControl<GeoModel[] | null>;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   qpv: FormControl<any[] | null>;
   financeurs: FormControl<CentreCouts[] | null>;
   thematiques: FormControl<string[] | null>;

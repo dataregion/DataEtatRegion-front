@@ -58,6 +58,7 @@ export class ExportDataService {
     }
 
     // Construction du Blob
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let buffer: any = null;
     let mimetype: string = '';
     const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(jsonData);

@@ -1,4 +1,4 @@
-/* eslint-disable no-unused-vars */
+ 
 
 import { DataType } from '@models/audit/audit-update-data.models';
 import { Optional } from 'apps/common-lib/src/lib/utilities/optional.type';
@@ -41,16 +41,16 @@ export interface Commune extends CodeLabel {
   arrondissement: Optional<Arrondissement>;
 }
 
-export interface Arrondissement extends CodeLabel {}
+export type Arrondissement = CodeLabel;
 
-export interface GroupeMarchandise extends CodeLabel {}
+export type GroupeMarchandise = CodeLabel;
 
 export interface LocalisationInterministerielle extends CodeLabel {
   code_departement: Optional<string>;
   commune: Optional<Commune>;
 }
 
-export interface DomaineFonctionnel extends CodeLabel {}
+export type DomaineFonctionnel = CodeLabel
 
 export interface CentreCouts extends CodeLabel {
   description: string;

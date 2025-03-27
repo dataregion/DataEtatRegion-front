@@ -12,7 +12,7 @@ import { SessionService } from 'apps/common-lib/src/public-api';
 import { NGXLogger } from 'ngx-logger';
 import { AuthUtils } from '../services/auth-utils.service';
 import { jwtDecode } from 'jwt-decode';
-/* eslint-disable no-unused-vars */
+ 
 
 @Injectable({
   providedIn: 'root'
@@ -29,7 +29,7 @@ export class AuthGuard extends KeycloakAuthGuard {
     super(router, keycloak);
   }
 
-  /* eslint-enable no-unused-vars */
+   
 
   private _current_roles = null;
   get current_roles(): string[] {
@@ -52,6 +52,7 @@ export class AuthGuard extends KeycloakAuthGuard {
 
     const userProfile = await this.keycloak.loadUserProfile()
     const accessToken = await this.keycloak.getToken()
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const decodedAccessToken: Record<string, any> = jwtDecode(accessToken);
     const code_region = decodedAccessToken['region'] ?? null
     this.sessionService.setAuthentication(

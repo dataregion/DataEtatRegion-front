@@ -11,6 +11,7 @@ export interface SearchForm {
   bops: FormControl<Bop[] | null>;
   referentiels_programmation: FormControl<ReferentielProgrammation[] | null>;
   niveau: FormControl<TypeLocalisation | null>;
+   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   location: FormControl<any>;
   year: FormControl<number[] | null>;
   beneficiaires: FormControl<Beneficiaire[] | null>;

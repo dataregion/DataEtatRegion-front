@@ -1,11 +1,9 @@
-import { chromium, FullConfig } from '@playwright/test';
+import { Browser, chromium, FullConfig } from '@playwright/test';
 import login from './tests/utils/login';
 
 async function globalSetup(config: FullConfig): Promise<void> {
   // récupération de la confid du projet nécessitant une authentification
   const browser = await chromium.launch();
-  const context = await browser.newContext();
-  const page = await context.newPage();
 
   await _login_profile(
     browser,
@@ -27,7 +25,7 @@ async function globalSetup(config: FullConfig): Promise<void> {
 }
 
 async function _login_profile(
-  browser: any,
+  browser: Browser,
   profile: string,
   baseUrl: string,
   username: string,

@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import { Inject, Injectable, InjectionToken } from '@angular/core';
 import { FinancialDataModel } from '@models/financial/financial-data.models';
 import { BopModel } from '@models/refs/bop.models';

@@ -27,7 +27,7 @@ export class BudgetDataHttpService implements DataHttpService<EnrichedFlattenFin
 
     constructor(
         private http: HttpClient,
-        @Inject(SETTINGS) readonly settings: SettingsService, // eslint-disable-line
+        @Inject(SETTINGS) readonly settings: SettingsService,  
     ) {
         this._apiAdministration = this.settings.apiAdministration;
         this._financialApiUrl = settings.apiFinancialData;
@@ -48,7 +48,7 @@ export class BudgetDataHttpService implements DataHttpService<EnrichedFlattenFin
     getSources(): string[] {
         return [SourceFinancialData.FINANCIAL_AE, SourceFinancialData.FINANCIAL_CP, SourceFinancialData.ADEME];
     }
-
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     public getById(source: SourceFinancialData, id: any, ..._: any[]): Observable<EnrichedFlattenFinancialLinesSchema> {
         return this._budgetApi.getGetBudgetCtrl(source, `${id}`)
     }
@@ -127,30 +127,30 @@ export class BudgetDataHttpService implements DataHttpService<EnrichedFlattenFin
 
         return arg
     }
-
-    public loadFinancialBudget(fileAe: any, fileCp: any, annee: string): Observable<any> {
+     // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    public loadFinancialBudget(fileAe: File, fileCp: File, annee: string): Observable<any> {
         const formData = new FormData();
         formData.append('fichierAe', fileAe);
         formData.append('fichierCp', fileCp);
         formData.append('annee', annee);
         return this.http.post(`${this._financialApiUrl}/region`, formData);
     }
-
-    public loadFinancialFrance2030(file: any, annee: string): Observable<any> {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    public loadFinancialFrance2030(file: File, annee: string): Observable<any> {
         const formData = new FormData();
         formData.append('fichier', file);
         formData.append('annee', annee);
         return this.http.post(`${this._laureatsApiUrl}/france-2030`, formData);
     }
-
-    public loadReferentielFile(file: any): Observable<any> {
+     // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    public loadReferentielFile(file: File): Observable<any> {
         const formData = new FormData();
         formData.append('fichier', file);
 
         return this.http.post(`${this._apiAdministration}/referentiels`, formData);
     }
-
-    public loadMajTagsFile(file: any): Observable<any> {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    public loadMajTagsFile(file: File): Observable<any> {
         const formData = new FormData();
         formData.append('fichier', file);
 

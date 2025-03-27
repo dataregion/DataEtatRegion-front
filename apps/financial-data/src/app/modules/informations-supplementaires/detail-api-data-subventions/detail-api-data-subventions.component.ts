@@ -33,7 +33,7 @@ export class DetailApiDataSubventionsComponent {
     });
   }
 
-  stringify(data: any) {
+  stringify(data: unknown) {
     return JSON.stringify(data);
   }
 

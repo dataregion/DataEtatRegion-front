@@ -88,6 +88,7 @@ export class SelectSimpleComponent<T> implements OnInit, OnChanges {
    * @returns
    */
   @Input()
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   renderLabelFunction(selected: any): string {
     return selected != null ? (selected as string) : '';
   }

@@ -17,7 +17,7 @@ export class TabsMapTableComponent {
   private _fullViewport = false
 
   private _searchResults: FinancialDataModel[] | null = [];
-
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   public mappedResults: any[] = []
 
   @ViewChild('datatable') datatable?: DsfrTableComponent;
@@ -44,7 +44,7 @@ export class TabsMapTableComponent {
     this._refreshDatatable()
     setTimeout(() => { this.dataLoaded = true; }, 1000);
   }
-
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   public mappingTabsBops: any = {
     0: "p147",
     1: "commun",
@@ -102,9 +102,8 @@ export class TabsMapTableComponent {
     {label: 'Département', field: 'commune.label_departement'},
     {label: 'Région', field: 'commune.label_region'},
   ]
-
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
   public data: any[] = []
-
 
   private _searchArgs: QpvSearchArgs | null = null;
 

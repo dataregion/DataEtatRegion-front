@@ -11,8 +11,8 @@ import {
 } from '@angular/material/autocomplete';
 import { MatIconModule } from '@angular/material/icon';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
-
 export interface SelectedData {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   item: any;
 }
 
@@ -103,7 +103,7 @@ export class AdvancedChipsMultiselectComponent {
       this.selectedDataChange.emit(this.selectedData);
     }
   }
-
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   remove(selection: any) {
     const index = this.selectedData.indexOf(selection);
 

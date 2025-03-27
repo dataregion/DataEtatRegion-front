@@ -120,6 +120,7 @@ export class SearchDataComponent implements OnInit, OnChanges {
   ngOnInit(): void {
     // récupération des themes dans le resolver
     this._route.data.subscribe(
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (response: { axes: SousAxePlanRelanceForFilter[] | Error } | any) => {
         this.axe_plan_relance = response.axes;
       }

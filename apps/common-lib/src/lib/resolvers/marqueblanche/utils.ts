@@ -15,7 +15,7 @@ import { catchError } from 'rxjs/operators';
  * ```
  */
 
-/* eslint-disable */
+ 
 export function passing_errors<
   U extends MarqueBlancheParsedParams,
   T extends MarqueBlancheParsedParamsResolverModel<U>
@@ -34,4 +34,4 @@ export function passing_errors<
   };
 }
 
-/* eslint-enable */
+ 

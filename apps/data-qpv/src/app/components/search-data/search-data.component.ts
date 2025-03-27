@@ -265,6 +265,7 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
    * Affiche une erreur
    */
   public displayError = false;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   public error: Error | any | null = null;
 
   /**
@@ -305,6 +306,7 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
       }),
       niveau: new FormControl<TypeLocalisation | null>(null),
       localisations: new FormControl<GeoModel[] | null>({ value: null, disabled: false }, []),
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       qpv: new FormControl<any | null>(null),
       financeurs: new FormControl<CentreCouts[] | null>(null),
       thematiques: new FormControl<string[] | null>(null),

@@ -15,7 +15,7 @@ import { RefQpv } from 'apps/common-lib/src/lib/models/refs/RefQpv';
 import { DataHttpService, SearchParameters } from './interface-data.service';
 import { CentreCouts } from '../models/financial/common.models';
 import { Beneficiaire } from '../models/qpv-search/beneficiaire.model';
-
+ // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const DATA_HTTP_SERVICE = new InjectionToken<DataHttpService<any, FinancialDataModel>>(
   'DataHttpService'
 );
@@ -28,6 +28,7 @@ export class BudgetService {
 
   constructor(
     private http: HttpClient,
+     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     @Inject(DATA_HTTP_SERVICE) private _services: DataHttpService<any, FinancialDataModel>[],
     @Inject(SETTINGS) readonly settings: SettingsService
   ) {

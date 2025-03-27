@@ -21,7 +21,7 @@ import { DetailApiDemarcheSimplifieComponent } from './detail-api-demarche-simpl
 import { FinancialDataModel } from '@models/financial/financial-data.models';
 import { AffichageDossier } from '@models/demarche_simplifie/demarche.model';
 
-/* eslint-disable no-unused-vars */
+ 
 export enum View {
   light = 'light',
   full_api_entreprise = 'full_api_entreprise',
@@ -30,7 +30,7 @@ export enum View {
   full = 'full'
 }
 
-/* eslint-enable no-unused-vars */
+ 
 
 @Component({
     selector: 'financial-informations-supplementaires',

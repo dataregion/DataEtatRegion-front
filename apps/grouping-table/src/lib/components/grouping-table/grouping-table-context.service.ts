@@ -87,6 +87,7 @@ export class GroupingTableContextService {
    * Retourne les définitions de règles CSS pour chacune des colonnes.
    */
   private calculateColumnStyle(): SafeHtml | null {
+    // eslint-disable-next-line  @typescript-eslint/no-explicit-any
     const colStyles: any[] = [];
     this.displayedColumns.forEach((col, i) => {
       if (!col.columnStyle) {

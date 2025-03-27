@@ -1,5 +1,5 @@
 import { TypeLocalisation } from "apps/common-lib/src/public-api"
-/* eslint-disable no-unused-vars */
+ 
 
 const synonymes: { [key in TypeLocalisation]: string[] } = {
     [TypeLocalisation.REGION]: ['region'],
@@ -15,7 +15,7 @@ export function synonymes_from_types_localisation(types: TypeLocalisation[]): st
     return types.flatMap(type => synonymes[type]);
 }
 
-/* eslint-enable no-unused-vars */
+ 
 
 export function to_type_localisation(name: string): TypeLocalisation {
     for (const key in synonymes) {

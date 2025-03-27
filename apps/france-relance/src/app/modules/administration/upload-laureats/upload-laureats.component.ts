@@ -58,8 +58,9 @@ export class UploadLaureatsComponent implements OnInit {
     return this._session.isAdmin();
   }
 
-  getFile(event: any): File {
-    return event.target.files[0];
+  getFile(event: Event): File | null {
+    const input = event.target as HTMLInputElement;
+    return input.files ? input.files[0] : null;
   }
 
   uploadFrance2030File() {

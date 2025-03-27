@@ -22,7 +22,7 @@ export class SettingsHttpService {
     private _matomoInitializer: MatomoInitializerService
   ) {}
 
-  initializeApp(): Promise<any> {
+  initializeApp(): Promise<unknown> {
     return new Promise((resolve, reject) => {
       firstValueFrom(this.http.get('assets/settings.json'))
         .then((response) => {
@@ -120,8 +120,8 @@ export class SettingsHttpService {
       });
 
       return initialization;
-    // eslint-disable-next-line no-unused-vars
-    } catch (error) {
+     
+    } catch {
       throw new Error("Une erreur s'est déroulée durant l'initialisation de keycloak");
     }
   }

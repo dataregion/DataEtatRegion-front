@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-/* eslint-disable no-unused-vars */
+ 
 
 export enum Region {
   BRETAGNE = 'Bretagne',

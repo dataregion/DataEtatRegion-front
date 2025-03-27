@@ -23,7 +23,7 @@ export class PreferenceUsersHttpService {
     return this.http.get<PreferenceWithShared>(`${this._apiPath}/users/preferences`);
   }
 
-  public savePreference(preference: Preference): Observable<any> {
+  public savePreference(preference: Preference): Observable<unknown> {
     if (preference.uuid) {
       // update
       return this.http.post(`${this._apiPath}/users/preferences/${preference.uuid}`, preference);
@@ -33,15 +33,15 @@ export class PreferenceUsersHttpService {
     }
   }
 
-  public deletePreference(uuid: string): Observable<any> {
-    return this.http.delete(`${this._apiPath}/users/preferences/${uuid}`);
+  public deletePreference(uuid: string): Observable<void> {
+    return this.http.delete<void>(`${this._apiPath}/users/preferences/${uuid}`);
   }
 
   public getPreference(uuid: string): Observable<Preference> {
     return this.http.get<Preference>(`${this._apiPath}/users/preferences/${uuid}`);
   }
 
-  public searchUser(search: string): Observable<any> {
-    return this.http.get<any>(`${this._apiPath}/users/preferences/search-user?username=${search}`);
+  public searchUser(search: string): Observable< { username: string }[]> {
+    return this.http.get< { username: string }[]>(`${this._apiPath}/users/preferences/search-user?username=${search}`);
   }
 }

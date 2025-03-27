@@ -58,6 +58,7 @@ export class ModalAdditionalParamsComponent<T> implements OnChanges {
       this.filteredCheckboxes = this.checkboxes;
       
       if (changes['checkboxes'].firstChange) {
+        // eslint-disable-next-line @typescript-eslint/no-this-alias
         const that = this
         this.actions.push({
           label: "Appliquer ce filtre",

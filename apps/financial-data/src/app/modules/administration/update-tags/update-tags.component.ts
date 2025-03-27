@@ -41,7 +41,7 @@ export class UpdateTagsComponent {
   uploadFileMajTag() {
     if (this.fileMajTag !== null) {
       // Fichier qui sera envoyé au back
-      let fileToUpload: File | null = null;
+      let fileToUpload: File;
       this.fileMajTag
         .text()
         // Remplacement des pretty headers par les clés correspondantes
@@ -85,7 +85,7 @@ export class UpdateTagsComponent {
         });
     }
   }
-
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   getFile(event: any): File {
     return event.target.files[0];
   }

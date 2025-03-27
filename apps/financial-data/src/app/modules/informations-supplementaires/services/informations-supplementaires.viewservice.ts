@@ -120,8 +120,9 @@ export class InformationSupplementairesViewService {
   api_subvention_full_error: ModelError | null = null;
 
   api_subvention_full$(): Observable<SubventionFull> {
+    const siret = this._financial?.siret?.code
     return forkJoin({
-      siret: of(this._financial?.siret?.code!),
+      siret: of(siret!),
       subvention: this.api_subvention_subvention$,
       contact: this.api_subvention_president$
     }).pipe(
@@ -154,8 +155,9 @@ export class InformationSupplementairesViewService {
 
   private get api_entreprise_info$() {
     if (this._api_entreprise_info$ == undefined) {
+      const siret = this._financial.siret?.code;
       this._api_entreprise_info$ = this._ae.getInfoEntrepriseCtrl(
-        this._financial.siret?.code!,
+        siret!,
         'body',
         false,
         this._options
@@ -194,7 +196,7 @@ export class InformationSupplementairesViewService {
 
   private get api_subvention$() {
     if (this._api_subvention$ === undefined) {
-      const siret = this._financial.siret?.code!;
+      const siret = this._financial.siret?.code;
       return this._ae
         .getInfoSubventionCtrl(siret!, 'body', false, this._options)
         .pipe(shareReplay(1));
@@ -203,7 +205,7 @@ export class InformationSupplementairesViewService {
   }
 
   subvention_full_has_no_info(info: SubventionFull | null) {
-    function vide(a: any) {
+    function vide(a: unknown) {
       return a === undefined || a === null;
     }
 

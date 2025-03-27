@@ -1,5 +1,4 @@
-/* eslint no-unused-vars: 0 */ // --> OFF
-
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export type AggregateReducerContext = {
   row: RowData;
   group: Group;
@@ -83,7 +82,7 @@ export type ColumnMetaDataDef = ParameterizedColumnMetaDataDef<RowData>;
 export class AggregatorFns {
   static sum(
     currentValue: any,
-    context: AggregateReducerContext,
+    _context: AggregateReducerContext,
     accumulator?: number
   ): number | undefined {
     if (!currentValue) {
@@ -104,7 +103,7 @@ export class AggregatorFns {
     return ((accumulator || 0) * (nbRows - 1) + (currentValue || 0)) / nbRows;
   }
 
-  static count(currentValue: any, context: AggregateReducerContext, accumulator?: number): number {
+  static count(_currentValue: unknown, _context: AggregateReducerContext, accumulator?: number): number {
     return (accumulator || 0) + 1;
   }
 }

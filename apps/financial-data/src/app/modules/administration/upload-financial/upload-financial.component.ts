@@ -67,7 +67,7 @@ export class UploadFinancialComponent implements OnInit {
   public get isAdmin(): boolean {
     return this._session.isAdmin();
   }
-
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   getFile(event: any): File {
     return event.target.files[0];
   }

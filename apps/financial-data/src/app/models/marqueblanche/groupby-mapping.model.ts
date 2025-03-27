@@ -1,4 +1,4 @@
-/* eslint-disable no-unused-vars */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 
 import { ColumnMetaDataDef } from 'apps/grouping-table/src/lib/components/grouping-table/group-utils';
 import { GroupByFieldname } from './groupby-fieldname.enum';

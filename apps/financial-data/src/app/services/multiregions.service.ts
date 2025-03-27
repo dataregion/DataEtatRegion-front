@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { SessionService } from 'apps/common-lib/src/public-api';
 
-/* eslint-disable no-unused-vars */
+ 
 
 export enum Region {
   BRETAGNE = 'Bretagne',

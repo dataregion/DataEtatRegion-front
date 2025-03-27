@@ -52,7 +52,6 @@ export const SearchParameters_empty: SearchParameters = {
   source_region: null
 };
 
-/* eslint no-unused-vars: 0 */ // --> OFF
 /**
  * Interface Http Service pour remonter des informations dans une application type Budget
  * T étant le type métier
@@ -61,6 +60,7 @@ export const SearchParameters_empty: SearchParameters = {
 export interface DataHttpService<T, M> {
   search(search_parameters: SearchParameters): Observable<DataIncrementalPagination<T> | null>;
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   getById(source: SourceFinancialData, id: any, ...options: any[]): Observable<T>;
 
   mapToGeneric(object: T): M;

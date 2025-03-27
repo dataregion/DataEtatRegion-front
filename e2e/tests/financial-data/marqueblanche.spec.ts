@@ -1,4 +1,4 @@
-import { expect, Page, test } from '@playwright/test';
+import { expect, Page, Route, test, Request } from '@playwright/test';
 import mockRefApi from '../utils/mock-api';
 
 test.describe("Lorsque l'on définit le paramètre `grouper_par`", () => {
@@ -113,7 +113,7 @@ test.describe("Lorsque l'on spécifie des bénéficiaires", () => {
   const urlparam = '?beneficiaires=30613890001294,30613890003688';
 
   test('Les filtres sont pré-remplis', async ({ page }) => {
-    await page.route(/.*\/budget\/api\/v1\/beneficiaire.*/, async (route: any, request: any) => {
+    await page.route(/.*\/budget\/api\/v1\/beneficiaire.*/, async (route: Route, request: Request ) => {
       const args = request.url().split('/');
       const siret = args[args.length - 1];
 

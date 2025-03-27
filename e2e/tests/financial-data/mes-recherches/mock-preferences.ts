@@ -1,7 +1,7 @@
 import { default as preferences } from './mock-preferences.data.json';
 import { default as preferencesdetails } from './mock-preferences-details.data.json';
 
-import { Page } from '@playwright/test';
+import { Page, Route } from '@playwright/test';
 
 function is_url_user_preferences(url: URL) {
   const match = url.pathname == '/administration/api/v1/users/preferences';
@@ -15,12 +15,12 @@ function is_url_user_preferences_detail(url: URL) {
 }
 
 async function mockPreferencesApi(page: Page) {
-  await page.route(is_url_user_preferences, async (route: any) => {
+  await page.route(is_url_user_preferences, async (route: Route) => {
     const json = preferences;
     await route.fulfill({ json });
   });
 
-  await page.route(is_url_user_preferences_detail, async (route: any) => {
+  await page.route(is_url_user_preferences_detail, async (route: Route) => {
     const json = preferencesdetails;
     await route.fulfill({ json });
   });

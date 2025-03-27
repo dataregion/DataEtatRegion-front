@@ -83,8 +83,9 @@ export class France2030HttpService extends AbstractLaureatsHttpService {
     if (params_code_geo) url += `&code_geo=${encodeURIComponent(params_code_geo)}`;
 
     const emptySearchResult = this._wrap_in_searchresult([]);
+    
     const answer$ = this.http
-      .get<
+      .get<// eslint-disable-next-line @typescript-eslint/no-explicit-any
         DataPagination<any>
       >(url, { context: new HttpContext().set(DO_NOT_ALERT_ON_NON_IMPLEMTENTED, true) })
       .pipe(

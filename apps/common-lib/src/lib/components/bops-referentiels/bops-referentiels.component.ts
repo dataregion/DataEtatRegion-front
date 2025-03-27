@@ -244,10 +244,7 @@ export class BopsReferentielsComponent {
     this.input = filterValue;
     this.inputRefFilter.next(filterValue);
     return this.selectedReferentiels
-      ? this.selectedReferentiels.filter((ref) => {
-          ref.code.toLowerCase().includes(filterValue) ||
-            ref.label.toLowerCase().includes(filterValue);
-        })
+      ? this.selectedReferentiels.filter((ref) => { return  ref.code.toLowerCase().includes(filterValue) || ref.label.toLowerCase().includes(filterValue);})
       : [];
   };
   public renderRefLabel = (bops: ReferentielProgrammation[]) => {

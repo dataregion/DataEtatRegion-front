@@ -1,4 +1,4 @@
-/* eslint-disable no-unused-vars */
+ 
 
 import { TypeCategorieJuridique } from '@models/financial/common.models';
 import { OtherTypeCategorieJuridique, SearchTypeCategorieJuridique } from '@services/interface-data.service';
@@ -15,7 +15,7 @@ export function synonymes_from_types_localisation(types: SearchTypeCategorieJuri
   return types.flatMap((type) => synonymes[type]);
 }
 
-/* eslint-enable no-unused-vars */
+ 
 
 export function to_types_categories_juridiques(name: string): SearchTypeCategorieJuridique {
   for (const key in synonymes) {

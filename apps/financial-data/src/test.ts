@@ -7,7 +7,7 @@ import {
   platformBrowserDynamicTesting
 } from '@angular/platform-browser-dynamic/testing';
 
-/* eslint-disable no-unused-vars */
+ 
 
 declare const require: {
   context(

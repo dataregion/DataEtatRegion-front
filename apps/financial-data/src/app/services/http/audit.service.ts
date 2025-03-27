@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import { Inject, Injectable } from '@angular/core';
 
 import { HttpClient } from '@angular/common/http';
@@ -12,7 +14,7 @@ import { SETTINGS } from 'apps/common-lib/src/lib/environments/settings.http.ser
 export class AuditHttpService {
   constructor(
     private http: HttpClient,
-    @Inject(SETTINGS) readonly settings: SettingsService //eslint-disable-line
+    @Inject(SETTINGS) readonly settings: SettingsService  
   ) {}
 
   public getLastDateUpdateData(): Observable<{ date: string }> {

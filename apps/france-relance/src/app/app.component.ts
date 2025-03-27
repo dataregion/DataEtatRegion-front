@@ -24,7 +24,7 @@ export class AppComponent implements OnInit {
     private _loaderService: LoaderService,
     private _sessionService: SessionService,
     private _gridFullscreen: GridInFullscreenStateService,
-    // eslint-disable-next-line
+     
     @Inject(SETTINGS) public readonly settings: SettingsService
   ) {}
 

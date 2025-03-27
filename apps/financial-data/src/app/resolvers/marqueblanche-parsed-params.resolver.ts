@@ -293,8 +293,8 @@ function localisation(
       throw Error(
         `Le niveau géographique doit être une de ces valeurs ${niveauxLocalisationLegaux}`
       );
-  // eslint-disable-next-line no-unused-vars
-  } catch (e) {
+   
+  } catch {
     const niveaux_valides = synonymes_from_types_localisation(niveauxLocalisationLegaux);
     throw Error(`Le niveau géographique doit être une de ces valeurs ${niveaux_valides}`);
   }
@@ -381,7 +381,7 @@ function filterGeo(api_geo: GeoHttpService, code_geo: string, niveau_geo: TypeLo
   return api_geo.search(niveau_geo, search_params);
 }
 
-function _xor(x: any, y: any) {
+function _xor(x: unknown, y: unknown) {
   const bx = Number(Boolean(x));
   const by = Number(Boolean(y));
 

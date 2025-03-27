@@ -45,6 +45,7 @@ export class ReferentielsHttpService {
   ) {
     return this.http.get(this._buildUrl(term, programmes, path_referentiel)).pipe(
       map((response) => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const result = response as unknown as DataPagination<any>;
         return result ? result.items : [];
       })
