@@ -39,10 +39,10 @@ import { DatePipe } from '@angular/common';
 import { ExportDataService } from 'apps/appcommon/src/lib/export-data.service';
 
 @Component({
-    selector: 'financial-home',
-    templateUrl: './home.component.html',
-    styleUrls: ['./home.component.scss'],
-    standalone: false
+  selector: 'financial-home',
+  templateUrl: './home.component.html',
+  styleUrls: ['./home.component.scss'],
+  standalone: false
 })
 export class HomeComponent implements OnInit {
   private dialog = inject(MatDialog);
@@ -111,7 +111,7 @@ export class HomeComponent implements OnInit {
     // Ordre et affichage de base des colonnes
     this.displayedOrderedColumns = this._getDefaultOrder();
     this.groupingColumns = this._getDefaultOrderGrouping();
-    
+
     this.virtualGroupFn = (tableData: TableData) => {
       const initial: number[] = [0, 0]
       const [sum_ae, sum_cp] = tableData.reduce((acc: number[], curr, _0, _1) => {
@@ -228,7 +228,7 @@ export class HomeComponent implements OnInit {
       autoFocus: 'input'
     });
 
-    dialogRef.afterClosed().subscribe((_) => {});
+    dialogRef.afterClosed().subscribe((_) => { });
   }
 
   public downloadData(extension: string, allColumns: boolean): void {
@@ -248,6 +248,33 @@ export class HomeComponent implements OnInit {
         document.body.appendChild(a);
         a.click();
         this.searchData.searchInProgress.next(false);
+      }
+    }
+  }
+
+  public exportToGrist(allColumns: boolean): void {
+    if (this.searchData.searchForm.valid && !this.searchData.searchInProgress.value) {
+      this.searchData.searchInProgress.next(true);
+      const dataToExport = this._exportDataService.getDataToExport(
+        this.searchData.searchResult() ?? [],
+        !allColumns ? this.displayedOrderedColumns : null
+      );
+
+      if (dataToExport) {
+        this._budgetService.exportToGrist(dataToExport).subscribe(
+          {
+            next:() => {
+              this._alertService.openAlertSuccess(`Les données ont bien été transférées dans votre espace Grist.`);
+            },
+            error: (err: Error) => {
+              this._alertService.openAlert("error", err, 8);
+              this.searchData.searchInProgress.next(false);
+            },
+            complete:() => {
+              this.searchData.searchInProgress.next(false);
+            }
+          }
+        )
       }
     }
   }

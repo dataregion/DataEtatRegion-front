@@ -25,38 +25,8 @@ export class ExportDataService {
     columns: DisplayedOrderedColumn[] | null
   ): Blob | null {
     // Transformation des données financières en JSON
-    const jsonData = [];
-    for (const item of data) {
-      let object = item.exportAsJson();
-      // Si des colonnes ont été précisées
-      if (columns) {
-        // Suppression des colonnes non-affichées de l'objet JSON
-        Object.keys(object).forEach((c) => {
-          if (!columns.map((c) => c.columnLabel).includes(c)) {
-            delete object[c];
-          }
-        });
-        columns
-          .filter((c) => 'displayed' in c && !c.displayed)
-          .map((c) => c.columnLabel)
-          .forEach((c) => {
-            delete object[c];
-          });
-        // Ordre des données du JSON en fonction de l'ordre des colonnes
-        object = Object.keys(object)
-          .sort((col1, col2) => {
-            const index1 = columns.findIndex((col) => col.columnLabel === col1);
-            const index2 = columns.findIndex((col) => col.columnLabel === col2);
-            return index1 - index2;
-          })
-          .reduce((obj: JSONObject, key: string) => {
-            obj[key] = object[key];
-            return obj;
-          }, {});
-      }
-      jsonData.push(object);
-    }
-    console.log(jsonData)
+    
+    const jsonData = this.getDataToExport(data, columns);
 
     // Construction du Blob
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -77,4 +47,47 @@ export class ExportDataService {
     }
     return buffer && mimetype ? new Blob([buffer], { type: '{{mimetype}};charset=utf-8;' }) : null;
   }
+
+
+  /**
+   * Convertion des données à exporter au forat JSONObject[]
+   * @param data  Données exportables 
+   * @param columns Colonnes des données à prendre en compte
+   */
+  public getDataToExport(
+    data: ExportableAsJson[],
+    columns: DisplayedOrderedColumn[] | null): JSONObject[] {
+      const jsonData = [];
+      for (const item of data) {
+        let object = item.exportAsJson();
+        // Si des colonnes ont été précisées
+        if (columns) {
+          // Suppression des colonnes non-affichées de l'objet JSON
+          Object.keys(object).forEach((c) => {
+            if (!columns.map((c) => c.columnLabel).includes(c)) {
+              delete object[c];
+            }
+          });
+          columns
+            .filter((c) => 'displayed' in c && !c.displayed)
+            .map((c) => c.columnLabel)
+            .forEach((c) => {
+              delete object[c];
+            });
+          // Ordre des données du JSON en fonction de l'ordre des colonnes
+          object = Object.keys(object)
+            .sort((col1, col2) => {
+              const index1 = columns.findIndex((col) => col.columnLabel === col1);
+              const index2 = columns.findIndex((col) => col.columnLabel === col2);
+              return index1 - index2;
+            })
+            .reduce((obj: JSONObject, key: string) => {
+              obj[key] = object[key];
+              return obj;
+            }, {});
+        }
+        jsonData.push(object);
+      }
+      return jsonData;
+    }
 }

@@ -82,6 +82,7 @@
                 <button (click)="downloadData('csv', true)" mat-menu-item>Format CSV</button>
                 <button (click)="downloadData('xlsx', true)" mat-menu-item>Format Excel</button>
                 <button (click)="downloadData('ods', true)" mat-menu-item>Format Libre Office</button>
+                <button (click)="exportToGrist(true)" mat-menu-item>Transférer vers Grist</button>
               </mat-menu>
 
               <button [matMenuTriggerFor]="displayedColumnsFormats" mat-menu-item>
@@ -91,6 +92,7 @@
                 <button (click)="downloadData('csv', false)" mat-menu-item>Format CSV</button>
                 <button (click)="downloadData('xlsx', false)" mat-menu-item>Format Excel</button>
                 <button (click)="downloadData('ods', false)" mat-menu-item>Format Libre Office</button>
+                <button (click)="exportToGrist(false)" mat-menu-item>Transférer vers Grist</button>
               </mat-menu>
 
             </mat-menu>
