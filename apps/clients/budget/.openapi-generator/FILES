@@ -6,11 +6,14 @@ api.module.ts
 api/api.ts
 api/budget.service.ts
 api/budget.serviceInterface.ts
+api/budgetToGrist.service.ts
+api/budgetToGrist.serviceInterface.ts
 configuration.ts
 encoder.ts
 git_push.sh
 index.ts
 model/enrichedFlattenFinancialLinesSchema.ts
+model/gristDataModel.ts
 model/incrementalPagination.ts
 model/models.ts
 model/paginatedBudgetLines.ts

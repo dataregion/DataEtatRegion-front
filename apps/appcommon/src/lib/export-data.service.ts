@@ -56,6 +56,7 @@ export class ExportDataService {
       }
       jsonData.push(object);
     }
+    console.log(jsonData)
 
     // Construction du Blob
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
