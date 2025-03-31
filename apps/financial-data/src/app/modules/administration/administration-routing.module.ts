@@ -14,6 +14,7 @@ const routes: Routes = [
   {
     path: 'upload',
     component: UploadFinancialComponent,
+    title:"Charger les données",
     canActivate: [keycloakAuthGuardCanActivate],
     data: {
       roles: profiles_required_for_upload_page
@@ -21,6 +22,7 @@ const routes: Routes = [
   },
   {
     path: 'update-tags',
+    title:"Gestion des tags",
     component: UpdateTagsComponent,
     canActivate: [keycloakAuthGuardCanActivate],
     data: {
@@ -29,6 +31,7 @@ const routes: Routes = [
   },
   {
     path: 'demarches',
+    title: "Gestion des démarches",
     canActivate: [keycloakAuthGuardCanActivate],
     data: {
       roles: profiles_required_for_demarches

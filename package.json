@@ -39,7 +39,7 @@
     "keycloak-angular": "^19.0.2",
     "keycloak-js": "^25.0.6",
     "ngx-logger": "^5.0.12",
-    "ngx-matomo-client": "^7.0.0",
+    "ngx-matomo-client": "^7.0.1",
     "ol": "^10.2.1",
     "ol-mapbox-style": "^12.3.5",
     "rxjs": "~7.8.0",
@@ -81,12 +81,7 @@
     "typescript": "^5.5.4",
     "typescript-eslint": "^8.28.0"
   },
-  "_comment": "TODO: Le temps que ngx-matomo-client ai une release compatible avec angular 19",
   "overrides": {
-    "browser-sync": "^3.0.2",
-    "ngx-matomo-client": {
-      "@angular/common@": ">=18.0.0",
-      "@angular/core@": ">=18.0.0"
-    }
+    "browser-sync": "^3.0.2"
   }
 }

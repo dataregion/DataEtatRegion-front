@@ -42,7 +42,7 @@ import { DATA_HTTP_SERVICE } from '@services/budget.service';
 import { budgetApiModule, budgetConfiguration } from 'apps/clients/budget';
 import { BudgetDataHttpService } from '@services/http/budget-lines-http.service';
 import { MultiregionsService } from '@services/multiregions.service';
-import { MatomoModule, MatomoRouterModule } from 'ngx-matomo-client';
+import { MatomoModule, MatomoRouteDataInterceptor, MatomoRouterModule } from 'ngx-matomo-client';
 
 export function apiExternesConfigFactory(settingsService: SettingsService): aeConfiguration {
   const params: aeConfigurationParameters = {
@@ -86,7 +86,9 @@ registerLocaleData(localeFr);
     MatomoModule.forRoot({
       mode: 'deferred'
     }),
-    MatomoRouterModule
+    MatomoRouterModule.forRoot({
+      interceptors: [MatomoRouteDataInterceptor], // Add this configuration
+    }),
   ],
   providers: [
     {

@@ -37,6 +37,7 @@ import { SearchDataComponent } from 'apps/financial-data/src/app/components/sear
 import { BudgetService } from '@services/budget.service';
 import { DatePipe } from '@angular/common';
 import { ExportDataService } from 'apps/appcommon/src/lib/export-data.service';
+import { MatomoTracker } from 'ngx-matomo-client';
 
 @Component({
   selector: 'financial-home',
@@ -46,6 +47,7 @@ import { ExportDataService } from 'apps/appcommon/src/lib/export-data.service';
 })
 export class HomeComponent implements OnInit {
   private dialog = inject(MatDialog);
+  private readonly tracker = inject(MatomoTracker);
 
   columnsMetaData: ParameterizedColumnsMetaData<FinancialColumnMetaDataDef>;
 
@@ -234,6 +236,7 @@ export class HomeComponent implements OnInit {
   public downloadData(extension: string, allColumns: boolean): void {
     this.searchData.searchForm.markAllAsTouched(); // pour notifier les erreurs sur le formulaire
     if (this.searchData.searchForm.valid && !this.searchData.searchInProgress.value) {
+      this.tracker.trackEvent("Export","Click", extension, undefined, {"allColumns": allColumns});
       this.searchData.searchInProgress.next(true);
       const blob = this._exportDataService.getBlob(
         this.searchData.searchResult() ?? [],
@@ -254,6 +257,7 @@ export class HomeComponent implements OnInit {
 
   public exportToGrist(allColumns: boolean): void {
     if (this.searchData.searchForm.valid && !this.searchData.searchInProgress.value) {
+      this.tracker.trackEvent("Export","Click", "grist", undefined, {"allColumns": allColumns});
       this.searchData.searchInProgress.next(true);
       const dataToExport = this._exportDataService.getDataToExport(
         this.searchData.searchResult() ?? [],

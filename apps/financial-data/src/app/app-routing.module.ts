@@ -12,10 +12,12 @@ import { PreferenceComponent } from './pages/preference/preference.component';
 import { resolveFinancialData } from './resolvers/financial-data.resolver';
 import { router_template_path_full as info_supplementaires_path } from './modules/informations-supplementaires/routes';
 import { resolveMarqueBlancheParsedParams } from './resolvers/marqueblanche-parsed-params.resolver';
+import { MatomoRouteData } from 'ngx-matomo-client';
 
 const routes: Routes = [
   {
     path: '',
+    title:"Budget",
     component: HomeComponent,
     canActivate: [keycloakAuthGuardCanActivate],
     runGuardsAndResolvers: 'always',
@@ -34,16 +36,19 @@ const routes: Routes = [
   },
   {
     path: 'preference',
+    title:"Mes Recherches",
     component: PreferenceComponent,
     canActivate: [keycloakAuthGuardCanActivate],
     runGuardsAndResolvers: 'always'
   },
   {
     path: 'register',
+    title:"S'enregistrer",
     component: RegisterComponent
   },
   {
     path: 'cgu',
+    title: 'Conditions générales d\'utilisation',
     component: TermOfUseComponent,
     canActivate: [keycloakAuthGuardCanActivate]
   },
@@ -51,7 +56,10 @@ const routes: Routes = [
     path: 'administration',
     canMatch: [keycloakAuthGuardCanMatchAccordingToRoles],
     data: {
-      roles: [Profil.USERS]
+      roles: [Profil.USERS],
+      matomo: {
+        title: 'Admin', // <-- You can override the title sent to Matomo
+      } as MatomoRouteData,
     },
     loadChildren: () =>
       import('./modules/administration/administration.module').then((m) => m.AdministrationModule)
