@@ -2,7 +2,7 @@ import { Observable, of } from 'rxjs';
 import { HandlerContext } from '../../models/marqueblanche/handler-context.model';
 import { MarqueBlancheParsedParams } from '../../models/marqueblanche/marqueblanche-parsed-params.model';
 import { QueryParam } from '../../models/marqueblanche/query-params.enum';
-import { GeoHttpService, GeoModel, ReferentielsHttpService, SearchByCodeParamsBuilder, TypeLocalisation } from 'apps/common-lib/src/public-api';
+import { GeoHttpService, ReferentielsHttpService, SearchByCodeParamsBuilder, TypeLocalisation } from 'apps/common-lib/src/public-api';
 import { ActivatedRouteSnapshot } from '@angular/router';
 import { NGXLogger } from 'ngx-logger';
 import { synonymes_from_types_localisation, to_type_localisation } from './niveau-localisation.model';
@@ -119,7 +119,6 @@ export function filterGeo(api_geo: GeoHttpService, code_geo: string, niveau_geo:
 }
 
 export function common_annee_min_max(
-  previous: MarqueBlancheParsedParams,
   logger: NGXLogger,
   annee_courante: number,
   p_annee_min: string | null,
@@ -156,7 +155,6 @@ export function common_annee_min_max(
 }
 
 export function common_localisation(
-  previous: MarqueBlancheParsedParams,
   p_niveau_geo: string | null,
   p_code_geo: string | null
 ): [TypeLocalisation, string] {

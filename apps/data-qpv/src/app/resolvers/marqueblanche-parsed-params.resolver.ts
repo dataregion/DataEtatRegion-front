@@ -1,7 +1,7 @@
 import { inject } from '@angular/core';
 import { ActivatedRouteSnapshot, ResolveFn } from '@angular/router';
 import { PreFilters } from 'apps/data-qpv/src/app/models/search/prefilters.model';
-import { GeoHttpService, SearchByCodeParamsBuilder } from 'apps/common-lib/src/lib/services/geo-http.service';
+import { GeoHttpService } from 'apps/common-lib/src/lib/services/geo-http.service';
 import { ReferentielsHttpService } from 'apps/common-lib/src/lib/services/referentiels.service';
 import { GeoModel, TypeLocalisation } from 'apps/common-lib/src/public-api';
 import { JSONObject } from "apps/common-lib/src/lib/models/jsonobject";
@@ -17,7 +17,7 @@ import { FinancialQueryParam } from 'apps/data-qpv/src/app/models/marqueblanche/
 import { QueryParam } from 'apps/common-lib/src/lib/models/marqueblanche/query-params.enum';
 import { passing_errors } from 'apps/common-lib/src/lib/resolvers/marqueblanche/utils';
 import { to_types_categories_juridiques } from 'apps/common-lib/src/lib/resolvers/marqueblanche/type-etablissement.model';
-import { _extract_multiple_queryparams, _HandlerContext, _parse_annee, _xor, common_annee_min_max, common_localisation, filterGeo, niveauxLocalisationLegaux } from 'apps/common-lib/src/lib/resolvers/marqueblanche/common-handlers';
+import { _extract_multiple_queryparams, _HandlerContext, common_annee_min_max, common_localisation, filterGeo } from 'apps/common-lib/src/lib/resolvers/marqueblanche/common-handlers';
 
 export interface MarqueBlancheParsedParams extends Params {
   preFilters: PreFilters,
@@ -131,7 +131,7 @@ function localisation(
   if (!p_niveau_geo)
     return of(previous);
 
-  const [niveau_geo, code_geo] = common_localisation(previous, p_niveau_geo, p_code_geo)
+  const [niveau_geo, code_geo] = common_localisation(p_niveau_geo, p_code_geo)
 
 
   logger.debug(
@@ -176,7 +176,7 @@ function annees_min_max(
   const p_annee_min = route.queryParamMap.get(FinancialQueryParam.Annee_min);
   const p_annee_max = route.queryParamMap.get(FinancialQueryParam.Annee_max);
 
-  const pf_annees = common_annee_min_max(previous, logger, annee_courante, p_annee_min, p_annee_max)
+  const pf_annees = common_annee_min_max(logger, annee_courante, p_annee_min, p_annee_max)
 
   const _preFilters = {
     ...previous.preFilters,

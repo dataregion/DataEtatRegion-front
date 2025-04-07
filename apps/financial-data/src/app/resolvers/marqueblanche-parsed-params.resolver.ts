@@ -19,8 +19,6 @@ import {
   fullscreen,
   p_group_by as common_group_by,
   _extract_multiple_queryparams,
-  _parse_annee,
-  _xor,
   filterGeo,
   common_annee_min_max,
   common_localisation
@@ -279,7 +277,7 @@ function localisation(
   if (!p_niveau_geo)
     return of(previous);
 
-  const [niveau_geo, code_geo] = common_localisation(previous, p_niveau_geo, p_code_geo)
+  const [niveau_geo, code_geo] = common_localisation(p_niveau_geo, p_code_geo)
 
   logger.debug(
     `Application des paramètres ${FinancialQueryParam.Niveau_geo}: ${niveau_geo} et ${FinancialQueryParam.Code_geo}: ${code_geo}`
@@ -300,7 +298,7 @@ function annees_min_max(
   const p_annee_min = route.queryParamMap.get(FinancialQueryParam.Annee_min);
   const p_annee_max = route.queryParamMap.get(FinancialQueryParam.Annee_max);
 
-  const pf_annees = common_annee_min_max(previous, logger, annee_courante, p_annee_min, p_annee_max)
+  const pf_annees = common_annee_min_max(logger, annee_courante, p_annee_min, p_annee_max)
 
   const _preFilters = {
     ...previous.preFilters,
