@@ -17,8 +17,9 @@
           [referentiels]="filteredReferentiels" [themes]="themes" />
       </div>
 
-      <div class="field-localisation field-30-width">
-        <lib-localisation [(selectedNiveau)]="selectedNiveau" [(selectedLocalisation)]="selectedLocation" />
+      <div class="field-localisation field-30-width" >
+        <lib-localisation [textTooltip]="'Votre recherche affichera les résultats si le SIRET du bénéficiaire ou si la localisation interministérielle est géolocalisée dans la zone recherchée'"
+           [(selectedNiveau)]="selectedNiveau" [(selectedLocalisation)]="selectedLocation" />
       </div>
 
       <lib-select-multiple [(selected)]="selectedYear" [canFilter]="false"

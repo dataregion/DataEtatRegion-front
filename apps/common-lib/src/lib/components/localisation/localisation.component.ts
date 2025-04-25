@@ -48,9 +48,11 @@ export class LocalisationComponent implements OnInit {
   private _selectedLocalisation: GeoModel[] | null = null;
   private _subFilterGeo: Subscription | null = null;
 
-  public selectedNiveauString: string = ''
+  public selectedNiveauString: string = '';
 
   @Input() niveauxExcludeFilter: string[] | null = null;
+
+  @Input() textTooltip: string  = "";
 
   // Liste des niveaux de localisation
   public niveaux = Object.values(TypeLocalisation);

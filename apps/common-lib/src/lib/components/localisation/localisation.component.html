@@ -1,7 +1,9 @@
 <div class="localisation-wrapper-fields">
   <mat-form-field appearance="fill" class="select-single">
     <mat-label>Zone géographique</mat-label>
-    <mat-select [(ngModel)]="selectedNiveau" data-test-id="niveau-localisation">
+    <mat-select [(ngModel)]="selectedNiveau" data-test-id="niveau-localisation" 
+    [matTooltip]="textTooltip"
+    matTooltipPosition="above">
       <mat-option />
       <mat-option *ngFor="let niveau of niveaux" [value]="niveau">
         {{ niveau }}
@@ -19,7 +21,6 @@
     [renderLabelFunction]="renderBopLabel"
     data-test-id="localisation-select"
     class="select-multiple"
-    matTooltip="Filtrer sur une zone géographique" matTooltipPosition="above"
     icon="map"
     />
 </div>
