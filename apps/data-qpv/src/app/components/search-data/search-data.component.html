@@ -13,7 +13,8 @@
         <lib-select-multiple [canFilter]="false" [canSelectAll]="true" [placeholder]="'Année'" [options]="annees" [(selected)]="selectedAnnees" data-test-id="annees-form-field" class="select-multiple" icon="calendar_month"/>
       </div>
       <div class="field-localisation fr-col-5 wrapper-select">
-        <lib-localisation [(selectedNiveau)]="selectedNiveau" [(selectedLocalisation)]="selectedLocalisations" [niveauxExcludeFilter]="['CRTE', 'Arrondissement', 'QPV']"/>
+        <lib-localisation [textTooltip]="'Votre recherche affichera les résultats si le lieu d\'action est géolocalisé dans un QPV de la zone recherchée'"
+           [(selectedNiveau)]="selectedNiveau" [(selectedLocalisation)]="selectedLocalisations" [niveauxExcludeFilter]="['CRTE', 'Arrondissement', 'QPV']"/>
       </div>
       <div class="fr-col-3 wrapper-select">
         <lib-select-multiple  [canFilter]="true"
