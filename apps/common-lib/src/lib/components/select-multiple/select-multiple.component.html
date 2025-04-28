@@ -8,7 +8,7 @@
       <mat-label>Rechercher</mat-label>
       <input #champRecherche (keydown)="$event.stopPropagation()" (ngModelChange)="filter($event)" [(ngModel)]="filterInput"
              class="fr-input" matInput
-             type="text">
+             type="search">
     </mat-form-field>
 
     <div *ngIf="canSelectAll && (filteredOptions !== null && filteredOptions.length !== 0)"
@@ -27,8 +27,8 @@
 
   </mat-select>
 
-  <mat-icon *ngIf="icon" matSuffix>{{ icon }}</mat-icon>
-  <button (click)="emptySelected()" *ngIf="!icon && hasMultipleSelected()" mat-icon-button matSuffix>
+  <mat-icon *ngIf="icon && !hasMultipleSelected()" matSuffix>{{ icon }}</mat-icon>
+  <button (click)="emptySelected()" *ngIf="hasMultipleSelected()" mat-icon-button matSuffix>
     <mat-icon>close</mat-icon>
   </button>
 

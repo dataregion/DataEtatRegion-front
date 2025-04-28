@@ -42,6 +42,7 @@ export interface FinancialDataModel extends ExportableAsJson {
   // Les CP associées à la donnée financière.
   // XXX: Présente uniquement si requêtée
   financial_cp?: Optional<FinancialCp[]>
+  data_source: Optional<string>
 }
 
 export interface FinancialCp {

@@ -14,18 +14,17 @@ export const resolveFinancialData: ResolveFn<FinancialDataResolverModel> =
 
     return forkJoin([
       financialService.getAnnees(),
-      budgetService.getCentreCouts(null),
+      // budgetService.getCentreCouts(null),
       budgetService.getBop(),
-      budgetService.getBeneficiaires(null),
     ]).pipe(
-      map(([fetchedAnnees, fetchedCentreCouts, fetchedBops, fetchedBeneficiaires]) => {
+      map(([fetchedAnnees, /*fetchedCentreCouts, */fetchedBops]) => {
         const themes = Array.from(new Set(fetchedBops.map(bop => bop.label_theme))).sort();
         const result = {
           bops: fetchedBops,
           annees: fetchedAnnees,
-          financeurs: fetchedCentreCouts,
+          financeurs: [],
           thematiques: themes,
-          porteurs: fetchedBeneficiaires,
+          porteurs: [],
         } as FinancialData
         return {
           data: result

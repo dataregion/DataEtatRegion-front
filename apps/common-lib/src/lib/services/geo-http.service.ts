@@ -6,6 +6,7 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { DataPagination } from '../models/pagination/pagination.models';
+import { SessionService } from './session.service';
 
 /**
  * Injection token for the API path.
@@ -34,11 +35,29 @@ export class GeoHttpService {
   private readonly api_geo = inject(API_GEO_PATH);
   private readonly api_ref = inject(API_REF_PATH);
 
-  public search(type: TypeLocalisation, search_param: SearchParams): Observable<GeoModel[]> {
-    const base = this._baseUrl(type);
+  constructor(
+    private _sessionService: SessionService,
+  ) {}
+
+  public search(type: TypeLocalisation, search_param: SearchParams, filterRegion: boolean): Observable<GeoModel[]> {
+    if (filterRegion && type != TypeLocalisation.REGION) {
+      search_param["codeRegion"] = this._sessionService.region_code?.length == 3 && this._sessionService.region_code[0] == "0"
+        ? this._sessionService.region_code.substring(1)
+        : this._sessionService.region_code;
+    }
+
+    const api: [boolean, string] = this._baseUrl(type);
+    if (filterRegion && type != TypeLocalisation.REGION && api[0] == false) {
+      delete search_param["codeRegion"]
+      search_param["code_region"] = this._sessionService.region_code?.length == 3 && this._sessionService.region_code[0] == "0"
+        ? this._sessionService.region_code.substring(1)
+        : this._sessionService.region_code;
+    }
+
+
     const str_params = this._to_query_paramstr(search_param);
 
-    const url = `${base}?${str_params}`;
+    const url = `${api[1]}?${str_params}`;
 
     return this.http.get<GeoModel[]>(url).pipe(
       map((payload) => {
@@ -48,14 +67,16 @@ export class GeoHttpService {
     );
   }
 
-  private _baseUrl(type: TypeLocalisation): string {
+  private _baseUrl(type: TypeLocalisation): [boolean, string] {
     let base = '';
+    let apiGeo: boolean = true;
 
     switch (type) {
       case TypeLocalisation.CRTE:
       case TypeLocalisation.QPV:
       case TypeLocalisation.ARRONDISSEMENT:
         base = `${this.api_ref}`;
+        apiGeo = false;
         break;
       default:
         base = `${this.api_geo}`;
@@ -89,7 +110,7 @@ export class GeoHttpService {
         throw new Error(`Non géré: ${type}`);
     }
 
-    return `${this._remove_trailing_slash(base)}/${segment}`;
+    return [apiGeo, `${this._remove_trailing_slash(base)}/${segment}`];
   }
 
   private _remove_trailing_slash(s: string) {
@@ -116,25 +137,25 @@ export class GeoHttpService {
     if (type === TypeLocalisation.ARRONDISSEMENT) {
       const payload = geos as unknown as DataPagination<GeoArrondissementModel>;
 
-      return payload.items.map((arr) => {
+      return payload ? payload.items.map((arr) => {
         return {
           nom: arr.label,
           code: arr.code,
           type: TypeLocalisation.ARRONDISSEMENT
         } as GeoModel;
-      });
+      }) : [];
     }
 
     if (type === TypeLocalisation.QPV) {
       const payload = geos as unknown as DataPagination<QpvModel>;
 
-      return payload.items.map((arr) => {
+      return payload ? payload.items.map((arr) => {
         return {
           nom: arr.label,
           code: arr.code,
           type: TypeLocalisation.QPV
         } as GeoModel;
-      });
+      }) : [];
     }
 
     return geos.map((geo) => {

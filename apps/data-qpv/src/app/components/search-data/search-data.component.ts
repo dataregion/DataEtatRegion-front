@@ -30,6 +30,8 @@ import { JSONObject } from "apps/common-lib/src/lib/models/jsonobject";
 import {
   AlertService,
   GeoModel,
+  ReferentielsHttpService,
+  SessionService,
   TypeLocalisation,
 } from 'apps/common-lib/src/public-api';
 import { BudgetService } from 'apps/data-qpv/src/app/services/budget.service';
@@ -161,7 +163,7 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
     return this.filteredFinanceurs ?? [];
   }
   public renderFinanceurCheckbox = (financeur: CentreCouts): string => {
-    return financeur.label ?? financeur.code
+    return financeur.label ? financeur.code + ' - ' + financeur.label : financeur.code
   }
 
   /**
@@ -200,7 +202,7 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
     return this.filteredPorteurs ?? [];
   }
   public renderPorteurCheckbox = (porteur: Beneficiaire): string => {
-    return porteur.siret
+    return porteur.siret + ' - ' + porteur.denomination
   }
 
 
@@ -234,6 +236,10 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
     this.searchResultsEventEmitter.emit(this._searchResults)
   }
   @Output() searchResultsEventEmitter = new EventEmitter<FinancialDataModel[] | null>();
+
+  public wordingNiveaux: Map<TypeLocalisation, string> = new Map<TypeLocalisation, string>([
+    [TypeLocalisation.EPCI, "Contrat de ville"]
+  ])
 
   /**
    * Indique si la recherche a été effectué
@@ -294,7 +300,8 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
     private _alertService: AlertService,
     private _budgetService: BudgetService,
     private _logger: NGXLogger,
-    private _geo: GeoLocalisationComponentService
+    private _geo: GeoLocalisationComponentService,
+    private _refService: ReferentielsHttpService,
   ) {
     // Formulaire avc champs déclarés dans l'ordre
     this.searchForm = new FormGroup<SearchForm>({
@@ -324,7 +331,7 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
       if (this._subFilterGeo)
         this._subFilterGeo.unsubscribe();
 
-      this._subFilterGeo = this._geo.filterQPV2024(term)
+      this._subFilterGeo = this._geo.filterQPV2024(term, true)
         .pipe(takeUntilDestroyed(this._destroyRef))
         .subscribe((response: GeoModel[]) => {
           this.filteredQPV = response;
@@ -351,6 +358,10 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
       this._subFilterGeo = this._budgetService.getCentreCouts(term)
         .pipe(takeUntilDestroyed(this._destroyRef))
         .subscribe((response: CentreCouts[]) => {
+          if (term === '') {
+            this.filteredPorteurs = []
+            return
+          }
           this.filteredFinanceurs = response;
           this.filteredFinanceurs = this.selectedFinanceurs != null ?
             [
@@ -365,14 +376,18 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
       debounceTime(300),
       takeUntilDestroyed(this._destroyRef)
     ).subscribe(() => {
-      const term = this.inputPorteurs !== '' ? this.inputPorteurs : null;
+      const term = this.inputPorteurs !== '' ? this.inputPorteurs : '';
 
       if (this._subFilterGeo)
         this._subFilterGeo.unsubscribe();
 
-      this._subFilterGeo = this._budgetService.getBeneficiaires(term)
+      this._subFilterGeo = this._refService.filterRefSiret$(term)
         .pipe(takeUntilDestroyed(this._destroyRef))
         .subscribe((response: Beneficiaire[]) => {
+          if (term === '') {
+            this.filteredPorteurs = []
+            return
+          }
           this.filteredPorteurs = response;
           this.filteredPorteurs = this.filteredPorteurs != null ?
             [
@@ -426,7 +441,7 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this._geo
-      .filterQPV2024("")
+      .filterQPV2024("", true)
       .pipe(takeUntilDestroyed(this._destroyRef))
       .subscribe((response) => {
         this.qpvs = response as GeoModel[]
@@ -533,7 +548,6 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
   public reset(): void {
     this.searchFinish = false;
     this.searchForm.reset();
-    this.doSearch();
   }
 
 

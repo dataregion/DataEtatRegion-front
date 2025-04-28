@@ -115,7 +115,7 @@ export function filterGeo(api_geo: GeoHttpService, code_geo: string, niveau_geo:
     .withDefaultLimit(1)
     .search(code_geo, niveau_geo);
 
-  return api_geo.search(niveau_geo, search_params);
+  return api_geo.search(niveau_geo, search_params, false);
 }
 
 export function common_annee_min_max(

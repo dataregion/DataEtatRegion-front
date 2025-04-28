@@ -192,19 +192,7 @@ export class BudgetService {
     return this.http.get<DataPagination<CentreCouts>>(`${this._apiRef}/centre-couts${params}`)
       .pipe(
         map(response => {
-          return response.items as CentreCouts[]
-        })
-    );
-  }
-
-  public getBeneficiaires(query: string | null): Observable<Beneficiaire[]> {
-    let params = '';
-    if (query)
-      params += '?query=' + query
-    return this.http.get<DataPagination<Beneficiaire>>(`${this._apiRef}/beneficiaire${params}`)
-      .pipe(
-        map(response => {
-          return response.items as Beneficiaire[]
+          return response != null ? response.items as CentreCouts[] : []
         })
     );
   }

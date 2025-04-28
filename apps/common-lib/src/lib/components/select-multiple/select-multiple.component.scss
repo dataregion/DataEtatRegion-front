@@ -56,3 +56,10 @@
   padding-bottom: 0px;
   overflow-x: hidden;
 }
+
+input[type=search]::-webkit-search-cancel-button {
+  margin-bottom: 10px;
+}
+input[type=search]::-webkit-search-cancel-button:hover {
+  cursor: pointer;
+}

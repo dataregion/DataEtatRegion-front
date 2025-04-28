@@ -56,6 +56,8 @@ export class LocalisationComponent implements OnInit {
 
   // Liste des niveaux de localisation
   public niveaux = Object.values(TypeLocalisation);
+  @Input() wordingNiveaux: Map<TypeLocalisation, string> | null = null;
+  @Input() filterRegion: boolean = false;
 
   // Liste des Geomodel
   public geomodels: GeoModel[] | null = null;
@@ -73,7 +75,7 @@ export class LocalisationComponent implements OnInit {
         if (this._subFilterGeo) this._subFilterGeo.unsubscribe();
 
         this._subFilterGeo = this._geo
-          .filterGeo(term, this.selectedNiveau)
+          .filterGeo(term, this.selectedNiveau, this.filterRegion)
           .pipe(takeUntilDestroyed(this._destroyRef))
           .subscribe((response: GeoModel[]) => {
             this.filteredGeomodels = response;
@@ -111,14 +113,20 @@ export class LocalisationComponent implements OnInit {
   @Input()
   set selectedNiveau(data: TypeLocalisation | null) {
     this._selectedNiveau = data ?? null;
-    this.selectedNiveauString = (this._selectedNiveau as string) ?? '';
+
+    this.selectedNiveauString = '';
+    if (this._selectedNiveau) {
+      this.selectedNiveauString = this.wordingNiveaux && this.wordingNiveaux.has(this._selectedNiveau)
+        ? this.wordingNiveaux.get(this._selectedNiveau) as string
+        : this.selectedNiveau as string
+    }
 
     // Mise en place des options du select selon le niveau géographique sélectionné
     // On ne rentre pas si selectedLocalisation est sélectionné (compatibilité marque blanche)
     if (this._selectedNiveau != null && this._selectedLocalisation == null) {
       if (this._subFilterGeo) this._subFilterGeo.unsubscribe();
       this._subFilterGeo = this._geo
-        .filterGeo(null, this._selectedNiveau)
+        .filterGeo(null, this._selectedNiveau, this.filterRegion)
         .pipe(takeUntilDestroyed(this._destroyRef))
         .subscribe((response) => {
           this.geomodels = response;

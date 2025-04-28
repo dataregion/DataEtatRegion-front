@@ -56,15 +56,6 @@ export class BudgetService {
     );
   }
 
-  public filterRefSiret$(nomOuSiret: string): Observable<RefSiret[]> {
-    const req$ = forkJoin({
-      byCode: this._filterByCode(nomOuSiret),
-      byDenomination: this._filterByDenomination(nomOuSiret)
-    }).pipe(map((full) => [...full.byCode, ...full.byDenomination]));
-
-    return req$;
-  }
-
   public allTags$(): Observable<Tag[]> {
     const url = `${this._apiRef}/tags`;
 
@@ -118,26 +109,5 @@ export class BudgetService {
     const data = {data: data_to_export} as GristDataModel;
     return this.budgetTogrist.postBugdetToGrist(data);
   }
-
-  private _filterByCode(nomOuSiret: string): Observable<RefSiret[]> {
-    return this._filter_by('query', nomOuSiret);
-  }
-
-  private _filterByDenomination(nomOuSiret: string): Observable<RefSiret[]> {
-    return this._filter_by('denomination', nomOuSiret);
-  }
-
-  private _filter_by(nomChamp: string, term: string) {
-    const encodedNomOuSiret = encodeURIComponent(term);
-    const params = `limit=10&${nomChamp}=${encodedNomOuSiret}`;
-    const url = `${this._apiRef}/beneficiaire?${params}`;
-    return this.http.get<DataPagination<RefSiret>>(url).pipe(
-      map((response) => {
-        if (response == null)
-          // XXX: no content
-          return [];
-        return response.items;
-      })
-    );
-  }
+  
 }

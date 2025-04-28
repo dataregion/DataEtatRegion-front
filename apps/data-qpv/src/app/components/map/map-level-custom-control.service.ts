@@ -19,7 +19,6 @@ export class MapLevelCustomControlService {
 
  
 export enum MapLevel {
-  region = 'Région',
   departement = 'Département',
   epci = 'Epci',
   commune = 'Commune',
@@ -30,7 +29,6 @@ export class LevelControl extends Control {
 
   private currentMap: Map | undefined;
   private zoomByLevel: { [key: string]: number } = {
-    'region': 7,
     'departement': 9,
     'epci': 11,
     'commune': 13,
@@ -111,9 +109,7 @@ export class LevelControl extends Control {
 
     newZoomLevel = Math.min(newZoomLevel, 16);
 
-    if(newZoomLevel && newZoomLevel < (this.zoomByLevel['departement']) - 1) {
-      this.selectMapLevel.value = 'region';
-    } else if(newZoomLevel && newZoomLevel < (this.zoomByLevel['epci'] - 1)) {
+    if(newZoomLevel && newZoomLevel < (this.zoomByLevel['epci'] - 1)) {
       this.selectMapLevel.value = 'departement';
     } else if(newZoomLevel && newZoomLevel < (this.zoomByLevel['commune'] - 1 )) {
       this.selectMapLevel.value = 'epci';

@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 
-import { Observable } from 'rxjs';
+import { forkJoin, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { API_REF_PATH } from '../../public-api';
 
@@ -9,6 +9,7 @@ import { ReferentielProgrammation } from '@models/refs/referentiel_programmation
 import { BopModel } from '@models/refs/bop.models';
 import { DataPagination } from '../models/pagination/pagination.models';
 import { CentreCouts, DomaineFonctionnel } from '@models/financial/common.models';
+import { RefSiret } from '../models/refs/RefSiret';
 
 @Injectable({
   providedIn: 'root'
@@ -63,4 +64,38 @@ export class ReferentielsHttpService {
     if (s.endsWith('/')) return s.slice(0, -1);
     return s;
   }
+
+
+  
+  public filterRefSiret$(nomOuSiret: string): Observable<RefSiret[]> {
+    const req$ = forkJoin({
+      byCode: this._filterByCode(nomOuSiret),
+      byDenomination: this._filterByDenomination(nomOuSiret)
+    }).pipe(map((full) => [...full.byCode, ...full.byDenomination]));
+
+    return req$;
+  }
+  
+  private _filterByCode(nomOuSiret: string): Observable<RefSiret[]> {
+    return this._filter_by('query', nomOuSiret);
+  }
+
+  private _filterByDenomination(nomOuSiret: string): Observable<RefSiret[]> {
+    return this._filter_by('denomination', nomOuSiret);
+  }
+
+  private _filter_by(nomChamp: string, term: string) {
+    const encodedNomOuSiret = encodeURIComponent(term);
+    const params = `limit=10&${nomChamp}=${encodedNomOuSiret}`;
+    const url = `${this.api_ref}/beneficiaire?${params}`;
+    return this.http.get<DataPagination<RefSiret>>(url).pipe(
+      map((response) => {
+        if (response == null)
+          // XXX: no content
+          return [];
+        return response.items;
+      })
+    );
+  }
+
 }

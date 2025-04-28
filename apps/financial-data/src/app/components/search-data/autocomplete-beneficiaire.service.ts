@@ -5,16 +5,20 @@ import { catchError, map } from 'rxjs/operators';
 import { BeneficiaireFieldData } from './beneficiaire-field-data.model';
 import { Beneficiaire } from '@models/search/beneficiaire.model';
 import { RefSiret } from 'apps/common-lib/src/lib/models/refs/RefSiret';
+import { ReferentielsHttpService } from 'apps/common-lib/src/lib/services/referentiels.service';
 
 @Injectable()
 export class AutocompleteBeneficiaireService {
-  constructor(private _budgetService: BudgetService) {}
+  constructor(
+    private _refService: ReferentielsHttpService,
+    private _budgetService: BudgetService
+  ) {}
 
   autocomplete$(input: string): Observable<BeneficiaireFieldData[]> {
     let sanitzed_input = input
     if (input && !Number.isNaN(parseInt(input)))
       sanitzed_input = input.replace(/\s+/g, "")
-    const autocompletion$ = this._budgetService.filterRefSiret$(sanitzed_input).pipe(
+    const autocompletion$ = this._refService.filterRefSiret$(sanitzed_input).pipe(
       map((response: Beneficiaire[]) => {
         return response.map((ref) => {
           return this._map_beneficiaire_to_fieldData(ref);

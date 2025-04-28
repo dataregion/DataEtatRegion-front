@@ -240,18 +240,18 @@ export class ReconciliationDemarcheComponent implements OnInit {
   };
 
   getCommunes = (input: string): Observable<GeoModel[]> => {
-    return this._geo.filterGeo(input, TypeLocalisation.COMMUNE);
+    return this._geo.filterGeo(input, TypeLocalisation.COMMUNE, false);
   };
 
   getEpcis = (input: string): Observable<GeoModel[]> => {
-    return this._geo.filterGeo(input, TypeLocalisation.EPCI);
+    return this._geo.filterGeo(input, TypeLocalisation.EPCI, false);
   };
 
   getDepartements = (input: string): Observable<GeoModel[]> => {
-    return this._geo.filterGeo(input, TypeLocalisation.DEPARTEMENT);
+    return this._geo.filterGeo(input, TypeLocalisation.DEPARTEMENT, false);
   };
 
   getRegions = (input: string): Observable<GeoModel[]> => {
-    return this._geo.filterGeo(input, TypeLocalisation.REGION);
+    return this._geo.filterGeo(input, TypeLocalisation.REGION, false);
   };
 }
