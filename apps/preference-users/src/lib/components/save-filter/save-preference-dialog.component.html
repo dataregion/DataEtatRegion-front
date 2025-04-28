@@ -12,15 +12,17 @@
   <mat-form-field appearance="fill" class="w-full">
     <mat-label>Nom</mat-label>
     <input [(ngModel)]="preference.name" matInput required type="text">
-    <mat-error *ngIf="preference.name === null ||preference.name === undefined">
+    @if (preference.name === null || preference.name === undefined) {
+    <mat-error >
       Le nom est obligatoire
     </mat-error>
+    }
   </mat-form-field>
 
   <mat-checkbox [(ngModel)]="shared">Partager la recherche</mat-checkbox>
 
-
-  <mat-form-field *ngIf="shared" appearance="fill" class="w-full">
+ @if(shared) {
+  <mat-form-field appearance="fill" class="w-full">
     <mat-label>Saisir les courriels des utilisateurs</mat-label>
     <mat-chip-grid #chipGrid aria-label="Sélection d'utilisateurs">
       <mat-chip-row (removed)="removeUserSelected(user)" *ngFor="let user of preference.shares">
@@ -39,6 +41,7 @@
       </mat-option>
     </mat-autocomplete>
   </mat-form-field>
+  }
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">

@@ -48,10 +48,14 @@
     </div>
   </ng-container>
 
-  <div *ngIf="(groupingColumns.length + 1) < allColumns.length">
+  @if ((groupingColumns.length + 1) < allColumns.length) {
+  <div>
     <div>
-      <p *ngIf="groupingColumns.length < 4" class="margin-label">Ajouter une colonne de groupement supplémentaire :</p>
-      <p *ngIf="groupingColumns.length >= 4" class="margin-label">Vous ne pouvez pas sélectionner plus de 4 colonnes de groupement</p>
+      @if (groupingColumns.length < 4) {
+        <p class="margin-label">Ajouter une colonne de groupement supplémentaire :</p>
+      } @else {
+        <p class="margin-label">Vous ne pouvez pas sélectionner plus de 4 colonnes de groupement</p>
+      }
     </div>
     <mat-form-field appearance="fill" style="width:50%">
       <mat-label>Grouper les lignes par</mat-label>
@@ -60,6 +64,7 @@
       </mat-select>
     </mat-form-field>
   </div>
+  }
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">
