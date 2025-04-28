@@ -4,34 +4,41 @@
 
     <mat-select-trigger>{{ renderLabel() }}</mat-select-trigger>
 
-    <mat-form-field *ngIf="canFilter" appearance="fill" class="field-100-width filter-input">
-      <mat-label>Rechercher</mat-label>
-      <input #champRecherche (keydown)="$event.stopPropagation()" (ngModelChange)="filter($event)" [(ngModel)]="filterInput"
-             class="fr-input" matInput
-             type="search">
-    </mat-form-field>
+    @if (canFilter) {
+      <mat-form-field appearance="fill" class="field-100-width filter-input">
+        <mat-label>Rechercher</mat-label>
+        <input #champRecherche (keydown)="$event.stopPropagation()" (ngModelChange)="filter($event)" [(ngModel)]="filterInput"
+               class="fr-input" matInput
+               type="search">
+      </mat-form-field>
+    }
 
-    <div *ngIf="canSelectAll && (filteredOptions !== null && filteredOptions.length !== 0)"
-         class="btn-select-all-wrapper">
-      <button (click)="toggleAll()" [color]="allSelected() ? 'basic' : 'primary'" extended mat-stroked-button
-              type="button">
-        <mat-icon>{{ allSelected() ? 'close' : 'check_circle_outline' }}</mat-icon>
-        {{ 'Tout ' + (allSelected() ? 'déselectionner' : 'sélectionner') }}
-      </button>
-    </div>
+    @if (canSelectAll && (filteredOptions !== null && filteredOptions.length !== 0)) {
+      <div class="btn-select-all-wrapper">
+        <button (click)="toggleAll()" [color]="allSelected() ? 'basic' : 'primary'" extended mat-stroked-button
+                type="button">
+          <mat-icon>{{ allSelected() ? 'close' : 'check_circle_outline' }}</mat-icon>
+          {{ 'Tout ' + (allSelected() ? 'déselectionner' : 'sélectionner') }}
+        </button>
+      </div>
+    }
 
-    <mat-option *ngIf="canFilter && (filteredOptions === null || filteredOptions?.length === 0)" class="no-result"
-                disabled>Aucun résultat
-    </mat-option>
+    @if (canFilter && (filteredOptions === null || filteredOptions.length === 0)) {
+      <mat-option class="no-result" disabled>Aucun résultat</mat-option>
+    }
     <mat-option *ngFor="let opt of filteredOptions" [value]="opt">{{ render(opt) }}</mat-option>
 
   </mat-select>
 
-  <mat-icon *ngIf="icon && !hasMultipleSelected()" matSuffix>{{ icon }}</mat-icon>
-  <button (click)="emptySelected()" *ngIf="hasMultipleSelected()" mat-icon-button matSuffix>
-    <mat-icon>close</mat-icon>
-  </button>
+  @if (icon && !hasMultipleSelected()) {
+    <mat-icon matSuffix>{{ icon }}</mat-icon>
+  }
+  @if (hasMultipleSelected()) {
+    <button (click)="emptySelected()" mat-icon-button matSuffix><mat-icon>close</mat-icon></button>
+  }
 
-  <mat-error *ngIf="error">{{ error }}</mat-error>
+  @if (error) {
+    <mat-error>{{ error }}</mat-error>
+  }
 
 </mat-form-field>

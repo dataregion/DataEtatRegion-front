@@ -14,7 +14,6 @@ export const resolveFinancialData: ResolveFn<FinancialDataResolverModel> =
 
     return forkJoin([
       financialService.getAnnees(),
-      // budgetService.getCentreCouts(null),
       budgetService.getBop(),
     ]).pipe(
       map(([fetchedAnnees, /*fetchedCentreCouts, */fetchedBops]) => {
