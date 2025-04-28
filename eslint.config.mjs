@@ -70,6 +70,15 @@ export default [
         },
 
         rules: {
+            "@typescript-eslint/naming-convention": [
+                "warn",
+                {
+                    "selector": "method",
+                    "format": ["camelCase"],
+                    "leadingUnderscore": "allow"
+                  }
+
+            ],
             "@angular-eslint/prefer-standalone": "off",
 
             "no-irregular-whitespace": ["error", {

@@ -14,21 +14,15 @@
 </div>
 
 <mat-dialog-content class="dialog-content" data-test-id="group-choice-dialog">
-
-  <ng-container [ngSwitch]="groupingColumns.length">
-    <ng-container *ngSwitchCase="0">
-      <p>Groupement désactivé, sélectionner des colonnes ci-dessous pour l'activer.</p>
-    </ng-container>
-
-    <div *ngSwitchDefault>
+  @if (groupingColumns.length === 0) {
+    <p>Groupement désactivé, sélectionner des colonnes ci-dessous pour l'activer.</p>
+  } @else {
+    <div>
       <p>Cliquer-déposer les colonnes pour réordonner les groupes :</p>
       <div>
         <div (cdkDropListDropped)="moveGroup($event)" cdkDropList class="column-list">
-          <div
-            *ngFor="let col of groupingColumns; let i = index"
-            cdkDrag
-            class="column-box"
-          >
+          @for (col of groupingColumns; let i = $index; track $index) {
+          <div  cdkDrag class="column-box">
             <mat-icon aria-hidden="true" fontIcon="drag_handle" />
             <div>{{ col.label }}</div>
             <div>
@@ -43,10 +37,11 @@
               </button>
             </div>
           </div>
+        }
         </div>
       </div>
     </div>
-  </ng-container>
+  }
 
   @if ((groupingColumns.length + 1) < allColumns.length) {
   <div>
@@ -60,7 +55,9 @@
     <mat-form-field appearance="fill" style="width:50%">
       <mat-label>Grouper les lignes par</mat-label>
       <mat-select (selectionChange)="addGroup($event)" [disabled]="groupingColumns.length >= 4">
-        <mat-option *ngFor="let column of remainingColumns" [value]="column">{{ column.label }}</mat-option>
+        @for(column of remainingColumns; track column) {
+          <mat-option  [value]="column">{{ column.label }}</mat-option>
+        }
       </mat-select>
     </mat-form-field>
   </div>

@@ -75,7 +75,7 @@ export class HomeComponent implements OnInit {
     return this._gridFullscreen.fullscreen;
   }
 
-  toggle_grid_fullscreen() {
+  toggleGridFullscreen() {
     this._gridFullscreen.fullscreen = !this.grid_fullscreen;
   }
 

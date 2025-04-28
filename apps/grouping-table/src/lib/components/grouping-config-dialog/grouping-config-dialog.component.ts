@@ -5,7 +5,6 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSelectChange, MatSelectModule } from '@angular/material/select';
-import { CommonModule } from '@angular/common';
 import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
 
 export type GroupingConfigDialogData = {
@@ -21,7 +20,6 @@ export type GroupingConfigDialogData = {
     templateUrl: './grouping-config-dialog.component.html',
     styleUrls: ['./grouping-config-dialog.component.scss'],
     imports: [
-        CommonModule,
         MatDialogModule,
         MatIconModule,
         MatButtonModule,

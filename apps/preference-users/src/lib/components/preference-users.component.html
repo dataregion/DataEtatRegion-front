@@ -1,6 +1,7 @@
 <mat-accordion>
 
-  <mat-expansion-panel *ngIf="dataSource.create_by_user.length > 0" [expanded]="true">
+  @if (dataSource.create_by_user.length > 0) {
+  <mat-expansion-panel [expanded]="true">
     <mat-expansion-panel-header>
       <mat-panel-title>
         Mes Filtres
@@ -81,6 +82,7 @@
       <tr *matRowDef="let row; columns: displayedColumns;" mat-row></tr>
     </table>
   </mat-expansion-panel>
+  }
 
 
   <mat-expansion-panel *ngIf="dataSource.shared_with_user.length > 0">

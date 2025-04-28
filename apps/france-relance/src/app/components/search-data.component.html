@@ -18,17 +18,22 @@
           </mat-option>
           <mat-select-trigger>
             {{ axePlanDeRelanceControls.value && axePlanDeRelanceControls.value.length ? axePlanDeRelanceControls.value[0].label : '' }}
-            <span *ngIf="axePlanDeRelanceControls.value?.length > 1" class="example-additional-selection">
-              (+{{ axePlanDeRelanceControls.value.length - 1 }} {{
-                axePlanDeRelanceControls.value?.length === 2 ? 'autre' :
-                  'autres'
-              }})
-            </span>
+            @if(axePlanDeRelanceControls.value?.length > 1) {
+              <span class="example-additional-selection">
+                (+{{ axePlanDeRelanceControls.value.length - 1 }} {{
+                  axePlanDeRelanceControls.value?.length === 2 ? 'autre' :
+                    'autres'
+                }})
+              </span>
+            }
           </mat-select-trigger>
         </mat-select>
-        <button (click)="cancelAxe()" *ngIf="axePlanDeRelanceControls.value !== null" mat-icon-button matSuffix>
-          <mat-icon>close</mat-icon>
-        </button>
+        @if(axePlanDeRelanceControls.value !== null) {
+          <button (click)="cancelAxe()" mat-icon-button matSuffix>
+            <mat-icon>close</mat-icon>
+          </button>
+        }
+        
       </mat-form-field>
     </div>
 
