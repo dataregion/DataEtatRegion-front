@@ -1,5 +1,4 @@
 import { Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
-import { CommonModule, NgFor } from '@angular/common';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
@@ -12,8 +11,7 @@ import {
 import { MatIconModule } from '@angular/material/icon';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 export interface SelectedData {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  item: any;
+  item: string;
 }
 
 /**
@@ -24,15 +22,13 @@ export interface SelectedData {
     templateUrl: './advanced-chips-multiselect.component.html',
     styleUrls: ['./advanced-chips-multiselect.component.css'],
     imports: [
-        CommonModule,
         MatIconModule,
         MatChipsModule,
         MatAutocompleteModule,
         MatFormFieldModule,
         MatSelectModule,
         FormsModule,
-        ReactiveFormsModule,
-        NgFor
+        ReactiveFormsModule
     ]
 })
 export class AdvancedChipsMultiselectComponent {
@@ -78,21 +74,22 @@ export class AdvancedChipsMultiselectComponent {
     else return 0;
   }
 
-  public get options_minus_selected(): SelectedData[] | undefined {
-    const selected = this.selectedData;
-    return this.options?.filter(
-      (option) => !selected.some((selection) => selection.item === option.item)
-    );
+  public get options_minus_selected(): SelectedData[] {
+    if (!this.options || !this.selectedData) {
+      return [];
+    }
+    const selectedItems = new Set(this.selectedData.map(s => s.item));
+    return this.options.filter(option => !selectedItems.has(option.item));
   }
 
   // # region: event de l'input
-  onMatChipInputEvent(_event: MatChipInputEvent) {
-    if (this.matAutoComplete.isOpen) return;
-
-    // XXX: desactivation de l'input "libre"
-    // this.add($event.value)
-
-    // $event.chipInput!.clear();
+  onMatChipInputEvent(event: MatChipInputEvent) {
+    if (this.matAutoComplete.isOpen && this.options_minus_selected.length > 0) {
+      return;
+    }
+  
+    // Nettoyage du champ input pour ne pas conserver de texte libre
+    event.chipInput?.clear();
   }
 
   add(value: SelectedData) {

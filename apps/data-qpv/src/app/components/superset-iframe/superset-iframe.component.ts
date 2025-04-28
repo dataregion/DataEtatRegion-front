@@ -85,7 +85,6 @@ export class SupersetIframeComponent implements OnInit, OnChanges {
 
   public updateSanitizedUrl():  void {
     this.sanitizedUrl =  this._domSanitizer.bypassSecurityTrustResourceUrl(`${this._supersetBaseDashboardUrl}/${this.getDashboardSlug()}/${this.getCurrentDashboardArgsString()}`);
-    console.log(this.sanitizedUrl)
   }
 
 }

@@ -4,8 +4,8 @@
 
   <mat-chip-grid #chipGrid [ariaLabel]="'Valeurs selectionnées pour ' + label">
 
+    @for (s of visible_selectedData; track $index) {
     <mat-chip-row (removed)="remove(s)"
-                  *ngFor="let s of visible_selectedData"
                   [aria-description]="s.item"
                   [editable]="false"
     >
@@ -15,10 +15,14 @@
       </button>
 
     </mat-chip-row>
+    }
 
-    <mat-chip-row *ngIf="invisible_count > 0">
-      <span>+ {{ invisible_count }}</span>
-    </mat-chip-row>
+    @if (invisible_count > 0) {
+      <mat-chip-row >
+        <span>+ {{ invisible_count }}</span>
+      </mat-chip-row>
+    }
+  
 
     <input
       #selectionInput
@@ -35,9 +39,15 @@
   </mat-chip-grid>
 
   <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
-    <mat-option *ngFor="let option of options_minus_selected" [value]="option">
+    @for(option of options_minus_selected; track $index) {
+    <mat-option  [value]="option">
       {{ option.item }}
     </mat-option>
+    } @empty {
+      <mat-option class="no-result"
+      disabled>Aucun résultat
+      </mat-option>
+    }
+   
   </mat-autocomplete>
-
 </mat-form-field>
