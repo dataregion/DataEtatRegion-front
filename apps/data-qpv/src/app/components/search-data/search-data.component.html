@@ -24,7 +24,9 @@
           [textTooltip]="'Votre recherche affichera les résultats si le lieu d\'action est géolocalisé dans un QPV de la zone recherchée'"
           [(selectedNiveau)]="selectedNiveau"
           [(selectedLocalisation)]="selectedLocalisations"
-          [niveauxExcludeFilter]="['Région', 'CRTE', 'Arrondissement', 'QPV']"/>
+          [niveauxExcludeFilter]="['Région', 'CRTE', 'Arrondissement', 'QPV']"
+          [filterRegion]="true"
+          [wordingNiveaux]="wordingNiveaux"/>
       </div>
       <div class="fr-col-3 wrapper-select">
         <lib-select-multiple  [canFilter]="true"
