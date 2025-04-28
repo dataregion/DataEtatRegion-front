@@ -31,7 +31,6 @@ import {
   AlertService,
   GeoModel,
   ReferentielsHttpService,
-  SessionService,
   TypeLocalisation,
 } from 'apps/common-lib/src/public-api';
 import { BudgetService } from 'apps/data-qpv/src/app/services/budget.service';
