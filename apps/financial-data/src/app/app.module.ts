@@ -43,6 +43,7 @@ import { budgetApiModule, budgetConfiguration } from 'apps/clients/budget';
 import { BudgetDataHttpService } from '@services/http/budget-lines-http.service';
 import { MultiregionsService } from '@services/multiregions.service';
 import { MatomoModule, MatomoRouteDataInterceptor, MatomoRouterModule } from 'ngx-matomo-client';
+import { PocComponent } from './pages/poc/poc.component';
 
 export function apiExternesConfigFactory(settingsService: SettingsService): aeConfiguration {
   const params: aeConfigurationParameters = {
@@ -65,7 +66,13 @@ export function apiBudgetConfigFactory(settingsService: SettingsService): aeConf
 registerLocaleData(localeFr);
 
 @NgModule({
-  declarations: [AppComponent, HomeComponent, PreferenceComponent, SearchDataComponent],
+  declarations: [
+    AppComponent,
+    HomeComponent,
+    PreferenceComponent,
+    SearchDataComponent,
+    PocComponent,
+  ],
   bootstrap: [AppComponent],
   imports: [
     BrowserModule,

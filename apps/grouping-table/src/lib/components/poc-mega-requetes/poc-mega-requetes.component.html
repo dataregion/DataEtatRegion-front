@@ -1,0 +1,42 @@
+<div class="fr-container">
+  <div class="fr-grid-row">
+    <div class="fr-col-12">
+      <nav role="navigation" class="fr-breadcrumb" aria-label="vous êtes ici :">
+        <button class="fr-breadcrumb__button" aria-expanded="false" aria-controls="breadcrumb-1">Voir le fil d’Ariane</button>
+        <div class="fr-collapse" id="breadcrumb-1">
+            <ol class="fr-breadcrumb__list">
+              @for (group of groupsPassed; track group.column) {
+                <li>
+                    <span style="font-size:16px;">{{group.column?.label}} : {{group.columnValue}}</span>
+                    <button (click)="goBackToGroupBefore(group)"><span class="fr-icon-error-fill" aria-hidden="true" style="color:#ff0000"></span>
+                    </button>
+                </li>
+              }
+            </ol>
+        </div>
+      </nav>
+      
+      <ul class="fr-badge-group">
+        <li>
+            <p class="fr-badge fr-badge--info">Total : {{currentGroup.count}}</p>
+        </li>
+        <li>
+            <p class="fr-badge fr-badge--success">Montant engagé : {{currentGroup | financialGroupAggregate: columnsMetaData.getByColumnName("montant_ae")}}</p>
+        </li>
+        <li>
+            <p class="fr-badge fr-badge--success">Montant payé : {{currentGroup | financialGroupAggregate: columnsMetaData.getByColumnName("montant_cp")}}</p>
+        </li>
+      </ul>
+
+      @if (consultingGrouping) {
+        <poc-grouping-data 
+          [(currentGroup)]="currentGroup"
+          (currentGroupChange)="checkForLastGroup()"
+          [columnsMetaData]="columnsMetaData" />
+      } @else {
+        <poc-data 
+        [currentGroup]="currentGroup" />
+      }
+    </div>
+  </div>
+</div>

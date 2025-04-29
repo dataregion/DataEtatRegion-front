@@ -1,0 +1,70 @@
+<div class="fr-table fr-table--bordered" id="table-bordered-component">
+  <div class="fr-table__wrapper">
+      <div class="fr-table__container">
+          <div class="fr-table__content">
+              <table id="table-bordered">
+                  <thead>
+                      <tr>
+                        @for (col of context.displayedColumns; track col) {
+                          <th scope="col">{{col.label}}</th>
+                        }
+                      </tr>
+                  </thead>
+                  <tbody>
+                    @for (row of getRows(); track row) {
+                      <tr data-row-key="1">
+                        @for (col of context.displayedColumns; track col) {
+                          <td>{{ col.renderFn ? col.renderFn(row, col) : row[col.name] }}</td>
+                        }
+                      </tr>
+                    }
+                  </tbody>
+              </table>
+          </div>
+      </div>
+  </div>
+</div>
+<div class="fr-m-1w" style="text-align:center">
+  <nav role="navigation" class="fr-pagination" aria-label="Pagination">
+      <ul class="fr-pagination__list">
+          <li>
+              <a class="fr-pagination__link fr-pagination__link--first" (click)="setCurrentPage(1)">
+                  Première page
+              </a>
+          </li>
+          <li>
+              <a class="fr-pagination__link fr-pagination__link--prev fr-pagination__link--lg-label" (click)="setCurrentPage(currentPage - 1)">
+                  Page précédente
+              </a>
+          </li>
+          @for (nb of getPages(); track nb; let idx = $index) {
+                @if ((idx !== 0 && getPages()[idx - 1] !== nb - 1)) {
+                    <li>
+                        <span class="fr-pagination__link fr-displayed-lg">
+                            …
+                        </span>
+                    </li>
+                }
+                <li>
+                  <a class="fr-pagination__link"
+                    [attr.aria-current]="currentPage === nb ? 'page' : null"
+                    [attr.href]="currentPage !== nb ? 'javascript:void(0);' : null"
+                    (click)="setCurrentPage(nb)"
+                    title="Page {{nb}}">
+                      {{nb}}
+                  </a>
+                </li>
+          }
+          <li>
+              <a class="fr-pagination__link fr-pagination__link--next fr-pagination__link--lg-label" (click)="setCurrentPage(currentPage + 1)">
+                  Page suivante
+              </a>
+          </li>
+          <li>
+              <a class="fr-pagination__link fr-pagination__link--last" (click)="setCurrentPage(currentGroup.rows ? currentGroup.rows.length / 20 : 0)">
+                  Dernière page
+              </a>
+          </li>
+      </ul>
+  </nav>
+  </div>

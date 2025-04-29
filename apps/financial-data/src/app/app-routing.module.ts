@@ -13,12 +13,24 @@ import { resolveFinancialData } from './resolvers/financial-data.resolver';
 import { router_template_path_full as info_supplementaires_path } from './modules/informations-supplementaires/routes';
 import { resolveMarqueBlancheParsedParams } from './resolvers/marqueblanche-parsed-params.resolver';
 import { MatomoRouteData } from 'ngx-matomo-client';
+import { PocComponent } from './pages/poc/poc.component';
 
 const routes: Routes = [
   {
     path: '',
     title:"Budget",
     component: HomeComponent,
+    canActivate: [keycloakAuthGuardCanActivate],
+    runGuardsAndResolvers: 'always',
+    resolve: {
+      financial: resolveFinancialData,
+      mb_parsed_params: resolveMarqueBlancheParsedParams
+    }
+  },
+  {
+    path: 'poc',
+    title:"Budget",
+    component: PocComponent,
     canActivate: [keycloakAuthGuardCanActivate],
     runGuardsAndResolvers: 'always',
     resolve: {

@@ -10,6 +10,9 @@ import { TableRowsComponent } from './components/grouping-table/table-rows.compo
 import { ProjectCellDirective } from './components/grouping-table/project-cell.directive';
 import { ProjectGroupingDirective } from './components/grouping-table/project-grouping.directive';
 import { MatMenuModule } from '@angular/material/menu';
+import { PocMegaRequetesComponent } from './components/poc-mega-requetes/poc-mega-requetes.component';
+import { PocGroupingDataComponent } from './components/poc-mega-requetes/poc-grouping-data.component';
+import { PocDataComponent } from './components/poc-mega-requetes/poc-data.component';
 
 @NgModule({
   imports: [CommonModule, MatMenuModule],
@@ -22,8 +25,11 @@ import { MatMenuModule } from '@angular/material/menu';
     TableGroupComponent,
     TableGroupHeaderComponent,
     TableRowsComponent,
-    FinancialGroupAggregatePipe
+    FinancialGroupAggregatePipe,
+    PocMegaRequetesComponent,
+    PocGroupingDataComponent,
+    PocDataComponent
   ],
-  exports: [GroupingTableComponent, ProjectCellDirective, ProjectGroupingDirective]
+  exports: [GroupingTableComponent, ProjectCellDirective, ProjectGroupingDirective, PocMegaRequetesComponent]
 })
 export class GroupingTableModule {}

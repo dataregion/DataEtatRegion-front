@@ -1,0 +1,28 @@
+@for (group of currentGroup.groups; track group.columnValue) {
+    <div class="fr-card fr-enlarge-link" style="width:100%; margin-bottom:30px; height:fit-content;">
+        <div class="fr-card__body" style="height:auto">
+            <div class="fr-card__content" style="padding-bottom: 2rem;">
+                <div class="fr-card__start">
+                    <ul class="fr-badges-group">
+                        <li>
+                            <p class="fr-badge fr-badge--info fr-badge--no-icon">Total : {{group.count}}</p>
+                        </li>
+                    </ul>
+                </div>
+                <h3 class="fr-card__title">
+                    <a href="javascript:void(0);" (click)="onGroupClick(group)">{{ group.column?.label }} : {{group.columnValue}}</a>
+                </h3>
+                <div class="fr-card__end" style="justify-content: unset; height: min-content;">
+                    <ul class="fr-badges-group">
+                        <li>
+                            <p class="fr-badge fr-badge--success fr-badge--no-icon">Montant engagé : {{ group | financialGroupAggregate: columnsMetaData.getByColumnName("montant_ae")}}</p>
+                        </li>
+                        <li>
+                            <p class="fr-badge fr-badge--success fr-badge--no-icon">Montant payé : {{ group | financialGroupAggregate: columnsMetaData.getByColumnName("montant_cp")}}</p>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+}
