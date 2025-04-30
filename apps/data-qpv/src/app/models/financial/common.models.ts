@@ -35,6 +35,7 @@ export interface Siret extends Code {
 
 export interface LieuAction {
   code_qpv: Optional<string>
+  label_qpv: Optional<string>
 }
 
 export interface Commune extends CodeLabel {

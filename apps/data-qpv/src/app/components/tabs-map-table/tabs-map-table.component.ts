@@ -80,6 +80,8 @@ export class TabsMapTableComponent {
         "programme.code": f.programme?.label,
         "qpv.code": f.siret?.code_qpv24,
         "lieu_action.code_qpv": f.lieu_action?.code_qpv,
+        "lieu_action.label_qpv": f.lieu_action?.label_qpv,
+        "centre_couts.description": f.centre_couts?.description,
         "commune.label": f.commune?.label,
         "commune.label_departement": f.commune?.label_departement,
         "commune.label_region": f.commune?.label_region,
@@ -90,17 +92,16 @@ export class TabsMapTableComponent {
 
   public columns = [
     {label: 'Nom du porteur de projet', field: 'siret.nom_beneficiaire', sortable: false},
-    {label: 'SIRET', field: 'siret.code', sortable: false},
     {label: 'Montant (AE)', field: 'montant_ae', sortable: false},
     {label: 'Année', field: 'annee'},
-    {label: 'Financeur', field: 'centre_couts.code'},
+    {label: 'Code Financeur', field: 'centre_couts.code'},
+    {label: 'Financeur', field: 'centre_couts.description'},
     {label: 'Thématique associée', field: 'thematique.libelle'},
     {label: 'Nom du programme (BOP)', field: 'programme.code'},
-    {label: 'QPV du Siret', field: 'qpv.code'},
-    {label: 'QPV du lieu de l\'action', field: 'lieu_action.code_qpv'},
+    {label: 'Code QPV du lieu de l\'action', field: 'lieu_action.code_qpv'},
+    {label: 'QPV du lieu de l\'action', field: 'lieu_action.label_qpv'},
     {label: 'Commune', field: 'commune.label'},
     {label: 'Département', field: 'commune.label_departement'},
-    {label: 'Région', field: 'commune.label_region'},
   ]
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
   public data: any[] = []

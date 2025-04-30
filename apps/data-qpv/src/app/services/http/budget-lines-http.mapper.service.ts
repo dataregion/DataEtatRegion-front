@@ -128,7 +128,8 @@ export class BudgetLineHttpMapper {
         if (!object.lieu_action_code_qpv)
             return null
         return {
-            code_qpv: object.lieu_action_code_qpv
+            code_qpv: object.lieu_action_code_qpv,
+            label_qpv: object.lieu_action_label_qpv
         };
     }
     private _map_loc_interministerielle(object: EnrichedFlattenFinancialLinesSchema): Optional<LocalisationInterministerielle> {

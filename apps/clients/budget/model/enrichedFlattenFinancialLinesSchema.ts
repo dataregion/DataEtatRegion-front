@@ -46,6 +46,7 @@ export interface EnrichedFlattenFinancialLinesSchema {
     groupeMarchandise_label?: string;
     id: number;
     lieu_action_code_qpv?: string;
+    lieu_action_label_qpv?: string;
     localisationInterministerielle_code?: string;
     localisationInterministerielle_codeDepartement?: string;
     localisationInterministerielle_commune_arrondissement_code?: string;
@@ -74,6 +75,7 @@ export interface EnrichedFlattenFinancialLinesSchema {
     source_region?: string;
     tags?: Array<TagsSchema>;
     updated_at?: string;
+    date_modification?: string;
 }
 export namespace EnrichedFlattenFinancialLinesSchema {
     export type SourceEnum = 'FINANCIAL_DATA_AE' | 'FINANCIAL_DATA_CP' | 'FRANCE_RELANCE' | 'FRANCE_2030' | 'ADEME' | 'REFERENTIEL';
