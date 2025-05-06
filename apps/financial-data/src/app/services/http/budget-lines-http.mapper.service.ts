@@ -65,6 +65,7 @@ export class BudgetLineHttpMapper {
 
       annee: object.annee!,
       data_source: object.data_source,
+      date_modification: object.date_modification,
 
       siret: this._map_beneficiaire_siret(object),
 
@@ -78,6 +79,7 @@ export class BudgetLineHttpMapper {
       exportAsJson(): JSONObject {
         return {
           [ColonneLibelles.SOURCE]: this.source,
+          [ColonneLibelles.DATE_MODIFICATION]: this.date_modification ?? '',
           [ColonneLibelles.N_EJ]: this.n_ej ?? '',
           [ColonneLibelles.POSTE_EJ]: this.n_poste_ej ?? '',
           [ColonneLibelles.MONTANT_AE]: this.montant_ae ?? '',

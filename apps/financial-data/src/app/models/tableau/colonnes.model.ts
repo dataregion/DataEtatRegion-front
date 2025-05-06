@@ -256,6 +256,20 @@ export const colonnes: FinancialColumnMetaDataDef[] = [
         : ''
   },
   {
+    name: ColonneCodes.DATE_MODIFICATION,
+    label: ColonneLibelles.DATE_MODIFICATION,
+    grouping: false,
+    displayed: false,
+    renderFn: (row, col) =>
+      row[col.name]
+        ? new Date(row[col.name]).toLocaleString([], {
+            year: 'numeric',
+            month: 'numeric',
+            day: 'numeric'
+          })
+        : ''
+  },
+  {
     name: ColonneCodes.DATA_SOURCE,
     label: ColonneLibelles.DATA_SOURCE,
     grouping: false,
