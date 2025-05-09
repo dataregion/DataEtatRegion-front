@@ -1,23 +1,29 @@
 <dsfr-tabs [selectedTabIndex]="selectedTabIndex" [tabsAriaLabel]="tabsAriaLabel" [fullViewport]="fullViewport" (tabSelect)="emitSelectedTab($event)">
   <dsfr-tab tabId="tab-iframe-1" label="Crédits P147">
+    @if (selectedTabIndex === 0) {
     <div class="fr-grid-row fr-grid-row--gutters">
       <div class="fr-col-12">
         <data-qpv-superset-iframe class="superset-dashboard-credit-wrapper" dashboardSlugType="credit" dashboardArgsCreditType="p147" [searchArgs]="searchArgs" />
       </div>
     </div>
+    }
   </dsfr-tab>
-  <!-- <dsfr-tab tabId="tab-iframe-2" label="Crédits droit commun">
+  <dsfr-tab tabId="tab-iframe-2" label="Crédits droit commun">
+     @if (selectedTabIndex === 1) {
     <div class="fr-grid-row fr-grid-row--gutters">
       <div class="fr-col-12">
         <data-qpv-superset-iframe class="superset-dashboard-credit-wrapper" dashboardSlugType="credit" dashboardArgsCreditType="commun" [searchArgs]="searchArgs" />
       </div>
     </div>
+    }
   </dsfr-tab>
   <dsfr-tab tabId="tab-iframe-3" label="Total des crédits">
-    <div class="fr-grid-row fr-grid-row--gutters">
-      <div class="fr-col-12">
-        <data-qpv-superset-iframe class="superset-dashboard-credit-wrapper" dashboardSlugType="credit" [searchArgs]="searchArgs" />
+     @if (selectedTabIndex === 2) {
+      <div class="fr-grid-row fr-grid-row--gutters">
+        <div class="fr-col-12">
+          <data-qpv-superset-iframe class="superset-dashboard-credit-wrapper" dashboardSlugType="credit" [searchArgs]="searchArgs" />
+        </div>
       </div>
-    </div>
-  </dsfr-tab> -->
+    }
+  </dsfr-tab>
 </dsfr-tabs>
