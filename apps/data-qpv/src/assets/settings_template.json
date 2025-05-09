@@ -18,14 +18,6 @@
     "referentiel": "url api referentiel",
     "apis_externes": "url api externes"
   },
-  "ressources": {
-    "visuterritoire": "<url visuterritoire>",
-    "relance": "<url france relance>",
-    "graphiques": "<url superset>",
-    "api_swagger": "<url swagger referentiel>",
-    "documentation": "<url doc utilisateur>",
-    "suivi_usage": "<url superset suivi>"
-  },
   "superset": {
     "baseDashboardUrl": "<url superset>",
     "dashboardsSlugs": {

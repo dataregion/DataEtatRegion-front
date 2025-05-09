@@ -201,7 +201,6 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     const clusterSource = this.clusterLayer.getSource() as Cluster<Feature>; // Get the Cluster source
     const vectorSource = clusterSource.getSource() as VectorSource;
     const selectedFeatures: Feature[] | null | undefined = this.findFeaturesByCodes(vectorSource.getFeatures(), selectedQpv);
-
     this.mapLevelControl?.updateSelectedQpv(selectedQpv, selectedAnnees, selectedNiveau, selectedFeatures);
   }
 

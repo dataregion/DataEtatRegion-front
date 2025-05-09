@@ -150,7 +150,8 @@ export class LevelControl extends Control {
           olExtend(selectedExtent, geom.getExtent());
         }
       });
-      this.currentMap?.getView().fit(selectedExtent, { size: this.currentMap?.getSize(), padding: [100, 100, 100, 100] });
+      // On zoom sur le niveau QPV
+      this.currentMap?.getView().fit(selectedExtent, { size: this.currentMap?.getSize(), maxZoom: this.zoomByLevel['qpv'], padding: [100, 100, 100, 100] });
       this.currentCenter = this.currentMap?.getView().getCenter();
       if (localisation && searchedFeatures.length === 1) {
         this.updateLevel(localisation);
