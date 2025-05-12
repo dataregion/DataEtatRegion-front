@@ -129,6 +129,8 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   }
 
   public fetchQpvs() {
+    console.log("dans fetchQpvs");
+    console.log(this._searchArgs);
     
     const cachedContours = this._cacheQPVService.get("map-qpv-contours");
     const cachedPoints = this._cacheQPVService.get("map-qpv-points");

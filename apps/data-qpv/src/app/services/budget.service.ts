@@ -6,9 +6,7 @@ import { SettingsService } from '../../environments/settings.service';
 import { SETTINGS } from 'apps/common-lib/src/lib/environments/settings.http.service';
 import { HttpClient } from '@angular/common/http';
 import { DataPagination } from 'apps/common-lib/src/lib/models/pagination/pagination.models';
-import { SourceFinancialData } from 'apps/data-qpv/src/app/models/financial/common.models';
-import { Tag } from 'apps/data-qpv/src/app/models/refs/tag.model';
-import { ReferentielProgrammation } from 'apps/data-qpv/src/app/models/refs/referentiel_programmation.model';
+import { SessionService } from 'apps/common-lib/src/public-api';
 
 import { RefSiret } from 'apps/common-lib/src/lib/models/refs/RefSiret';
 import { RefQpv } from 'apps/common-lib/src/lib/models/refs/RefQpv';
@@ -24,12 +22,12 @@ export class BudgetService {
 
   private _apiRef!: string;
 
-
   constructor(
     private http: HttpClient,
      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     @Inject(DATA_HTTP_SERVICE) private _services: DataHttpService<any, FinancialDataModel>[],
-    @Inject(SETTINGS) readonly settings: SettingsService
+    @Inject(SETTINGS) readonly settings: SettingsService,
+    private _sessionService: SessionService
   ) {
     this._apiRef = this.settings.apiReferentiel;
   }
@@ -72,7 +70,46 @@ export class BudgetService {
     return req$
   }
 
-  private _filterByCode(nomOuSiret: string): Observable<RefSiret[]> {
+  public getQpvs$(annee?: number): Observable<DataPagination<RefQpv>> {
+    let params = `limit=1000`;
+    const code_region =  this._sessionService.region_code?.length == 3 && this._sessionService.region_code[0] == "0"
+        ? this._sessionService.region_code.substring(1)
+        : this._sessionService.region_code;
+    params += `&code_region=${code_region}`;
+    if (annee) {
+      params += `&annee_decoupage=${annee}`;
+    }
+
+    const url = `${this._apiRef}/qpv?${params}`;
+    return this.http
+      .get<DataPagination<RefQpv>>(url)
+      .pipe(
+        map(response => {
+          return response as DataPagination<RefQpv>
+        })
+      );
+  }
+
+  public getBop(): Observable<BopModel[]> {
+    const params = 'limit=500';
+    return this.http
+      .get<DataPagination<BopModel>>(`${this._apiRef}/programme?${params}`)
+      .pipe(map((response) => response.items));
+  }
+
+  public getCentreCouts(query: string | null): Observable<CentreCouts[]> {
+    let params = '';
+    if (query)
+      params += '?query=' + query
+    return this.http.get<DataPagination<CentreCouts>>(`${this._apiRef}/centre-couts${params}`)
+      .pipe(
+        map(response => {
+          return response != null ? response.items as CentreCouts[] : []
+        })
+    );
+  }
+
+   private _filterByCode(nomOuSiret: string): Observable<RefSiret[]> {
     return this._filter_by("query", nomOuSiret)
   }
 
@@ -96,104 +133,6 @@ export class BudgetService {
           }
         )
       );
-  }
-
-  public allTags$(): Observable<Tag[]> {
-    const url = `${this._apiRef}/tags`;
-
-    return this.http
-      .get<Tag[]>(url)
-      .pipe(
-        map(
-          (response) => {
-            if (response == null)
-              return [];
-            return response;
-          }
-        )
-      )
-  }
-
-  public getRefSiretFromCode$(code: string): Observable<RefSiret> {
-
-    const url = `${this._apiRef}/beneficiaire/${code}`;
-    return this.http
-      .get<RefSiret>(url)
-      .pipe(
-        map(response => {
-          return response as RefSiret
-        })
-      );
-  }
-
-  public getQpvs$(annee?: number): Observable<DataPagination<RefQpv>> {
-    let params = `limit=1000`;
-    if (annee) {
-      params += `&annee_decoupage=${annee}`;
-    }
-    const url = `${this._apiRef}/qpv?${params}`;
-    return this.http
-      .get<DataPagination<RefQpv>>(url)
-      .pipe(
-        map(response => {
-          return response as DataPagination<RefQpv>
-        })
-      );
-  }
-
-  public getQpv(code: string): Observable<RefQpv> {
-
-    const url = `${this._apiRef}/qpv/${code}`;
-    return this.http
-      .get<RefQpv>(url)
-      .pipe(
-        map(response => {
-          return response as RefQpv
-        })
-      );
-  }
-
-  public getBop(): Observable<BopModel[]> {
-    const params = 'limit=500';
-    return this.http
-      .get<DataPagination<BopModel>>(`${this._apiRef}/programme?${params}`)
-      .pipe(map((response) => response.items));
-  }
-
-  public getReferentielsProgrammation(query: string | null): Observable<ReferentielProgrammation[]> {
-    let params = 'limit=500';
-    if (query)
-      params += '&code=' + query
-    return this.http
-      .get<DataPagination<ReferentielProgrammation>>(`${this._apiRef}/ref-programmation?${params}`)
-      .pipe(
-        map((response) => {
-          return response.items
-        })
-      );
-  }
-
-  public getById(source: SourceFinancialData, id: number): Observable<FinancialDataModel> {
-
-    const service = this._services.find(s => s.getSources().includes(source.toString()));
-
-    if (service === undefined) throw new Error(`Aucun provider pour la source ${source}`);
-
-    return service.getById(source, id).pipe(
-      map(data => service.mapToGeneric(data))
-    );
-  }
-
-  public getCentreCouts(query: string | null): Observable<CentreCouts[]> {
-    let params = '';
-    if (query)
-      params += '?query=' + query
-    return this.http.get<DataPagination<CentreCouts>>(`${this._apiRef}/centre-couts${params}`)
-      .pipe(
-        map(response => {
-          return response != null ? response.items as CentreCouts[] : []
-        })
-    );
   }
 
 }

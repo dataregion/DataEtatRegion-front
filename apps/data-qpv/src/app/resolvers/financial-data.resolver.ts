@@ -16,7 +16,7 @@ export const resolveFinancialData: ResolveFn<FinancialDataResolverModel> =
       financialService.getAnnees(),
       budgetService.getBop(),
     ]).pipe(
-      map(([fetchedAnnees, /*fetchedCentreCouts, */fetchedBops]) => {
+      map(([fetchedAnnees, fetchedBops]) => {
         const themes = Array.from(new Set(fetchedBops.map(bop => bop.label_theme))).sort();
         const result = {
           bops: fetchedBops,

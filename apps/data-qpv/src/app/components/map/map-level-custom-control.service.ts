@@ -142,7 +142,9 @@ export class LevelControl extends Control {
   }
 
   fitViewForFeatures(searchedFeatures: Feature[] | null | undefined, localisation: string | null | undefined): void {
-    if (searchedFeatures) {
+    console.log("fitViewForFeatures");
+    console.log(searchedFeatures);
+    if (searchedFeatures && searchedFeatures?.length > 0) {
       const selectedExtent = olCreateEmptyExtend();
       searchedFeatures.forEach(function(feature) {
         const geom = feature?.getGeometry();
