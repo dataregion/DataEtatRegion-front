@@ -120,7 +120,6 @@ export class SettingsHttpService {
       });
 
       return initialization;
-     
     } catch {
       throw new Error("Une erreur s'est déroulée durant l'initialisation de keycloak");
     }

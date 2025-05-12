@@ -1,6 +1,6 @@
-import { APP_INITIALIZER, LOCALE_ID, NgModule } from '@angular/core';
+import { inject, LOCALE_ID, NgModule, provideAppInitializer } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { KeycloakAngularModule, KeycloakService } from 'keycloak-angular';
+import { KeycloakAngularModule } from 'keycloak-angular';
 import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { LoggerModule, NgxLoggerLevel } from 'ngx-logger';
 
@@ -43,7 +43,6 @@ import {
   budgetApiModule, budgetConfiguration,
 } from 'apps/clients/budget';
 import { BudgetDataHttpService } from 'apps/data-qpv/src/app/services/http/budget-lines-http.service';
-import { MultiregionsService } from 'apps/data-qpv/src/app/services/multiregions.service';
 
 import { SupersetIframeComponent } from './components/superset-iframe/superset-iframe.component'
 import { DsfrTabsModule, DsfrModalModule, DsfrDataTableModule, DsfrAlertModule, DsfrFormFieldsetModule, DsfrFormCheckboxModule, DsfrFormInputModule } from '@edugouvfr/ngx-dsfr';
@@ -93,6 +92,7 @@ registerLocaleData(localeFr);
   imports: [
     BrowserModule,
     AppRoutingModule,
+    //@ TODO migrer vers provideKeycloak => https://github.com/mauriciovigolo/keycloak-angular
     KeycloakAngularModule,
     BrowserAnimationsModule,
     ReactiveFormsModule,
@@ -128,12 +128,10 @@ registerLocaleData(localeFr);
         useClass: BudgetDataHttpService,
         multi: true,
     },
-    {
-        provide: APP_INITIALIZER,
-        useFactory: app_Init,
-        multi: true,
-        deps: [SettingsHttpService, KeycloakService, SettingsService, MultiregionsService],
-    },
+    provideAppInitializer(() => {
+      const settingsHttpService = inject(SettingsHttpService);
+      return settingsHttpService.initializeApp();
+    }),
     {
         provide: HTTP_INTERCEPTORS,
         useClass: CommonHttpInterceptor,
@@ -181,9 +179,3 @@ registerLocaleData(localeFr);
   ]
 })
 export class AppModule {}
-
-export function app_Init(
-  settingsHttpService: SettingsHttpService
-): () => Promise<unknown> {
-  return () => settingsHttpService.initializeApp();
-}
