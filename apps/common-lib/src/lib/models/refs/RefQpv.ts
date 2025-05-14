@@ -6,3 +6,12 @@ export interface RefQpv {
   geom: string,
   centroid: string,
 }
+
+export interface RefQpvWithCommune extends RefQpv{
+  code_commune: string,
+  nom_commune: string,
+  code_departement: string,
+  nom_departement: string,
+  code_epci: string,
+  nom_epci: string,
+}

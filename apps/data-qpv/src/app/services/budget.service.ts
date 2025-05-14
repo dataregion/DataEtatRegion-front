@@ -9,7 +9,7 @@ import { DataPagination } from 'apps/common-lib/src/lib/models/pagination/pagina
 import { SessionService } from 'apps/common-lib/src/public-api';
 
 import { RefSiret } from 'apps/common-lib/src/lib/models/refs/RefSiret';
-import { RefQpv } from 'apps/common-lib/src/lib/models/refs/RefQpv';
+import { RefQpv, RefQpvWithCommune } from 'apps/common-lib/src/lib/models/refs/RefQpv';
 import { DataHttpService, SearchParameters } from './interface-data.service';
 import { CentreCouts } from '../models/financial/common.models';
  // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -70,22 +70,19 @@ export class BudgetService {
     return req$
   }
 
-  public getQpvs$(annee?: number): Observable<DataPagination<RefQpv>> {
-    let params = `limit=1000`;
+  public getQpvs(annee?: number): Observable<RefQpvWithCommune[]> {
     const code_region =  this._sessionService.region_code?.length == 3 && this._sessionService.region_code[0] == "0"
         ? this._sessionService.region_code.substring(1)
         : this._sessionService.region_code;
-    params += `&code_region=${code_region}`;
-    if (annee) {
-      params += `&annee_decoupage=${annee}`;
-    }
+    
 
-    const url = `${this._apiRef}/qpv?${params}`;
+    const url = `${this._apiRef}/qpv/region/${code_region}`;
     return this.http
-      .get<DataPagination<RefQpv>>(url)
+      .get<RefQpvWithCommune[]>(url)
       .pipe(
         map(response => {
-          return response as DataPagination<RefQpv>
+          console.log(response);
+          return response as RefQpvWithCommune[]
         })
       );
   }

@@ -51,6 +51,7 @@ import { SavePreferenceDialogComponent } from 'apps/preference-users/src/public-
 import { MatDialog } from '@angular/material/dialog';
 import { ModalAdditionalParamsComponent } from '../modal-additional-params/modal-additional-params.component';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { RefQpvWithCommune } from 'apps/common-lib/src/lib/models/refs/RefQpv';
 
 
 
@@ -72,7 +73,7 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
   public bops: BopModel[] = [];
 
   public annees: number[] = [];
-  public qpvs: GeoModel[] = [];
+  public qpvs: RefQpvWithCommune[] = [];
 
   public financeurs: CentreCouts[] = [];
   public thematiques: string[] = [];
@@ -424,6 +425,7 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
     this.thematiques = financial.thematiques;
     this.porteurs = financial.porteurs;
     this.filteredPorteurs = financial.porteurs;
+    this.qpvs = financial.qpvs;
 
     if (!mb_has_params)
       return
@@ -439,21 +441,21 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
   private _destroyRef = inject(DestroyRef)
 
   ngOnInit(): void {
-    this._geo
-      .filterQPV2024("", true)
-      .pipe(takeUntilDestroyed(this._destroyRef))
-      .subscribe((response) => {
-        this.qpvs = response as GeoModel[]
-        this.filteredQPV = response as GeoModel[]
-        // TODO : Facto du filter générique pour gérer aussi les Observable
-        // Concaténation des éléments sélectionnés avec les éléments filtrés (en supprimant les doublons éventuels)
-        this.filteredQPV = this.selectedQpv != null ?
-          [
-            ...this.selectedQpv,
-            ...this.filteredQPV.filter((el) => !this.selectedQpv?.map(s => s.code).includes(el.code))
-          ]
-          : this.filteredQPV
-      });
+    // this._budgetService
+    //   .getQpvs$()
+    //   .pipe(takeUntilDestroyed(this._destroyRef))
+    //   .subscribe((response) => {
+    //     this.qpvs = response as GeoModel[]
+    //     this.filteredQPV = response as GeoModel[]
+    //     // TODO : Facto du filter générique pour gérer aussi les Observable
+    //     // Concaténation des éléments sélectionnés avec les éléments filtrés (en supprimant les doublons éventuels)
+    //     this.filteredQPV = this.selectedQpv != null ?
+    //       [
+    //         ...this.selectedQpv,
+    //         ...this.filteredQPV.filter((el) => !this.selectedQpv?.map(s => s.code).includes(el.code))
+    //       ]
+    //       : this.filteredQPV
+    //   });
       this.currentFilter = this._buildPreference(this.searchForm.value as JSONObject);
   }
 

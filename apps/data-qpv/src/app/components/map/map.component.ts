@@ -141,11 +141,11 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       return;
     }
 
-    this._budgetService.getQpvs$(2024).subscribe( qpvsData => {
+    this._budgetService.getQpvs(2024).subscribe( qpvsData => {
       const features_countours: Feature[] = [];
       const features_points: Feature[] = [];
 
-      qpvsData?.items?.forEach(qpv => {
+      qpvsData?.forEach(qpv => {
         // Assuming geom is in GeoJSON format
         const geom = new WKT().readGeometry(qpv.geom, {
           dataProjection: 'EPSG:4326', // Data is in lat/lon (WGS84)
