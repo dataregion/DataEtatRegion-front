@@ -23,6 +23,7 @@ import { SelectMultipleComponent } from '../select-multiple/select-multiple.comp
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { debounceTime, Subject, Subscription } from 'rxjs';
 
+
 @Component({
     selector: 'lib-localisation',
     templateUrl: './localisation.component.html',
@@ -42,6 +43,17 @@ import { debounceTime, Subject, Subscription } from 'rxjs';
 })
 export class LocalisationComponent implements OnInit {
 
+  private readonly TypeLocalisationKeyMap: Record<TypeLocalisation, string> = {
+  [TypeLocalisation.REGION]: 'region',
+  [TypeLocalisation.DEPARTEMENT]: 'departement',
+  [TypeLocalisation.EPCI]: 'epci',
+  [TypeLocalisation.COMMUNE]: 'commune',
+  [TypeLocalisation.CRTE]: 'crte',
+  [TypeLocalisation.ARRONDISSEMENT]: 'arrondissement',
+  [TypeLocalisation.QPV]: 'qpv'
+};
+
+
   private _destroyRef = inject(DestroyRef)
 
   private _selectedNiveau: TypeLocalisation | null = null;
@@ -58,6 +70,9 @@ export class LocalisationComponent implements OnInit {
   public niveaux = Object.values(TypeLocalisation);
   @Input() wordingNiveaux: Map<TypeLocalisation, string> | null = null;
   @Input() filterRegion: boolean = false;
+ // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  @Input() data : any | {[key: string]: GeoModel[]} | null = null;
+  @Input() dataPreLoaded : boolean = false;
 
   // Liste des Geomodel
   public geomodels: GeoModel[] | null = null;
@@ -74,23 +89,44 @@ export class LocalisationComponent implements OnInit {
 
         if (this._subFilterGeo) this._subFilterGeo.unsubscribe();
 
-        this._subFilterGeo = this._geo
-          .filterGeo(term, this.selectedNiveau, this.filterRegion)
-          .pipe(takeUntilDestroyed(this._destroyRef))
-          .subscribe((response: GeoModel[]) => {
-            this.filteredGeomodels = response;
-            // TODO : Facto du filter générique pour gérer aussi les Observable
-            // Concaténation des éléments sélectionnés avec les éléments filtrés (en supprimant les doublons éventuels)
+        if (this.dataPreLoaded && this.data != null ) {
+          const loc = this.TypeLocalisationKeyMap[this.selectedNiveau]
+          this.geomodels = this.data[loc];
+          if (this.geomodels != null) {
+            this.filteredGeomodels = term != null ? this.geomodels.filter( 
+              geo => geo.code.includes(term) || geo.nom.includes(term)
+            ) : this.geomodels;
             this.filteredGeomodels =
-              this.selectedLocalisation != null
-                ? [
-                    ...this.selectedLocalisation,
-                    ...this.filteredGeomodels.filter(
-                      (el) => !this.selectedLocalisation?.map((s) => s.code).includes(el.code)
-                    )
-                  ]
-                : this.filteredGeomodels;
-          });
+                  this.selectedLocalisation != null
+                    ? [
+                        ...this.selectedLocalisation,
+                        ...this.filteredGeomodels.filter(
+                          (el) => !this.selectedLocalisation?.map((s) => s.code).includes(el.code)
+                        )
+                      ]
+                    : this.filteredGeomodels;
+          }
+          
+
+        } else {
+          this._subFilterGeo = this._geo
+            .filterGeo(term, this.selectedNiveau, this.filterRegion)
+            .pipe(takeUntilDestroyed(this._destroyRef))
+            .subscribe((response: GeoModel[]) => {
+              this.filteredGeomodels = response;
+              // TODO : Facto du filter générique pour gérer aussi les Observable
+              // Concaténation des éléments sélectionnés avec les éléments filtrés (en supprimant les doublons éventuels)
+              this.filteredGeomodels =
+                this.selectedLocalisation != null
+                  ? [
+                      ...this.selectedLocalisation,
+                      ...this.filteredGeomodels.filter(
+                        (el) => !this.selectedLocalisation?.map((s) => s.code).includes(el.code)
+                      )
+                    ]
+                  : this.filteredGeomodels;
+            });
+        }
       }
     });
   }
@@ -125,13 +161,19 @@ export class LocalisationComponent implements OnInit {
     // On ne rentre pas si selectedLocalisation est sélectionné (compatibilité marque blanche)
     if (this._selectedNiveau != null && this._selectedLocalisation == null) {
       if (this._subFilterGeo) this._subFilterGeo.unsubscribe();
-      this._subFilterGeo = this._geo
-        .filterGeo(null, this._selectedNiveau, this.filterRegion)
-        .pipe(takeUntilDestroyed(this._destroyRef))
-        .subscribe((response) => {
-          this.geomodels = response;
-          this.filteredGeomodels = this.geomodels;
-          // TODO : Facto du filter générique pour gérer aussi les Observable
+
+      if (this.dataPreLoaded && this.data != null ) {
+        const loc = this.TypeLocalisationKeyMap[this._selectedNiveau]
+        this.geomodels = this.data[loc];
+        this.filteredGeomodels = this.geomodels;
+      } else {
+        this._subFilterGeo = this._geo
+          .filterGeo(null, this._selectedNiveau, this.filterRegion)
+          .pipe(takeUntilDestroyed(this._destroyRef))
+          .subscribe((response) => {
+            this.geomodels = response;
+            this.filteredGeomodels = this.geomodels;
+            // TODO : Facto du filter générique pour gérer aussi les Observable
           // Concaténation des éléments sélectionnés avec les éléments filtrés (en supprimant les doublons éventuels)
           this.filteredGeomodels =
             this.selectedLocalisation != null
@@ -143,6 +185,8 @@ export class LocalisationComponent implements OnInit {
                 ]
               : this.filteredGeomodels;
         });
+      }
+
     } else {
       this.geomodels = null;
       this.filteredGeomodels = this.geomodels;
@@ -187,4 +231,5 @@ export class LocalisationComponent implements OnInit {
     }
     return label;
   };
+
 }

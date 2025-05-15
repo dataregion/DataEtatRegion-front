@@ -20,13 +20,19 @@
                               icon="calendar_month" />
       </div>
       <div class="field-localisation fr-col-5 wrapper-select">
-        <lib-localisation
-          [textTooltip]="'Votre recherche affichera les résultats si le lieu d\'action est géolocalisé dans un QPV de la zone recherchée'"
-          [(selectedNiveau)]="selectedNiveau"
-          [(selectedLocalisation)]="selectedLocalisations"
-          [niveauxExcludeFilter]="['Région', 'CRTE', 'Arrondissement', 'QPV']"
-          [filterRegion]="true"
-          [wordingNiveaux]="wordingNiveaux"/>
+        @if (refGeo !== null) {
+          <lib-localisation
+            [textTooltip]="'Votre recherche affichera les résultats si le lieu d\'action est géolocalisé dans un QPV de la zone recherchée'"
+            [(selectedNiveau)]="selectedNiveau"
+            [(selectedLocalisation)]="selectedLocalisations"
+            (selectedNiveauChange)="selectNiveauChange()"
+            (selectedLocalisationChange)="selectLocalisationChange($event)"
+            [dataPreLoaded]="true"
+            [data]="refGeo"
+            [niveauxExcludeFilter]="['Région', 'CRTE', 'Arrondissement', 'QPV']"
+            [filterRegion]="true"
+            [wordingNiveaux]="wordingNiveaux"/>
+          }
       </div>
       <div class="fr-col-3 wrapper-select">
         <lib-select-multiple  [canFilter]="true"
@@ -61,7 +67,10 @@
                       'fr-btn--primary': selectedFinanceurs !== null && selectedFinanceurs.length !== 0,
                       'fr-btn--tertiary': selectedFinanceurs === null || selectedFinanceurs.length === 0
                     }">
-                    <p *ngIf="selectedFinanceurs !== null && selectedFinanceurs.length !== 0" class="fr-tag">{{selectedFinanceurs.length}}</p>
+                    @if (selectedFinanceurs !== null && selectedFinanceurs.length !== 0) {
+                      <p class="fr-tag">{{selectedFinanceurs.length}}</p>
+                    }
+                    
                     Financeur
             </button>
           </li>
@@ -72,7 +81,10 @@
                       'fr-btn--primary': selectedThematiques !== null && selectedThematiques.length !== 0,
                       'fr-btn--tertiary': selectedThematiques === null || selectedThematiques.length === 0
                     }">
-                    <p *ngIf="selectedThematiques !== null && selectedThematiques.length !== 0" class="fr-tag">{{selectedThematiques.length}}</p>
+                    @if (selectedThematiques !== null && selectedThematiques.length !== 0) {
+                      <p class="fr-tag">{{selectedThematiques.length}}</p>
+                    }
+                    
                     Thématique
             </button>
           </li>
@@ -83,7 +95,10 @@
                       'fr-btn--primary': selectedPorteurs !== null && selectedPorteurs.length !== 0,
                       'fr-btn--tertiary': selectedPorteurs === null || selectedPorteurs.length === 0
                     }">
-                    <p *ngIf="selectedPorteurs !== null && selectedPorteurs.length !== 0" class="fr-tag">{{selectedPorteurs.length}}</p>
+                    @if (selectedPorteurs !== null && selectedPorteurs.length !== 0) {
+                      <p  class="fr-tag">{{selectedPorteurs.length}}</p>
+                    }
+                    
                     Nom du porteur de projet
             </button>
           </li>
@@ -94,14 +109,16 @@
                       'fr-btn--primary': selectedTypesPorteur !== null && selectedTypesPorteur.length !== 0,
                       'fr-btn--tertiary': selectedTypesPorteur === null || selectedTypesPorteur.length === 0
                     }">
-                    <p *ngIf="selectedTypesPorteur !== null && selectedTypesPorteur.length !== 0" class="fr-tag">{{selectedTypesPorteur.length}}</p>
+                    @if(selectedTypesPorteur !== null && selectedTypesPorteur.length !== 0) {
+                      <p class="fr-tag">{{selectedTypesPorteur.length}}</p>
+                    }
+                    
                     Type de porteur de projet
             </button>
           </li>
         </ul>
       </div>
       <div class="fr-col-2">
-        <!-- <a class="fr-link" href="#" (click)="openSaveFilterDialog()">Sauvegarder la recherche</a> -->
       </div>
     </div>
 

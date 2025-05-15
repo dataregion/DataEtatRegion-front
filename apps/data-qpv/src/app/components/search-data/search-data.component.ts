@@ -51,18 +51,18 @@ import { SavePreferenceDialogComponent } from 'apps/preference-users/src/public-
 import { MatDialog } from '@angular/material/dialog';
 import { ModalAdditionalParamsComponent } from '../modal-additional-params/modal-additional-params.component';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { RefQpvWithCommune } from 'apps/common-lib/src/lib/models/refs/RefQpv';
+import { RefGeoQpv, RefQpvWithCommune } from '../../models/refs/qpv.model';
 
 
 
 @Component({
-    selector: 'data-qpv-search-data',
-    templateUrl: './search-data.component.html',
-    styleUrls: ['./search-data.component.scss'],
-    providers: [
-        GeoLocalisationComponentService,
-    ],
-    standalone: false
+  selector: 'data-qpv-search-data',
+  templateUrl: './search-data.component.html',
+  styleUrls: ['./search-data.component.scss'],
+  providers: [
+    GeoLocalisationComponentService,
+  ],
+  standalone: false
 })
 export class SearchDataComponent implements OnInit, AfterViewInit {
   public readonly TypeLocalisation = TypeLocalisation;
@@ -85,7 +85,7 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
   /**
    * Années
    */
-   get selectedAnnees() : number[] | null {
+  get selectedAnnees(): number[] | null {
     const annees = this.searchForm.get('annees')?.value;
     return annees && annees.length != 0 ? annees : null;
   }
@@ -96,13 +96,13 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
   /**
    * Localisation
    */
-  get selectedNiveau() : TypeLocalisation | null {
+  get selectedNiveau(): TypeLocalisation | null {
     return this.searchForm.get('niveau')?.value ?? null;
   }
   set selectedNiveau(data: TypeLocalisation | null) {
     this.searchForm.get('niveau')?.setValue(data ?? null);
   }
-  get selectedLocalisations() : GeoModel[] | null {
+  get selectedLocalisations(): GeoModel[] | null {
     return this.searchForm.get('localisations')?.value ?? null;
   }
   set selectedLocalisations(data: GeoModel[] | null) {
@@ -112,30 +112,30 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
   /**
    * QPV
    */
-  get selectedQpv() : GeoModel[] | null {
+  get selectedQpv(): GeoModel[] | null {
     return this.searchForm.get('qpv')?.value ?? null;
   }
   set selectedQpv(data: GeoModel[] | null) {
     this.searchForm.get('qpv')?.setValue(data ?? null);
   }
-  
+
   inputQPV: string = '';
   inputFilterQPV = new Subject<string>();
   public filteredQPV: GeoModel[] | null = null;
-  
-  public renderQPVOption = (geo: GeoModel): string => {
-    return geo.code + ' - ' + geo.nom
+
+  public renderQPVOption = (geo: RefQpvWithCommune): string => {
+    return geo.code + ' - ' + geo.label
   }
   public filterQPV = (value: string): GeoModel[] => {
     this.inputQPV = value;
     this.inputFilterQPV.next(value);
     return this.filteredQPV ?? [];
   }
-  public renderQPVLabel = (bops: GeoModel[]) => {
+  public renderQPVLabel = (geos: RefQpvWithCommune[]) => {
     let label: string = ''
-    if (bops)
-      bops.forEach((bop, i) => {
-        label += (bop.code + ' - ' + bop.nom) + (i !== bops.length - 1 ? ', ' : '')
+    if (geos)
+      geos.forEach((geo, i) => {
+        label += (geo.code + ' - ' + geo.label) + (i !== geos.length - 1 ? ', ' : '')
       })
     return label
   }
@@ -143,14 +143,14 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
   /**
    * Financeurs
    */
-  
+
   @ViewChild('modalFinanceurs') modalFinanceurs!: ModalAdditionalParamsComponent<CentreCouts>;
-  
+
   inputFinanceurs: string = '';
   inputFilterFinanceurs = new Subject<string>();
   filteredFinanceurs: CentreCouts[] = []
 
-  get selectedFinanceurs() : CentreCouts[] | null {
+  get selectedFinanceurs(): CentreCouts[] | null {
     return this.searchForm.get('financeurs')?.value ?? null;
   }
   set selectedFinanceurs(data: CentreCouts[] | null) {
@@ -172,7 +172,7 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
 
   @ViewChild('modalThematiques') modalThematiques!: ModalAdditionalParamsComponent<string>;
 
-  get selectedThematiques() : string[] | null {
+  get selectedThematiques(): string[] | null {
     return this.searchForm.get('thematiques')?.value ?? null;
   }
   set selectedThematiques(data: string[] | null) {
@@ -182,14 +182,14 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
   /**
    * Porteurs de projet
    */
-  
+
   @ViewChild('modalPorteurs') modalPorteurs!: ModalAdditionalParamsComponent<Beneficiaire>;
-  
+
   inputPorteurs: string = '';
   inputFilterPorteurs = new Subject<string>();
   filteredPorteurs: Beneficiaire[] = []
 
-  get selectedPorteurs() : Beneficiaire[] | null {
+  get selectedPorteurs(): Beneficiaire[] | null {
     return this.searchForm.get('porteurs')?.value ?? null;
   }
   set selectedPorteurs(data: Beneficiaire[] | null) {
@@ -212,7 +212,7 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
 
   @ViewChild('modalTypesPorteur') modalTypesPorteur!: ModalAdditionalParamsComponent<SearchTypeCategorieJuridique>;
 
-  get selectedTypesPorteur() : SearchTypeCategorieJuridique[] | null {
+  get selectedTypesPorteur(): SearchTypeCategorieJuridique[] | null {
     return this.searchForm.get('types_porteur')?.value ?? null;
   }
   set selectedTypesPorteur(data: SearchTypeCategorieJuridique[] | null) {
@@ -222,7 +222,7 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
   public renderTypePorteurCheckbox = (type: SearchTypeCategorieJuridique): string => {
     return type
   }
-  
+
   /**
    * Les donnees de la recherche
    */
@@ -275,10 +275,14 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
   public error: Error | any | null = null;
 
   /**
+   * Liste des ref Geo
+   */
+  @Input() public refGeo: RefGeoQpv | null = null;
+
+  /**
    * Resultats de la recherche.
    */
   @Output() searchArgsEventEmitter = new EventEmitter<QpvSearchArgs>();
-
 
 
   /**
@@ -289,7 +293,7 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
   @Input() public set preFilter(value: PreFilters | undefined) {
     try {
       this._apply_prefilters(value);
-    } catch(e) {
+    } catch (e) {
       this.displayError = true;
       this.error = e;
     }
@@ -300,7 +304,6 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
     private _alertService: AlertService,
     private _budgetService: BudgetService,
     private _logger: NGXLogger,
-    private _geo: GeoLocalisationComponentService,
     private _refService: ReferentielsHttpService,
   ) {
     // Formulaire avc champs déclarés dans l'ordre
@@ -321,31 +324,33 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
       types_porteur: new FormControl<SearchTypeCategorieJuridique[] | null>(null),
     });
 
-    
+
     this.inputFilterQPV.pipe(
       debounceTime(300),
       takeUntilDestroyed(this._destroyRef)
     ).subscribe(() => {
       const term = this.inputQPV !== '' ? this.inputQPV : null;
+      if (this.searchForm.get('localisations')?.value) {
+        const localisations = this.searchForm.get('localisations')?.value as GeoModel[];
+        const type = this.searchForm.get('niveau')?.value;
+        const codes = localisations.map(geo => geo.code);
+        this.filteredQPV = this._filterQpvByTypeLocalisation(codes, type as TypeLocalisation);
+      } else {
+        this.filteredQPV = this.refGeo?.qpvs as GeoModel[];
+      }
 
-      if (this._subFilterGeo)
-        this._subFilterGeo.unsubscribe();
 
-      this._subFilterGeo = this._geo.filterQPV2024(term, true)
-        .pipe(takeUntilDestroyed(this._destroyRef))
-        .subscribe((response: GeoModel[]) => {
-          this.filteredQPV = response;
-          // TODO : Facto du filter générique pour gérer aussi les Observable
-          // Concaténation des éléments sélectionnés avec les éléments filtrés (en supprimant les doublons éventuels)
-          this.filteredQPV = this.selectedQpv != null ?
-            [
-              ...this.selectedQpv,
-              ...this.filteredQPV.filter((el) => !this.selectedQpv?.map(s => s.code).includes(el.code))
-            ]
-            : this.filteredQPV
-        });
+      if (term != null) {
+        this.filteredQPV = this.filteredQPV.filter(qpv => qpv.code.includes(term) || (qpv as RefQpvWithCommune).label.toLocaleLowerCase().includes(term.toLocaleLowerCase()));
+      }
+      this.filteredQPV = this.selectedQpv != null ?
+        [
+          ...this.selectedQpv,
+          ...this.filteredQPV.filter((el) => !this.selectedQpv?.map(s => s.code).includes(el.code))
+        ]
+        : this.filteredQPV
     });
-        
+
     this.inputFilterFinanceurs.pipe(
       debounceTime(300),
       takeUntilDestroyed(this._destroyRef)
@@ -371,7 +376,7 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
             : this.filteredFinanceurs
         });
     });
-        
+
     this.inputFilterPorteurs.pipe(
       debounceTime(300),
       takeUntilDestroyed(this._destroyRef)
@@ -425,11 +430,9 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
     this.thematiques = financial.thematiques;
     this.porteurs = financial.porteurs;
     this.filteredPorteurs = financial.porteurs;
-    this.qpvs = financial.qpvs;
 
     if (!mb_has_params)
       return
-
     this._logger.debug(`Mode marque blanche actif.`)
     if (mb_prefilter) {
       this._logger.debug(`Application des filtres`);
@@ -441,22 +444,9 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
   private _destroyRef = inject(DestroyRef)
 
   ngOnInit(): void {
-    // this._budgetService
-    //   .getQpvs$()
-    //   .pipe(takeUntilDestroyed(this._destroyRef))
-    //   .subscribe((response) => {
-    //     this.qpvs = response as GeoModel[]
-    //     this.filteredQPV = response as GeoModel[]
-    //     // TODO : Facto du filter générique pour gérer aussi les Observable
-    //     // Concaténation des éléments sélectionnés avec les éléments filtrés (en supprimant les doublons éventuels)
-    //     this.filteredQPV = this.selectedQpv != null ?
-    //       [
-    //         ...this.selectedQpv,
-    //         ...this.filteredQPV.filter((el) => !this.selectedQpv?.map(s => s.code).includes(el.code))
-    //       ]
-    //       : this.filteredQPV
-    //   });
-      this.currentFilter = this._buildPreference(this.searchForm.value as JSONObject);
+    this.filteredQPV = this.refGeo?.qpvs as GeoModel[];
+
+    this.currentFilter = this._buildPreference(this.searchForm.value as JSONObject);
   }
 
   ngAfterViewInit(): void {
@@ -484,11 +474,11 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
       annees: this.selectedAnnees,
       niveau: this.selectedNiveau,
       localisations: this.selectedLocalisations,
-      qpv_codes: this.selectedQpv, 
-      financeurs: this.selectedFinanceurs, 
-      thematiques: this.selectedThematiques, 
-      porteurs: this.selectedPorteurs, 
-      types_porteur: this.selectedTypesPorteur, 
+      qpv_codes: this.selectedQpv,
+      financeurs: this.selectedFinanceurs,
+      thematiques: this.selectedThematiques,
+      porteurs: this.selectedPorteurs,
+      types_porteur: this.selectedTypesPorteur,
     };
 
     this.searchArgsEventEmitter.next(newQpvSearchArgsObject);
@@ -496,13 +486,21 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
     const search_parameters: SearchParameters = {
       ...SearchParameters_empty,
       years: formValue.annees || null,
-      niveau: formValue.niveau || null,
-      locations: formValue.localisations || null,
+      niveau: null,
+      locations: null,
       qpvs: formValue.qpv || null,
       centre_couts: formValue.financeurs || null,
       themes: formValue.thematiques || null,
       beneficiaires: formValue.porteurs || null,
       types_beneficiaires: formValue.types_porteur || null,
+    }
+
+    if (search_parameters.qpvs === null && formValue.localisations && formValue.niveau) { // si pas de qpv, on va peupler avec les QPV de la locations
+      const niveau = formValue.niveau as TypeLocalisation;
+      const codes = formValue.localisations.map(geo => geo.code);
+      const qpvs = this._filterQpvByTypeLocalisation(codes, niveau);
+      search_parameters.qpvs = qpvs;
+
     }
 
     this._search_subscription = this._budgetService
@@ -603,6 +601,36 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
     });
 
     dialogRef.afterClosed().subscribe((_) => { });
+  }
+
+  public selectNiveauChange(): void {
+    this.searchForm.get('qpv')?.reset();
+
+    this.filteredQPV = this.refGeo?.qpvs as GeoModel[];
+  }
+
+  public selectLocalisationChange(event: GeoModel[] | null): void {
+    this.searchForm.get('qpv')?.reset();
+
+    if (event) {
+      const type = event[0].type;
+      const codes = event.map(geo => geo.code);
+      this.filteredQPV = this._filterQpvByTypeLocalisation(codes, type as TypeLocalisation);
+    } else {
+      this.filteredQPV = this.refGeo?.qpvs as GeoModel[];
+    }
+  }
+
+  private _filterQpvByTypeLocalisation(codes: string[], type: TypeLocalisation): GeoModel[] {
+    switch (type) {
+      case TypeLocalisation.DEPARTEMENT:
+        return this.refGeo?.qpvs.filter((qpv) => codes.includes(qpv.code_departement)) as GeoModel[]
+      case TypeLocalisation.EPCI:
+        return this.refGeo?.qpvs.filter((qpv) => codes.includes(qpv.code_epci)) as GeoModel[]
+      case TypeLocalisation.COMMUNE:
+      default:
+        return this.refGeo?.qpvs.filter((qpv) => codes.includes(qpv.code_commune)) as GeoModel[];
+    }
   }
 
 }

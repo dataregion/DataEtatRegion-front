@@ -10,6 +10,7 @@ import { QueryParam } from 'apps/common-lib/src/lib/models/marqueblanche/query-p
 import { SearchDataComponent } from 'apps/data-qpv/src/app/components/search-data/search-data.component';
 import { QpvSearchArgs } from "apps/data-qpv/src/app/models/qpv-search/qpv-search.models";
 import { FinancialDataModel } from '../../models/financial/financial-data.models';
+import { FinancialData, FinancialDataResolverModel } from 'apps/data-qpv/src/app/models/financial/financial-data-resolvers.models';
 
 @Component({
     selector: 'data-qpv-home',
@@ -35,6 +36,7 @@ export class HomeComponent implements OnInit {
 
   public current_years : number[] = [];
   public current_qpv_codes : string[] = [];
+  public financialData: FinancialData | undefined;
 
   public isSearchOver() {
     return !this.searchInProgress.value
@@ -93,14 +95,14 @@ export class HomeComponent implements OnInit {
           });
       }
     });
-
     this._route.data
       .pipe(delay(0))
       .subscribe((data: Data) => {
-
-        const response = data as { mb_parsed_params: MarqueBlancheParsedParamsResolverModel }
+        const response = data as { mb_parsed_params: MarqueBlancheParsedParamsResolverModel, financial: FinancialDataResolverModel }
 
         const mb_has_params = response.mb_parsed_params?.data?.has_marqueblanche_params;
+
+        this.financialData = response.financial.data;
 
         if (!mb_has_params)
           return;

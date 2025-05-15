@@ -9,9 +9,9 @@ import { DataPagination } from 'apps/common-lib/src/lib/models/pagination/pagina
 import { SessionService } from 'apps/common-lib/src/public-api';
 
 import { RefSiret } from 'apps/common-lib/src/lib/models/refs/RefSiret';
-import { RefQpv, RefQpvWithCommune } from 'apps/common-lib/src/lib/models/refs/RefQpv';
 import { DataHttpService, SearchParameters } from './interface-data.service';
 import { CentreCouts } from '../models/financial/common.models';
+import { explodeQpvList, RefGeoQpv, RefQpvWithCommune } from '../models/refs/qpv.model';
  // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const DATA_HTTP_SERVICE = new InjectionToken<DataHttpService<any, FinancialDataModel>>(
   'DataHttpService'
@@ -70,7 +70,7 @@ export class BudgetService {
     return req$
   }
 
-  public getQpvs(annee?: number): Observable<RefQpvWithCommune[]> {
+  public getRefGeoQpv(): Observable<RefGeoQpv> {
     const code_region =  this._sessionService.region_code?.length == 3 && this._sessionService.region_code[0] == "0"
         ? this._sessionService.region_code.substring(1)
         : this._sessionService.region_code;
@@ -80,9 +80,9 @@ export class BudgetService {
     return this.http
       .get<RefQpvWithCommune[]>(url)
       .pipe(
-        map(response => {
-          console.log(response);
-          return response as RefQpvWithCommune[]
+        map(refQpvWithCommune => {          
+          const qpv = explodeQpvList(refQpvWithCommune)
+          return qpv;
         })
       );
   }

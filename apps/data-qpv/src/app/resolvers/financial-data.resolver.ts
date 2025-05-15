@@ -15,7 +15,7 @@ export const resolveFinancialData: ResolveFn<FinancialDataResolverModel> =
     return forkJoin([
       financialService.getAnnees(),
       budgetService.getBop(),
-      budgetService.getQpvs()
+      budgetService.getRefGeoQpv()
     ]).pipe(
       map(([fetchedAnnees, fetchedBops, fetchQpv]) => {
         const themes = Array.from(new Set(fetchedBops.map(bop => bop.label_theme))).sort();
@@ -25,7 +25,7 @@ export const resolveFinancialData: ResolveFn<FinancialDataResolverModel> =
           financeurs: [],
           thematiques: themes,
           porteurs: [],
-          qpvs: fetchQpv,
+          refGeo: fetchQpv,
         } as FinancialData
         return {
           data: result

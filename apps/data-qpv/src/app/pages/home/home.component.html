@@ -8,12 +8,17 @@
       </div>
 
       <div class="fr-col-12" style="margin-bottom:30px;">
+        @if(financialData) {
+
+        
         <data-qpv-search-data (searchArgsEventEmitter)="currentSearchArgs = $event"
+                            [refGeo]="financialData.refGeo"
                             [preFilter]="preFilter"
                             [(searchFinish)]="searchFinish"
                             [(searchInProgress)]="searchInProgress"
                             (searchResultsEventEmitter)="currentSearchResults = $event"
                             />
+        }
       </div>
 
     </div>
