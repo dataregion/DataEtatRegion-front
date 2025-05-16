@@ -112,10 +112,10 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
   /**
    * QPV
    */
-  get selectedQpv(): RefQpvWithCommune[] | null {
+  get selectedQpv(): GeoModel[] | null {
     return this.searchForm.get('qpv')?.value ?? null;
   }
-  set selectedQpv(data: RefQpvWithCommune[] | null) {
+  set selectedQpv(data: GeoModel[] | null) {
     this.searchForm.get('qpv')?.setValue(data ?? null);
   }
 
@@ -463,8 +463,6 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
    */
   private _search_subscription?: Subscription;
   public doSearch(): void {
-    console.log("dans la recherche");
-
     this._search_subscription?.unsubscribe();
 
     const formValue = this.searchForm.value;
@@ -489,7 +487,7 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
       annees: this.selectedAnnees,
       niveau: this.selectedNiveau,
       localisations: this.selectedLocalisations,
-      qpv_codes: this.selectedQpv,
+      qpv_codes: this.selectedQpv as RefQpvWithCommune[],
       financeurs: this.selectedFinanceurs,
       thematiques: this.selectedThematiques,
       porteurs: this.selectedPorteurs,
