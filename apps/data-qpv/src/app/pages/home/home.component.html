@@ -14,7 +14,7 @@
                             [preFilter]="preFilter"
                             [(searchFinish)]="searchFinish"
                             [(searchInProgress)]="searchInProgress"
-                            (searchResultsEventEmitter)="currentSearchResults = $event"
+                            (searchResultsEventEmitter)="onSearchResult($event)"
                             />
         }
       </div>
@@ -31,37 +31,8 @@
       <lib-spinner />
     </div>
     }
-    
-    @if(!isSearchArgsEmpty() && !isSearchResultsEmpty() && isSearchOver()) {
-      <div class="fr-grid-row">
-        <div class="fr-col-12"> 
-          <span class="search-resume" [innerText]="searchArgsToText()"></span>
-        </div>
-        <div class="fr-col-6" style="margin-bottom: 50px;">
-          <data-qpv-tabs-superset-iframes [searchArgs]="currentSearchArgs" [searchResults]="currentSearchResults" [(selectedTabIndex)]="selectedTabIndex"/>
-        </div>
-        <div class="fr-col-6" style="margin-bottom: 50px;">
-          <data-qpv-tabs-map-table [searchArgs]="currentSearchArgs" [searchResults]="currentSearchResults" [selectedTabIndexCredits]="selectedTabIndex" />
-        </div>
-      </div>
-    }
 
-    @if(isSearchArgsEmpty() && !isSearchResultsEmpty() && isSearchOver()) {
-      <div class="fr-grid-row">
-        <div class="fr-col-12" style="padding-top: 50px; padding-bottom: 50px;">
-          <dsfr-alert
-            [message]="'Veuillez effectuer une recherche pour afficher des données '"
-            [severity]="'info'"
-            [ariaRoleValue]="'alert'"
-            [size]="'MD'"
-            [hasAriaRole]="false"
-            [closeable]="false" />
-        </div>
-      </div>
-
-    }
-    
-    @if (!isSearchArgsEmpty() && isSearchResultsEmpty() && isSearchOver()) {
+    @if (hasEmptyResults()) {
       <div class="fr-grid-row">
         <div class="fr-col-12" style="padding-top: 50px; padding-bottom: 50px;">
           <dsfr-alert
@@ -73,7 +44,35 @@
             [closeable]="false" />
         </div>
       </div>
+    } @else if (hasResults()) {
+      <div class="fr-grid-row">
+        <div class="fr-col-12"> 
+          <span class="search-resume" [innerText]="searchArgsToText()"></span>
+        </div>
+        <div class="fr-col-6" style="margin-bottom: 50px;">
+          <data-qpv-tabs-superset-iframes [searchArgs]="currentSearchArgs" [searchResults]="currentSearchResults()" [(selectedTabIndex)]="selectedTabIndex"/>
+        </div>
+        <div class="fr-col-6" style="margin-bottom: 50px;">
+          <data-qpv-tabs-map-table [searchArgs]="currentSearchArgs" [searchResults]="currentSearchResults()" [selectedTabIndexCredits]="selectedTabIndex" />
+        </div>
+      </div>
+    } @else {
+    <div class="fr-grid-row">
+        <div class="fr-col-12" style="padding-top: 50px; padding-bottom: 50px;">
+          <dsfr-alert
+            [message]="'Veuillez effectuer une recherche pour afficher des données '"
+            [severity]="'info'"
+            [ariaRoleValue]="'alert'"
+            [size]="'MD'"
+            [hasAriaRole]="false"
+            [closeable]="false" />
+        </div>
+      </div>
     }
+
+   
+    
+    
     
 
   </div>

@@ -26,7 +26,6 @@ import { FinancialData, FinancialDataResolverModel } from 'apps/data-qpv/src/app
 import {
   Preference,
 } from 'apps/preference-users/src/lib/models/preference.models';
-import { JSONObject } from "apps/common-lib/src/lib/models/jsonobject";
 import {
   AlertService,
   GeoModel,
@@ -47,8 +46,6 @@ import { Beneficiaire } from 'apps/data-qpv/src/app/models/qpv-search/beneficiai
 import { BopModel } from 'apps/data-qpv/src/app/models/refs/bop.models';
 import { FinancialDataModel } from '../../models/financial/financial-data.models';
 import { SearchParameters, SearchParameters_empty, SearchTypeCategorieJuridique } from '../../services/interface-data.service';
-import { SavePreferenceDialogComponent } from 'apps/preference-users/src/public-api';
-import { MatDialog } from '@angular/material/dialog';
 import { ModalAdditionalParamsComponent } from '../modal-additional-params/modal-additional-params.component';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RefGeoQpv, RefQpvWithCommune } from '../../models/refs/qpv.model';
@@ -445,8 +442,6 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.filteredQPV = this.refGeo?.qpvs as GeoModel[];
-
-    this.currentFilter = this._buildPreference(this.searchForm.value as JSONObject);
   }
 
   ngAfterViewInit(): void {
@@ -466,10 +461,7 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
     this._search_subscription?.unsubscribe();
 
     const formValue = this.searchForm.value;
-    this.searchInProgress.next(true);
-
-    this.currentFilter = this._buildPreference(formValue as JSONObject);
-   
+    this.searchInProgress.next(true);   
 
     const search_parameters: SearchParameters = {
       ...SearchParameters_empty,
@@ -511,37 +503,20 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
         })
       )
       .subscribe({
-        next: (response: FinancialDataModel[] | Error) => {
+        next: (response: FinancialDataModel[]) => {
           this.searchFinish = true;
-          this.currentFilter = this._buildPreference(formValue as JSONObject);
-          this.searchResults = response as FinancialDataModel[];
+          if(response.length === 0) {
+            this.searchResults = [];
+          } else {
+            this.searchResults = response as FinancialDataModel[];
+          }
         },
         error: (err: Error) => {
           this.searchFinish = true;
           this.searchResults = [];
-          this.currentFilter = this._buildPreference(formValue as JSONObject);
           this._alertService.openAlert("error", err, 8);
         },
       });
-  }
-
-  /**
-   * Clean les donners undefined, null et vide pour enregistrer en tant que preference
-   * @param object
-   * @returns
-   */
-  private _buildPreference(object: JSONObject): Preference {
-    const preference: Preference = { filters: {} };
-    Object.keys(object).forEach((key) => {
-      if (
-        object[key] !== null &&
-        object[key] !== undefined &&
-        object[key] !== ''
-      ) {
-        preference.filters[key] = object[key];
-      }
-    });
-    return preference;
   }
 
   public reset(): void {
@@ -584,25 +559,6 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
     this.doSearch();
   }
 
-
-  /**
-   * Filtre retourner par le formulaire de recherche
-   */
-  private dialog = inject(MatDialog);
-
-  public openSaveFilterDialog(): void {
-    if (this.currentFilter) {
-      this.currentFilter.name = '';
-    }
-
-    const dialogRef = this.dialog.open(SavePreferenceDialogComponent, {
-      data: this.currentFilter,
-      width: '40rem',
-      autoFocus: 'input',
-    });
-
-    dialogRef.afterClosed().subscribe((_) => { });
-  }
 
   public selectNiveauChange(): void {
     this.searchForm.get('qpv')?.reset();

@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, computed, OnInit, Signal, signal, ViewChild } from '@angular/core';
 
 import { PreferenceUsersHttpService } from 'apps/preference-users/src/public-api';
 import { ActivatedRoute, Data } from '@angular/router';
@@ -21,13 +21,27 @@ import { FinancialData, FinancialDataResolverModel } from 'apps/data-qpv/src/app
 export class HomeComponent implements OnInit {
 
   currentSearchArgs: QpvSearchArgs | null = null;
-  currentSearchResults: FinancialDataModel[] | null = [];
 
   @ViewChild(SearchDataComponent) searchData!: SearchDataComponent;
 
   public selectedTabIndex: number = 0;
   public searchFinish: boolean = false;
   public searchInProgress: BehaviorSubject<boolean> = new BehaviorSubject(false);
+
+  private _currentSearchResults = signal<FinancialDataModel[] | null>(null);
+
+
+  currentSearchResults = computed(() => this._currentSearchResults());
+
+  hasResults: Signal<boolean> = computed(() => {
+    const result =  this._currentSearchResults() ;
+    return  result !==null &&  result.length > 0;
+  });
+
+  hasEmptyResults: Signal<boolean> = computed(() => {
+    const result =  this._currentSearchResults() ;
+    return  result !==null &&  result.length === 0;
+  });
 
   /**
    * Filtre à appliquer sur la recherche
@@ -37,41 +51,6 @@ export class HomeComponent implements OnInit {
   public current_years : number[] = [];
   public current_qpv_codes : string[] = [];
   public financialData: FinancialData | undefined;
-
-  public isSearchOver() {
-    return !this.searchInProgress.value
-  }
-
-  public isSearchArgsEmpty() {
-    return this.currentSearchArgs === null ||
-          (
-            (this.currentSearchArgs.annees === null || this.currentSearchArgs.annees.length === 0) &&
-            (this.currentSearchArgs.niveau === null) &&
-            (this.currentSearchArgs.localisations === null || this.currentSearchArgs.localisations.length === 0) &&
-            (this.currentSearchArgs.qpv_codes === null || this.currentSearchArgs.qpv_codes.length === 0) &&
-            (this.currentSearchArgs.financeurs === null || this.currentSearchArgs.financeurs.length === 0) &&
-            (this.currentSearchArgs.thematiques === null || this.currentSearchArgs.thematiques.length === 0) &&
-            (this.currentSearchArgs.porteurs === null || this.currentSearchArgs.porteurs.length === 0) &&
-            (this.currentSearchArgs.types_porteur === null || this.currentSearchArgs.types_porteur.length === 0)
-          ) 
-  }
-
-  public isSearchResultsEmpty() {
-    return this.searchFinish && (this.currentSearchResults === null || this.currentSearchResults.length === 0)
-  }
-
-  public searchArgsToText(): string {
-    let text = ""
-    if (this.currentSearchArgs === null)
-      return "";
-    if (this.currentSearchArgs.niveau !== null && this.currentSearchArgs.localisations && this.currentSearchArgs.localisations.length !== 0)
-      text += this.currentSearchArgs.niveau + " : " + this.currentSearchArgs.localisations?.map(l => l.code + " - " + l.nom).join(",")
-    if (this.currentSearchArgs.qpv_codes !== null && this.currentSearchArgs.qpv_codes.length !== 0)
-      text += (text.length !== 0 ? " ; " : "") + "QPV : " + this.currentSearchArgs.qpv_codes?.map(q => q.code + " - " + q.label).join(",")
-    if (this.currentSearchArgs.annees !== null && this.currentSearchArgs.annees.length !== 0)
-      text += (text.length !== 0 ? " ; " : "") + "Années : " + this.currentSearchArgs.annees?.join(",")
-    return text
-  }
 
   constructor(
     private _route: ActivatedRoute,
@@ -107,7 +86,42 @@ export class HomeComponent implements OnInit {
         if (!mb_has_params)
           return;
       });
+  }
 
+    public isSearchOver() {
+    return !this.searchInProgress.value
+  }
+
+  public isSearchArgsEmpty() {
+    return this.currentSearchArgs === null ||
+          (
+            (this.currentSearchArgs.annees === null || this.currentSearchArgs.annees.length === 0) &&
+            (this.currentSearchArgs.niveau === null) &&
+            (this.currentSearchArgs.localisations === null || this.currentSearchArgs.localisations.length === 0) &&
+            (this.currentSearchArgs.qpv_codes === null || this.currentSearchArgs.qpv_codes.length === 0) &&
+            (this.currentSearchArgs.financeurs === null || this.currentSearchArgs.financeurs.length === 0) &&
+            (this.currentSearchArgs.thematiques === null || this.currentSearchArgs.thematiques.length === 0) &&
+            (this.currentSearchArgs.porteurs === null || this.currentSearchArgs.porteurs.length === 0) &&
+            (this.currentSearchArgs.types_porteur === null || this.currentSearchArgs.types_porteur.length === 0)
+          ) 
+  }
+
+  public onSearchResult(data : FinancialDataModel[] | null ) {
+    this._currentSearchResults.set(data);
+  }
+
+ 
+  public searchArgsToText(): string {
+    let text = ""
+    if (this.currentSearchArgs === null)
+      return "";
+    if (this.currentSearchArgs.niveau !== null && this.currentSearchArgs.localisations && this.currentSearchArgs.localisations.length !== 0)
+      text += this.currentSearchArgs.niveau + " : " + this.currentSearchArgs.localisations?.map(l => l.code + " - " + l.nom).join(",")
+    if (this.currentSearchArgs.qpv_codes !== null && this.currentSearchArgs.qpv_codes.length !== 0)
+      text += (text.length !== 0 ? " ; " : "") + "QPV : " + this.currentSearchArgs.qpv_codes?.map(q => q.code + " - " + q.label).join(",")
+    if (this.currentSearchArgs.annees !== null && this.currentSearchArgs.annees.length !== 0)
+      text += (text.length !== 0 ? " ; " : "") + "Années : " + this.currentSearchArgs.annees?.join(",")
+    return text
   }
 
 }
