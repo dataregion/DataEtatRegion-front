@@ -20,14 +20,17 @@
 
         <div class="fr-header__tools">
           <div class="fr-header__tools-links">
-            <ul *ngIf="isLoggedIn && user !== null" class="fr-btns-group">
+            @if(isLoggedIn && user !== null) {
+            <ul class="fr-btns-group">
 
-              <li>
-                <button
-                  class="fr-btn fr-btn--tertiary-no-outline fr-icon-bookmark-line" matTooltip="Mes recherches"
-                  routerLink="preference">Mes recherches
-                </button>
-              </li>
+              @if(displayPreference) {
+                <li>
+                  <button
+                    class="fr-btn fr-btn--tertiary-no-outline fr-icon-bookmark-line" matTooltip="Mes recherches"
+                    routerLink="preference">Mes recherches
+                  </button>
+                </li>
+              }
 
               <ng-content select="[help]" />
 
@@ -51,6 +54,7 @@
               </li>
 
             </ul>
+            }
           </div>
         </div>
       </div>

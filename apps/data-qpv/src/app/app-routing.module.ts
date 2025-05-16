@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { RegisterComponent } from 'apps/common-lib/src/lib/components/register/register.component';
 import { TermOfUseComponent } from 'apps/common-lib/src/lib/components/term-of-use/term-of-use.component';
 import { keycloakAuthGuardCanActivate } from 'apps/common-lib/src/public-api';
 import { HelpComponent } from './pages/help/help.component';
@@ -31,10 +30,6 @@ const routes: Routes = [
     component: HelpComponent,
     canActivate: [keycloakAuthGuardCanActivate],
     runGuardsAndResolvers: 'always',
-  },
-  {
-    path: 'register',
-    component: RegisterComponent,
   },
   {
     path: 'cgu',

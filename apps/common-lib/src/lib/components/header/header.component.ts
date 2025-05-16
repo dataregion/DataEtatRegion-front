@@ -27,6 +27,9 @@ export class HeaderComponent implements OnInit {
   @Input()
   logo: string = 'DataEtat.svg';
 
+  @Input()
+  displayPreference: boolean = true;
+
   constructor(
     protected session: SessionService,  
     private _keycloak: KeycloakService
