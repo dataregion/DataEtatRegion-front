@@ -282,7 +282,7 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
   /**
    * Resultats de la recherche.
    */
-  @Output() searchArgsEventEmitter = new EventEmitter<QpvSearchArgs>();
+  @Output() searchArgsEventEmitter = new EventEmitter<QpvSearchArgs | null>();
 
 
   /**
@@ -463,25 +463,13 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
    */
   private _search_subscription?: Subscription;
   public doSearch(): void {
-
     this._search_subscription?.unsubscribe();
 
     const formValue = this.searchForm.value;
     this.searchInProgress.next(true);
 
     this.currentFilter = this._buildPreference(formValue as JSONObject);
-    const newQpvSearchArgsObject: QpvSearchArgs = {
-      annees: this.selectedAnnees,
-      niveau: this.selectedNiveau,
-      localisations: this.selectedLocalisations,
-      qpv_codes: this.selectedQpv,
-      financeurs: this.selectedFinanceurs,
-      thematiques: this.selectedThematiques,
-      porteurs: this.selectedPorteurs,
-      types_porteur: this.selectedTypesPorteur,
-    };
-
-    this.searchArgsEventEmitter.next(newQpvSearchArgsObject);
+   
 
     const search_parameters: SearchParameters = {
       ...SearchParameters_empty,
@@ -495,13 +483,25 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
       types_beneficiaires: formValue.types_porteur || null,
     }
 
+     const newQpvSearchArgsObject: QpvSearchArgs = {
+      annees: this.selectedAnnees,
+      niveau: this.selectedNiveau,
+      localisations: this.selectedLocalisations,
+      qpv_codes: this.selectedQpv as RefQpvWithCommune[],
+      financeurs: this.selectedFinanceurs,
+      thematiques: this.selectedThematiques,
+      porteurs: this.selectedPorteurs,
+      types_porteur: this.selectedTypesPorteur,
+    };
+
     if (search_parameters.qpvs === null && formValue.localisations && formValue.niveau) { // si pas de qpv, on va peupler avec les QPV de la locations
       const niveau = formValue.niveau as TypeLocalisation;
       const codes = formValue.localisations.map(geo => geo.code);
       const qpvs = this._filterQpvByTypeLocalisation(codes, niveau);
       search_parameters.qpvs = qpvs;
-
     }
+
+    this.searchArgsEventEmitter.next(newQpvSearchArgsObject);
 
     this._search_subscription = this._budgetService
       .search(search_parameters)
@@ -547,6 +547,7 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
   public reset(): void {
     this.searchFinish = false;
     this.searchForm.reset();
+    this.searchArgsEventEmitter.next(null)
   }
 
 
@@ -564,7 +565,7 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
       this.selectedNiveau = this.selectedLocalisations != null ? this.selectedLocalisations.map(gm => gm.type)[0] as TypeLocalisation : null;
     }
     if (preFilter.qpv) {
-      this.selectedQpv = preFilter.qpv as unknown as GeoModel[]
+      this.selectedQpv = preFilter.qpv as unknown as RefQpvWithCommune[]
     }
     if (preFilter.financeurs) {
       this.selectedFinanceurs = preFilter.financeurs as unknown as CentreCouts[]
