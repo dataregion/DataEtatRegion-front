@@ -612,7 +612,7 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
   public selectLocalisationChange(event: GeoModel[] | null): void {
     this.searchForm.get('qpv')?.reset();
 
-    if (event) {
+    if (event && event.length > 0) {
       const type = event[0].type;
       const codes = event.map(geo => geo.code);
       this.filteredQPV = this._filterQpvByTypeLocalisation(codes, type as TypeLocalisation);

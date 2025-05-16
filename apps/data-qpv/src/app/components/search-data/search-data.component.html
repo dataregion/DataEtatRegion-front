@@ -1,12 +1,10 @@
-<ng-container *ngIf="displayError && error?.name else form">
-  <div class="box" data-test-id="search-cmp-error-msg">
+@if(displayError && error?.name) {
+ <div class="box" data-test-id="search-cmp-error-msg">
     <div class="fr-alert fr-alert--error">
       <p>{{error?.message}}</p>
     </div>
   </div>
-</ng-container>
-
-<ng-template #form>
+} @else {
   <form [formGroup]="searchForm" autocomplete="off">
     <div class="box fr-grid-row">
       <div class="fr-col-2 wrapper-select">
@@ -151,4 +149,4 @@
           [(selected)]="selectedTypesPorteur" />
 
   </form>
-</ng-template>
+}

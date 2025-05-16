@@ -22,7 +22,8 @@ export class TabsMapTableComponent {
 
   @ViewChild('datatable') datatable?: DsfrTableComponent;
 
-  public rowsPerPageOptions: DsfrOption[] = []
+  public rowsPerPageOptions: DsfrOption[] = [ { label: '10 lignes par page ', value: 10 }, { label: '20 lignes par page', value: 20 } ]
+
 
   @Input()
   public bops: string = ""

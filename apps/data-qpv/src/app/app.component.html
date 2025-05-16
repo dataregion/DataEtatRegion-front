@@ -8,15 +8,24 @@
 
 </lib-header>
 
-<div *ngIf="progressBarVisible === true">
+@if(progressBarVisible === true) {
+<div>
   <mat-progress-bar mode="query"/>
 </div>
+}
+
 
 <router-outlet class="page-content-outlet"/>
 
-<lib-footer *ngIf="isAuthenticated" [ngClass]="{'hidden': grid_fullscreen }" [logo]="'DataEtat.svg'">
-  <li class="fr-footer__bottom-item" *ngIf="help">
-    <a class="fr-footer__bottom-link" href="{{help}}" target="_blank">Aide en
-      ligne</a>
-  </li>
+@if(isAuthenticated) {
+<lib-footer [ngClass]="{'hidden': grid_fullscreen }" [logo]="'DataEtat.svg'">
+  @if(help) {
+    <li class="fr-footer__bottom-item">
+      <a class="fr-footer__bottom-link" href="{{help}}" target="_blank">Aide en
+        ligne</a>
+    </li>
+  }
+ 
 </lib-footer>
+}
+
