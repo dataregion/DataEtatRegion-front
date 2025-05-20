@@ -1,6 +1,5 @@
 import { HttpClient } from "@angular/common/http";
 import { Inject, Injectable, inject } from "@angular/core";
-import { SourceFinancialData } from "apps/data-qpv/src/app/models/financial/common.models";
 import { FinancialDataModel } from "apps/data-qpv/src/app/models/financial/financial-data.models";
 import { BudgetService as GeneratedBudgetApiService } from "apps/clients/budget";
 import { EnrichedFlattenFinancialLinesSchema } from "apps/clients/budget/model/enrichedFlattenFinancialLinesSchema";
@@ -18,9 +17,6 @@ import { SearchUtilsService } from "apps/common-lib/src/lib/services/search-util
 })
 export class BudgetDataHttpService implements DataHttpService<EnrichedFlattenFinancialLinesSchema, FinancialDataModel> {
 
-    private _apiAdministration!: string;
-    private _financialApiUrl!: string;
-    private _laureatsApiUrl!: string;
     private _budgetApi: GeneratedBudgetApiService = inject(GeneratedBudgetApiService);
     private _searchUtils: SearchUtilsService = inject(SearchUtilsService)
     private _mapper: BudgetLineHttpMapper;
@@ -29,9 +25,6 @@ export class BudgetDataHttpService implements DataHttpService<EnrichedFlattenFin
         private http: HttpClient,
         @Inject(SETTINGS) readonly settings: SettingsService,  
     ) {
-        this._apiAdministration = this.settings.apiAdministration;
-        this._financialApiUrl = settings.apiFinancialData;
-        this._laureatsApiUrl = settings.apiLaureatsData;
         this._mapper = new BudgetLineHttpMapper();
     }
 
@@ -44,17 +37,6 @@ export class BudgetDataHttpService implements DataHttpService<EnrichedFlattenFin
         const mapped = this._mapper.map(object)
         return mapped
     }
-
-    getSources(): string[] {
-        return [SourceFinancialData.FINANCIAL_AE, SourceFinancialData.FINANCIAL_CP, SourceFinancialData.ADEME];
-    }
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    public getById(source: SourceFinancialData, id: any, ..._: any[]): Observable<EnrichedFlattenFinancialLinesSchema> {
-        return this._budgetApi.getGetBudgetCtrl(source, `${id}`)
-    }
-
-
-
     /**
      *
      * @param SearchParameters
@@ -123,36 +105,7 @@ export class BudgetDataHttpService implements DataHttpService<EnrichedFlattenFin
 
         return arg
     }
-     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    public loadFinancialBudget(fileAe: File, fileCp: File, annee: string): Observable<any> {
-        const formData = new FormData();
-        formData.append('fichierAe', fileAe);
-        formData.append('fichierCp', fileCp);
-        formData.append('annee', annee);
-        return this.http.post(`${this._financialApiUrl}/region`, formData);
-    }
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    public loadFinancialFrance2030(file: File, annee: string): Observable<any> {
-        const formData = new FormData();
-        formData.append('fichier', file);
-        formData.append('annee', annee);
-        return this.http.post(`${this._laureatsApiUrl}/france-2030`, formData);
-    }
-     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    public loadReferentielFile(file: File): Observable<any> {
-        const formData = new FormData();
-        formData.append('fichier', file);
-
-        return this.http.post(`${this._apiAdministration}/referentiels`, formData);
-    }
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    public loadMajTagsFile(file: File): Observable<any> {
-        const formData = new FormData();
-        formData.append('fichier', file);
-
-        return this.http.post(`${this._financialApiUrl}/tags/maj_ae_tags_from_export`, formData);
-    }
-
+    
     public getAnnees(): Observable<number[]> {
         return this._budgetApi.getGetPlageAnnees()
     }

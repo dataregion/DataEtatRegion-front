@@ -267,7 +267,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     if (this.map && this.map.getView && typeof this.map.getView === 'function') {
       zoomLevel = this.map.getView().getZoom();
     }
-    let circleColor = this.colorLavande;
+    const  circleColor = this.colorLavande;
 
     const nomStyle = new Style({
       text: new Text({
