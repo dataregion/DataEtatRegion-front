@@ -1,32 +1,32 @@
-import {Component, Input, AfterViewInit, ViewEncapsulation, OnDestroy, input, effect, computed} from '@angular/core';
+import { Component, Input, AfterViewInit, ViewEncapsulation, OnDestroy, input, effect, computed } from '@angular/core';
 import Map from 'ol/Map';
 import View from 'ol/View';
 import TileLayer from 'ol/layer/Tile';
-import {FullScreen, defaults as defaultControls } from 'ol/control';
+import { FullScreen, defaults as defaultControls } from 'ol/control';
 import XYZ from 'ol/source/XYZ';
 import { fromLonLat } from 'ol/proj';
-import { MVT, WKT} from "ol/format";
-import {Fill, Stroke, Style} from "ol/style";
+import { MVT, WKT } from "ol/format";
+import { Fill, Stroke, Style } from "ol/style";
 import CircleStyle from "ol/style/Circle";
 import VectorSource from "ol/source/Vector";
 import VectorLayer from "ol/layer/Vector";
-import {Feature} from "ol";
+import { Feature } from "ol";
 import Cluster from 'ol/source/Cluster';
 import Text from 'ol/style/Text';
-import {FeatureLike} from "ol/Feature";
+import { FeatureLike } from "ol/Feature";
 import { MapLevelCustomControlService, LevelControl } from './map-level-custom-control.service';
-import {VectorTile as VectorTileLayer} from "ol/layer";
-import {VectorTile as VectorTileSource} from "ol/source";
-import {QpvSearchArgs} from "../../models/qpv-search/qpv-search.models";
+import { VectorTile as VectorTileLayer } from "ol/layer";
+import { VectorTile as VectorTileSource } from "ol/source";
+import { QpvSearchArgs } from "../../models/qpv-search/qpv-search.models";
 import { FinancialDataModel } from "../../models/financial/financial-data.models";
 import { QpvWithMontant, RefQpvWithCommune } from '../../models/refs/qpv.model';
 
 @Component({
-    selector: 'data-qpv-map',
-    templateUrl: './map.component.html',
-    styleUrls: ['./map.component.scss'],
-    encapsulation: ViewEncapsulation.None,
-    standalone: false
+  selector: 'data-qpv-map',
+  templateUrl: './map.component.html',
+  styleUrls: ['./map.component.scss'],
+  encapsulation: ViewEncapsulation.None,
+  standalone: false
 })
 export class MapComponent implements AfterViewInit, OnDestroy {
 
@@ -56,11 +56,11 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   }
 
   public readonly financialData = input<FinancialDataModel[]>();
-  public readonly qpv =  input<RefQpvWithCommune[]>([]);
+  public readonly qpv = input<RefQpvWithCommune[]>([]);
 
   qpvWithMontant = computed(() => {
     const financialData = this.financialData() ?? [];
-    const groupedQpvMontant = financialData.reduce( (acc, item) => {
+    const groupedQpvMontant = financialData.reduce((acc, item) => {
       const key = item.lieu_action?.code_qpv;
 
       if (key) {
@@ -74,13 +74,17 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
     const qpvWithMontant = this.qpv().map(qpv => {
       if (groupedQpvMontant[qpv.code]) {
-        return {...qpv, montant: groupedQpvMontant[qpv.code]} as QpvWithMontant;
+        return { ...qpv, montant: groupedQpvMontant[qpv.code] } as QpvWithMontant;
       } else {
-        return {...qpv, montant: 0} as QpvWithMontant;
+        return { ...qpv, montant: 0 } as QpvWithMontant;
       }
     });
     return qpvWithMontant;
   });
+
+  public readonly totalMontant = computed(() =>
+    this.qpvWithMontant().reduce((acc, qpv) => acc + qpv.montant, 0)
+  );
 
   constructor(
     private _mapLevelControlService: MapLevelCustomControlService,
@@ -112,7 +116,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       this._loadDataMap(qpvWithMontant);
     });
   }
-  
+
   ngAfterViewInit(): void {
     const franceCoordinates = fromLonLat([1.888334, 46.603354]);
 
@@ -121,7 +125,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       controls: defaultControls().extend([new FullScreen()]),
       layers: [
         new TileLayer({ // Fond de carte
-          source:  new XYZ({
+          source: new XYZ({
             url: 'https://{a-c}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png',
           })
         }),
@@ -158,36 +162,35 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   }
 
   private _loadDataMap(qpvWithMontant: QpvWithMontant[]) {
-
-    console.log("Dans loadDataMap");
     const features_countours: Feature[] = [];
     const features_points: Feature[] = [];
-    qpvWithMontant.forEach( qpv => {
-       const geom = new WKT().readGeometry(qpv.geom, {
-          dataProjection: 'EPSG:4326', // Data is in lat/lon (WGS84)
-          featureProjection: 'EPSG:3857' // Transform to Web Mercator for OpenLayers
-        });
+    qpvWithMontant.forEach(qpv => {
+      const geom = new WKT().readGeometry(qpv.geom, {
+        dataProjection: 'EPSG:4326', // Data is in lat/lon (WGS84)
+        featureProjection: 'EPSG:3857' // Transform to Web Mercator for OpenLayers
+      });
 
-        const feature_countour = new Feature({
-          geometry: geom,
-          name: qpv.label,
-          code: qpv.code,
-        });
+      const feature_countour = new Feature({
+        geometry: geom,
+        name: qpv.label,
+        code: qpv.code,
+      });
 
-        const point = new WKT().readGeometry(qpv.centroid, {
-          dataProjection: 'EPSG:4326', // Data is in lat/lon (WGS84)
-          featureProjection: 'EPSG:3857' // Transform to Web Mercator for OpenLayers
-        });
+      const point = new WKT().readGeometry(qpv.centroid, {
+        dataProjection: 'EPSG:4326', // Data is in lat/lon (WGS84)
+        featureProjection: 'EPSG:3857' // Transform to Web Mercator for OpenLayers
+      });
 
-        const feature_point = new Feature({
-          geometry: point,
-          name: qpv.label,
-          code: qpv.code,
-        });
+      const feature_point = new Feature({
+        geometry: point,
+        name: qpv.label,
+        code: qpv.code,
+        montant: qpv.montant
+      });
 
-        feature_countour.setStyle(this.selectedContourStyleFuction);
-        features_countours.push(feature_countour);
-        features_points.push(feature_point);
+      feature_countour.setStyle(this.selectedContourStyleFuction);
+      features_countours.push(feature_countour);
+      features_points.push(feature_point);
 
     });
 
@@ -199,75 +202,11 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     this.updateCustomControl();
   }
 
-
-  // public fetchQpvs() {
-  //   // const cachedContours = this._cacheQPVService.get("map-qpv-contours");
-  //   // const cachedPoints = this._cacheQPVService.get("map-qpv-points");
-
-  //   // if (cachedContours && cachedPoints) {
-  //   //   this.contourLayer.getSource()?.addFeatures(cachedContours);
-  //   //   const clusterSource = this.clusterLayer.getSource() as Cluster<Feature>; // Get the Cluster source
-  //   //   const vectorSource = clusterSource.getSource() as VectorSource; // Get the underlying VectorSource
-  //   //   vectorSource.addFeatures(cachedPoints);
-  //   //   this.updateCustomControl();
-  //   //   return;
-  //   // }
-
-  //   this._budgetService.getRefGeoQpv().subscribe( qpvsData => {
-  //     const features_countours: Feature[] = [];
-  //     const features_points: Feature[] = [];
-
-  //     qpvsData?.qpvs.forEach(qpv => {
-  //       // Assuming geom is in GeoJSON format
-  //       const geom = new WKT().readGeometry(qpv.geom, {
-  //         dataProjection: 'EPSG:4326', // Data is in lat/lon (WGS84)
-  //         featureProjection: 'EPSG:3857' // Transform to Web Mercator for OpenLayers
-  //       });
-
-  //       const feature_countour = new Feature({
-  //         geometry: geom,
-  //         name: qpv.label,
-  //         code: qpv.code,
-  //       });
-
-  //       const point = new WKT().readGeometry(qpv.centroid, {
-  //         dataProjection: 'EPSG:4326', // Data is in lat/lon (WGS84)
-  //         featureProjection: 'EPSG:3857' // Transform to Web Mercator for OpenLayers
-  //       });
-
-  //       const feature_point = new Feature({
-  //         geometry: point,
-  //         name: qpv.label,
-  //         code: qpv.code,
-  //       });
-
-  //       // We apply countour style for each feature
-  //       if (this._searchArgs?.qpv_codes?.map(qpv => qpv.code)?.includes(feature_countour.get('code'))) {
-  //         feature_countour.setStyle(this.selectedContourStyleFuction);
-  //       } else {
-  //         feature_countour.setStyle(this.contourStyleFuction);
-  //       }
-
-  //       features_countours.push(feature_countour);
-  //       features_points.push(feature_point);
-  //     });
-  //     this._cacheQPVService.set("map-qpv-contours", features_countours);
-  //     this._cacheQPVService.set("map-qpv-points", features_points);
-
-  //     this.contourLayer.getSource()?.addFeatures(features_countours);
-
-  //     const clusterSource = this.clusterLayer.getSource() as Cluster<Feature>; // Get the Cluster source
-  //     const vectorSource = clusterSource.getSource() as VectorSource; // Get the underlying VectorSource
-  //     vectorSource.addFeatures(features_points);
-  //     this.updateCustomControl();
-  //   });
-  // }
-
   private updateCustomControl(): void {
 
-   const selectedQpv = this._searchArgs?.qpv_codes?.map(qpv => qpv.code)
-   const selectedAnnees = this._searchArgs?.annees
-   const selectedNiveau = this._searchArgs?.niveau
+    const selectedQpv = this._searchArgs?.qpv_codes?.map(qpv => qpv.code)
+    const selectedAnnees = this._searchArgs?.annees
+    const selectedNiveau = this._searchArgs?.niveau
 
     const clusterSource = this.clusterLayer.getSource() as Cluster<Feature>; // Get the Cluster source
     const vectorSource = clusterSource.getSource() as VectorSource;
@@ -279,42 +218,49 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     features: Feature[],
     codes: string[] | null | undefined
   ): Feature[] | null | undefined {
-    return features.filter(function(feature) {
+    return features.filter(function (feature) {
       return codes?.includes(feature.get('code'));
     });
   }
 
-  private clusterStyleFunction(feature: FeatureLike): Style {
+  private clusterStyleFunction(feature: FeatureLike): Style[] {
     const size = feature.get('features').length; // Get number of features in the cluster
 
-    if(size > 1) {
-      return this.multiFeaturesStyleFunction(feature.get('features'), size);
+    if (size > 1) {
+      return [this.multiFeaturesStyleFunction(feature.get('features'))];
     } else {
       return this.singleFeatureStyleFunction(feature.get('features')?.[0]);
     }
   }
 
-  private multiFeaturesStyleFunction(features: FeatureLike[], size: number): Style {
-    let circleColor = this.colorDarkBlue;
-    if(this.doesSelectedInFeatures(features)) {
-      circleColor = this.colorSelected;
-    }
+  private multiFeaturesStyleFunction(features: FeatureLike[]): Style {
+    const circleColor = this.colorDarkBlue;
+    const totalMontant = features.reduce((acc, f) => {
+      const m = f.get('montant');
+      return acc + (typeof m === 'number' ? m : 0);
+    }, 0);
+
+    const formattedMontant = `${totalMontant.toLocaleString()} €`;
+
     return new Style({
       image: new CircleStyle({
-        radius: Math.min(30, 10 + size * 3),
-        fill: new Fill({ color: `rgba( ${circleColor}, 1)` }),
+        radius: this.computeRadius(totalMontant),
+        fill: new Fill({ color: `rgba(${circleColor}, 1)` }),
       }),
       text: new Text({
-        text: size.toString(),
-        fill: new Fill({ color: 'white' }),
-        font: 'bold 16px Marianne, Calibri,sans-serif',
+        text: formattedMontant,
+        fill: new Fill({ color: '#fff' }),
+        font: 'bold 14px Arial',
+        textAlign: 'center',
+        textBaseline: 'middle',
       }),
       zIndex: 1,
     });
   }
 
-  private singleFeatureStyleFunction(feature: FeatureLike): Style {
+  private singleFeatureStyleFunction(feature: FeatureLike): Style[] {
     const featureName = feature?.get('name') ?? '';
+    const montant = feature?.get('montant') ?? 0;
     let zoomLevel: number | undefined;
 
     // Check if `this.map` is defined and has the necessary methods
@@ -322,30 +268,37 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       zoomLevel = this.map.getView().getZoom();
     }
     let circleColor = this.colorLavande;
-    if(this.doesSelectedInFeature(feature)) {
-      circleColor = this.colorSelected;
-    }
 
-    return new Style({
+    const nomStyle = new Style({
+      text: new Text({
+        backgroundStroke: new Stroke({ color: `rgba(255, 255, 255, 1)`, width: 16, lineCap: 'round', lineJoin: 'round' }),
+        backgroundFill: new Fill({ color: `rgba(255, 255, 255, 1)` }),
+        text: featureName,
+        fill: new Fill({ color: `rgba(${this.colorDarkBlue}, 1)` }),
+        font: 'bold 14px Marianne, Calibri, sans-serif',
+        offsetY: (zoomLevel && zoomLevel > this.clusterZoomThreshold) ? 75 : 35,
+        textAlign: 'center',
+      }),
+      zIndex: 101
+    });
+    const radius = this.computeRadius(montant);
+
+    const montantStyle = new Style({
       image: new CircleStyle({
-        radius: (zoomLevel && zoomLevel > this.clusterZoomThreshold) ? 50 : 10,
-        fill: new Fill({ color: `rgba( ${circleColor}, 0.2)` }),
-        stroke: new Stroke({
-          color: `rgba( ${circleColor}, 1)`,
-          width: 3
-        })
+        radius: radius,
+        fill: new Fill({ color: `rgba(${circleColor}, 0.2)` }),
+        stroke: new Stroke({ color: `rgba(${circleColor}, 1)`, width: 3 })
       }),
       text: new Text({
-        backgroundStroke: new Stroke({ color: `rgba( 255, 255, 255, 1)`, width: 16, lineCap: 'round', lineJoin: 'round', }),
-        backgroundFill: new Fill({ color: `rgba( 255, 255, 255, 1)` }),
-        text: featureName,
-        fill: new Fill({ color: `rgba( ${this.colorDarkBlue}, 1)` }),
-        font: 'bold 16px Marianne, Calibri,sans-serif',
-        offsetX: 0,
-        offsetY: (zoomLevel && zoomLevel > this.clusterZoomThreshold) ? 75 : 35,
+        text: `${montant.toLocaleString()} €`,
+        fill: new Fill({ color: '#000' }), // texte noir au centre
+        font: 'bold 14px Arial',
+        textAlign: 'center',
+        textBaseline: 'middle',
       }),
-      zIndex:100
+      zIndex: 100
     });
+    return [nomStyle,montantStyle];
   }
 
   private contourStyleFuction() {
@@ -372,22 +325,17 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     })
   }
 
-  private doesSelectedInFeatures(features: FeatureLike[]): boolean {
-    const selectedCodes: string[] | undefined= this._searchArgs?.qpv_codes?.map(qpv => qpv.code);
-    if (selectedCodes) {
-      for (const feature of features) {
-        if (selectedCodes?.includes(feature.get('code'))) {
-          return true;
-        }
-      }
-    }
+  private computeRadius(montant: number): number {
+    const total = this.totalMontant();
+    if (!total ||montant <=0) return 20;
 
-    return false
-  }
+    if (total === montant) return 60;
 
-  private doesSelectedInFeature(feature: FeatureLike): boolean {
-    const selectedCodes: string[] | undefined= this._searchArgs?.qpv_codes?.map(qpv => qpv.code);
-    return !!selectedCodes?.includes(feature.get('code'));
+    const minRadius = 30;
+    const maxAdditional = 60; 
+   
+    const radius =  minRadius + (montant / total) * maxAdditional;
+    return radius
   }
 
   ngOnDestroy(): void {
