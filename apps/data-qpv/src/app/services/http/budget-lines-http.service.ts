@@ -1,7 +1,7 @@
 import { HttpClient } from "@angular/common/http";
 import { Inject, Injectable, inject } from "@angular/core";
 import { SourceFinancialData } from "apps/data-qpv/src/app/models/financial/common.models";
-import { FinancialCp, FinancialDataModel } from "apps/data-qpv/src/app/models/financial/financial-data.models";
+import { FinancialDataModel } from "apps/data-qpv/src/app/models/financial/financial-data.models";
 import { BudgetService as GeneratedBudgetApiService } from "apps/clients/budget";
 import { EnrichedFlattenFinancialLinesSchema } from "apps/clients/budget/model/enrichedFlattenFinancialLinesSchema";
 import { SETTINGS } from "apps/common-lib/src/lib/environments/settings.http.service";
@@ -53,10 +53,6 @@ export class BudgetDataHttpService implements DataHttpService<EnrichedFlattenFin
         return this._budgetApi.getGetBudgetCtrl(source, `${id}`)
     }
 
-    public getCp(id: number): Observable<FinancialCp[]> {
-        // XXX: ici, on requête forcement un CP rattaché à une AE.
-        return this.http.get<FinancialCp[]>(`${this._financialApiUrl}/ae/${id}/cp`);
-    }
 
 
     /**

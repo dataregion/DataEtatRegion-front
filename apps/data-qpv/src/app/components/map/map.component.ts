@@ -1,11 +1,10 @@
-import {Component, Input, AfterViewInit, ViewEncapsulation, OnDestroy} from '@angular/core';
+import {Component, Input, AfterViewInit, ViewEncapsulation, OnDestroy, input, effect, computed} from '@angular/core';
 import Map from 'ol/Map';
 import View from 'ol/View';
 import TileLayer from 'ol/layer/Tile';
 import {FullScreen, defaults as defaultControls } from 'ol/control';
 import XYZ from 'ol/source/XYZ';
 import { fromLonLat } from 'ol/proj';
-import {BudgetService} from "apps/data-qpv/src/app/services/budget.service";
 import { MVT, WKT} from "ol/format";
 import {Fill, Stroke, Style} from "ol/style";
 import CircleStyle from "ol/style/Circle";
@@ -19,7 +18,8 @@ import { MapLevelCustomControlService, LevelControl } from './map-level-custom-c
 import {VectorTile as VectorTileLayer} from "ol/layer";
 import {VectorTile as VectorTileSource} from "ol/source";
 import {QpvSearchArgs} from "../../models/qpv-search/qpv-search.models";
-import { CacheQPVService } from './cache-qpv.service';
+import { FinancialDataModel } from "../../models/financial/financial-data.models";
+import { QpvWithMontant, RefQpvWithCommune } from '../../models/refs/qpv.model';
 
 @Component({
     selector: 'data-qpv-map',
@@ -48,15 +48,41 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   clusterZoomThreshold = 12;
 
   private _searchArgs: QpvSearchArgs | null = null;
+
   @Input()
   set searchArgs(data: QpvSearchArgs | null) {
     this._searchArgs = data;
     this.mapLevelControl?.gotoCurrentCenter();
   }
 
+  public readonly financialData = input<FinancialDataModel[]>();
+  public readonly qpv =  input<RefQpvWithCommune[]>([]);
+
+  qpvWithMontant = computed(() => {
+    const financialData = this.financialData() ?? [];
+    const groupedQpvMontant = financialData.reduce( (acc, item) => {
+      const key = item.lieu_action?.code_qpv;
+
+      if (key) {
+        if (!acc[key]) {
+          acc[key] = 0;
+        }
+        acc[key] += item.montant_ae ?? 0;
+      }
+      return acc;
+    }, {} as Record<string, number>);
+
+    const qpvWithMontant = this.qpv().map(qpv => {
+      if (groupedQpvMontant[qpv.code]) {
+        return {...qpv, montant: groupedQpvMontant[qpv.code]} as QpvWithMontant;
+      } else {
+        return {...qpv, montant: 0} as QpvWithMontant;
+      }
+    });
+    return qpvWithMontant;
+  });
+
   constructor(
-    private _budgetService: BudgetService,
-    private _cacheQPVService: CacheQPVService,
     private _mapLevelControlService: MapLevelCustomControlService,
   ) {
     this.mapId = `ol-map-${Math.floor(Math.random() * 100)}`;
@@ -80,8 +106,13 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
     this.contourStyleFuction = this.contourStyleFuction.bind(this);
     this.selectedContourStyleFuction = this.selectedContourStyleFuction.bind(this);
-  }
 
+    effect(() => {
+      const qpvWithMontant = this.qpvWithMontant();
+      this._loadDataMap(qpvWithMontant);
+    });
+  }
+  
   ngAfterViewInit(): void {
     const franceCoordinates = fromLonLat([1.888334, 46.603354]);
 
@@ -124,30 +155,15 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
     this.map?.addLayer(this.contourLayer);
     this.map?.addLayer(this.clusterLayer);
-
-    this.fetchQpvs();
   }
 
-  public fetchQpvs() {
-    const cachedContours = this._cacheQPVService.get("map-qpv-contours");
-    const cachedPoints = this._cacheQPVService.get("map-qpv-points");
+  private _loadDataMap(qpvWithMontant: QpvWithMontant[]) {
 
-    if (cachedContours && cachedPoints) {
-      this.contourLayer.getSource()?.addFeatures(cachedContours);
-      const clusterSource = this.clusterLayer.getSource() as Cluster<Feature>; // Get the Cluster source
-      const vectorSource = clusterSource.getSource() as VectorSource; // Get the underlying VectorSource
-      vectorSource.addFeatures(cachedPoints);
-      this.updateCustomControl();
-      return;
-    }
-
-    this._budgetService.getRefGeoQpv().subscribe( qpvsData => {
-      const features_countours: Feature[] = [];
-      const features_points: Feature[] = [];
-
-      qpvsData?.qpvs.forEach(qpv => {
-        // Assuming geom is in GeoJSON format
-        const geom = new WKT().readGeometry(qpv.geom, {
+    console.log("Dans loadDataMap");
+    const features_countours: Feature[] = [];
+    const features_points: Feature[] = [];
+    qpvWithMontant.forEach( qpv => {
+       const geom = new WKT().readGeometry(qpv.geom, {
           dataProjection: 'EPSG:4326', // Data is in lat/lon (WGS84)
           featureProjection: 'EPSG:3857' // Transform to Web Mercator for OpenLayers
         });
@@ -169,27 +185,83 @@ export class MapComponent implements AfterViewInit, OnDestroy {
           code: qpv.code,
         });
 
-        // We apply countour style for each feature
-        if (this._searchArgs?.qpv_codes?.map(qpv => qpv.code)?.includes(feature_countour.get('code'))) {
-          feature_countour.setStyle(this.selectedContourStyleFuction);
-        } else {
-          feature_countour.setStyle(this.contourStyleFuction);
-        }
-
+        feature_countour.setStyle(this.selectedContourStyleFuction);
         features_countours.push(feature_countour);
         features_points.push(feature_point);
-      });
-      this._cacheQPVService.set("map-qpv-contours", features_countours);
-      this._cacheQPVService.set("map-qpv-points", features_points);
 
-      this.contourLayer.getSource()?.addFeatures(features_countours);
-
-      const clusterSource = this.clusterLayer.getSource() as Cluster<Feature>; // Get the Cluster source
-      const vectorSource = clusterSource.getSource() as VectorSource; // Get the underlying VectorSource
-      vectorSource.addFeatures(features_points);
-      this.updateCustomControl();
     });
+
+    this.contourLayer.getSource()?.addFeatures(features_countours);
+
+    const clusterSource = this.clusterLayer.getSource() as Cluster<Feature>; // Get the Cluster source
+    const vectorSource = clusterSource.getSource() as VectorSource; // Get the underlying VectorSource
+    vectorSource.addFeatures(features_points);
+    this.updateCustomControl();
   }
+
+
+  // public fetchQpvs() {
+  //   // const cachedContours = this._cacheQPVService.get("map-qpv-contours");
+  //   // const cachedPoints = this._cacheQPVService.get("map-qpv-points");
+
+  //   // if (cachedContours && cachedPoints) {
+  //   //   this.contourLayer.getSource()?.addFeatures(cachedContours);
+  //   //   const clusterSource = this.clusterLayer.getSource() as Cluster<Feature>; // Get the Cluster source
+  //   //   const vectorSource = clusterSource.getSource() as VectorSource; // Get the underlying VectorSource
+  //   //   vectorSource.addFeatures(cachedPoints);
+  //   //   this.updateCustomControl();
+  //   //   return;
+  //   // }
+
+  //   this._budgetService.getRefGeoQpv().subscribe( qpvsData => {
+  //     const features_countours: Feature[] = [];
+  //     const features_points: Feature[] = [];
+
+  //     qpvsData?.qpvs.forEach(qpv => {
+  //       // Assuming geom is in GeoJSON format
+  //       const geom = new WKT().readGeometry(qpv.geom, {
+  //         dataProjection: 'EPSG:4326', // Data is in lat/lon (WGS84)
+  //         featureProjection: 'EPSG:3857' // Transform to Web Mercator for OpenLayers
+  //       });
+
+  //       const feature_countour = new Feature({
+  //         geometry: geom,
+  //         name: qpv.label,
+  //         code: qpv.code,
+  //       });
+
+  //       const point = new WKT().readGeometry(qpv.centroid, {
+  //         dataProjection: 'EPSG:4326', // Data is in lat/lon (WGS84)
+  //         featureProjection: 'EPSG:3857' // Transform to Web Mercator for OpenLayers
+  //       });
+
+  //       const feature_point = new Feature({
+  //         geometry: point,
+  //         name: qpv.label,
+  //         code: qpv.code,
+  //       });
+
+  //       // We apply countour style for each feature
+  //       if (this._searchArgs?.qpv_codes?.map(qpv => qpv.code)?.includes(feature_countour.get('code'))) {
+  //         feature_countour.setStyle(this.selectedContourStyleFuction);
+  //       } else {
+  //         feature_countour.setStyle(this.contourStyleFuction);
+  //       }
+
+  //       features_countours.push(feature_countour);
+  //       features_points.push(feature_point);
+  //     });
+  //     this._cacheQPVService.set("map-qpv-contours", features_countours);
+  //     this._cacheQPVService.set("map-qpv-points", features_points);
+
+  //     this.contourLayer.getSource()?.addFeatures(features_countours);
+
+  //     const clusterSource = this.clusterLayer.getSource() as Cluster<Feature>; // Get the Cluster source
+  //     const vectorSource = clusterSource.getSource() as VectorSource; // Get the underlying VectorSource
+  //     vectorSource.addFeatures(features_points);
+  //     this.updateCustomControl();
+  //   });
+  // }
 
   private updateCustomControl(): void {
 

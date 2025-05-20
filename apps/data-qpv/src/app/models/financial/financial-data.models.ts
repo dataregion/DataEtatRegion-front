@@ -39,16 +39,5 @@ export interface FinancialDataModel extends ExportableAsJson {
 
   tags: Tag[];
 
-  // Les CP associées à la donnée financière.
-  // XXX: Présente uniquement si requêtée
-  financial_cp?: Optional<FinancialCp[]>
   data_source: Optional<string>
-}
-
-export interface FinancialCp {
-
-  date_base_dp: string;
-  montant: number;
-  n_dp: string;
-
 }

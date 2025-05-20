@@ -1,6 +1,4 @@
 <dsfr-tabs [selectedTabIndex]="selectedTabIndex" [tabsAriaLabel]="tabsAriaLabel" [fullViewport]="fullViewport">
-
-
     <dsfr-tab tabId="tab-table" label="Tableau">
       <div class="wrapper-tab-content">
 
@@ -13,13 +11,31 @@
           <div class="fr-col-12">
             <dsfr-datatable #datatable
               [caption]="''"
-              [data]="mappedResults()"
+              [data]="data()"
               [columns]="columns"
               [showSearch]="false"
               [rowsPerPageOptions]="rowsPerPageOptions"
               [pagination]="true"
               [initialState]="initialState"
-              />
+              >
+              <ng-template #tableBodyTemplate let-row let-rowOptions>
+                <tr>
+                  <td>{{ row.siret?.nom_beneficiaire ?? 'N/A' }}</td>
+                  <td>{{ row.montant_ae }}</td>
+                  <td>{{ row.annee }}</td>
+                  <td>{{ row.centre_couts?.code ?? 'N/A' }}</td>
+                  <td>{{ row.centre_couts?.description ?? 'N/A' }}</td>
+                  <td>{{ row.programme?.theme ?? 'N/A' }}</td>
+                  <td>{{ row.programme?.code ?? 'N/A' }}</td>
+                  <td>{{ row.lieu_action?.code_qpv ?? 'N/A' }}</td>
+                  <td>{{ row.lieu_action?.label_qpv ?? 'N/A' }}</td>
+                  <td>{{ row.commune?.label ?? 'N/A' }}</td>
+                  <td>{{ row.commune?.label_departement ?? 'N/A' }}</td>
+
+                </tr>
+              </ng-template>
+
+              </dsfr-datatable>
           </div>
         </div>
         }
@@ -31,7 +47,7 @@
       @if(dataLoaded) {
         <div class="fr-grid-row fr-grid-row--gutters test">
           <div class="fr-col-12">
-            <data-qpv-map [searchArgs]="searchArgs" />
+            <data-qpv-map [searchArgs]="searchArgs" [qpv]="qpv()" [financialData]="data()" />
           </div>
         </div>
       }

@@ -11,6 +11,9 @@ export interface RefQpvWithCommune extends RefQpv {
   nom_epci: string,
 }
 
+export interface QpvWithMontant extends RefQpv {
+  montant: number
+}
 
 /**
  * Interface contenant la liste des departement, epci et qpv

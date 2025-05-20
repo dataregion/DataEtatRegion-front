@@ -10,6 +10,7 @@
       <div class="fr-col-12" style="margin-bottom:30px;">
         @if(financialData) {
         <data-qpv-search-data (searchArgsEventEmitter)="currentSearchArgs = $event"
+                            (qpvSelectedEventEmitter)="qpvSelected = $event"
                             [refGeo]="financialData.refGeo"
                             [preFilter]="preFilter"
                             [(searchFinish)]="searchFinish"
@@ -53,7 +54,7 @@
           <data-qpv-tabs-superset-iframes [searchArgs]="currentSearchArgs" [searchResults]="currentSearchResults()" [(selectedTabIndex)]="selectedTabIndex"/>
         </div>
         <div class="fr-col-6" style="margin-bottom: 50px;">
-          <data-qpv-tabs-map-table [searchArgs]="currentSearchArgs" [searchResults]="currentSearchResults()" [selectedTabIndexCredits]="selectedTabIndex" />
+          <data-qpv-tabs-map-table [searchArgs]="currentSearchArgs" [qpv]="qpvSelected" [searchResults]="currentSearchResults()" [selectedTabIndexCredits]="selectedTabIndex" />
         </div>
       </div>
     } @else {

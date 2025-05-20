@@ -281,6 +281,10 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
    */
   @Output() searchArgsEventEmitter = new EventEmitter<QpvSearchArgs | null>();
 
+  /**
+   * Les Qpvs selectionnés lors de la recherche
+   */
+  @Output() qpvSelectedEventEmitter = new EventEmitter<RefQpvWithCommune[]>();
 
   /**
    * Resultats de la recherche.
@@ -492,8 +496,8 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
       const qpvs = this._filterQpvByTypeLocalisation(codes, niveau);
       search_parameters.qpvs = qpvs;
     }
-
     this.searchArgsEventEmitter.next(newQpvSearchArgsObject);
+    this.qpvSelectedEventEmitter.next(search_parameters.qpvs as RefQpvWithCommune[])
 
     this._search_subscription = this._budgetService
       .search(search_parameters)

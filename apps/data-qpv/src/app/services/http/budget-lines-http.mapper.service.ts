@@ -63,7 +63,6 @@ export class BudgetLineHttpMapper {
 
             tags: this._map_tags(object),
 
-            financial_cp: null, // XXX: On ne résoud pas les CPs ici. C'est fait dans un appel séparé.
             
             data_source: object.data_source,
 

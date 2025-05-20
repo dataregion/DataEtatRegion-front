@@ -11,6 +11,7 @@ import { SearchDataComponent } from 'apps/data-qpv/src/app/components/search-dat
 import { QpvSearchArgs } from "apps/data-qpv/src/app/models/qpv-search/qpv-search.models";
 import { FinancialDataModel } from '../../models/financial/financial-data.models';
 import { FinancialData, FinancialDataResolverModel } from 'apps/data-qpv/src/app/models/financial/financial-data-resolvers.models';
+import { RefQpvWithCommune } from '../../models/refs/qpv.model';
 
 @Component({
     selector: 'data-qpv-home',
@@ -21,6 +22,8 @@ import { FinancialData, FinancialDataResolverModel } from 'apps/data-qpv/src/app
 export class HomeComponent implements OnInit {
 
   currentSearchArgs: QpvSearchArgs | null = null;
+
+  qpvSelected: RefQpvWithCommune[] = [];
 
   @ViewChild(SearchDataComponent) searchData!: SearchDataComponent;
 
