@@ -31,12 +31,15 @@
           <ul *ngIf="objectKeys(element.filters).length !== 0; else noFilters" class="fr-badge-group">
             <li *ngFor="let field of objectKeys(element.filters)" class="fr-mr-3v">
 
-              <p *ngIf="mappingMetadata[field]" class="fr-mr-1v fr-badge fr-badge--blue-ecume">
-                {{ mappingMetadata[field].label }}
-              </p>
-              <ng-container *ngIf="mappingMetadata[field]"
+              @if(mappingMetadata[field]) {
+                <p  class="fr-mr-1v fr-badge fr-badge--blue-ecume">
+                  {{ mappingMetadata[field].label }}
+                </p>
+                <ng-container
                             [ngTemplateOutletContext]="{value: element.filters[field], metadata: mappingMetadata[field]}"
                             [ngTemplateOutlet]="getTypeField(element.filters[field]) === 'array' ? badgeArray : badgeSimple" />
+              }
+             
             </li>
           </ul>
           <ng-template #noFilters>Aucun critère renseigné</ng-template>
@@ -115,12 +118,13 @@
 
           <ul class="fr-badge-group">
             <li *ngFor="let field of objectKeys(element.filters)" class="fr-mr-3v">
-              <p *ngIf="mappingMetadata[field]" class="fr-mr-1v fr-badge fr-badge--blue-ecume">
+              @if(mappingMetadata[field]) {
+              <p class="fr-mr-1v fr-badge fr-badge--blue-ecume">
                 {{ mappingMetadata[field].label }}
               </p>
-              <ng-container *ngIf="mappingMetadata[field]"
-                            [ngTemplateOutletContext]="{value: element.filters[field], metadata: mappingMetadata[field]}"
+              <ng-container [ngTemplateOutletContext]="{value: element.filters[field], metadata: mappingMetadata[field]}"
                             [ngTemplateOutlet]="getTypeField(element.filters[field]) === 'array' ? badgeArray : badgeSimple" />
+              }              
             </li>
           </ul>
         </td>

@@ -76,7 +76,7 @@ export class SettingsHttpService {
       const { url, realm, clientId } = settings;
       assert(clientId != null, 'Le clientId est nécessaire dans une configuration monoregion');
 
-      return await this.init_keycloak(url, realm, clientId);
+      return await this.initKeycloak(url, realm, clientId);
     } catch (error) {
       console.error(error);
       return false;
@@ -94,14 +94,14 @@ export class SettingsHttpService {
         `Initialisation de keycloak avec url: ${url}, realm: ${realm} et le client id: ${clientId}`
       );
 
-      return await this.init_keycloak(url, realm, clientId);
+      return await this.initKeycloak(url, realm, clientId);
     } catch (error) {
       console.error(error);
       return false;
     }
   }
 
-  async init_keycloak(url: string, realm: string, clientId: string) {
+  async initKeycloak(url: string, realm: string, clientId: string) {
     try {
       const initialization = await this._keycloak.init({
         config: {

@@ -74,7 +74,7 @@ export class InformationsSupplementairesComponent implements OnInit {
 
   ngOnInit() {
     const data: FinancialDataModel = this._route.snapshot.data['financial_data'];
-    this._init_from_resolver_model(data);
+    this._initFromResolverModel(data);
   }
 
   constructor(
@@ -95,7 +95,7 @@ export class InformationsSupplementairesComponent implements OnInit {
     this.affichage_dossier$ = this.vService.dossier_demarche$();
   }
 
-  _init_from_resolver_model(data: FinancialDataModel) {
+  _initFromResolverModel(data: FinancialDataModel) {
     if (data === undefined) return;
 
     this.financial = data;

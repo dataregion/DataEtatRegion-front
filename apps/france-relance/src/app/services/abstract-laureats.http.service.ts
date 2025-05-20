@@ -30,7 +30,7 @@ export abstract class AbstractLaureatsHttpService extends NocodbHttpService {
 
   abstract searchLaureats(_search_parameters: SearchParameters): Observable<SearchResults>;
 
-  protected _wrap_in_searchresult(xs: FrontLaureat[]): SearchResults {
+  protected _wrapInSearchresult(xs: FrontLaureat[]): SearchResults {
     return {
       messages_utilisateur: [],
       resultats: xs

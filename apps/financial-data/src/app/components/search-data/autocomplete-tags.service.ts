@@ -18,7 +18,7 @@ export class AutocompleteTagsService {
       }),
       map((tags) => {
         return (tags || []).map((tags) => {
-          return this._map_tags_to_fielddata(tags);
+          return this._mapTagsToFielddata(tags);
         });
       })
     );
@@ -26,7 +26,7 @@ export class AutocompleteTagsService {
     return autocompletion$;
   }
 
-  private _map_tags_to_fielddata(tag: Tag): TagFieldData {
+  private _mapTagsToFielddata(tag: Tag): TagFieldData {
     return {
       ...tag,
       item: tag.display_name

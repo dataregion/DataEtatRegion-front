@@ -293,7 +293,7 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
 
   @Input() public set preFilter(value: PreFilters | undefined) {
     try {
-      this._apply_prefilters(value);
+      this._applyPrefilters(value);
     } catch (e) {
       this.displayError = true;
       this.error = e;
@@ -405,7 +405,7 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
     });
   }
 
-  private _on_route_data(data: Data) {
+  private _onRouteData(data: Data) {
     const response = data as {
       financial: FinancialDataResolverModel,
       mb_parsed_params: MarqueBlancheParsedParamsResolverModel
@@ -452,7 +452,7 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
     // Récupération des options de select du formulaires
     this._route.data.subscribe(
       (data: Data) => {
-        setTimeout(() => { this._on_route_data(data) }, 0);
+        setTimeout(() => { this._onRouteData(data) }, 0);
       }
     );
   }
@@ -531,7 +531,7 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
 
 
   /** Applique les filtres selectionnés au préalable*/
-  private _apply_prefilters(preFilter?: PreFilters) {
+  private _applyPrefilters(preFilter?: PreFilters) {
     if (preFilter == null)
       return
 

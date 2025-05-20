@@ -119,21 +119,21 @@ export class BudgetDataHttpService
     const p_tags: string[] | undefined = tags ?? [];
 
         const query_params = [
-            this._sanitize_req_arg(numeros_ej),
-            this._sanitize_req_arg(data_source),
-            this._sanitize_req_arg(codes_programme),
-            this._sanitize_req_arg(niveau_geo),
-            this._sanitize_req_arg(listCode),
+            this._sanitizeReqArg(numeros_ej),
+            this._sanitizeReqArg(data_source),
+            this._sanitizeReqArg(codes_programme),
+            this._sanitizeReqArg(niveau_geo),
+            this._sanitizeReqArg(listCode),
             undefined, // Année découpage QPV
             undefined, // Codes QPV
-            this._sanitize_req_arg(p_themes),
-            this._sanitize_req_arg(siret_beneficiaire),
-            this._sanitize_req_arg(p_types_beneficaires),
-            this._sanitize_req_arg(annees),
+            this._sanitizeReqArg(p_themes),
+            this._sanitizeReqArg(siret_beneficiaire),
+            this._sanitizeReqArg(p_types_beneficaires),
+            this._sanitizeReqArg(annees),
             undefined, // Centres de couts
-            this._sanitize_req_arg(p_domaines_fonctionnels),
-            this._sanitize_req_arg(p_refprod),
-            this._sanitize_req_arg(p_tags)
+            this._sanitizeReqArg(p_domaines_fonctionnels),
+            this._sanitizeReqArg(p_refprod),
+            this._sanitizeReqArg(p_tags)
         ] as const;
 
         const req$ = this._budgetApi.getBudgetCtrl(
@@ -145,7 +145,7 @@ export class BudgetDataHttpService
     return req$;
   }
 
-  _sanitize_req_arg<T>(arg: Optional<T>): T | undefined {
+  _sanitizeReqArg<T>(arg: Optional<T>): T | undefined {
     if (!arg) return undefined;
 
     if (Array.isArray(arg) && arg.length == 0) return undefined;

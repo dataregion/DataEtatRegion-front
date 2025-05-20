@@ -20,11 +20,11 @@ class UnsupportedNiveauLocalisation extends Error {
    *
    */
   constructor(niveau: string) {
-    super(UnsupportedNiveauLocalisation._message_utilisateur(niveau));
+    super(UnsupportedNiveauLocalisation._messageUtilisateur(niveau));
     Object.setPrototypeOf(this, UnsupportedNiveauLocalisation.prototype);
   }
 
-  static _message_utilisateur(niveau: string) {
+  static _messageUtilisateur(niveau: string) {
     return `Impossible de rechercher au niveau ${niveau} au sein de la base France Relance. Nous n'afficherons pas les résultats France Relance.`;
   }
 }
@@ -189,7 +189,7 @@ export class FranceRelanceHttpService extends AbstractLaureatsHttpService {
       this.http.get<NocoDbResponse<any>>(`${apiFr}/Laureats/Laureats-front?${params}`)
     ).pipe(
       map(this._mapToSourceLaureatsData(SourceLaureatsData.RELANCE)),
-      map(this._wrap_in_searchresult)
+      map(this._wrapInSearchresult)
     );
   }
 

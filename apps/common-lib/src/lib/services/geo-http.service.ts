@@ -110,10 +110,10 @@ export class GeoHttpService {
         throw new Error(`Non géré: ${type}`);
     }
 
-    return [apiGeo, `${this._remove_trailing_slash(base)}/${segment}`];
+    return [apiGeo, `${this._removeRrailingSlash(base)}/${segment}`];
   }
 
-  private _remove_trailing_slash(s: string) {
+  private _removeRrailingSlash(s: string) {
     if (s.endsWith('/')) return s.slice(0, -1);
     return s;
   }
@@ -245,22 +245,22 @@ export class FuzzySearchParamsBuilder extends ASearchParamsBuilder {
     switch (type) {
       case TypeLocalisation.ARRONDISSEMENT:
       case TypeLocalisation.QPV:
-        search_params = this._arrondissement_or_qpv_fuzzy(term);
+        search_params = this._arrondissementOrQpvFuzzy(term);
         break;
       case TypeLocalisation.COMMUNE:
-        search_params = this._commune_fuzzy(term);
+        search_params = this._communeFuzzy(term);
         break;
       case TypeLocalisation.CRTE:
         search_params = this._crte_fuzzy(term);
         break;
       case TypeLocalisation.REGION:
-        search_params = this._region_fuzzy(term);
+        search_params = this._regionFuzzy(term);
         break;
       case TypeLocalisation.DEPARTEMENT:
-        search_params = this._departement_fuzzy(term);
+        search_params = this._departementFuzzy(term);
         break;
       case TypeLocalisation.EPCI:
-        search_params = this._epci_fuzzy(term);
+        search_params = this._epciFuzzy(term);
         break;
       default:
         throw new Error(`Non géré: ${type}`);
@@ -269,12 +269,12 @@ export class FuzzySearchParamsBuilder extends ASearchParamsBuilder {
     return search_params;
   }
 
-  private _arrondissement_or_qpv_fuzzy(term: _Term): SearchParams {
+  private _arrondissementOrQpvFuzzy(term: _Term): SearchParams {
     if (term) return { query: term };
     else return {};
   }
 
-  private _commune_fuzzy(term: _Term): SearchParams {
+  private _communeFuzzy(term: _Term): SearchParams {
     if (!term) return {};
 
     let params: SearchParams = {};
@@ -304,7 +304,7 @@ export class FuzzySearchParamsBuilder extends ASearchParamsBuilder {
     return params;
   }
 
-  private _departement_fuzzy(term: _Term): SearchParams {
+  private _departementFuzzy(term: _Term): SearchParams {
     if (!term) return {};
 
     let params: SearchParams = {};
@@ -316,7 +316,7 @@ export class FuzzySearchParamsBuilder extends ASearchParamsBuilder {
     return params;
   }
 
-  private _region_fuzzy(term: _Term): SearchParams {
+  private _regionFuzzy(term: _Term): SearchParams {
     if (!term) return {};
 
     let params: SearchParams = {};
@@ -328,7 +328,7 @@ export class FuzzySearchParamsBuilder extends ASearchParamsBuilder {
     return params;
   }
 
-  private _epci_fuzzy(term: _Term) {
+  private _epciFuzzy(term: _Term) {
     if (!term) return {};
 
     let params: SearchParams = {};

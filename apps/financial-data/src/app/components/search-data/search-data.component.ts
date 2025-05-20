@@ -274,7 +274,7 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
     });
   }
 
-  private _on_route_data(data: Data) {
+  private _onRouteData(data: Data) {
     const response = data as {
       financial: FinancialDataResolverModel;
       mb_parsed_params: MarqueBlancheParsedParamsResolverModel;
@@ -317,7 +317,7 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
     // récupération des themes dans le resolver
     this._route.data.subscribe((data: Data) => {
       setTimeout(() => {
-        this._on_route_data(data);
+        this._onRouteData(data);
       }, 0);
     });
   }

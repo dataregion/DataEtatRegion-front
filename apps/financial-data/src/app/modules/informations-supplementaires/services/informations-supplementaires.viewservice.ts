@@ -42,7 +42,7 @@ export class InformationSupplementairesViewService {
     window.open(_path_full(this._financial.source.toString(), id));
   }
 
-  _map_subvention_light(
+  _mapSubventionLight(
     subvention: Subvention | null,
     representantLegal: RepresentantLegal | null
   ): SubventionLight {
@@ -69,7 +69,7 @@ export class InformationSupplementairesViewService {
     return null;
   }
 
-  _extract_error(err: HttpErrorResponse) {
+  _extractError(err: HttpErrorResponse) {
     const defaultError: ModelError = {
       code: 'UNKNOWN',
       message: 'Le service API externe répond mal.'
@@ -94,9 +94,9 @@ export class InformationSupplementairesViewService {
       subvention: this.api_subvention_subvention$,
       contact: this.api_subvention_president$
     }).pipe(
-      map((full) => this._map_subvention_light(full.subvention, full.contact)),
+      map((full) => this._mapSubventionLight(full.subvention, full.contact)),
       catchError((err) => {
-        this.api_subvention_light_error = this._extract_error(err);
+        this.api_subvention_light_error = this._extractError(err);
         throw err;
       })
     );
@@ -109,7 +109,7 @@ export class InformationSupplementairesViewService {
     if (!this._dossier_demarche$) {
       this._dossier_demarche$ = this._compagnonDS.getAffichage(this._financial.id).pipe(
         catchError((err) => {
-          this.api_demarche_error = this._extract_error(err);
+          this.api_demarche_error = this._extractError(err);
           throw err;
         })
       );
@@ -127,7 +127,7 @@ export class InformationSupplementairesViewService {
       contact: this.api_subvention_president$
     }).pipe(
       catchError((err) => {
-        this.api_subvention_full_error = this._extract_error(err);
+        this.api_subvention_full_error = this._extractError(err);
         throw err;
       })
     );
@@ -139,7 +139,7 @@ export class InformationSupplementairesViewService {
     return this.api_entreprise_info$.pipe(
       map((info) => fromInfoApiEntreprise(info)),
       catchError((err) => {
-        this.api_entreprise_full_error = this._extract_error(err);
+        this.api_entreprise_full_error = this._extractError(err);
         throw err;
       })
     );

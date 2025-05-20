@@ -32,22 +32,26 @@
       <div>
         <ul class="fr-btns-group--inline">
           <li>
+            @if(!grid_fullscreen) {
             <button (click)="openGroupConfigDialog()"
-                    *ngIf="!grid_fullscreen"
                     aria-label="Grouper les lignes par"
                     class="fr-btn fr-btn--sm fr-btn--secondary fr-btn--icon-left fr-icon-menu-2-fill"
                     data-test-id="group-by-btn">
               Grouper les lignes par
             </button>
+            }
+           
           </li>
           <li>
+            @if(!grid_fullscreen) {
             <button (click)="openSortColumnsDialog()"
-                    *ngIf="!grid_fullscreen"
                     aria-label="Choisir les colonnes"
                     class="fr-btn fr-btn--sm fr-btn--secondary fr-btn--icon-left fr-icon-table-line"
                     data-test-id="chose-columns-btn">
               Choisir les colonnes
             </button>
+            }
+            
           </li>
         </ul>
       </div>
@@ -57,22 +61,27 @@
       <div>
         <ul class="fr-btns-group--inline">
           <li>
+            @if(!grid_fullscreen) {
             <button (click)="openSaveFilterDialog()"
-                    *ngIf="!grid_fullscreen"
                     aria-label="Sauvegarder la recherche"
                     class="fr-btn fr-btn--sm fr-btn--secondary fr-btn--icon-left fr-icon-save-fill">
               Sauvegarder la recherche
             </button>
+            }
+           
           </li>
 
           <li>
-            <button *ngIf="!grid_fullscreen && searchData.searchFinish === true"
+            @if(!grid_fullscreen && searchData.searchFinish === true) {
+            <button 
                     [disabled]="searchData.searchInProgress.value === true"
                     [matMenuTriggerFor]="downloadOptions"
                     aria-label="Bouton de téléchargement de données."
                     class="fr-btn fr-btn--sm fr-btn--secondary fr-btn--icon-left fr-icon-download-fill">
               Télécharger les données
             </button>
+            }
+            
             <mat-menu #downloadOptions="matMenu">
 
               <button [matMenuTriggerFor]="allColumnsFormats" mat-menu-item>

@@ -72,16 +72,16 @@ export class BudgetDataHttpService implements DataHttpService<EnrichedFlattenFin
         const query_params = [
             undefined, // Numeros EJ
             undefined, // Data source
-            this._sanitize_req_arg(codes_programme),
-            this._sanitize_req_arg(niveau_geo),
-            this._sanitize_req_arg(listCode),
-            this._sanitize_req_arg(annee_decoupage),
-            this._sanitize_req_arg(qpv_codes),
-            this._sanitize_req_arg(p_themes),
-            this._sanitize_req_arg(siret_beneficiaire),
-            this._sanitize_req_arg(p_types_beneficaires),
-            this._sanitize_req_arg(annees),
-            this._sanitize_req_arg(codes_cc),
+            this._sanitizeReqArg(codes_programme),
+            this._sanitizeReqArg(niveau_geo),
+            this._sanitizeReqArg(listCode),
+            this._sanitizeReqArg(annee_decoupage),
+            this._sanitizeReqArg(qpv_codes),
+            this._sanitizeReqArg(p_themes),
+            this._sanitizeReqArg(siret_beneficiaire),
+            this._sanitizeReqArg(p_types_beneficaires),
+            this._sanitizeReqArg(annees),
+            this._sanitizeReqArg(codes_cc),
             undefined, // Domaine fonctionnel
             undefined, // Référentiel programmtion
             undefined  // Tags
@@ -96,7 +96,7 @@ export class BudgetDataHttpService implements DataHttpService<EnrichedFlattenFin
         return req$
     }
 
-    _sanitize_req_arg<T>(arg: Optional<T>): T | undefined {
+    _sanitizeReqArg<T>(arg: Optional<T>): T | undefined {
         if (!arg)
             return undefined
 

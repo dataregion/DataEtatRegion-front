@@ -82,7 +82,7 @@ export class France2030HttpService extends AbstractLaureatsHttpService {
 
     if (params_code_geo) url += `&code_geo=${encodeURIComponent(params_code_geo)}`;
 
-    const emptySearchResult = this._wrap_in_searchresult([]);
+    const emptySearchResult = this._wrapInSearchresult([]);
     
     const answer$ = this.http
       .get<// eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -91,7 +91,7 @@ export class France2030HttpService extends AbstractLaureatsHttpService {
       .pipe(
         map((x) => x?.items ?? []),
         map(this._mapToSourceLaureatsData(SourceLaureatsData.FRANCE2030)),
-        map(this._wrap_in_searchresult),
+        map(this._wrapInSearchresult),
         catchError(this._returnValueOn501(emptySearchResult))
       );
     return answer$;

@@ -21,7 +21,7 @@ export class AutocompleteBeneficiaireService {
     const autocompletion$ = this._refService.filterRefSiret$(sanitzed_input).pipe(
       map((response: Beneficiaire[]) => {
         return response.map((ref) => {
-          return this._map_beneficiaire_to_fieldData(ref);
+          return this._mapBeneficiaireToFieldData(ref);
         });
       }),
       catchError((err) => {
@@ -36,12 +36,12 @@ export class AutocompleteBeneficiaireService {
   autocomplete_single$(code: string): Observable<BeneficiaireFieldData> {
     const autocompletion$ = this._budgetService
       .getRefSiretFromCode$(code)
-      .pipe(map((response: Beneficiaire) => this._map_beneficiaire_to_fieldData(response)));
+      .pipe(map((response: Beneficiaire) => this._mapBeneficiaireToFieldData(response)));
 
     return autocompletion$;
   }
 
-  private _map_beneficiaire_to_fieldData(benef: Beneficiaire): BeneficiaireFieldData {
+  private _mapBeneficiaireToFieldData(benef: Beneficiaire): BeneficiaireFieldData {
     return {
       ...benef,
       item: this._displayBeneficiaire(benef)

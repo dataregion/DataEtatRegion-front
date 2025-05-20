@@ -47,11 +47,14 @@
       <mat-form-field appearance="fill">
         <mat-label>Lauréat</mat-label>
         <input [matAutocomplete]="structure" formControlName="structure" matInput type="text">
-        <button (click)="searchForm.controls['structure'].setValue(null)"
-                *ngIf="searchForm.controls['structure'].value !== null" mat-icon-button
-                matSuffix>
-          <mat-icon>close</mat-icon>
-        </button>
+        @if(searchForm.controls['structure'].value !== null) {
+          <button (click)="searchForm.controls['structure'].setValue(null)"
+                  mat-icon-button
+                  matSuffix>
+            <mat-icon>close</mat-icon>
+          </button>
+        }
+        
         <mat-autocomplete #structure="matAutocomplete" (optionSelected)="onSelectLaureat($event.option.value)"
                           [displayWith]="displayLaureat">
           <mat-option *ngFor="let laureat of filteredLaureat | async" [value]="laureat">
@@ -73,8 +76,10 @@
 
   </div>
 </form>
-
-<div *ngIf="warningMessage" class="fr-alert fr-alert--info">
+@if(warningMessage) {
+<div class="fr-alert fr-alert--info">
   {{ warningMessage }}
 </div>
+}
+
 

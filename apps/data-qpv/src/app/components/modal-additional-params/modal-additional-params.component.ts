@@ -1,6 +1,6 @@
-import { Component, DestroyRef, EventEmitter, inject, Input, OnChanges, Output, SimpleChanges, ViewChild } from "@angular/core";
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild } from "@angular/core";
 import { DsfrHeadingLevel, DsfrModalAction, DsfrModalComponent, DsfrSize, DsfrSizeConst } from "@edugouvfr/ngx-dsfr";
-import { Subject, Subscription } from "rxjs";
+import { Subject } from "rxjs";
 
 
 @Component({
@@ -10,8 +10,6 @@ import { Subject, Subscription } from "rxjs";
     standalone: false
 })
 export class ModalAdditionalParamsComponent<T> implements OnChanges {
-
-  private _destroyRef = inject(DestroyRef)
 
   public size: DsfrSize = DsfrSizeConst.LG
   public headingLevel: DsfrHeadingLevel | undefined
@@ -41,11 +39,6 @@ export class ModalAdditionalParamsComponent<T> implements OnChanges {
 
   filterInput: string = "";
   inputFiltre: Subject<string> = new Subject<string>();
-  private _subFilterGeo: Subscription | null = null;
-
-  constructor() {
-    
-  }
 
   /**
    * Actions au changement des inputs

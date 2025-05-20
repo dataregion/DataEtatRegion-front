@@ -46,33 +46,33 @@ export class BudgetLineHttpMapper {
       montant_ae: object.montant_ae,
       montant_cp: object.montant_cp,
 
-      commune: this._map_beneficiaire_commune(object),
+      commune: this._mapBeneficiaireCommune(object),
 
-      domaine_fonctionnel: this._map_domaine_fonctionnel(object),
+      domaine_fonctionnel: this._mapDomaineFonctionnel(object),
 
-      centre_couts: this._map_centre_couts(object),
+      centre_couts: this._mapCentreCouts(object),
 
-      programme: this._map_programme(object),
+      programme: this._mapProgramme(object),
 
-      referentiel_programmation: this._map_ref_prog(object),
+      referentiel_programmation: this._mapRefProg(object),
 
       compte_budgetaire: object.compte_budgetaire,
       contrat_etat_region: object.contrat_etat_region,
 
-      groupe_marchandise: this._map_groupe_marchandise(object),
+      groupe_marchandise: this._mapGroupeMarchandise(object),
 
-      localisation_interministerielle: this._map_loc_interministerielle(object),
+      localisation_interministerielle: this._mapLocInterministerielle(object),
 
       annee: object.annee!,
       data_source: object.data_source,
       date_modification: object.date_modification,
 
-      siret: this._map_beneficiaire_siret(object),
+      siret: this._mapBeneficiaireSiret(object),
 
       date_cp: object.dateDeDernierPaiement,
       date_replication: object.dateDeCreation,
 
-      tags: this._map_tags(object),
+      tags: this._mapTags(object),
 
       financial_cp: null, // XXX: On ne résoud pas les CPs ici. C'est fait dans un appel séparé.
 
@@ -121,19 +121,19 @@ export class BudgetLineHttpMapper {
     };
   }
 
-  private _map_beneficiaire_siret(object: EnrichedFlattenFinancialLinesSchema): Optional<Siret> {
+  private _mapBeneficiaireSiret(object: EnrichedFlattenFinancialLinesSchema): Optional<Siret> {
     if (!object.beneficiaire_code) return null;
 
     return {
       code: object.beneficiaire_code,
       nom_beneficiaire: object.beneficiaire_denomination,
-      categorie_juridique: this._map_beneficiaire_categorie_juridique(object),
+      categorie_juridique: this._mapBeneficiaireCategorieJuridique(object),
       code_qpv: object.beneficiaire_qpv_code,
       label_qpv: object.beneficiaire_qpv_label
     };
   }
 
-  private _map_loc_interministerielle(
+  private _mapLocInterministerielle(
     object: EnrichedFlattenFinancialLinesSchema
   ): Optional<LocalisationInterministerielle> {
     if (!object.localisationInterministerielle_code) return null;
@@ -171,7 +171,7 @@ export class BudgetLineHttpMapper {
     };
   }
 
-  private _map_centre_couts(object: EnrichedFlattenFinancialLinesSchema): Optional<CentreCouts> {
+  private _mapCentreCouts(object: EnrichedFlattenFinancialLinesSchema): Optional<CentreCouts> {
     return {
       code: object.centreCouts_code ? object.centreCouts_code : '',
       label: object.centreCouts_label!,
@@ -179,7 +179,7 @@ export class BudgetLineHttpMapper {
     };
   }
 
-  private _map_groupe_marchandise(
+  private _mapGroupeMarchandise(
     object: EnrichedFlattenFinancialLinesSchema
   ): Optional<GroupeMarchandise> {
     if (!object.groupeMarchandise_code) return null;
@@ -189,7 +189,7 @@ export class BudgetLineHttpMapper {
     };
   }
 
-  private _map_ref_prog(
+  private _mapRefProg(
     object: EnrichedFlattenFinancialLinesSchema
   ): Optional<ReferentielProgrammation> {
     return {
@@ -198,7 +198,7 @@ export class BudgetLineHttpMapper {
     };
   }
 
-  private _map_programme(object: EnrichedFlattenFinancialLinesSchema): Optional<Programme> {
+  private _mapProgramme(object: EnrichedFlattenFinancialLinesSchema): Optional<Programme> {
     if (!object.programme_code) return null;
     return {
       code: object.programme_code,
@@ -207,7 +207,7 @@ export class BudgetLineHttpMapper {
     };
   }
 
-  private _map_domaine_fonctionnel(
+  private _mapDomaineFonctionnel(
     object: EnrichedFlattenFinancialLinesSchema
   ): Optional<DomaineFonctionnel> {
     return {
@@ -216,13 +216,13 @@ export class BudgetLineHttpMapper {
     };
   }
 
-  _map_beneficiaire_categorie_juridique(
+  _mapBeneficiaireCategorieJuridique(
     object: EnrichedFlattenFinancialLinesSchema
   ): TypeCategorieJuridique {
     return object.beneficiaire_categorieJuridique_type as TypeCategorieJuridique;
   }
 
-  _map_tags(object: EnrichedFlattenFinancialLinesSchema): Tag[] {
+  _mapTags(object: EnrichedFlattenFinancialLinesSchema): Tag[] {
     const _tags_schema: TagsSchema[] = object.tags ?? [];
     const tags: Tag[] = [];
     for (const tag_schema of _tags_schema) {
@@ -240,7 +240,7 @@ export class BudgetLineHttpMapper {
     return tags;
   }
 
-  _map_beneficiaire_commune(object: EnrichedFlattenFinancialLinesSchema): Optional<Commune> {
+  _mapBeneficiaireCommune(object: EnrichedFlattenFinancialLinesSchema): Optional<Commune> {
     if (!object.beneficiaire_commune_code) return null;
 
     let arrondissement = null;

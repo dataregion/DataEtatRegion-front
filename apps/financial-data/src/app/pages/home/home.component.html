@@ -14,15 +14,18 @@
     </div>
   </mat-card-content>
 
-  <div *ngIf="lastImportDate" class="last-import">
-    <mat-icon aria-hidden="false" aria-label="Example home icon" class="info-icon" fontIcon="info" />
-    <div>
-      Le dernier chargement complet des données financières date du
-      <lib-display-date [date]="lastImportDate" />
-      . <br>
-      Les données prennent donc en compte la situation au dernier jour du mois précédent.
+  @if(lastImportDate) {
+    <div  class="last-import">
+      <mat-icon aria-hidden="false" aria-label="Example home icon" class="info-icon" fontIcon="info" />
+      <div>
+        Le dernier chargement complet des données financières date du
+        <lib-display-date [date]="lastImportDate" />
+        . <br>
+        Les données prennent donc en compte la situation au dernier jour du mois précédent.
+      </div>
     </div>
-  </div>
+  }
+  
 </mat-card>
 
 <ng-template #groupingTable>
@@ -66,13 +69,16 @@
           </li>
 
           <li>
-            <button *ngIf="!grid_fullscreen && searchData.searchFinish === true"
+            @if(!grid_fullscreen && searchData.searchFinish === true) {
+              <button 
                     [disabled]="searchData.searchInProgress.value === true"
                     [matMenuTriggerFor]="downloadOptions"
                     aria-label="Bouton de téléchargement de données."
                     class="fr-btn fr-btn--sm fr-btn--secondary fr-btn--icon-left fr-icon-download-fill">
               Télécharger les données
             </button>
+            }
+            
             <mat-menu #downloadOptions="matMenu">
 
               <button [matMenuTriggerFor]="allColumnsFormats" mat-menu-item>

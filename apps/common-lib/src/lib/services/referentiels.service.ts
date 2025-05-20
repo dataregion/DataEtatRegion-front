@@ -77,14 +77,14 @@ export class ReferentielsHttpService {
   }
   
   private _filterByCode(nomOuSiret: string): Observable<RefSiret[]> {
-    return this._filter_by('query', nomOuSiret);
+    return this._filterBy('query', nomOuSiret);
   }
 
   private _filterByDenomination(nomOuSiret: string): Observable<RefSiret[]> {
-    return this._filter_by('denomination', nomOuSiret);
+    return this._filterBy('denomination', nomOuSiret);
   }
 
-  private _filter_by(nomChamp: string, term: string) {
+  private _filterBy(nomChamp: string, term: string) {
     const encodedNomOuSiret = encodeURIComponent(term);
     const params = `limit=10&${nomChamp}=${encodedNomOuSiret}`;
     const url = `${this.api_ref}/beneficiaire?${params}`;
