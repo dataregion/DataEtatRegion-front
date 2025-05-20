@@ -274,7 +274,7 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
   /**
    * Liste des ref Geo
    */
-  @Input() public refGeo: RefGeoQpv | null = null;
+  @Input() public refGeo: RefGeoQpv | undefined;
 
   /**
    * Resultats de la recherche.

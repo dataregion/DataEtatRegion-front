@@ -39,9 +39,9 @@ export class TabsMapTableComponent {
   @Input()
   set selectedTabIndexCredits(selectedTabIndexCredits: number) {
     this._selectedTabIndexCredits = selectedTabIndexCredits
-    this.dataLoaded = false;
+    this.dataLoaded.set(false);
     this._refreshDatatable(this.searchResults())
-    setTimeout(() => { this.dataLoaded = true; }, 1000);
+    setTimeout(() => { this.dataLoaded.set(true); }, 1000);
   }
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   public mappingTabsBops: any = {
@@ -50,7 +50,7 @@ export class TabsMapTableComponent {
     2: null
   }
 
-  public dataLoaded: boolean = false;
+  public dataLoaded = signal<boolean>(false);
 
   public readonly searchResults = input<FinancialDataModel[] | null>(null);
   public readonly qpv =  input<RefQpvWithCommune[]>([]);

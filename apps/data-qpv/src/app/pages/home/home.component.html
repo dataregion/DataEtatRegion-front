@@ -8,10 +8,10 @@
       </div>
 
       <div class="fr-col-12" style="margin-bottom:30px;">
-        @if(financialData) {
+        @if(financialData()) {
         <data-qpv-search-data (searchArgsEventEmitter)="currentSearchArgs = $event"
                             (qpvSelectedEventEmitter)="qpvSelected = $event"
-                            [refGeo]="financialData.refGeo"
+                            [refGeo]="financialData()?.refGeo"
                             [preFilter]="preFilter"
                             [(searchFinish)]="searchFinish"
                             [(searchInProgress)]="searchInProgress"

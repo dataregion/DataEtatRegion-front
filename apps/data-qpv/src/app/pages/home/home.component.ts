@@ -53,7 +53,7 @@ export class HomeComponent implements OnInit {
 
   public current_years : number[] = [];
   public current_qpv_codes : string[] = [];
-  public financialData: FinancialData | undefined;
+  public financialData = signal<FinancialData | undefined>(undefined);
 
   constructor(
     private _route: ActivatedRoute,
@@ -84,7 +84,7 @@ export class HomeComponent implements OnInit {
 
         const mb_has_params = response.mb_parsed_params?.data?.has_marqueblanche_params;
 
-        this.financialData = response.financial.data;
+        this.financialData.set(response.financial.data);
 
         if (!mb_has_params)
           return;

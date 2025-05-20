@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, Inject, signal } from '@angular/core';
 import { SETTINGS } from 'apps/common-lib/src/lib/environments/settings.http.service';
 import { GridInFullscreenStateService } from 'apps/common-lib/src/lib/services/grid-in-fullscreen-state.service';
 import { LoaderService, SessionService } from 'apps/common-lib/src/public-api';
@@ -13,7 +13,7 @@ import { SettingsService } from '../environments/settings.service';
     standalone: false
 })
 export class AppComponent implements OnInit {
-  public progressBarVisible: boolean = false;
+  public progressBarVisible = signal<boolean>(false);
   public isAuthenticated: boolean = false;
 
   public region: string = "";
@@ -32,7 +32,7 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
     this._loaderService.isLoading().subscribe((loading) => {
-      this.progressBarVisible = loading;
+      this.progressBarVisible.set(loading);
     });
 
     this._sessionService.getUser().subscribe((user) => {
