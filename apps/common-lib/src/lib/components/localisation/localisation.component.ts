@@ -6,6 +6,7 @@ import {
   EventEmitter,
   DestroyRef,
   inject,
+  signal,
 } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -76,7 +77,7 @@ export class LocalisationComponent implements OnInit {
 
   // Liste des Geomodel
   public geomodels: GeoModel[] | null = null;
-  public filteredGeomodels: GeoModel[] | null = null;
+  public filteredGeomodels = signal<GeoModel[]>([]);// GeoModel[] | null = null;
   input: string = '';
   inputFilter = new Subject<string>();
   @Output() selectedNiveauChange = new EventEmitter<TypeLocalisation | null>();
@@ -93,38 +94,35 @@ export class LocalisationComponent implements OnInit {
           const loc = this.TypeLocalisationKeyMap[this.selectedNiveau]
           this.geomodels = this.data[loc];
           if (this.geomodels != null) {
-            this.filteredGeomodels = term != null ? this.geomodels.filter( 
+            this.filteredGeomodels.set(term != null ? this.geomodels.filter( 
               geo => geo.code.includes(term) || geo.nom.includes(term)
-            ) : this.geomodels;
-            this.filteredGeomodels =
-                  this.selectedLocalisation != null
-                    ? [
+            ) : this.geomodels);
+
+            if (this.selectedLocalisation != null) {
+               this.filteredGeomodels.set([
                         ...this.selectedLocalisation,
-                        ...this.filteredGeomodels.filter(
+                        ...this.filteredGeomodels().filter(
                           (el) => !this.selectedLocalisation?.map((s) => s.code).includes(el.code)
                         )
-                      ]
-                    : this.filteredGeomodels;
+                      ])
+            }
           }
-          
-
         } else {
           this._subFilterGeo = this._geo
             .filterGeo(term, this.selectedNiveau, this.filterRegion)
             .pipe(takeUntilDestroyed(this._destroyRef))
             .subscribe((response: GeoModel[]) => {
-              this.filteredGeomodels = response;
+              this.filteredGeomodels.set(response);
               // TODO : Facto du filter générique pour gérer aussi les Observable
               // Concaténation des éléments sélectionnés avec les éléments filtrés (en supprimant les doublons éventuels)
-              this.filteredGeomodels =
-                this.selectedLocalisation != null
-                  ? [
+              if (this.selectedLocalisation != null) {
+                this.filteredGeomodels.set([
                       ...this.selectedLocalisation,
-                      ...this.filteredGeomodels.filter(
+                      ...this.filteredGeomodels().filter(
                         (el) => !this.selectedLocalisation?.map((s) => s.code).includes(el.code)
                       )
-                    ]
-                  : this.filteredGeomodels;
+                    ]);
+              }
             });
         }
       }
@@ -165,31 +163,30 @@ export class LocalisationComponent implements OnInit {
       if (this.dataPreLoaded && this.data != null ) {
         const loc = this.TypeLocalisationKeyMap[this._selectedNiveau]
         this.geomodels = this.data[loc];
-        this.filteredGeomodels = this.geomodels;
+        this.filteredGeomodels.set(this.geomodels ?? []);
       } else {
         this._subFilterGeo = this._geo
           .filterGeo(null, this._selectedNiveau, this.filterRegion)
           .pipe(takeUntilDestroyed(this._destroyRef))
           .subscribe((response) => {
             this.geomodels = response;
-            this.filteredGeomodels = this.geomodels;
+            this.filteredGeomodels.set(this.geomodels);
             // TODO : Facto du filter générique pour gérer aussi les Observable
           // Concaténation des éléments sélectionnés avec les éléments filtrés (en supprimant les doublons éventuels)
-          this.filteredGeomodels =
-            this.selectedLocalisation != null
-              ? [
+          if (this.selectedLocalisation != null) {
+             this.filteredGeomodels.set([
                   ...this.selectedLocalisation,
-                  ...this.filteredGeomodels.filter(
+                  ...this.filteredGeomodels().filter(
                     (el) => !this.selectedLocalisation?.map((s) => s.code).includes(el.code)
                   )
-                ]
-              : this.filteredGeomodels;
+                ])
+          }
         });
       }
 
     } else {
       this.geomodels = null;
-      this.filteredGeomodels = this.geomodels;
+      this.filteredGeomodels.set(this.geomodels ?? []);
       this.selectedLocalisation = null;
     }
 
@@ -212,7 +209,7 @@ export class LocalisationComponent implements OnInit {
   public filterGeomodels = (value: string): GeoModel[] => {
     this.input = value;
     this.inputFilter.next(value);
-    return this.filteredGeomodels ?? [];
+    return this.filteredGeomodels();
   };
 
   public renderGeomodelOption = (geo: GeoModel): string => {

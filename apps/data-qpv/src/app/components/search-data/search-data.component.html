@@ -36,7 +36,7 @@
         <lib-select-multiple  [canFilter]="true"
                               [canSelectAll]="false"
                               [placeholder]="'QPV'"
-                              [options]="filteredQPV"
+                              [options]="filteredQPV()"
                               [(selected)]="selectedQpv"
                               [filterFunction]="filterQPV"
                               [renderLabelFunction]="renderQPVLabel"

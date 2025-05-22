@@ -28,7 +28,8 @@
         <th *matHeaderCellDef mat-header-cell>Critères</th>
         <td *matCellDef="let element" mat-cell>
 
-          <ul *ngIf="objectKeys(element.filters).length !== 0; else noFilters" class="fr-badge-group">
+          @if(objectKeys(element.filters).length !== 0) {
+          <ul  class="fr-badge-group">
             <li *ngFor="let field of objectKeys(element.filters)" class="fr-mr-3v">
 
               @if(mappingMetadata[field]) {
@@ -42,7 +43,9 @@
              
             </li>
           </ul>
-          <ng-template #noFilters>Aucun critère renseigné</ng-template>
+          } @else{
+            Aucun critère renseigné
+          }
         </td>
       </ng-container>
 
@@ -87,8 +90,8 @@
   </mat-expansion-panel>
   }
 
-
-  <mat-expansion-panel *ngIf="dataSource.shared_with_user.length > 0">
+  @if(dataSource.shared_with_user.length > 0) {
+  <mat-expansion-panel>
     <mat-expansion-panel-header>
       <mat-panel-title>
         Filtres partagés par les autres utilisateurs
@@ -157,6 +160,7 @@
     </table>
 
   </mat-expansion-panel>
+  }
 </mat-accordion>
 
 

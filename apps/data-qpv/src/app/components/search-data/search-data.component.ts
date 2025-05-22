@@ -7,6 +7,7 @@ import {
   Input,
   OnInit,
   Output,
+  signal,
   ViewChild,
 } from '@angular/core';
 import {
@@ -118,7 +119,7 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
 
   inputQPV: string = '';
   inputFilterQPV = new Subject<string>();
-  public filteredQPV: GeoModel[] | null = null;
+  public filteredQPV = signal<GeoModel[]>([]);
 
   public renderQPVOption = (geo: RefQpvWithCommune): string => {
     return geo.code + ' - ' + geo.label
@@ -126,7 +127,7 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
   public filterQPV = (value: string): GeoModel[] => {
     this.inputQPV = value;
     this.inputFilterQPV.next(value);
-    return this.filteredQPV ?? [];
+    return this.filteredQPV();
   }
   public renderQPVLabel = (geos: RefQpvWithCommune[]) => {
     let label: string = ''
@@ -330,26 +331,29 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
       debounceTime(300),
       takeUntilDestroyed(this._destroyRef)
     ).subscribe(() => {
+      console.log("dans le filtre")
       const term = this.inputQPV !== '' ? this.inputQPV : null;
       if (this.searchForm.get('localisations')?.value) {
         const localisations = this.searchForm.get('localisations')?.value as GeoModel[];
         const type = this.searchForm.get('niveau')?.value;
         const codes = localisations.map(geo => geo.code);
-        this.filteredQPV = this._filterQpvByTypeLocalisation(codes, type as TypeLocalisation);
+        this.filteredQPV.set(this._filterQpvByTypeLocalisation(codes, type as TypeLocalisation));
       } else {
-        this.filteredQPV = this.refGeo?.qpvs as GeoModel[];
+        this.filteredQPV.set(this.refGeo?.qpvs as GeoModel[]);
       }
 
-
+     
       if (term != null) {
-        this.filteredQPV = this.filteredQPV.filter(qpv => qpv.code.includes(term) || (qpv as RefQpvWithCommune).label.toLocaleLowerCase().includes(term.toLocaleLowerCase()));
+        const qpv = this.filteredQPV();
+        this.filteredQPV.set(qpv.filter(qpv => qpv.code.includes(term) || (qpv as RefQpvWithCommune).label.toLocaleLowerCase().includes(term.toLocaleLowerCase())));
       }
-      this.filteredQPV = this.selectedQpv != null ?
-        [
+
+      if(this.selectedQpv != null) {
+        this.filteredQPV.set([
           ...this.selectedQpv,
-          ...this.filteredQPV.filter((el) => !this.selectedQpv?.map(s => s.code).includes(el.code))
-        ]
-        : this.filteredQPV
+          ...this.filteredQPV().filter((el) => !this.selectedQpv?.map(s => s.code).includes(el.code))
+        ])
+      }
     });
 
     this.inputFilterFinanceurs.pipe(
@@ -445,7 +449,7 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
   private _destroyRef = inject(DestroyRef)
 
   ngOnInit(): void {
-    this.filteredQPV = this.refGeo?.qpvs as GeoModel[];
+    this.filteredQPV.set(this.refGeo?.qpvs as GeoModel[]);
   }
 
   ngAfterViewInit(): void {
@@ -567,7 +571,7 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
   public selectNiveauChange(): void {
     this.searchForm.get('qpv')?.reset();
 
-    this.filteredQPV = this.refGeo?.qpvs as GeoModel[];
+    this.filteredQPV.set(this.refGeo?.qpvs as GeoModel[]);
   }
 
   public selectLocalisationChange(event: GeoModel[] | null): void {
@@ -576,9 +580,9 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
     if (event && event.length > 0) {
       const type = event[0].type;
       const codes = event.map(geo => geo.code);
-      this.filteredQPV = this._filterQpvByTypeLocalisation(codes, type as TypeLocalisation);
+      this.filteredQPV.set(this._filterQpvByTypeLocalisation(codes, type as TypeLocalisation));
     } else {
-      this.filteredQPV = this.refGeo?.qpvs as GeoModel[];
+      this.filteredQPV.set(this.refGeo?.qpvs as GeoModel[]);
     }
   }
 

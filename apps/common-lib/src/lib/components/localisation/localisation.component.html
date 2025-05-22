@@ -14,7 +14,7 @@
 
   <lib-select-multiple [canFilter]="true" [canSelectAll]="false"
     [placeholder]="selectedNiveauString"
-    [options]="filteredGeomodels"
+    [options]="filteredGeomodels()"
     [(selected)]="selectedLocalisation"
     [filterFunction]="filterGeomodels"
     [renderFunction]="renderGeomodelOption"
