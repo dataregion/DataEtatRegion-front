@@ -35,36 +35,31 @@ include:
       do-push: true
       # enable-debug: true
 
-
-"🐳 dockerizing financial-data":
-  extends: ".dockerize-${REGISTRY}nocode/financial-data"
-  stage: 🐳 dockerize
+.default-dockerize: &default-dockerize
   rules:
     - if: '$DO_DOCKERIZE == "✅"'
-    - if: '$CI_COMMIT_REF_NAME' # always
+    - if: '$DO_DOCKERIZE == "⚙️"'
       when: manual
     - when: never
+
+
+"🐳 dockerizing financial-data":
+  <<: *default-dockerize
+  extends: ".dockerize-${REGISTRY}nocode/financial-data"
+  stage: 🐳 dockerize
   needs:
     - job: "🔨 build angular apps"
 
 "🐳 dockerizing france-relance":
+  <<: *default-dockerize
   extends: ".dockerize-${REGISTRY}nocode/france-relance"
   stage: 🐳 dockerize
-  rules:
-    - if: '$DO_DOCKERIZE == "✅"'
-    - if: '$CI_COMMIT_REF_NAME' # always
-      when: manual
-    - when: never
   needs:
     - job: "🔨 build angular apps"
 
 "🐳 dockerizing data-qpv":
+  <<: *default-dockerize
   extends: ".dockerize-${REGISTRY}nocode/data-qpv"
   stage: 🐳 dockerize
-  rules:
-    - if: '$DO_DOCKERIZE == "✅"'
-    - if: '$CI_COMMIT_REF_NAME' # always
-      when: manual
-    - when: never
   needs:
     - job: "🔨 build angular apps"

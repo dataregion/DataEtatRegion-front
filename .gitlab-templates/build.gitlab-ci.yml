@@ -37,4 +37,6 @@
 
   rules:
     - if: '$DO_BUILD == "✅"'
-    - when: manual
+    - if: '$DO_BUILD == "⚙️"'
+      when: manual
+    - when: never
