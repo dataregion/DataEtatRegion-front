@@ -1,4 +1,4 @@
-import { inject, LOCALE_ID, NgModule, provideAppInitializer, provideExperimentalZonelessChangeDetection } from '@angular/core';
+import { inject, LOCALE_ID, NgModule, provideAppInitializer, provideZonelessChangeDetection } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { KeycloakAngularModule } from 'keycloak-angular';
 import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
@@ -176,7 +176,7 @@ registerLocaleData(localeFr);
         multi: false,
     },
     provideHttpClient(withInterceptorsFromDi()),
-    provideExperimentalZonelessChangeDetection(),
+    provideZonelessChangeDetection()
   ]
 })
 export class AppModule {}
