@@ -1,13 +1,15 @@
 /* You can add global styles to this file, and also import other style files */
 
+@use "apps/grouping-table/src/lib/components/grouping-table/grouping-table.global.scss";
+@use "apps/common-lib/fix-angular-material-chips-overflow.scss";
+@use "apps/common-lib/flex-container-common.scss";
+
 :root {
   --base-color: #024059;
   --base-foreground-color: white;
   --background-color: white;
   --color: black;
 }
-
-@import "apps/grouping-table/src/lib/components/grouping-table/grouping-table.global.scss";
 
 html,
 body {
@@ -140,6 +142,3 @@ body {
     background-color: rgba(152, 128, 255, 0.2);
   }
 }
-
-@import "apps/common-lib/fix-angular-material-chips-overflow.scss";
-@import "apps/common-lib/flex-container-common.scss"
