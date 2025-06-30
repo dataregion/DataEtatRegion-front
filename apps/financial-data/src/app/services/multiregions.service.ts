@@ -12,7 +12,8 @@ export enum Region {
   CORSE = 'Corse',
   OCCITANIE = 'Occitanie',
   CENTRE_VALDELOIRE = 'Centre-Val de loire',
-  GRAND_EST = 'Grand-Est'
+  GRAND_EST = 'Grand-Est',
+  NATIONAL = 'National'
 }
 
 @Injectable({
@@ -56,6 +57,9 @@ export class MultiregionsService {
     ],
     [Region.GRAND_EST]: [
       "044",
+    ],
+    [Region.NATIONAL]: [
+      "NAT",
     ]
   };
   
