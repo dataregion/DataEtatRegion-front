@@ -5,8 +5,7 @@ import {
   CanActivateFn,
   CanMatchFn,
   Router,
-  RouterStateSnapshot,
-  UrlTree
+  RouterStateSnapshot
 } from '@angular/router';
 import { KeycloakAuthGuard, KeycloakService } from 'keycloak-angular';
 import { SessionService } from 'apps/common-lib/src/public-api';
