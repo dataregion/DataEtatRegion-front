@@ -50,4 +50,9 @@ export class HeaderComponent implements OnInit {
     });
     this.isLoggedIn = false;
   }
+
+  public isNational() {
+    return this.session.region_code == "NAT"
+  }
+
 }

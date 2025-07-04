@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { Profil } from 'apps/common-lib/src/lib/models/profil.enum.model';
-import { keycloakAuthGuardCanActivate } from 'apps/common-lib/src/public-api';
+import { guardIsNotNational, keycloakAuthGuardCanActivate } from 'apps/common-lib/src/public-api';
 import { UploadFinancialComponent } from './upload-financial/upload-financial.component';
 import { UpdateTagsComponent } from './update-tags/update-tags.component';
 
@@ -15,7 +15,7 @@ const routes: Routes = [
     path: 'upload',
     component: UploadFinancialComponent,
     title:"Charger les données",
-    canActivate: [keycloakAuthGuardCanActivate],
+    canActivate: [keycloakAuthGuardCanActivate, guardIsNotNational],
     data: {
       roles: profiles_required_for_upload_page
     }

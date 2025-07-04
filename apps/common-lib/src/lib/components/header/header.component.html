@@ -42,7 +42,9 @@
 
               <ng-content select="[ressources]" />
 
-              <ng-content select="[administration]" />
+              @if (!isNational()) {
+                <ng-content select="[administration]" />
+              }
 
               <li>
                 <button

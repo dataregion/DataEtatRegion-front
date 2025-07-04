@@ -5,7 +5,8 @@ import {
   CanActivateFn,
   CanMatchFn,
   Router,
-  RouterStateSnapshot
+  RouterStateSnapshot,
+  UrlTree
 } from '@angular/router';
 import { KeycloakAuthGuard, KeycloakService } from 'keycloak-angular';
 import { SessionService } from 'apps/common-lib/src/public-api';
@@ -32,6 +33,8 @@ export class AuthGuard extends KeycloakAuthGuard {
    
 
   private _current_roles = null;
+  public current_region = null;
+
   get current_roles(): string[] {
     if (!this._current_roles) this._current_roles = this.auth_utils.roles_to_uppercase(this.roles);
     return this._current_roles!;
@@ -55,6 +58,7 @@ export class AuthGuard extends KeycloakAuthGuard {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const decodedAccessToken: Record<string, any> = jwtDecode(accessToken);
     const code_region = decodedAccessToken['region'] ?? null
+    this.current_region = code_region
     this.sessionService.setAuthentication(
       userProfile,
       this.keycloak.getUserRoles(),
@@ -95,4 +99,17 @@ export const keycloakAuthGuardCanMatchAccordingToRoles: CanMatchFn = (route) => 
 export const keycloakAuthGuardCanActivate: CanActivateFn = (route, state) => {
   const guard = inject(AuthGuard);
   return guard.canActivate(route, state);
+};
+
+export const guardIsNotNational: CanActivateFn = async (route, state) => {
+  
+  const guard = inject(AuthGuard);
+  const router = inject(Router);
+
+  await guard.canActivate(route, state);
+  if (guard.current_region === 'NAT' && state.url !== '/') {
+    return router.navigateByUrl('/');
+  }
+
+  return true;
 };
