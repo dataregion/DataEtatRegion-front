@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Inject, Injectable, InjectionToken } from '@angular/core';
+import { Injectable, InjectionToken, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Preference, PreferenceWithShared } from '../models/preference.models';
 
@@ -9,15 +9,9 @@ export const API_PREFERENCE_PATH = new InjectionToken<string>('Helper service ty
   providedIn: 'root'
 })
 export class PreferenceUsersHttpService {
-  /**
-   * Service constructor
-   * @param http HttpClient object for making HTTP requests
-   * @param _apiPath Path api
-   */
-  constructor(
-    private http: HttpClient,
-    @Inject(API_PREFERENCE_PATH) private readonly _apiPath: string
-  ) {}
+  private http = inject(HttpClient);
+  private readonly _apiPath = inject(API_PREFERENCE_PATH);
+
 
   public getPreferences(): Observable<PreferenceWithShared> {
     return this.http.get<PreferenceWithShared>(`${this._apiPath}/users/preferences`);

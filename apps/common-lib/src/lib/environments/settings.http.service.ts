@@ -1,4 +1,4 @@
-import { Inject, Injectable, InjectionToken } from '@angular/core';
+import { Injectable, InjectionToken, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { KeycloakService } from 'keycloak-angular';
 import { firstValueFrom } from 'rxjs';
@@ -13,14 +13,13 @@ export const SETTINGS = new InjectionToken<ISettingsService>('SETTINGS');
 
 @Injectable({ providedIn: 'root' })
 export class SettingsHttpService {
-  constructor(
-    private http: HttpClient,
-    @Inject(SETTINGS) private _settingsService: ISettingsService,
-    private _keycloak: KeycloakService,
-    private _hostname_mapper: MultiRegionClientIdMapper,
-    private _logger: NGXLogger,
-    private _matomoInitializer: MatomoInitializerService
-  ) {}
+  private http = inject(HttpClient);
+  private _settingsService = inject<ISettingsService>(SETTINGS);
+  private _keycloak = inject(KeycloakService);
+  private _hostname_mapper = inject(MultiRegionClientIdMapper);
+  private _logger = inject(NGXLogger);
+  private _matomoInitializer = inject(MatomoInitializerService);
+
 
   initializeApp(): Promise<unknown> {
     return new Promise((resolve, reject) => {

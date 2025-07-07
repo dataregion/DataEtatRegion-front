@@ -7,7 +7,8 @@ import { LaureatHttpService } from '../services/laureat.http.service';
 
 @Injectable({ providedIn: 'root' })
 export class FranceRelanceResolvers {
-  constructor(private _service: LaureatHttpService) {}
+  private _service = inject(LaureatHttpService);
+
 
   resolve(): Observable<SousAxePlanRelance[] | Error> {
     return this._service.getSousAxePlanRelance();

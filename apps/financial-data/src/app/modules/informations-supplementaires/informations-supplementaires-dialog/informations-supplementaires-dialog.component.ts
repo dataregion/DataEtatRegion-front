@@ -1,4 +1,4 @@
-import { Component, Inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { RowData } from 'apps/grouping-table/src/lib/components/grouping-table/group-utils';
 import { InformationsSupplementairesComponent } from '../informations-supplementaires.component';
@@ -16,12 +16,14 @@ export interface InformationsSupplementairesDialogData {
     imports: [InformationsSupplementairesComponent, MatDialogModule]
 })
 export class InformationsSupplementairesDialogComponent {
+  data = inject<InformationsSupplementairesDialogData>(MAT_DIALOG_DATA);
+  private _httpService = inject(BudgetDataHttpService);
+
   public financial_data: FinancialDataModel;
 
-  constructor(
-    @Inject(MAT_DIALOG_DATA) public data: InformationsSupplementairesDialogData,
-    private _httpService: BudgetDataHttpService
-  ) {
+  constructor() {
+    const data = this.data;
+
     this.financial_data = data.row as FinancialDataModel;
 
     // Récupération de l'AE pour avoir le détails des CP associés

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { SessionService } from 'apps/common-lib/src/public-api';
 
  
@@ -20,10 +20,12 @@ export enum Region {
   providedIn: 'root'
 })
 export class MultiregionsService {
+  private _sessionService = inject(SessionService);
+
   
   private _region = ""
 
-  constructor(private _sessionService: SessionService) { 
+  constructor() { 
     
     this._sessionService.authenticated$.subscribe(() => {
       this._region = this._findRegion()

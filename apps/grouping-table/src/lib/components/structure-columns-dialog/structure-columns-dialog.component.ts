@@ -1,4 +1,4 @@
-import { Component, Inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { ColumnMetaDataDef, DisplayedOrderedColumn } from '../grouping-table/group-utils';
 import { MatIconModule } from '@angular/material/icon';
@@ -32,6 +32,8 @@ export type StructureColumnsDialogData = {
     ]
 })
 export class StructureColumnsDialogComponent {
+  private _dialogRef = inject<MatDialogRef<StructureColumnsDialogComponent>>(MatDialogRef);
+
   // Référence pour toujours connaître l'ordre de base des colonnes
   defaultOrder: DisplayedOrderedColumn[];
   // Liste des colonnes pour l'affichage de la liste
@@ -39,10 +41,9 @@ export class StructureColumnsDialogComponent {
   // Liste des statuts des colonnes
   displayedOrderedColumns: DisplayedOrderedColumn[];
 
-  constructor(
-    private _dialogRef: MatDialogRef<StructureColumnsDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) dialogData: StructureColumnsDialogData
-  ) {
+  constructor() {
+    const dialogData = inject<StructureColumnsDialogData>(MAT_DIALOG_DATA);
+
     this.defaultOrder = dialogData.defaultOrder;
     this.columns = dialogData.columns;
     this.displayedOrderedColumns = dialogData.displayedOrderedColumns;

@@ -1,4 +1,4 @@
-import { Component, Inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { ColumnMetaDataDef, GroupingColumn } from '../grouping-table/group-utils';
 import { MatIconModule } from '@angular/material/icon';
@@ -29,15 +29,16 @@ export type GroupingConfigDialogData = {
     ]
 })
 export class GroupingConfigDialogComponent {
+  private _dialogRef = inject<MatDialogRef<GroupingConfigDialogComponent>>(MatDialogRef);
+
   readonly allColumns: ColumnMetaDataDef[];
   groupingColumns: ColumnMetaDataDef[];
   remainingColumns: ColumnMetaDataDef[];
   groupingOrder: string[];
 
-  constructor(
-    private _dialogRef: MatDialogRef<GroupingConfigDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) dialogData: GroupingConfigDialogData
-  ) {
+  constructor() {
+    const dialogData = inject<GroupingConfigDialogData>(MAT_DIALOG_DATA);
+
     this.groupingOrder = dialogData.groupingOrder;
     this.allColumns = dialogData.columns
       .filter(

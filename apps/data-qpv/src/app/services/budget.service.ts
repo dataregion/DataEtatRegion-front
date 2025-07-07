@@ -1,4 +1,4 @@
-import { Inject, Injectable, InjectionToken } from '@angular/core';
+import { Injectable, InjectionToken, inject } from '@angular/core';
 import { FinancialDataModel } from 'apps/data-qpv/src/app/models/financial/financial-data.models';
 import { BopModel } from 'apps/data-qpv/src/app/models/refs/bop.models';
 import { Observable, forkJoin, map } from 'rxjs';
@@ -19,16 +19,15 @@ export const DATA_HTTP_SERVICE = new InjectionToken<DataHttpService<any, Financi
 
 @Injectable({ providedIn: 'root' })
 export class BudgetService {
+  private http = inject(HttpClient);
+  private _services = [inject(DATA_HTTP_SERVICE)];
+  readonly settings = inject<SettingsService>(SETTINGS);
+  private _sessionService = inject(SessionService);
+
 
   private _apiRef!: string;
 
-  constructor(
-    private http: HttpClient,
-     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    @Inject(DATA_HTTP_SERVICE) private _services: DataHttpService<any, FinancialDataModel>[],
-    @Inject(SETTINGS) readonly settings: SettingsService,
-    private _sessionService: SessionService
-  ) {
+  constructor() {
     this._apiRef = this.settings.apiReferentiel;
   }
 

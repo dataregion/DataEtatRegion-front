@@ -46,6 +46,16 @@ import { MatomoTracker } from 'ngx-matomo-client';
   standalone: false
 })
 export class HomeComponent implements OnInit {
+  private _route = inject(ActivatedRoute);
+  private _alertService = inject(AlertService);
+  private _preferenceService = inject(PreferenceUsersHttpService);
+  private _auditService = inject(AuditHttpService);
+  private _gridFullscreen = inject(GridInFullscreenStateService);
+  private _logger = inject(NGXLogger);
+  private _budgetService = inject(BudgetService);
+  private _exportDataService = inject(ExportDataService);
+  private _datePipe = inject(DatePipe);
+
   private dialog = inject(MatDialog);
   private readonly tracker = inject(MatomoTracker);
 
@@ -97,17 +107,7 @@ export class HomeComponent implements OnInit {
     else return 'Rétrécir le tableau';
   }
 
-  constructor(
-    private _route: ActivatedRoute,
-    private _alertService: AlertService,
-    private _preferenceService: PreferenceUsersHttpService,
-    private _auditService: AuditHttpService,
-    private _gridFullscreen: GridInFullscreenStateService,
-    private _logger: NGXLogger,
-    private _budgetService: BudgetService,
-    private _exportDataService: ExportDataService,
-    private _datePipe: DatePipe
-  ) {
+  constructor() {
     // Récupération de l'ordre des colonnes par défaut
     this.defaultOrder = this._getDefaultOrder();
     // Ordre et affichage de base des colonnes

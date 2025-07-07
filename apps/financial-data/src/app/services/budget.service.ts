@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { Inject, Injectable, InjectionToken } from '@angular/core';
+import { Injectable, InjectionToken, inject } from '@angular/core';
 import { FinancialDataModel } from '@models/financial/financial-data.models';
 import { BopModel } from '@models/refs/bop.models';
 import { forkJoin, map, Observable } from 'rxjs';
@@ -23,14 +23,14 @@ export const DATA_HTTP_SERVICE = new InjectionToken<DataHttpService<any, Financi
 
 @Injectable({ providedIn: 'root' })
 export class BudgetService {
+  private http = inject(HttpClient);
+  private budgetTogrist = inject(BudgetToGristService);
+  private _services= [inject(DATA_HTTP_SERVICE)];
+  readonly settings = inject<SettingsService>(SETTINGS);
+
   private _apiRef!: string;
 
-  constructor(
-    private http: HttpClient,
-    private budgetTogrist: BudgetToGristService,
-    @Inject(DATA_HTTP_SERVICE) private _services: DataHttpService<any, FinancialDataModel>[],
-    @Inject(SETTINGS) readonly settings: SettingsService
-  ) {
+  constructor() {
     this._apiRef = this.settings.apiReferentiel;
   }
 

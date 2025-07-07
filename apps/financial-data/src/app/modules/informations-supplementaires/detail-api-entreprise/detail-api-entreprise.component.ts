@@ -1,5 +1,5 @@
 import { DatePipe, NgFor, NgIf, NgTemplateOutlet } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { ChargementOuErreurComponent } from '../chargement-ou-erreur/chargement-ou-erreur.component';
 import { InformationsSupplementairesService } from '../services/informations-supplementaires.service';
 import { OuNonRenseignePipe } from 'apps/common-lib/src/public-api';
@@ -22,13 +22,17 @@ import { EntrepriseFull } from '../models/EntrepriseFull';
     ]
 })
 export class DetailApiEntrepriseComponent {
+  private service = inject(InformationsSupplementairesService);
+
   public info: EntrepriseFull | null = null;
 
   get vService() {
     return this.service.viewService;
   }
 
-  constructor(private service: InformationsSupplementairesService) {
+  constructor() {
+    const service = this.service;
+
     service.viewService.api_entreprise_full$().subscribe((info) => (this.info = info));
   }
 

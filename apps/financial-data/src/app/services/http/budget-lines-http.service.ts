@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { HttpClient } from '@angular/common/http';
-import { Inject, inject, Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { SourceFinancialData } from '@models/financial/common.models';
 import { FinancialCp, FinancialDataModel } from '@models/financial/financial-data.models';
 import { BudgetService as GeneratedBudgetApiService } from 'apps/clients/budget';
@@ -20,6 +20,9 @@ import { SearchUtilsService } from 'apps/common-lib/src/lib/services/search-util
 export class BudgetDataHttpService
   implements DataHttpService<EnrichedFlattenFinancialLinesSchema, FinancialDataModel>
 {
+  private http = inject(HttpClient);
+  readonly settings = inject<SettingsService>(SETTINGS);
+
   private _apiAdministration!: string;
   private _financialApiUrl!: string;
   private _laureatsApiUrl!: string;
@@ -27,10 +30,9 @@ export class BudgetDataHttpService
   private _searchUtils: SearchUtilsService = inject(SearchUtilsService);
   private _mapper: BudgetLineHttpMapper;
 
-  constructor(
-    private http: HttpClient,
-    @Inject(SETTINGS) readonly settings: SettingsService  
-  ) {
+  constructor() {
+    const settings = this.settings;
+
     this._apiAdministration = this.settings.apiAdministration;
     this._financialApiUrl = settings.apiFinancialData;
     this._laureatsApiUrl = settings.apiLaureatsData;

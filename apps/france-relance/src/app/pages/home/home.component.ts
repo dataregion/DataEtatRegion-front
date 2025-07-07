@@ -37,6 +37,14 @@ import { SlugifyPipe } from 'apps/common-lib/src/lib/pipes/slugify.pipe';
     standalone: false
 })
 export class HomeComponent implements OnInit {
+  private _route = inject(ActivatedRoute);
+  private _alertService = inject(AlertService);
+  private _preferenceService = inject(PreferenceUsersHttpService);
+  private _gridFullscreen = inject(GridInFullscreenStateService);
+  private _exportDataService = inject(ExportDataService);
+  private _datePipe = inject(DatePipe);
+  private _slugifyPipe = inject(SlugifyPipe);
+
   private dialog = inject(MatDialog);
 
   columnsMetaData: ParameterizedColumnsMetaData<LaureatColumnMetaDataDef>;
@@ -84,15 +92,7 @@ export class HomeComponent implements OnInit {
     else return 'Rétrécir le tableau';
   }
 
-  constructor(
-    private _route: ActivatedRoute,
-    private _alertService: AlertService,
-    private _preferenceService: PreferenceUsersHttpService,
-    private _gridFullscreen: GridInFullscreenStateService,
-    private _exportDataService: ExportDataService,
-    private _datePipe: DatePipe,
-    private _slugifyPipe: SlugifyPipe
-  ) {
+  constructor() {
     // Récupération de l'ordre des colonnes par défaut
     this.defaultOrder = this._getDefaultOrder();
     // Ordre et affichage de base des colonnes

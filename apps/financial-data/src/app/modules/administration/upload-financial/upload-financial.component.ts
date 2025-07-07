@@ -15,6 +15,11 @@ import { BudgetDataHttpService } from '@services/http/budget-lines-http.service'
     standalone: false
 })
 export class UploadFinancialComponent implements OnInit {
+  private _service = inject(BudgetDataHttpService);
+  private _session = inject(SessionService);
+  private _auditService = inject(AuditHttpService);
+  private _alertService = inject(AlertService);
+
   public readonly requiredFileType: string = '.csv';
   public DataType = DataType;
 
@@ -48,12 +53,7 @@ export class UploadFinancialComponent implements OnInit {
 
   // public typeSelected: DataType | null = null;
 
-  constructor(
-    private _service: BudgetDataHttpService,
-    private _session: SessionService,
-    private _auditService: AuditHttpService,
-    private _alertService: AlertService
-  ) {
+  constructor() {
     const max_year = new Date().getFullYear();
     let arr = Array(8).fill(new Date().getFullYear());
     arr = arr.map((_val, index) => max_year - index);

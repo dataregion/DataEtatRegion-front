@@ -1,4 +1,4 @@
-import { Inject, inject, Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import {
   AbstractLaureatsHttpService,
   SearchParameters,
@@ -20,14 +20,10 @@ import { SearchUtilsService } from 'apps/common-lib/src/lib/services/search-util
   providedIn: 'root'
 })
 export class France2030HttpService extends AbstractLaureatsHttpService {
-  private _searchUtils = inject(SearchUtilsService);
+  private http = inject(HttpClient);
+  readonly _settings = inject<SettingsService>(SETTINGS);
 
-  constructor(
-    private http: HttpClient,
-    @Inject(SETTINGS) readonly _settings: SettingsService
-  ) {
-    super();
-  }
+  private _searchUtils = inject(SearchUtilsService);
 
   get apiLaureats() {
     return this._settings.apiLaureatsData;

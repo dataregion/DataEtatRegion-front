@@ -1,4 +1,4 @@
-import { Component, Inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
 /**
@@ -10,12 +10,14 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
     standalone: false
 })
 export class ConfirmDialogComponent {
+  dialogRef = inject<MatDialogRef<ConfirmDialogComponent>>(MatDialogRef);
+  data = inject(MAT_DIALOG_DATA);
+
   public year: string;
 
-  constructor(
-    public dialogRef: MatDialogRef<ConfirmDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: string
-  ) {
+  constructor() {
+    const data = this.data;
+
     this.year = data;
   }
 

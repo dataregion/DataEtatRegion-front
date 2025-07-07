@@ -1,4 +1,4 @@
-import { Component, ElementRef, Inject, ViewChild } from '@angular/core';
+import { Component, ElementRef, ViewChild, inject } from '@angular/core';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { AlertService } from 'apps/common-lib/src/public-api';
@@ -15,6 +15,11 @@ import { PreferenceUsersHttpService } from '../../services/preference-users-http
     standalone: false
 })
 export class SavePreferenceDialogComponent {
+  dialogRef = inject<MatDialogRef<SavePreferenceDialogComponent>>(MatDialogRef);
+  private _service = inject(PreferenceUsersHttpService);
+  private _alertService = inject(AlertService);
+  data = inject<Preference>(MAT_DIALOG_DATA);
+
   public separatorKeysCodes: number[] = [ENTER, COMMA];
   public preference: Preference;
 
@@ -28,12 +33,9 @@ export class SavePreferenceDialogComponent {
 
   @ViewChild('userInput') userInput!: ElementRef<HTMLInputElement>;
 
-  constructor(
-    public dialogRef: MatDialogRef<SavePreferenceDialogComponent>,
-    private _service: PreferenceUsersHttpService,
-    private _alertService: AlertService,
-    @Inject(MAT_DIALOG_DATA) public data: Preference
-  ) {
+  constructor() {
+    const data = this.data;
+
     this.preference = data;
     // si la préférence d'origine est déjà partagé ou si elle est déjà créé sans partage,
     // on active par défaut la checkbox de partage

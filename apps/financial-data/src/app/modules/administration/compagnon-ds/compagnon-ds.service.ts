@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, map, Observable } from 'rxjs';
@@ -18,6 +18,9 @@ import { SettingsService } from 'apps/financial-data/src/environments/settings.s
   providedIn: 'root'
 })
 export class CompagnonDSService {
+  private _http = inject(HttpClient);
+  readonly settings = inject<SettingsService>(SETTINGS);
+
   private _apiExternes: string;
   private _apiDemarches: string;
 
@@ -35,10 +38,9 @@ export class CompagnonDSService {
     this._donnees.next(donnees);
   }
 
-  constructor(
-    private _http: HttpClient,
-    @Inject(SETTINGS) readonly settings: SettingsService  
-  ) {
+  constructor() {
+    const settings = this.settings;
+
     this._apiExternes = settings.apiExternes;
     this._apiDemarches = settings.apiDemarches;
   }

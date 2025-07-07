@@ -13,12 +13,12 @@ import { Token } from '@models/demarche_simplifie/demarche.model';
     standalone: false
 })
 export class GestionTokenComponent implements OnInit {
+  private _compagnonDS = inject(CompagnonDSService);
+
   private dialog = inject(MatDialog);
 
   public columnsToDisplay: string[] = ['nom', 'token', 'actions'];
   public tokens: Token[] = [];
-
-  constructor(private _compagnonDS: CompagnonDSService) {}
 
   ngOnInit(): void {
     this.loadTokens();

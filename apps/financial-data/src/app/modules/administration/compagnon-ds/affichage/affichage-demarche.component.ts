@@ -33,6 +33,12 @@ interface AffichageFormData {
     standalone: false
 })
 export class AffichageDemarcheComponent implements OnInit {
+  private _route = inject(ActivatedRoute);
+  private _router = inject(Router);
+  private _alertService = inject(AlertService);
+  private _compagnonDS = inject(CompagnonDSService);
+  private _budgetService = inject(BudgetService);
+
   private _destroyRef = inject(DestroyRef);
 
   public demarche: Demarche | null = null;
@@ -54,14 +60,6 @@ export class AffichageDemarcheComponent implements OnInit {
     dateFinProjet: new FormControl(''),
     contact: new FormControl('')
   });
-
-  constructor(
-    private _route: ActivatedRoute,
-    private _router: Router,
-    private _alertService: AlertService,
-    private _compagnonDS: CompagnonDSService,
-    private _budgetService: BudgetService
-  ) {}
 
   private _patchValues(demarche: Demarche) {
     if (demarche.affichage === null) {

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { BudgetService } from '@services/budget.service';
 import { Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
@@ -8,7 +8,8 @@ import { ReferentielProgrammation } from '@models/refs/referentiel_programmation
   providedIn: 'root'
 })
 export class AutocompleteRefProgrammationService {
-  constructor(private _budgetService: BudgetService) {}
+  private _budgetService = inject(BudgetService);
+
 
   autocomplete$(input: string[]): Observable<ReferentielProgrammation[]> {
     const autocompletion$ = this._budgetService.getReferentielsProgrammation(input.join(',')).pipe(

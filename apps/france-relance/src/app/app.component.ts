@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { SETTINGS } from 'apps/common-lib/src/lib/environments/settings.http.service';
 import { GridInFullscreenStateService } from 'apps/common-lib/src/lib/services/grid-in-fullscreen-state.service';
 import { LoaderService, SessionService } from 'apps/common-lib/src/public-api';
@@ -11,6 +11,11 @@ import { SettingsService } from '../environments/settings.service';
     standalone: false
 })
 export class AppComponent implements OnInit {
+  private _loaderService = inject(LoaderService);
+  private _sessionService = inject(SessionService);
+  private _gridFullscreen = inject(GridInFullscreenStateService);
+  readonly settings = inject<SettingsService>(SETTINGS);
+
   public progressBarVisible: boolean = false;
   public isAuthenticated: boolean = false;
 
@@ -19,14 +24,6 @@ export class AppComponent implements OnInit {
   get grid_fullscreen() {
     return this._gridFullscreen.fullscreen;
   }
-
-  constructor(
-    private _loaderService: LoaderService,
-    private _sessionService: SessionService,
-    private _gridFullscreen: GridInFullscreenStateService,
-     
-    @Inject(SETTINGS) public readonly settings: SettingsService
-  ) {}
 
   ngOnInit(): void {
     this._loaderService.isLoading().subscribe((loading) => {

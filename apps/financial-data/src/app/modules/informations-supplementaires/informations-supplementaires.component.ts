@@ -5,7 +5,7 @@ import {
   NgSwitchCase,
   NgTemplateOutlet
 } from '@angular/common';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 import { ChargementOuErreurComponent } from './chargement-ou-erreur/chargement-ou-erreur.component';
@@ -55,6 +55,9 @@ export enum View {
     providers: [InformationsSupplementairesService]
 })
 export class InformationsSupplementairesComponent implements OnInit {
+  private _route = inject(ActivatedRoute);
+  private _service = inject(InformationsSupplementairesService);
+
   view: View = View.light;
 
   private _financial: FinancialDataModel | undefined = undefined;
@@ -76,11 +79,6 @@ export class InformationsSupplementairesComponent implements OnInit {
     const data: FinancialDataModel = this._route.snapshot.data['financial_data'];
     this._initFromResolverModel(data);
   }
-
-  constructor(
-    private _route: ActivatedRoute,
-    private _service: InformationsSupplementairesService
-  ) {}
 
   get vService(): InformationSupplementairesViewService {
     return this._service.viewService;

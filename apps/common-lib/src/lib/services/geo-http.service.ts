@@ -31,13 +31,11 @@ interface SearchParams {
   providedIn: 'root'
 })
 export class GeoHttpService {
+  private _sessionService = inject(SessionService);
+
   private http = inject(HttpClient);
   private readonly api_geo = inject(API_GEO_PATH);
   private readonly api_ref = inject(API_REF_PATH);
-
-  constructor(
-    private _sessionService: SessionService,
-  ) {}
 
   public search(type: TypeLocalisation, search_param: SearchParams, filterRegion: boolean): Observable<GeoModel[]> {
     if (filterRegion && type != TypeLocalisation.REGION) {

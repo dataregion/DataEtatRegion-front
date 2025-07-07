@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { BudgetService } from '@services/budget.service';
 import { Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
@@ -9,10 +9,9 @@ import { ReferentielsHttpService } from 'apps/common-lib/src/lib/services/refere
 
 @Injectable()
 export class AutocompleteBeneficiaireService {
-  constructor(
-    private _refService: ReferentielsHttpService,
-    private _budgetService: BudgetService
-  ) {}
+  private _refService = inject(ReferentielsHttpService);
+  private _budgetService = inject(BudgetService);
+
 
   autocomplete$(input: string): Observable<BeneficiaireFieldData[]> {
     let sanitzed_input = input

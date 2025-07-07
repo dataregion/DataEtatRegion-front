@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { SettingsService } from '../../environments/settings.service';
@@ -9,13 +9,13 @@ import { Ressources } from '@models/ressource/ressource.models';
   providedIn: 'root'
 })
 export class ResourceService {
+    private http = inject(HttpClient);
+    readonly settings = inject<SettingsService>(SETTINGS);
+
   
     private _apiRessource: string;
 
-  constructor(
-    private http: HttpClient,
-    @Inject(SETTINGS) readonly settings: SettingsService
-  ) {
+  constructor() {
     this._apiRessource = this.settings.apiRessource;
   }
 

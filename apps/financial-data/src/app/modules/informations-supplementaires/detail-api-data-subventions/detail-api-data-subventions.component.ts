@@ -1,5 +1,5 @@
 import { CurrencyPipe, NgIf, NgTemplateOutlet } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { ChargementOuErreurComponent } from '../chargement-ou-erreur/chargement-ou-erreur.component';
 import { InformationsSupplementairesService } from '../services/informations-supplementaires.service';
 import { SubventionFull } from '../models/SubventionFull';
@@ -21,13 +21,17 @@ import { OuNonRenseignePipe } from 'apps/common-lib/src/public-api';
     ]
 })
 export class DetailApiDataSubventionsComponent {
+  private service = inject(InformationsSupplementairesService);
+
   public info: SubventionFull | null = null;
 
   get vService() {
     return this.service.viewService;
   }
 
-  constructor(private service: InformationsSupplementairesService) {
+  constructor() {
+    const service = this.service;
+
     service.viewService.api_subvention_full$().subscribe((subvention) => {
       this.info = subvention;
     });

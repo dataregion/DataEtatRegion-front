@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { KeycloakService } from 'keycloak-angular';
 
 @Component({
@@ -8,8 +8,10 @@ import { KeycloakService } from 'keycloak-angular';
 })
 /* eslint no-unused-vars: 0 */ // --> OFF
 export class RegisterComponent {
+  protected readonly keycloak = inject(KeycloakService);
+
   // redirection vers la page de création de compte
-  constructor(protected readonly keycloak: KeycloakService) {
+  constructor() {
     this.keycloak.register();
   }
 }

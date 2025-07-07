@@ -1,5 +1,5 @@
 import { HttpClient } from "@angular/common/http";
-import { Inject, Injectable, inject } from "@angular/core";
+import { Injectable, inject } from "@angular/core";
 import { FinancialDataModel } from "apps/data-qpv/src/app/models/financial/financial-data.models";
 import { BudgetService as GeneratedBudgetApiService } from "apps/clients/budget";
 import { EnrichedFlattenFinancialLinesSchema } from "apps/clients/budget/model/enrichedFlattenFinancialLinesSchema";
@@ -16,15 +16,15 @@ import { SearchUtilsService } from "apps/common-lib/src/lib/services/search-util
     providedIn: 'root',
 })
 export class BudgetDataHttpService implements DataHttpService<EnrichedFlattenFinancialLinesSchema, FinancialDataModel> {
+    private http = inject(HttpClient);
+    readonly settings = inject<SettingsService>(SETTINGS);
+
 
     private _budgetApi: GeneratedBudgetApiService = inject(GeneratedBudgetApiService);
     private _searchUtils: SearchUtilsService = inject(SearchUtilsService)
     private _mapper: BudgetLineHttpMapper;
 
-    constructor(
-        private http: HttpClient,
-        @Inject(SETTINGS) readonly settings: SettingsService,  
-    ) {
+    constructor() {
         this._mapper = new BudgetLineHttpMapper();
     }
 

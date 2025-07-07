@@ -43,6 +43,8 @@ import { debounceTime, Subject, Subscription } from 'rxjs';
     providers: [GeoLocalisationComponentService]
 })
 export class LocalisationComponent implements OnInit {
+  private _geo = inject(GeoLocalisationComponentService);
+
 
   private readonly TypeLocalisationKeyMap: Record<TypeLocalisation, string> = {
   [TypeLocalisation.REGION]: 'region',
@@ -83,7 +85,7 @@ export class LocalisationComponent implements OnInit {
   @Output() selectedNiveauChange = new EventEmitter<TypeLocalisation | null>();
   @Output() selectedLocalisationChange = new EventEmitter<GeoModel[] | null>();
 
-  constructor(private _geo: GeoLocalisationComponentService) {
+  constructor() {
     this.inputFilter.pipe(debounceTime(300), takeUntilDestroyed(this._destroyRef)).subscribe(() => {
       if (this.selectedNiveau != null) {
         const term = this.input !== '' ? this.input : null;

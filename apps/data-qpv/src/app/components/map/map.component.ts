@@ -1,4 +1,4 @@
-import { Component, Input, AfterViewInit, ViewEncapsulation, OnDestroy, input, effect, computed } from '@angular/core';
+import { Component, Input, AfterViewInit, ViewEncapsulation, OnDestroy, input, effect, computed, inject } from '@angular/core';
 import Map from 'ol/Map';
 import View from 'ol/View';
 import TileLayer from 'ol/layer/Tile';
@@ -29,6 +29,8 @@ import { QpvWithMontant, RefQpvWithCommune } from '../../models/refs/qpv.model';
   standalone: false
 })
 export class MapComponent implements AfterViewInit, OnDestroy {
+  private _mapLevelControlService = inject(MapLevelCustomControlService);
+
 
   public map: Map | undefined;
   public mapId: string;
@@ -86,9 +88,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     this.qpvWithMontant().reduce((acc, qpv) => acc + qpv.montant, 0)
   );
 
-  constructor(
-    private _mapLevelControlService: MapLevelCustomControlService,
-  ) {
+  constructor() {
     this.mapId = `ol-map-${Math.floor(Math.random() * 100)}`;
 
     this.mapLevelControl = this._mapLevelControlService.createLevelControl();

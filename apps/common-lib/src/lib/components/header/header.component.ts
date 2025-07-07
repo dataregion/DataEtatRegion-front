@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, inject } from '@angular/core';
 import { KeycloakService } from 'keycloak-angular';
 import { SessionService } from '../../services/session.service';
 import { MatIconModule } from '@angular/material/icon';
@@ -15,6 +15,9 @@ import { User } from '../../models/user.model';
     imports: [MatIconModule, MatTooltipModule, CommonModule, RouterModule, MatMenuModule]
 })
 export class HeaderComponent implements OnInit {
+  protected session = inject(SessionService);
+  private _keycloak = inject(KeycloakService);
+
   public isLoggedIn = false;
   public user: User | null = null;
 
@@ -29,11 +32,6 @@ export class HeaderComponent implements OnInit {
 
   @Input()
   displayPreference: boolean = true;
-
-  constructor(
-    protected session: SessionService,  
-    private _keycloak: KeycloakService
-  ) {}
 
   public ngOnInit() {
     this.session.getUser().subscribe((user) => {

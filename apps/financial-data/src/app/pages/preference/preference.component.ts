@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import {
   MapPreferenceFilterMetadata,
@@ -12,7 +12,8 @@ import { JSONObject } from 'apps/common-lib/src/lib/models/jsonobject';
     standalone: false
 })
 export class PreferenceComponent {
-  constructor(private _router: Router) {}
+  private _router = inject(Router);
+
 
   public mappingValueFilter: MapPreferenceFilterMetadata = {
     theme: {

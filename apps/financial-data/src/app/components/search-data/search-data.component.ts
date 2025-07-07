@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output, inject } from '@angular/core';
 import { FormControl, FormGroup, ValidationErrors, Validators } from '@angular/forms';
 import { ActivatedRoute, Data } from '@angular/router';
 import {
@@ -56,6 +56,14 @@ import {
     standalone: false
 })
 export class SearchDataComponent implements OnInit, AfterViewInit {
+  private _route = inject(ActivatedRoute);
+  private _alertService = inject(AlertService);
+  private _budgetService = inject(BudgetService);
+  private _logger = inject(NGXLogger);
+  private _autocompleteBeneficiaires = inject(AutocompleteBeneficiaireService);
+  private _autocompleteTags = inject(AutocompleteTagsService);
+  private _autocompleteReferentiels = inject(AutocompleteRefProgrammationService);
+
   public readonly TypeLocalisation = TypeLocalisation;
 
   public searchForm!: FormGroup<SearchForm>;
@@ -249,15 +257,7 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
     }
   }
 
-  constructor(
-    private _route: ActivatedRoute,
-    private _alertService: AlertService,
-    private _budgetService: BudgetService,
-    private _logger: NGXLogger,
-    private _autocompleteBeneficiaires: AutocompleteBeneficiaireService,
-    private _autocompleteTags: AutocompleteTagsService,
-    private _autocompleteReferentiels: AutocompleteRefProgrammationService
-  ) {
+  constructor() {
     // Formulaire avc champs déclarés dans l'ordre
     this.searchForm = new FormGroup<SearchForm>({
       theme: new FormControl<string[] | null>(null),

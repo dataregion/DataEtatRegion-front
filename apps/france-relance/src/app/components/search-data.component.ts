@@ -1,15 +1,5 @@
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import {
-  Component,
-  ElementRef,
-  EventEmitter,
-  Input,
-  OnChanges,
-  OnInit,
-  Output,
-  SimpleChanges,
-  ViewChild
-} from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild, inject } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { AlertService } from 'apps/common-lib/src/public-api';
@@ -41,6 +31,11 @@ import { Optional } from 'apps/common-lib/src/lib/utilities/optional.type';
     standalone: false
 })
 export class SearchDataComponent implements OnInit, OnChanges {
+  private _route = inject(ActivatedRoute);
+  private _alertService = inject(AlertService);
+  private _service = inject(LaureatHttpService);
+  private _exportService = inject(ExportDataService);
+
   public separatorKeysCodes: number[] = [ENTER, COMMA];
 
   warningMessage?: string;
@@ -81,13 +76,6 @@ export class SearchDataComponent implements OnInit, OnChanges {
 
   @ViewChild('filterTerritoireInput')
   filterTerritoireInput!: ElementRef<HTMLInputElement>;
-
-  public constructor(
-    private _route: ActivatedRoute,
-    private _alertService: AlertService,
-    private _service: LaureatHttpService,
-    private _exportService: ExportDataService
-  ) {}
 
   /**
    * Applique le filtre par défaut

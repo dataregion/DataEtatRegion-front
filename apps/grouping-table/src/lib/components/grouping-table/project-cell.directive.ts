@@ -1,4 +1,4 @@
-import { Directive, Input, TemplateRef } from '@angular/core';
+import { Directive, Input, TemplateRef, inject } from '@angular/core';
 
 /* eslint no-unused-vars: 0 */ // --> OFF
 
@@ -7,7 +7,8 @@ import { Directive, Input, TemplateRef } from '@angular/core';
     standalone: false
 })
 export class ProjectCellDirective {
-  constructor(public templateRef: TemplateRef<unknown>) {}
+  templateRef = inject<TemplateRef<unknown>>(TemplateRef);
+
 
   @Input('libProjectCell')
   projectCell = '';

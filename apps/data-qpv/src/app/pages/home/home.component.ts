@@ -1,4 +1,4 @@
-import { Component, computed, OnInit, Signal, signal, ViewChild } from '@angular/core';
+import { Component, computed, OnInit, Signal, signal, ViewChild, inject } from '@angular/core';
 
 import { PreferenceUsersHttpService } from 'apps/preference-users/src/public-api';
 import { ActivatedRoute, Data } from '@angular/router';
@@ -20,6 +20,10 @@ import { RefQpvWithCommune } from '../../models/refs/qpv.model';
     standalone: false
 })
 export class HomeComponent implements OnInit {
+  private _route = inject(ActivatedRoute);
+  private _alertService = inject(AlertService);
+  private _preferenceService = inject(PreferenceUsersHttpService);
+
 
   currentSearchArgs: QpvSearchArgs | null = null;
 
@@ -55,11 +59,7 @@ export class HomeComponent implements OnInit {
   public current_qpv_codes : string[] = [];
   public financialData = signal<FinancialData | undefined>(undefined);
 
-  constructor(
-    private _route: ActivatedRoute,
-    private _alertService: AlertService,
-    private _preferenceService: PreferenceUsersHttpService,
-  ) {
+  constructor() {
     this.preFilter = undefined;
   }
 

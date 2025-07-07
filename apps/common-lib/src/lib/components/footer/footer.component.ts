@@ -1,4 +1,4 @@
-import { Component, Inject, Input } from '@angular/core';
+import { Component, Input, inject } from '@angular/core';
 import { ISettingsService } from '../../environments/interface-settings.service';
 import { SETTINGS } from '../../environments/settings.http.service';
 
@@ -9,12 +9,16 @@ import { SETTINGS } from '../../environments/settings.http.service';
     standalone: false
 })
 export class FooterComponent {
+  readonly settings = inject<ISettingsService>(SETTINGS);
+
   public contact?: string;
   public url_github?: string;
   @Input()
   logo: string = 'Infradonnee.svg';
 
-  constructor(@Inject(SETTINGS) public readonly settings: ISettingsService) {
+  constructor() {
+    const settings = this.settings;
+
     this.contact = settings.getSetting().contact;
     this.url_github = settings.getSetting().url_github;
   }

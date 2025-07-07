@@ -34,6 +34,8 @@ import { BopModel } from '@models/refs/bop.models';
     providers: [BopsReferentielsComponentService]
 })
 export class BopsReferentielsComponent {
+  private _refs = inject(BopsReferentielsComponentService);
+
   @Input()
   public themes: string[] = [];
   public filteredBops: BopModel[] | null = null;
@@ -47,7 +49,7 @@ export class BopsReferentielsComponent {
   private _destroyRef = inject(DestroyRef);
   private _subFilterRef: Subscription | null = null;
 
-  constructor(private _refs: BopsReferentielsComponentService) {
+  constructor() {
     this.inputRefFilter
       .pipe(debounceTime(300), takeUntilDestroyed(this._destroyRef))
       .subscribe(() => {

@@ -1,4 +1,4 @@
-import { Component, Inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { MAT_SNACK_BAR_DATA } from '@angular/material/snack-bar';
 
  
@@ -22,10 +22,14 @@ export interface AlertMessage {
     standalone: false
 })
 export class AlertSnackBarComponent {
+  alert = inject<AlertMessage>(MAT_SNACK_BAR_DATA);
+
   public classAlert: string;
   public title: string;
 
-  constructor(@Inject(MAT_SNACK_BAR_DATA) public alert: AlertMessage) {
+  constructor() {
+    const alert = this.alert;
+
     this.classAlert = 'fr-alert--info';
     this.title = 'Information';
     if (alert.type === AlertType.Error) {

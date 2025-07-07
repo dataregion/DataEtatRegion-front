@@ -22,6 +22,9 @@ import { SavePreferenceDialogComponent } from './save-filter/save-preference-dia
     standalone: false
 })
 export class PreferenceUsersComponent implements OnInit {
+  private _service = inject(PreferenceUsersHttpService);
+  private _alertService = inject(AlertService);
+
   /**
    * Object pour mapper le nom du filtre avec une String affichable.
    * Uniquement les filtres présent dans l'attribut seront affichés
@@ -45,10 +48,7 @@ export class PreferenceUsersComponent implements OnInit {
   public readonly objectKeys = Object.keys;
   public readonly json = JSON;
 
-  constructor(
-    private _service: PreferenceUsersHttpService,
-    private _alertService: AlertService
-  ) {
+  constructor() {
     this.applyPreference = (_uuid: string) => {};
   }
 

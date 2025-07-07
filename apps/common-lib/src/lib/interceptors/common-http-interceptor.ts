@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import {
   HttpContextToken,
   HttpErrorResponse,
@@ -16,11 +16,10 @@ export const DO_NOT_ALERT_ON_NON_IMPLEMTENTED = new HttpContextToken<boolean>(()
 
 @Injectable()
 export class CommonHttpInterceptor implements HttpInterceptor {
-  constructor(
-    private _keycloak: KeycloakService,
-    private _loader: LoaderService,
-    private _alertService: AlertService
-  ) {}
+  private _keycloak = inject(KeycloakService);
+  private _loader = inject(LoaderService);
+  private _alertService = inject(AlertService);
+
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     this._loader.startLoader();

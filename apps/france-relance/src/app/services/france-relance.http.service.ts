@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { HttpClient } from '@angular/common/http';
-import { Inject, Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { SETTINGS } from 'apps/common-lib/src/lib/environments/settings.http.service';
 import { GeoModel, NocoDbResponse, TypeLocalisation } from 'apps/common-lib/src/public-api';
 import { map, Observable, of } from 'rxjs';
@@ -33,12 +33,9 @@ class UnsupportedNiveauLocalisation extends Error {
   providedIn: 'root'
 })
 export class FranceRelanceHttpService extends AbstractLaureatsHttpService {
-  constructor(
-    private http: HttpClient,
-    @Inject(SETTINGS) readonly _settings: SettingsService
-  ) {
-    super();
-  }
+  private http = inject(HttpClient);
+  readonly _settings = inject<SettingsService>(SETTINGS);
+
 
   /**
    * Récupère les Axe du plan de relance

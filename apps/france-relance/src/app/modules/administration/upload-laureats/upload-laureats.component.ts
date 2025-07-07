@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild, inject } from '@angular/core';
 import { AuditUpdateData, DataType } from '@models/audit/audit-update-data.models';
 import { AuditHttpService } from '@services/http/audit.service';
 import { AlertService, SessionService } from 'apps/common-lib/src/public-api';
@@ -14,6 +14,11 @@ import { HttpErrorResponse } from '@angular/common/http';
     standalone: false
 })
 export class UploadLaureatsComponent implements OnInit {
+  private _service = inject(BudgetDataHttpService);
+  private _session = inject(SessionService);
+  private _auditService = inject(AuditHttpService);
+  private _alertService = inject(AlertService);
+
   public readonly requiredFileType: string = '.csv';
   public DataType = DataType;
 
@@ -38,12 +43,7 @@ export class UploadLaureatsComponent implements OnInit {
 
   public typeSelected: DataType = DataType.FRANCE_2030;
 
-  constructor(
-    private _service: BudgetDataHttpService,
-    private _session: SessionService,
-    private _auditService: AuditHttpService,
-    private _alertService: AlertService
-  ) {
+  constructor() {
     const max_year = new Date().getFullYear();
     let arr = Array(8).fill(new Date().getFullYear());
     arr = arr.map((_val, index) => max_year - index);

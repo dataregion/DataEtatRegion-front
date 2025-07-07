@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { BudgetService } from '@services/budget.service';
 import { TagFieldData } from './tags-field-data.model';
 import { Observable } from 'rxjs';
@@ -7,7 +7,8 @@ import { Tag, tag_fullname } from '@models/refs/tag.model';
 
 @Injectable()
 export class AutocompleteTagsService {
-  constructor(private _budgetService: BudgetService) {}
+  private _budgetService = inject(BudgetService);
+
 
   autocomplete$(input: string): Observable<TagFieldData[]> {
     const autocompletion$ = this._budgetService.allTags$().pipe(

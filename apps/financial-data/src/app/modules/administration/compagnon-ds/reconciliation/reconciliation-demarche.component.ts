@@ -24,6 +24,14 @@ import { CentreCouts, CodeLabel, DomaineFonctionnel } from '@models/financial/co
     standalone: false
 })
 export class ReconciliationDemarcheComponent implements OnInit {
+  private _route = inject(ActivatedRoute);
+  private _alertService = inject(AlertService);
+  private _compagnonDS = inject(CompagnonDSService);
+  private _router = inject(Router);
+  private _referentielService = inject(ReferentielsHttpService);
+  private _financialService = inject(BudgetDataHttpService);
+  private _geo = inject(GeoLocalisationComponentService);
+
   private _destroyRef = inject(DestroyRef);
 
   public checkedId: string = '';
@@ -48,15 +56,7 @@ export class ReconciliationDemarcheComponent implements OnInit {
   public departement: GeoModel | null = null;
   public region: GeoModel | null = null;
 
-  constructor(
-    private _route: ActivatedRoute,
-    private _alertService: AlertService,
-    private _compagnonDS: CompagnonDSService,
-    private _router: Router,
-    private _referentielService: ReferentielsHttpService,
-    private _financialService: BudgetDataHttpService,
-    private _geo: GeoLocalisationComponentService
-  ) {
+  constructor() {
     this.checkedId = 'reconciliation-no';
   }
 

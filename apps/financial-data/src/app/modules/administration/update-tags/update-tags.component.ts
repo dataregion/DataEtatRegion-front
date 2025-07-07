@@ -16,6 +16,12 @@ import { ColonneLibelles, ColonnesService } from '@services/colonnes.service';
     standalone: false
 })
 export class UpdateTagsComponent {
+  private _service = inject(BudgetDataHttpService);
+  private _budgetService = inject(BudgetService);
+  private _colonnesService = inject(ColonnesService);
+  private _alertService = inject(AlertService);
+  private _clipboard = inject(Clipboard);
+
   /** Indique si la recherche est en cours */
   public uploadInProgress = new BehaviorSubject(false);
 
@@ -25,13 +31,7 @@ export class UpdateTagsComponent {
 
   private _destroyRef = inject(DestroyRef);
 
-  constructor(
-    private _service: BudgetDataHttpService,
-    private _budgetService: BudgetService,
-    private _colonnesService: ColonnesService,
-    private _alertService: AlertService,
-    private _clipboard: Clipboard
-  ) {
+  constructor() {
     this._budgetService
       .allTags$()
       .pipe(takeUntilDestroyed(this._destroyRef))

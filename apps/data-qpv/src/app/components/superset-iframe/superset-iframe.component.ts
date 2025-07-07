@@ -1,11 +1,4 @@
-import {
-  Component,
-  Inject,
-  Input,
-  OnInit,
-  OnChanges,
-  SimpleChanges,
-} from '@angular/core';
+import { Component, Input, OnInit, OnChanges, SimpleChanges, inject } from '@angular/core';
 import {DomSanitizer, SafeResourceUrl} from '@angular/platform-browser';
 import { SETTINGS } from 'apps/common-lib/src/lib/environments/settings.http.service';
 import {SettingsService} from "../../../environments/settings.service";
@@ -21,6 +14,9 @@ import {QpvSearchArgs} from "../../models/qpv-search/qpv-search.models";
     standalone: false
 })
 export class SupersetIframeComponent implements OnInit, OnChanges {
+  private _domSanitizer = inject(DomSanitizer);
+  readonly settings = inject<SettingsService>(SETTINGS);
+
 
   @Input() dashboardSlugType!: string;
 
@@ -34,10 +30,9 @@ export class SupersetIframeComponent implements OnInit, OnChanges {
 
   public sanitizedUrl: SafeResourceUrl | undefined;
 
-  constructor(
-    private _domSanitizer: DomSanitizer,
-    @Inject(SETTINGS) readonly settings: SettingsService,  
-  ) {
+  constructor() {
+    const settings = this.settings;
+
     this._supersetSettings = settings.getSuperset();
   }
 

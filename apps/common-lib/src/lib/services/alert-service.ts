@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AlertSnackBarComponent, AlertType } from '../components/snackbar/alert-snackbar.component';
 
@@ -7,7 +7,8 @@ import { AlertSnackBarComponent, AlertType } from '../components/snackbar/alert-
   providedIn: 'root'
 })
 export class AlertService {
-  constructor(private _snackBar: MatSnackBar) {}
+  private _snackBar = inject(MatSnackBar);
+
 
   public openAlertCopiedInClipboard(content: string): void {
     this.openAlertSuccess(`'${content}' copié dans le presse-papier.`);

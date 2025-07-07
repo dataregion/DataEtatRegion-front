@@ -14,6 +14,11 @@ import { ActivatedRoute } from '@angular/router';
     standalone: false
 })
 export class IntegrationDemarcheComponent implements OnInit {
+  private _loaderService = inject(LoaderService);
+  private _route = inject(ActivatedRoute);
+  private _compagnonDS = inject(CompagnonDSService);
+  private _alertService = inject(AlertService);
+
   private _destroyRef = inject(DestroyRef);
 
   public demarche: Demarche | null = null;
@@ -32,12 +37,7 @@ export class IntegrationDemarcheComponent implements OnInit {
   public dateIntegration: Date | null = null;
   public somethingIsLoading: boolean = false;
 
-  constructor(
-    private _loaderService: LoaderService,
-    private _route: ActivatedRoute,
-    private _compagnonDS: CompagnonDSService,
-    private _alertService: AlertService,
-  ) {
+  constructor() {
     this.integrationForm.get('numeroDemarche')?.valueChanges.subscribe(value => {
       this.numberDemarche = value ? parseInt(value) : null
       if (this.integrationForm.value.numeroDemarche && this.numberDemarche !== parseInt(this.integrationForm.value.numeroDemarche)) {

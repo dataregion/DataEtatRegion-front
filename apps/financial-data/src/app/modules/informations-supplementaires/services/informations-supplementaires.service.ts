@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { FinancialDataModel } from '@models/financial/financial-data.models';
 import { ExternalAPIsService, InfoApiEntreprise } from 'apps/clients/apis-externes';
 import { EntrepriseFull } from '../models/EntrepriseFull';
@@ -26,16 +26,14 @@ export function fromInfoApiEntreprise(info: InfoApiEntreprise): EntrepriseFull {
 
 @Injectable()
 export class InformationsSupplementairesService {
+  private _ea = inject(ExternalAPIsService);
+  private _compagnonDS = inject(CompagnonDSService);
+
   private _viewService: InformationSupplementairesViewService | undefined;
 
   get viewService() {
     return this._viewService!;
   }
-
-  constructor(
-    private _ea: ExternalAPIsService,
-    private _compagnonDS: CompagnonDSService
-  ) {}
 
   setupViewModelService(financial_data: FinancialDataModel) {
     this._viewService = new InformationSupplementairesViewService(

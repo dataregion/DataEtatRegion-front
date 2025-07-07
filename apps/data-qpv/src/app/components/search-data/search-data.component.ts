@@ -63,6 +63,12 @@ import { RefGeoQpv, RefQpvWithCommune } from '../../models/refs/qpv.model';
   standalone: false
 })
 export class SearchDataComponent implements OnInit, AfterViewInit {
+  private _route = inject(ActivatedRoute);
+  private _alertService = inject(AlertService);
+  private _budgetService = inject(BudgetService);
+  private _logger = inject(NGXLogger);
+  private _refService = inject(ReferentielsHttpService);
+
   public readonly TypeLocalisation = TypeLocalisation;
 
   public searchForm!: FormGroup<SearchForm>;
@@ -301,13 +307,7 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
     }
   }
 
-  constructor(
-    private _route: ActivatedRoute,
-    private _alertService: AlertService,
-    private _budgetService: BudgetService,
-    private _logger: NGXLogger,
-    private _refService: ReferentielsHttpService,
-  ) {
+  constructor() {
     // Formulaire avc champs déclarés dans l'ordre
     this.searchForm = new FormGroup<SearchForm>({
       annees: new FormControl<number[]>([], {

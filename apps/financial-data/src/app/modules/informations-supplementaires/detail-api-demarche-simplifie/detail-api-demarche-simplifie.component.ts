@@ -1,5 +1,5 @@
 import { NgIf, NgTemplateOutlet } from '@angular/common';
-import { Component, Inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { ChargementOuErreurComponent } from '../chargement-ou-erreur/chargement-ou-erreur.component';
 import { InformationsSupplementairesService } from '../services/informations-supplementaires.service';
 import { OuNonRenseignePipe } from 'apps/common-lib/src/public-api';
@@ -19,6 +19,9 @@ import { ISettingsService } from 'apps/common-lib/src/lib/environments/interface
     ]
 })
 export class DetailApiDemarcheSimplifieComponent {
+  readonly settings = inject<ISettingsService>(SETTINGS);
+  private service = inject(InformationsSupplementairesService);
+
   public affichageDossier!: AffichageDossier;
   public url_dossier_ds?: string;
 
@@ -27,10 +30,10 @@ export class DetailApiDemarcheSimplifieComponent {
     currency: 'EUR'
   });
 
-  constructor(
-    @Inject(SETTINGS) public readonly settings: ISettingsService,
-    private service: InformationsSupplementairesService
-  ) {
+  constructor() {
+    const settings = this.settings;
+    const service = this.service;
+
     service.viewService
       .dossier_demarche$()
       .subscribe((dossier) => (this.affichageDossier = dossier));

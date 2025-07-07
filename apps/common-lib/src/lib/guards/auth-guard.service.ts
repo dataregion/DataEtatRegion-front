@@ -18,15 +18,21 @@ import { jwtDecode } from 'jwt-decode';
   providedIn: 'root'
 })
 export class AuthGuard extends KeycloakAuthGuard {
-  constructor(
-    protected override readonly router: Router,
-    protected readonly keycloak: KeycloakService,
-    protected location: Location,
-    protected sessionService: SessionService,
-    protected auth_utils: AuthUtils,
-    private _logger: NGXLogger
-  ) {
+  protected override readonly router: Router;
+  protected readonly keycloak: KeycloakService;
+  protected location = inject(Location);
+  protected sessionService = inject(SessionService);
+  protected auth_utils = inject(AuthUtils);
+  private _logger = inject(NGXLogger);
+
+  constructor() {
+    const router = inject(Router);
+    const keycloak = inject(KeycloakService);
+
     super(router, keycloak);
+  
+    this.router = router;
+    this.keycloak = keycloak;
   }
 
    
