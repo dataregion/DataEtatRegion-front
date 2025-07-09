@@ -3,7 +3,7 @@
 import { Injectable, InjectionToken, inject } from '@angular/core';
 import { FinancialDataModel } from '@models/financial/financial-data.models';
 import { BopModel } from '@models/refs/bop.models';
-import { forkJoin, map, Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { SettingsService } from '../../environments/settings.service';
 import { SETTINGS } from 'apps/common-lib/src/lib/environments/settings.http.service';
 import { HttpClient } from '@angular/common/http';
@@ -25,7 +25,7 @@ export const DATA_HTTP_SERVICE = new InjectionToken<DataHttpService<any, Financi
 export class BudgetService {
   private http = inject(HttpClient);
   private budgetTogrist = inject(BudgetToGristService);
-  private _services= [inject(DATA_HTTP_SERVICE)];
+  private service= inject(DATA_HTTP_SERVICE);
   readonly settings = inject<SettingsService>(SETTINGS);
 
   private _apiRef!: string;
@@ -35,8 +35,7 @@ export class BudgetService {
   }
 
   public search(search_params: SearchParameters): Observable<FinancialDataModel[]> {
-    const search$: Observable<FinancialDataModel[]>[] = this._services.map((service) => {
-      return service.search(search_params).pipe(
+    return this.service.search(search_params).pipe(
         map((resultIncPagination) => {
 
           if (resultIncPagination === null) return [];
@@ -45,15 +44,8 @@ export class BudgetService {
           }
           return resultIncPagination.items;
         }),
-        map((items) => items.map((data) => service.mapToGeneric(data)))
+        map((items) => items.map((data) =>  this.service.mapToGeneric(data)))
       );
-    });
-
-    return forkJoin(search$).pipe(
-      map((response) => {
-        return response.flatMap((data) => [...data]);
-      })
-    );
   }
 
   public allTags$(): Observable<Tag[]> {
@@ -98,11 +90,10 @@ export class BudgetService {
   }
 
   public getById(source: SourceFinancialData, id: number): Observable<FinancialDataModel> {
-    const service = this._services.find((s) => s.getSources().includes(source.toString()));
 
-    if (service === undefined) throw new Error(`Aucun provider pour la source ${source}`);
+    if (this.service.getSources().includes(source.toString()) === false) throw new Error(`Aucun provider pour la source ${source}`);
 
-    return service.getById(source, id).pipe(map((data) => service.mapToGeneric(data)));
+    return this.service.getById(source, id).pipe(map((data) => this.service.mapToGeneric(data)));
   }
 
   public exportToGrist(data_to_export: JSONObject[]): Observable<void> {

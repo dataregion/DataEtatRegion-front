@@ -125,8 +125,7 @@ registerLocaleData(localeFr);
     },
     {
         provide: DATA_HTTP_SERVICE,
-        useClass: BudgetDataHttpService,
-        multi: true,
+        useClass: BudgetDataHttpService
     },
     provideAppInitializer(() => {
       const settingsHttpService = inject(SettingsHttpService);

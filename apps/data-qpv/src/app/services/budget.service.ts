@@ -12,7 +12,7 @@ import { RefSiret } from 'apps/common-lib/src/lib/models/refs/RefSiret';
 import { DataHttpService, SearchParameters } from './interface-data.service';
 import { CentreCouts } from '../models/financial/common.models';
 import { explodeQpvList, RefGeoQpv, RefQpvWithCommune } from '../models/refs/qpv.model';
- // eslint-disable-next-line @typescript-eslint/no-explicit-any
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const DATA_HTTP_SERVICE = new InjectionToken<DataHttpService<any, FinancialDataModel>>(
   'DataHttpService'
 );
@@ -20,7 +20,7 @@ export const DATA_HTTP_SERVICE = new InjectionToken<DataHttpService<any, Financi
 @Injectable({ providedIn: 'root' })
 export class BudgetService {
   private http = inject(HttpClient);
-  private _services = [inject(DATA_HTTP_SERVICE)];
+  private service = inject(DATA_HTTP_SERVICE);
   readonly settings = inject<SettingsService>(SETTINGS);
   private _sessionService = inject(SessionService);
 
@@ -32,25 +32,16 @@ export class BudgetService {
   }
 
   public search(search_params: SearchParameters): Observable<FinancialDataModel[]> {
-    const search$: Observable<FinancialDataModel[]>[] = this._services.map(service => {
-      return service.search(search_params).pipe(
-        map((resultIncPagination) => {
+    return this.service.search(search_params).pipe(
+      map((resultIncPagination) => {
 
-          if (resultIncPagination === null) return [];
-          if (resultIncPagination.pagination.hasNext) {
-            throw new Error(`La limite de lignes de résultat est atteinte. Veuillez affiner vos filtres afin d'obtenir un résultat complet.`);
-          }
-          return resultIncPagination.items;
-        }),
-        map(items => items.map(data => service.mapToGeneric(data)))
-      )
-    });
-
-
-    return forkJoin(search$).pipe(
-      map((response) => {
-        return response.flatMap(data => [...data])
-      })
+        if (resultIncPagination === null) return [];
+        if (resultIncPagination.pagination.hasNext) {
+          throw new Error(`La limite de lignes de résultat est atteinte. Veuillez affiner vos filtres afin d'obtenir un résultat complet.`);
+        }
+        return resultIncPagination.items;
+      }),
+      map(items => items.map(data => this.service.mapToGeneric(data)))
     );
   }
 
@@ -62,24 +53,24 @@ export class BudgetService {
         byDenomination: this._filterByDenomination(nomOuSiret),
       }
     )
-    .pipe(
-      map((full) => [...full.byCode, ...full.byDenomination]),
-    );
+      .pipe(
+        map((full) => [...full.byCode, ...full.byDenomination]),
+      );
 
     return req$
   }
 
   public getRefGeoQpv(): Observable<RefGeoQpv> {
-    const code_region =  this._sessionService.region_code?.length == 3 && this._sessionService.region_code[0] == "0"
-        ? this._sessionService.region_code.substring(1)
-        : this._sessionService.region_code;
-    
+    const code_region = this._sessionService.region_code?.length == 3 && this._sessionService.region_code[0] == "0"
+      ? this._sessionService.region_code.substring(1)
+      : this._sessionService.region_code;
+
 
     const url = `${this._apiRef}/qpv/region/${code_region}`;
     return this.http
       .get<RefQpvWithCommune[]>(url)
       .pipe(
-        map(refQpvWithCommune => {          
+        map(refQpvWithCommune => {
           const qpv = explodeQpvList(refQpvWithCommune)
           return qpv;
         })
@@ -102,10 +93,10 @@ export class BudgetService {
         map(response => {
           return response != null ? response.items as CentreCouts[] : []
         })
-    );
+      );
   }
 
-   private _filterByCode(nomOuSiret: string): Observable<RefSiret[]> {
+  private _filterByCode(nomOuSiret: string): Observable<RefSiret[]> {
     return this._filterBy("query", nomOuSiret)
   }
 

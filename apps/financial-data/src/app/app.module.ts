@@ -105,7 +105,6 @@ registerLocaleData(localeFr);
     {
       provide: DATA_HTTP_SERVICE,
       useClass: BudgetDataHttpService,
-      multi: true
     },
     {
       provide: APP_INITIALIZER,
