@@ -55,5 +55,13 @@
     "strictInjectionParameters": true,
     "strictInputAccessModifiers": true,
     "strictTemplates": true
-  }
+  },
+  "references": [
+    {
+      "path": "./apps/budget-dataetat/tsconfig.app.json"
+    },
+    {
+      "path": "./apps/budget-dataetat/tsconfig.spec.json"
+    }
+  ]
 }

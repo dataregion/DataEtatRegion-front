@@ -94,6 +94,20 @@ export default [
             }],
         },
     },
+    { 
+        files: ["apps/budget-dataetat/**/*.ts"], // on applique la règle pour le nouveau front budget
+        rules: {
+            "@angular-eslint/prefer-standalone": "error",
+            "@angular-eslint/component-selector": [
+                "error",
+                {
+                    type: "element",
+                    prefix: "budget",
+                    style: "kebab-case"
+                }
+            ]
+        },
+    },
     ...compat.extends("plugin:@angular-eslint/template/recommended").map(config => ({
         ...config,
         files: ["**/*.html"],
@@ -111,6 +125,12 @@ export default [
         rules: {
             "@angular-eslint/template/prefer-self-closing-tags": "error",
             "@angular-eslint/template/prefer-control-flow": "warn"
+        },
+    },
+     { 
+        files: ["apps/budget-dataetat/**/*.html"], // on applique la du control flow en erreur pour le nouveau front
+        rules: {
+            "@angular-eslint/template/prefer-control-flow": "error"
         },
     },
     {

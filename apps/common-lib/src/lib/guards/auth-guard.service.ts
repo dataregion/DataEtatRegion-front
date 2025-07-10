@@ -14,6 +14,10 @@ import { AuthUtils } from '../services/auth-utils.service';
 import { jwtDecode } from 'jwt-decode';
  
 
+/**
+ * 
+ * @deprecated
+ */
 @Injectable({
   providedIn: 'root'
 })
@@ -89,6 +93,7 @@ export class AuthGuard extends KeycloakAuthGuard {
 /**
  * Vérifie les roles de la personne authentifiée.
  * si aucune authentification, on match
+ * @deprecated
  */
 export const keycloakAuthGuardCanMatchAccordingToRoles: CanMatchFn = (route) => {
   const data = route.data;
@@ -100,12 +105,19 @@ export const keycloakAuthGuardCanMatchAccordingToRoles: CanMatchFn = (route) => 
 
   return guard.has_any_roles(requiredRoles);
 };
-
+/**
+ * 
+ * @deprecated
+ */
 export const keycloakAuthGuardCanActivate: CanActivateFn = (route, state) => {
   const guard = inject(AuthGuard);
   return guard.canActivate(route, state);
 };
 
+/**
+ * 
+ * @deprecated
+ */
 export const guardIsNotNational: CanActivateFn = async (route, state) => {
   
   const guard = inject(AuthGuard);

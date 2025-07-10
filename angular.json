@@ -562,6 +562,108 @@
           }
         }
       }
+    },
+    "budget-dataetat": {
+      "projectType": "application",
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "scss"
+        }
+      },
+      "root": "apps/budget-dataetat",
+      "sourceRoot": "apps/budget-dataetat/src",
+      "prefix": "budget",
+      "architect": {
+        "build": {
+          "builder": "@angular/build:application",
+          "options": {
+            "browser": "apps/budget-dataetat/src/main.ts",
+            "tsConfig": "apps/budget-dataetat/tsconfig.app.json",
+            "inlineStyleLanguage": "scss",
+            "assets": [
+              {
+                "glob": "**/*",
+                "input": "apps/budget-dataetat/public"
+              },
+               {
+                "glob": "**/*",
+                "input": "./node_modules/@gouvfr/dsfr/dist",
+                "output": "/@gouvfr"
+              }
+            ],
+            "styles": [
+              "./node_modules/@angular/material/prebuilt-themes/indigo-pink.css",
+              "./node_modules/@gouvfr/dsfr/dist/dsfr/dsfr.min.css",
+              "./node_modules/@gouvfr/dsfr/dist/utility/utility.min.css",
+              "apps/budget-dataetat/src/styles.scss"
+            ]
+          },
+          "configurations": {
+            "production": {
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "500kB",
+                  "maximumError": "1MB"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "4kB",
+                  "maximumError": "8kB"
+                }
+              ],
+              "outputHashing": "all"
+            },
+            "development": {
+              "optimization": false,
+              "extractLicenses": false,
+              "sourceMap": true
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "serve": {
+          "builder": "@angular/build:dev-server",
+          "configurations": {
+            "production": {
+              "buildTarget": "budget-dataetat:build:production"
+            },
+            "development": {
+              "buildTarget": "budget-dataetat:build:development"
+            }
+          },
+          "defaultConfiguration": "development"
+        },
+        "extract-i18n": {
+          "builder": "@angular/build:extract-i18n"
+        },
+        "test": {
+          "builder": "@angular/build:karma",
+          "options": {
+            "tsConfig": "apps/budget-dataetat/tsconfig.spec.json",
+            "inlineStyleLanguage": "scss",
+            "assets": [
+              {
+                "glob": "**/*",
+                "input": "apps/budget-dataetat/public"
+              }
+            ],
+            "styles": [
+              "apps/budget-dataetat/src/styles.scss"
+            ]
+          }
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": [
+              "apps/budget-dataetat/**/*.ts",
+              "apps/budget-dataetat/**/*.html"
+            ],
+            "eslintConfig": "apps/budget-dataetat/eslint.config.js"
+          }
+        }
+      }
     }
   },
   "cli": {
