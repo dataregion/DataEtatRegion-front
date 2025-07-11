@@ -1,4 +1,4 @@
-<lib-header [logo]="'BudgetEtat.svg'" [ngClass]="{'hidden': grid_fullscreen }" [title]="'Budget Data État ' + region">
+<lib-header-legacy [logo]="'BudgetEtat.svg'" [ngClass]="{'hidden': grid_fullscreen }" [title]="'Budget Data État ' + region">
 
   <li *ngIf="showUpdateTagsPage" tags>
     <button
@@ -45,7 +45,7 @@
     </mat-menu>
   </li>
 
-</lib-header>
+</lib-header-legacy>
 
 <div *ngIf="progressBarVisible === true">
   <mat-progress-bar mode="query" />

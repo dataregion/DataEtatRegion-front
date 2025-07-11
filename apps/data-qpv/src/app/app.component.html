@@ -1,4 +1,4 @@
-<lib-header [ngClass]="{'hidden': grid_fullscreen }" [title]="'Data QPV ' + region" [displayPreference]="false" [subTitle]="'Rechercher des données financières à l\'échelle des QPV'" [logo]="'DataQpvLogo.svg'">
+<lib-header-legacy [ngClass]="{'hidden': grid_fullscreen }" [title]="'Data QPV ' + region" [displayPreference]="false" [subTitle]="'Rechercher des données financières à l\'échelle des QPV'" [logo]="'DataQpvLogo.svg'">
 
   <li help>
     <button
@@ -6,7 +6,7 @@
       class="fr-btn fr-btn--tertiary-no-outline">Aide</button>
   </li>
 
-</lib-header>
+</lib-header-legacy>
 
 @if(progressBarVisible() === true) {
 <div>

@@ -32,8 +32,18 @@ export function provideKeycloakAngularDynamic(settingsService: SettingsBudgetSer
   logger.debug(`Initialisation de keycloak avec url: ${keycloak_settings.url}, realm: ${keycloak_settings.realm} et le client id: ${clientId}`);
 
 
+  const urls = [
+    settingsService.apiExternes,
+    settingsService.apiFinancialData,
+    settingsService.apiFinancialDataV2,
+    settingsService.apiReferentiel,
+    settingsService.apiAdministration,
+    settingsService.apiRessource
+  ];
+  const regexPattern = new RegExp(urls.map(url => escapeRegex(url)).join('|'), 'i');
+
   const urlCondition = createInterceptorCondition<IncludeBearerTokenCondition>({
-    urlPattern: /\/api\//i,
+    urlPattern: regexPattern,
     bearerPrefix: 'Bearer'
   });
 
@@ -75,4 +85,8 @@ function getClientIdMultiRegion(settings: KeycloakSettings): string {
     settings.hostname_client_id_mappings
   );
   return clientId;
+}
+
+function escapeRegex(url: string): string {
+  return url.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }

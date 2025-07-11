@@ -1,4 +1,4 @@
-<lib-header [logo]="'FranceRelance.svg'" [ngClass]="{'hidden': grid_fullscreen }"
+<lib-header-legacy [logo]="'FranceRelance.svg'" [ngClass]="{'hidden': grid_fullscreen }"
             [title]="'France 2030 et Relance en Bretagne'">
 
   <li *ngIf="displayAdmin" administration>
@@ -11,7 +11,7 @@
     </mat-menu>
   </li>
 
-</lib-header>
+</lib-header-legacy>
 
 <div *ngIf="progressBarVisible === true">
   <mat-progress-bar mode="query" />

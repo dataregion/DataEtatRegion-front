@@ -1,4 +1,5 @@
 import { Component, Input, OnInit, inject } from '@angular/core';
+import { KeycloakService } from 'keycloak-angular';
 import { SessionService } from '../../services/session.service';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
@@ -6,17 +7,19 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { User } from '../../models/user.model';
-import Keycloak from 'keycloak-js';
 
+/**
+ * @deprecated Utilisez `lib-header` à la place. Ce composant sera supprimé dans une future version.
+ */
 @Component({
-    selector: 'lib-header',
-    templateUrl: './header.component.html',
-    styleUrls: ['./header.component.scss'],
+    selector: 'lib-header-legacy',
+    templateUrl: './header-legacy.component.html',
+    styleUrls: ['./header-legacy.component.scss'],
     imports: [MatIconModule, MatTooltipModule, CommonModule, RouterModule, MatMenuModule]
 })
-export class HeaderComponent implements OnInit {
+export class HeaderLegacyComponent implements OnInit {
   protected session = inject(SessionService);
-  private _keycloak = inject(Keycloak);
+  private _keycloak = inject(KeycloakService);
 
   public isLoggedIn = false;
   public user: User | null = null;
@@ -44,9 +47,9 @@ export class HeaderComponent implements OnInit {
 
   public logout() {
     this._keycloak.logout().then(() => {
-       this.isLoggedIn = false;
+      this._keycloak.clearToken();
     });
-   
+    this.isLoggedIn = false;
   }
 
   public isNational() {

@@ -1,4 +1,91 @@
-it works !
-<main>
-  <router-outlet/>
-</main>
+<lib-header [logo]="'BudgetEtat.svg'" [ngClass]="{'hidden': grid_fullscreen }" [title]="'Budget Data État ' + region">
+
+  @if(showUpdateTagsPage) {
+  <li tags>
+    <button
+      class="fr-btn fr-btn--tertiary-no-outline fr-icon-hashtag" matTooltip="Tags"
+      routerLink="administration/update-tags">Tags
+    </button>
+  </li>
+  }
+ 
+  @if(showIntegrationDemarchePage) {
+    <li compagnonDS>
+      <button
+        class="fr-btn fr-btn--tertiary-no-outline fr-icon-bank-card-line" matTooltip="Compagnon DS"
+        id="compagnonDS"
+        routerLink="administration/demarches/integration">Compagnon DS
+      </button>
+    </li>
+  }
+ 
+  @if(ressources(); as r) {
+   <li ressources >
+    <button [matMenuTriggerFor]="ressourcesMenu" class="fr-btn fr-btn--tertiary-no-outline fr-icon-book-2-line"
+            id="ressources"
+            matTooltip="Ressources">Ressources
+    </button>
+    <mat-menu #ressourcesMenu="matMenu">
+       @if(r.visuterritoire) {
+        <a  [href]="r.visuterritoire" mat-menu-item
+         target="_blank">VisuTerritoire</a>
+      }
+      @if(r.relance) {
+        <a  [href]="r.relance" mat-menu-item target="_blank">France 2030 et Relance</a>
+      }
+      @if(r.graphiques) {
+        <a [href]="r.graphiques" mat-menu-item target="_blank">Graphiques</a>
+      }
+      @if(r.api_swagger) {
+         <a [href]="r.api_swagger" mat-menu-item target="_blank">API Swagger</a>
+      }
+      @if(r.documentation) {
+         <a [href]="r.documentation" mat-menu-item target="_blank">API Swagger</a>
+      }
+      @if(r.suivi_usage) {
+        <a  [href]="r.suivi_usage" mat-menu-item target="_blank">Suivi usage</a>
+      }
+      @if(r.grist) {
+        <a  [href]="r.grist" mat-menu-item target="_blank">Grist</a>
+      }
+    
+    </mat-menu>
+  </li>
+} @else {
+  vide
+}
+
+
+   @if(showManageUsersPage || showUploadFinancialDataPage) {
+    <li  administration>
+      <button [matMenuTriggerFor]="administration" class="fr-btn fr-btn--tertiary-no-outline fr-icon-settings-5-fill"
+              id="administration"
+              matTooltip="Administration">Admin
+      </button>
+      <mat-menu #administration="matMenu">
+        @if(showUploadFinancialDataPage) {        
+          <button  mat-menu-item routerLink='administration/upload'>Charger des données
+          </button>
+        }
+      </mat-menu>
+    </li>
+   }
+  
+
+</lib-header>
+
+@if(progressBarVisible === true) {
+<div>
+  <mat-progress-bar mode="query" />
+</div>
+}
+
+
+<router-outlet class="page-content-outlet" />
+
+<!-- <lib-footer *ngIf="isAuthenticated" [logo]="'DataEtat.svg'" [ngClass]="{'hidden': grid_fullscreen }">
+  <li *ngIf="help" class="fr-footer__bottom-item">
+    <a class="fr-footer__bottom-link" href="{{help}}" target="_blank">Aide en
+      ligne</a>
+  </li>
+</lib-footer> -->

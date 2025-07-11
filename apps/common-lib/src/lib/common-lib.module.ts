@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { AlertSnackBarComponent } from './components/snackbar/alert-snackbar.component';
 import { LocalisationComponent } from './components/localisation/localisation.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HeaderComponent } from './components/header/header.component';
+import { HeaderLegacyComponent } from './components/header-legacy/header-legacy.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { RegisterComponent } from './components/register/register.component';
 import { TermOfUseComponent } from './components/term-of-use/term-of-use.component';
@@ -22,7 +22,7 @@ import { SpinnerComponent } from './components/spinner/spinner.component';
     LocalisationComponent,
     ReactiveFormsModule,
     FormsModule,
-    HeaderComponent,
+    HeaderLegacyComponent,
     DisplayDateComponent,
     AdvancedChipsMultiselectComponent,
     SelectMultipleComponent,
@@ -33,7 +33,7 @@ import { SpinnerComponent } from './components/spinner/spinner.component';
     AlertSnackBarComponent,
     BopsReferentielsComponent,
     LocalisationComponent,
-    HeaderComponent,
+    HeaderLegacyComponent,
     DisplayDateComponent,
     FooterComponent,
     TermOfUseComponent,
