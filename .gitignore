@@ -51,3 +51,4 @@ Thumbs.db
 /apps/data-qpv/src/assets/settings.json*
 
 .tool-versions
+apps/budget-dataetat/public/config/settings.json

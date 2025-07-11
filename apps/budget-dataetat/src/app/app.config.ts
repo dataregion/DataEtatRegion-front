@@ -1,24 +1,24 @@
-import { ApplicationConfig, provideBrowserGlobalErrorListeners, provideZonelessChangeDetection } from '@angular/core';
+import { ApplicationConfig, LOCALE_ID, provideBrowserGlobalErrorListeners, provideZonelessChangeDetection } from '@angular/core';
 import { provideRouter } from '@angular/router';
-
 import { routes } from './app.routes';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
-import { provideKeycloakAngular } from './keycloak.config';
 import { includeBearerTokenInterceptor } from 'keycloak-angular';
+import { DatePipe } from '@angular/common';
 
 
-
-
-// https://github.com/mauriciovigolo/keycloak-angular/blob/main/projects/examples/standalone/src/app/keycloak.config.ts
-export const appConfig: ApplicationConfig = {
+export const configApp: ApplicationConfig = {
   providers: [
-    provideKeycloakAngular(),
+    DatePipe,
+    {
+      provide: LOCALE_ID,
+      useValue: 'fr-FR'
+    },
     provideBrowserGlobalErrorListeners(),
     provideZonelessChangeDetection(),
     provideRouter(routes),
     provideHttpClient(
       withInterceptors([includeBearerTokenInterceptor])
-    )
+    ),
   ]
 };
 

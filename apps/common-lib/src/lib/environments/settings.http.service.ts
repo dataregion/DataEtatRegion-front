@@ -10,7 +10,9 @@ import { MultiRegionClientIdMapper } from './mutli-region.mapper.service';
 import { MatomoInitializerService } from 'ngx-matomo-client';
 
 export const SETTINGS = new InjectionToken<ISettingsService>('SETTINGS');
-
+/**
+ * @deprecated.
+ */
 @Injectable({ providedIn: 'root' })
 export class SettingsHttpService {
   private http = inject(HttpClient);
