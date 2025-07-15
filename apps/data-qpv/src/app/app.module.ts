@@ -49,8 +49,9 @@ import { DsfrTabsModule, DsfrModalModule, DsfrDataTableModule, DsfrAlertModule, 
 import { TabsSupersetIframesComponent } from './components/tabs-superset-iframes/tabs-superset-iframes.component';
 import { TabsMapTableComponent } from './components/tabs-map-table/tabs-map-table.component';
 import { ModalAdditionalParamsComponent } from './components/modal-additional-params/modal-additional-params.component';
-import {MapComponent} from "./components/map/map.component";
+import { MapComponent } from "./components/map/map.component";
 import { MatomoModule } from 'ngx-matomo-client';
+import { FooterComponent } from 'apps/common-lib/src/lib/components/footer/footer.component';
 
 export function apiExternesConfigFactory(
   settingsService: SettingsService
@@ -90,13 +91,14 @@ registerLocaleData(localeFr);
   ],
   bootstrap: [AppComponent],
   imports: [
+    FooterComponent,
     BrowserModule,
     AppRoutingModule,
     //@ TODO migrer vers provideKeycloak => https://github.com/mauriciovigolo/keycloak-angular
     KeycloakAngularModule,
     BrowserAnimationsModule,
     ReactiveFormsModule,
-    LoggerModule.forRoot({level: NgxLoggerLevel.WARN}),
+    LoggerModule.forRoot({ level: NgxLoggerLevel.WARN }),
     MaterialModule,
     GroupingTableModule,
     MatDialogModule,
@@ -120,62 +122,62 @@ registerLocaleData(localeFr);
   ],
   providers: [
     {
-        provide: SETTINGS,
-        useClass: SettingsService,
+      provide: SETTINGS,
+      useClass: SettingsService,
     },
     {
-        provide: DATA_HTTP_SERVICE,
-        useClass: BudgetDataHttpService
+      provide: DATA_HTTP_SERVICE,
+      useClass: BudgetDataHttpService
     },
     provideAppInitializer(() => {
       const settingsHttpService = inject(SettingsHttpService);
       return settingsHttpService.initializeApp();
     }),
     {
-        provide: HTTP_INTERCEPTORS,
-        useClass: CommonHttpInterceptor,
-        multi: true,
+      provide: HTTP_INTERCEPTORS,
+      useClass: CommonHttpInterceptor,
+      multi: true,
     },
     DatePipe,
     {
-        provide: LOCALE_ID,
-        useValue: 'fr-FR',
+      provide: LOCALE_ID,
+      useValue: 'fr-FR',
     },
     {
-        provide: API_PREFERENCE_PATH,
-        useFactory: (settings: SettingsService) => {
-            return settings.apiAdministration;
-        },
-        deps: [SETTINGS],
+      provide: API_PREFERENCE_PATH,
+      useFactory: (settings: SettingsService) => {
+        return settings.apiAdministration;
+      },
+      deps: [SETTINGS],
     },
     {
-        provide: API_GEO_PATH,
-        useFactory: (settings: SettingsService) => {
-            return settings.apiGeo;
-        },
-        deps: [SETTINGS],
+      provide: API_GEO_PATH,
+      useFactory: (settings: SettingsService) => {
+        return settings.apiGeo;
+      },
+      deps: [SETTINGS],
     },
     {
-        provide: API_REF_PATH,
-        useFactory: (settings: SettingsService) => {
-            return settings.apiReferentiel;
-        },
-        deps: [SETTINGS],
+      provide: API_REF_PATH,
+      useFactory: (settings: SettingsService) => {
+        return settings.apiReferentiel;
+      },
+      deps: [SETTINGS],
     },
     {
-        provide: aeConfiguration,
-        useFactory: apiExternesConfigFactory,
-        deps: [SETTINGS],
-        multi: false,
+      provide: aeConfiguration,
+      useFactory: apiExternesConfigFactory,
+      deps: [SETTINGS],
+      multi: false,
     },
     {
-        provide: budgetConfiguration,
-        useFactory: apiBudgetConfigFactory,
-        deps: [SETTINGS],
-        multi: false,
+      provide: budgetConfiguration,
+      useFactory: apiBudgetConfigFactory,
+      deps: [SETTINGS],
+      multi: false,
     },
     provideHttpClient(withInterceptorsFromDi()),
     provideZonelessChangeDetection()
   ]
 })
-export class AppModule {}
+export class AppModule { }

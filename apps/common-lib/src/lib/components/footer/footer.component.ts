@@ -3,10 +3,9 @@ import { ISettingsService } from '../../environments/interface-settings.service'
 import { SETTINGS } from '../../environments/settings.http.service';
 
 @Component({
-    selector: 'lib-footer',
-    templateUrl: './footer.component.html',
-    styleUrls: ['./footer.component.scss'],
-    standalone: false
+  selector: 'lib-footer',
+  templateUrl: './footer.component.html',
+  styleUrls: ['./footer.component.scss'],
 })
 export class FooterComponent {
   readonly settings = inject<ISettingsService>(SETTINGS);

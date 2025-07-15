@@ -24,18 +24,26 @@ const isAccessAllowed = async (
     if (authenticated === false) {
         keycloak.login();
     }
-    const userProfile = await keycloak.loadUserProfile()
-    const accessToken = keycloak.token ?? '';
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const decodedAccessToken: Record<string, any> = jwtDecode(accessToken);
-    const code_region = decodedAccessToken['region'] ?? null
-    const currentRoleUser = Object.values(grantedRoles.resourceRoles).flat();
 
-    sessionService.setAuthentication(
-        userProfile,
-        currentRoleUser,
-        code_region
-    );
+    // si le user est null, on load son profile via Keycloak
+    if (sessionService.user() === null) {
+        const userProfile = await keycloak.loadUserProfile()
+        const accessToken = keycloak.token ?? '';
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const decodedAccessToken: Record<string, any> = jwtDecode(accessToken);
+        const code_region = decodedAccessToken['region'] ?? null
+        const roleUser = Object.values(grantedRoles.resourceRoles).flat();
+
+        sessionService.setAuthentication(
+            userProfile,
+            roleUser,
+            code_region
+        );
+    }
+
+    const user = sessionService.user();
+    if (user === null) return false;
+    const currentRoleUser: string[] = user.roles;
 
     const requiredRoles = route.data['roles'];
     // Allow the user to to proceed if no additional roles are required to access the route.

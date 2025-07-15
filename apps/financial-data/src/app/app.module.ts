@@ -44,6 +44,7 @@ import { BudgetDataHttpService } from '@services/http/budget-lines-http.service'
 import { MultiregionsService } from '@services/multiregions.service';
 import { MatomoModule, MatomoRouteDataInterceptor, MatomoRouterModule } from 'ngx-matomo-client';
 import { PocComponent } from './pages/poc/poc.component';
+import { FooterComponent } from 'apps/common-lib/src/lib/components/footer/footer.component';
 
 export function apiExternesConfigFactory(settingsService: SettingsService): aeConfiguration {
   const params: aeConfigurationParameters = {
@@ -75,6 +76,7 @@ registerLocaleData(localeFr);
   ],
   bootstrap: [AppComponent],
   imports: [
+    FooterComponent,
     BrowserModule,
     AppRoutingModule,
     KeycloakAngularModule,
@@ -158,7 +160,7 @@ registerLocaleData(localeFr);
     provideHttpClient(withInterceptorsFromDi())
   ]
 })
-export class AppModule {}
+export class AppModule { }
 
 export function app_Init(settingsHttpService: SettingsHttpService): () => Promise<unknown> {
   return () => settingsHttpService.initializeApp();

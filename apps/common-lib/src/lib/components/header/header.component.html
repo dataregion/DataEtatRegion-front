@@ -5,7 +5,7 @@
         <div class="fr-header__brand fr-enlarge-link">
           <div class="fr-header__brand-top">
             <div class="fr-header__logo">
-              <img src="img/{{logo}}" />
+              <img src="assets/img/{{logo}}" />
             </div>
           </div>
 
@@ -13,7 +13,7 @@
             <a href="/" title="Accueil - databretagne.fr">
               <p class="fr-header__service-title">{{title}}</p>
               @if(subTitle !== '') {
-                <p  class="fr-header__service-subtitle">{{subTitle}}</p>
+              <p class="fr-header__service-subtitle">{{subTitle}}</p>
               }
             </a>
           </div>
@@ -22,16 +22,15 @@
 
         <div class="fr-header__tools">
           <div class="fr-header__tools-links">
-            @if(isLoggedIn && user !== null) {
+            @if(isLoggedIn()) {
             <ul class="fr-btns-group">
 
               @if(displayPreference) {
-                <li>
-                  <button
-                    class="fr-btn fr-btn--tertiary-no-outline fr-icon-bookmark-line" matTooltip="Mes recherches"
-                    routerLink="preference">Mes recherches
-                  </button>
-                </li>
+              <li>
+                <button class="fr-btn fr-btn--tertiary-no-outline fr-icon-bookmark-line" matTooltip="Mes recherches"
+                  routerLink="preference">Mes recherches
+                </button>
+              </li>
               }
 
               <ng-content select="[help]" />
@@ -43,16 +42,12 @@
               <ng-content select="[ressources]" />
 
               @if (!isNational()) {
-                <ng-content select="[administration]" />
+              <ng-content select="[administration]" />
               }
 
               <li>
-                <button
-                  (click)="logout()"
-                  class="fr-btn fr-btn--tertiary-no-outline fr-icon-logout-box-r-line"
-                  mat-icon-button
-                  matTooltip="Déconnexion"
-                >
+                <button (click)="logout()" class="fr-btn fr-btn--tertiary-no-outline fr-icon-logout-box-r-line"
+                  mat-icon-button matTooltip="Déconnexion">
                   Déconnexion
                 </button>
               </li>
@@ -66,9 +61,9 @@
   </div>
   <!-- evite erreur console JS-->
   <div class="fr-header__menu fr-modal" id="modal-499" aria-labelledby="button-500">
-        <div class="fr-container">
-            <div class="fr-header__menu-links">
-            </div>
-        </div>
+    <div class="fr-container">
+      <div class="fr-header__menu-links">
+      </div>
     </div>
+  </div>
 </header>

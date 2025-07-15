@@ -4,9 +4,7 @@ import { AlertSnackBarComponent } from './components/snackbar/alert-snackbar.com
 import { LocalisationComponent } from './components/localisation/localisation.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HeaderLegacyComponent } from './components/header-legacy/header-legacy.component';
-import { FooterComponent } from './components/footer/footer.component';
 import { RegisterComponent } from './components/register/register.component';
-import { TermOfUseComponent } from './components/term-of-use/term-of-use.component';
 import { DisplayDateComponent } from './components/display-date/display-date.component';
 import { AdvancedChipsMultiselectComponent } from './components/advanced-chips-multiselect/advanced-chips-multiselect.component';
 import { SelectMultipleComponent } from './components/select-multiple/select-multiple.component';
@@ -15,7 +13,7 @@ import { SelectSimpleComponent } from './components/select-simple/select-simple.
 import { SpinnerComponent } from './components/spinner/spinner.component';
 
 @NgModule({
-  declarations: [AlertSnackBarComponent, FooterComponent, RegisterComponent, TermOfUseComponent],
+  declarations: [AlertSnackBarComponent, RegisterComponent],
   imports: [
     CommonModule,
     BopsReferentielsComponent,
@@ -35,8 +33,6 @@ import { SpinnerComponent } from './components/spinner/spinner.component';
     LocalisationComponent,
     HeaderLegacyComponent,
     DisplayDateComponent,
-    FooterComponent,
-    TermOfUseComponent,
     RegisterComponent,
     AdvancedChipsMultiselectComponent,
     SelectMultipleComponent,
@@ -44,4 +40,4 @@ import { SpinnerComponent } from './components/spinner/spinner.component';
     SpinnerComponent,
   ]
 })
-export class CommonLibModule {}
+export class CommonLibModule { }

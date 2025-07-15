@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { computed, inject, Injectable, signal } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import { User } from '../models/user.model';
 import { Profil } from '../models/profil.enum.model';
@@ -9,21 +9,33 @@ import { Optional } from '../utilities/optional.type';
   providedIn: 'root'
 })
 export class SessionService {
-  private _userInfo: User | null = null;
   private auth_utils = inject(AuthUtils);
 
+  /** @deprecated */
   public authenticated$ = new Subject<void>();
+  /** @deprecated user user Signals this.user*/
   public userInfo$ = new Subject<User | null>();
-  public region_code: Optional<string> = null
+  /** @deprecated use regionCode signals this.regionCode*/
+  public region_code: Optional<string> = null;
 
-  constructor() {}
+  public regionCode = signal<string | undefined>(undefined);
+  public user = signal<User | null>(null);
+
+  public hasRoleAdmin = computed(() => {
+    const user = this.user();
+    return user !== null && user.roles.includes(Profil.ADMIN);
+  });
+
+
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   public setAuthentication(info: Keycloak.KeycloakProfile, roles: any, region_code?: string): void {
-    this._userInfo = info as User;
-    this._userInfo.roles = this.auth_utils.roles_to_uppercase(roles);
+    const user = info as User;
+    user.roles = this.auth_utils.roles_to_uppercase(roles);
     this.region_code = region_code;
-    this.userInfo$.next(this._userInfo);
+    this.user.set(user);
+    this.regionCode.set(region_code);
+    this.userInfo$.next(this.user());
     this.authenticated$.next();
   }
 
@@ -32,14 +44,22 @@ export class SessionService {
   }
 
   /**
-   * Return state of User Connected
+   * 
+   * @returns 
+   * @deprecated use signal user
    */
   public getCurrentAccount(): User | null {
-    return this._userInfo;
+    return this.user();
   }
 
+  /**
+   * 
+   * @returns 
+   * @deprecated use hasRoleAdmin signal computed
+   */
   public isAdmin(): boolean {
-    return this._userInfo !== null && this._userInfo?.roles.includes(Profil.ADMIN);
+    const user = this.user()
+    return user !== null && user.roles.includes(Profil.ADMIN);
   }
 
   /**
@@ -48,10 +68,11 @@ export class SessionService {
    * @returns
    */
   public hasOneRole(profiles: Profil[]): boolean {
-    if (this._userInfo === null) return false;
+    const user = this.user();
+    if (user === null) return false;
 
     const roles = profiles.map((p) => p.toString());
-    const isIncluded = this._userInfo.roles.some((element) => roles.includes(element));
+    const isIncluded = user.roles.some((element) => roles.includes(element));
 
     return isIncluded;
   }

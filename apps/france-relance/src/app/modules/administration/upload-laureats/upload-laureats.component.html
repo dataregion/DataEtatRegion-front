@@ -9,20 +9,18 @@
 
       <div class="col">
         <input #fileFrance2030Upload (change)="fileFrance2030 = getFile($event)" [accept]="requiredFileType"
-               class="file-input"
-               type="file">
+          class="file-input" type="file">
         <div class="file-upload">
 
           <span>{{ fileFrance2030 !== null ? fileFrance2030.name : "Sélectionner un fichier csv" }}</span>
 
           <button (click)="fileFrance2030Upload.click()" *ngIf="fileFrance2030 === null" class="upload-btn"
-                  color="primary"
-                  mat-mini-fab>
+            color="primary" mat-mini-fab>
             <mat-icon>attach_file</mat-icon>
           </button>
 
           <button (click)="fileFrance2030 = null" *ngIf="fileFrance2030 !== null" class="cancel-upload" color="warn"
-                  mat-mini-fab>
+            mat-mini-fab>
             <mat-icon (click)="fileFrance2030 = null" class="cancel-upload">delete_forever</mat-icon>
           </button>
 
@@ -41,19 +39,20 @@
         </mat-form-field>
       </div>
 
-      <button (click)="uploadFrance2030File()" (disabled)="uploadInProgress.value === true"
-              *ngIf="fileFrance2030 !== null" color="primary"
-              mat-fab>
+      @if(fileFrance2030 !== null) {
+      <button (click)="uploadFrance2030File()" (disabled)="uploadInProgress.value === true" color="primary" mat-fab>
         <mat-icon fontIcon="upload_file" />
       </button>
-
+      }
     </div>
   </mat-card-content>
 </mat-card>
 
 <hr>
+@if(dataSource.length> 0) {
 
-<mat-card *ngIf=" dataSource.length> 0" class="mat-card">
+
+<mat-card class="mat-card">
   <mat-card-header>
     <mat-card-title-group>
       <mat-card-title>Historique des 10 derniers chargements des données financières</mat-card-title>
@@ -90,3 +89,4 @@
   </mat-card-content>
 
 </mat-card>
+}

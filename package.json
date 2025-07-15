@@ -17,7 +17,7 @@
     "build:all": "ng build --project=france-relance && ng build --project=financial-data && ng build --project=data-qpv",
     "storybook:common-lib": "ng run common-lib:storybook",
     "test-storybook": "test-storybook --config-dir=apps/common-lib/.storybook",
-    "lint": "eslint --max-warnings 178"
+    "lint": "eslint --max-warnings 170"
   },
   "env": {
     "browser": true,

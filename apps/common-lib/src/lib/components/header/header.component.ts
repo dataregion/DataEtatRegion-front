@@ -1,25 +1,21 @@
-import { Component, Input, OnInit, inject } from '@angular/core';
+import { Component, Input, computed, inject } from '@angular/core';
 import { SessionService } from '../../services/session.service';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { User } from '../../models/user.model';
 import Keycloak from 'keycloak-js';
 
 @Component({
-    selector: 'lib-header',
-    templateUrl: './header.component.html',
-    styleUrls: ['./header.component.scss'],
-    imports: [MatIconModule, MatTooltipModule, CommonModule, RouterModule, MatMenuModule]
+  selector: 'lib-header',
+  templateUrl: './header.component.html',
+  styleUrls: ['./header.component.scss'],
+  imports: [MatIconModule, MatTooltipModule, CommonModule, RouterModule, MatMenuModule]
 })
-export class HeaderComponent implements OnInit {
+export class HeaderComponent {
   protected session = inject(SessionService);
   private _keycloak = inject(Keycloak);
-
-  public isLoggedIn = false;
-  public user: User | null = null;
 
   @Input()
   title: string = '';
@@ -33,24 +29,19 @@ export class HeaderComponent implements OnInit {
   @Input()
   displayPreference: boolean = true;
 
-  public ngOnInit() {
-    this.session.getUser().subscribe((user) => {
-      if (user != null) {
-        this.isLoggedIn = true;
-        this.user = user;
-      }
-    });
-  }
+  public isLoggedIn = computed(() => {
+    const user = this.session.getUser();
+    if (user !== null) return true;
+    return false;
+  });
+
+  public isNational = computed(() => {
+    const region = this.session.regionCode()
+    return region === "NAT";
+  });
 
   public logout() {
-    this._keycloak.logout().then(() => {
-       this.isLoggedIn = false;
-    });
-   
-  }
-
-  public isNational() {
-    return this.session.region_code == "NAT"
+    this._keycloak.logout();
   }
 
 }
