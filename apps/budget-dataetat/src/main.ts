@@ -6,7 +6,6 @@ import { provideKeycloakAngularDynamic } from './app/keycloak.config';
 import { configApp, providerBugdetConfiguration } from './app/app.config';
 import { LoggerService, LogLevel } from 'apps/common-lib/src/lib/services/logger.service';
 import { providerMatomoDynamic } from './app/matomo.config';
-import { SETTINGS } from 'apps/common-lib/src/lib/environments/settings.http.service';
 
 async function loadApp(): Promise<{ settings: SettingsBudgetService, logger: LoggerService }> {
   const response = await fetch('/config/settings.json');
@@ -33,15 +32,10 @@ loadApp().then((services) => {
     providers: [
       // Injecte les services
       { provide: SettingsBudgetService, useValue: services.settings },
-      // pour rester compatible avec les anciens composants
-      {
-        provide: SETTINGS,
-        useValue: services.settings
-      },
       { provide: LoggerService, useValue: services.logger },
 
       // la conf des uri API
-      providerBugdetConfiguration(services.settings),
+      ...providerBugdetConfiguration(services.settings),
 
       // Keycloak configuré via useFactory + SettingsBudgetService + Logger
       // ✅ Appelle une fonction qui retourne les providers

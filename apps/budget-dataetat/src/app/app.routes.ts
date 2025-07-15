@@ -7,6 +7,7 @@ import { Profil } from 'apps/common-lib/src/lib/models/profil.enum.model';
 import { TermOfUseComponent } from 'apps/common-lib/src/lib/components/term-of-use/term-of-use.component';
 import { inject } from '@angular/core';
 import Keycloak from 'keycloak-js';
+import { PreferenceComponent } from './components/preference/preference.component';
 
 
 export const profiles_required_for_upload_page = [Profil.ADMIN];
@@ -30,18 +31,25 @@ export const routes: Routes = [
         resolve: {
             financial: resolveFinancialData,
             mb_parsed_params: resolveMarqueBlancheParsedParams
-        }
+        },
+        children: [
+            {
+                path: 'preference',
+                title: "Mes Recherches",
+                component: PreferenceComponent
+            },
+            {
+                path: 'cgu',
+                title: "Conditions générales d'utilisation",
+                component: TermOfUseComponent
+            },
+        ]
     },
     {
         path: 'register',
         title: "S'enregistrer",
         canActivate: [registerRedirect],
         component: HomeComponent
-    },
-    {
-        path: 'cgu',
-        component: TermOfUseComponent,
-        canActivate: [canActivateAuthRole],
     },
     {
         path: '**',

@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, inject } from '@angular/core';
+import { Component, Input, OnInit, inject, signal } from '@angular/core';
 import {
   Preference,
   MapPreferenceFilterMetadata,
@@ -12,14 +12,14 @@ import { AlertService } from 'apps/common-lib/src/public-api';
 import { SavePreferenceDialogComponent } from './save-filter/save-preference-dialog.component';
 
 @Component({
-    selector: 'lib-preference-users',
-    templateUrl: './preference-users.component.html',
-    styles: [
-        '.mat-column-filters { width: 55%; } ',
-        '.mat-column-shares { width: 20% }',
-        '.mat-column-name { width: 10% }'
-    ],
-    standalone: false
+  selector: 'lib-preference-users',
+  templateUrl: './preference-users.component.html',
+  styles: [
+    '.mat-column-filters { width: 55%; } ',
+    '.mat-column-shares { width: 20% }',
+    '.mat-column-name { width: 10% }'
+  ],
+  standalone: false
 })
 export class PreferenceUsersComponent implements OnInit {
   private _service = inject(PreferenceUsersHttpService);
@@ -40,21 +40,26 @@ export class PreferenceUsersComponent implements OnInit {
 
   public displayedColumns: string[] = ['name', 'filters', 'shares', 'actions'];
 
-  public dataSource: PreferenceWithShared = {
+  // public dataSource: PreferenceWithShared = {
+  //   create_by_user: [],
+  //   shared_with_user: []
+  // };
+
+  public dataSource = signal<PreferenceWithShared>({
     create_by_user: [],
     shared_with_user: []
-  };
+  })
 
   public readonly objectKeys = Object.keys;
   public readonly json = JSON;
 
   constructor() {
-    this.applyPreference = (_uuid: string) => {};
+    this.applyPreference = (_uuid: string) => { };
   }
 
   ngOnInit(): void {
     this._service.getPreferences().subscribe((response) => {
-      this.dataSource = response;
+      this.dataSource.set(response);
     });
   }
 
@@ -82,7 +87,7 @@ export class PreferenceUsersComponent implements OnInit {
       if (result) {
         this._service.deletePreference(uuid).subscribe({
           next: () => {
-            this.dataSource.create_by_user = this.dataSource.create_by_user.filter(
+            this.dataSource().create_by_user = this.dataSource().create_by_user.filter(
               (data) => data.uuid && data.uuid !== uuid
             );
             this._alertService.openAlertSuccess('Suppression du filtre');

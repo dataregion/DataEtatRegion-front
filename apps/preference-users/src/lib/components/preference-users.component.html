@@ -1,6 +1,6 @@
 <mat-accordion>
 
-  @if (dataSource.create_by_user.length > 0) {
+  @if (dataSource().create_by_user.length > 0) {
   <mat-expansion-panel [expanded]="true">
     <mat-expansion-panel-header>
       <mat-panel-title>
@@ -11,7 +11,8 @@
       </mat-panel-description>
     </mat-expansion-panel-header>
 
-    <table [dataSource]="dataSource.create_by_user" class="fr-table fr-table--no-caption fr-table--bordered" mat-table>
+    <table [dataSource]="dataSource().create_by_user" class="fr-table fr-table--no-caption fr-table--bordered"
+      mat-table>
       <caption>Liste des recherches sauvegarder</caption>
 
       <ng-container matColumnDef="name">
@@ -91,7 +92,7 @@
   </mat-expansion-panel>
   }
 
-  @if(dataSource.shared_with_user.length > 0) {
+  @if(dataSource().shared_with_user.length > 0) {
   <mat-expansion-panel>
     <mat-expansion-panel-header>
       <mat-panel-title>
@@ -102,7 +103,7 @@
       </mat-panel-description>
     </mat-expansion-panel-header>
 
-    <table [dataSource]="dataSource.shared_with_user" class="fr-table fr-table--no-caption fr-table--bordered"
+    <table [dataSource]="dataSource().shared_with_user" class="fr-table fr-table--no-caption fr-table--bordered"
       mat-table>
       <caption>Liste des recherches partager</caption>
 

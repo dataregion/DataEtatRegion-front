@@ -1,11 +1,13 @@
 import { Component, Input, inject } from '@angular/core';
 import { ISettingsService } from '../../environments/interface-settings.service';
 import { SETTINGS } from '../../environments/settings.http.service';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'lib-footer',
   templateUrl: './footer.component.html',
   styleUrls: ['./footer.component.scss'],
+  imports: [RouterLink]
 })
 export class FooterComponent {
   readonly settings = inject<ISettingsService>(SETTINGS);

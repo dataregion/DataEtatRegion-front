@@ -7,21 +7,32 @@ import { DatePipe } from '@angular/common';
 import { SettingsBudgetService } from './environments/settings-budget.service';
 import { budgetConfiguration } from 'apps/clients/budget';
 import { aeConfiguration, aeConfigurationParameters } from 'apps/clients/apis-externes';
+import { API_PREFERENCE_PATH } from 'apps/preference-users/src/public-api';
+import { SETTINGS } from 'apps/common-lib/src/lib/environments/settings.http.service';
+import { budgetHttpInterceptorInterceptor } from './interceptors/budget-http-interceptor.interceptor';
 
 
-export function providerBugdetConfiguration(settingsService: SettingsBudgetService): Provider {
-  return {
-
-    provide: budgetConfiguration,
-    useFactory: () => {
-       const params: aeConfigurationParameters = {
-        withCredentials: false,
-        basePath: settingsService.apiFinancialDataV2
-      };
-      return new aeConfiguration(params);
+export function providerBugdetConfiguration(settingsService: SettingsBudgetService): Provider[] {
+  return [
+    // pour rester compatible avec les anciens composants
+    {
+      provide: SETTINGS,
+      useValue: settingsService
     },
-    multi: false
-  }
+    {
+      provide: budgetConfiguration,
+      useFactory: () => {
+        const params: aeConfigurationParameters = {
+          withCredentials: false,
+          basePath: settingsService.apiFinancialDataV2
+        };
+        return new aeConfiguration(params);
+      },
+      multi: false
+    }, {
+      provide: API_PREFERENCE_PATH,
+      useValue: settingsService.apiAdministration
+    },]
 }
 
 
@@ -36,7 +47,7 @@ export const configApp: ApplicationConfig = {
     provideZonelessChangeDetection(),
     provideRouter(routes),
     provideHttpClient(
-      withInterceptors([includeBearerTokenInterceptor])
+      withInterceptors([includeBearerTokenInterceptor, budgetHttpInterceptorInterceptor])
     ),
   ]
 };
