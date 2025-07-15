@@ -8,6 +8,7 @@ import { TermOfUseComponent } from 'apps/common-lib/src/lib/components/term-of-u
 import { inject } from '@angular/core';
 import Keycloak from 'keycloak-js';
 import { PreferenceComponent } from './components/preference/preference.component';
+import { UpdateTagsComponent } from './components/update-tags/update-tags.component';
 
 
 export const profiles_required_for_upload_page = [Profil.ADMIN];
@@ -42,6 +43,15 @@ export const routes: Routes = [
                 path: 'cgu',
                 title: "Conditions générales d'utilisation",
                 component: TermOfUseComponent
+            },
+            {
+                path: 'update-tags',
+                title: "Gestion des tags",
+                component: UpdateTagsComponent,
+                // canActivate: [canActivateAuthRole],
+                // data: {
+                //     roles: profiles_required_for_tags_page
+                // }
             },
         ]
     },
