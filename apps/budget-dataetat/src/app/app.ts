@@ -1,4 +1,4 @@
-import { RouterOutlet } from '@angular/router';
+import { RouterLink, RouterOutlet } from '@angular/router';
 import { Component, computed, effect, inject, signal } from '@angular/core';
 import { GridInFullscreenStateService } from 'apps/common-lib/src/lib/services/grid-in-fullscreen-state.service';
 import { LoaderService, Ressources, SessionService } from 'apps/common-lib/src/public-api';
@@ -15,7 +15,7 @@ import { FooterComponent } from 'apps/common-lib/src/lib/components/footer/foote
 
 @Component({
   selector: 'budget-root',
-  imports: [RouterOutlet, HeaderComponent, FooterComponent, MatProgressBar, MatMenuModule, CommonModule],
+  imports: [RouterOutlet, HeaderComponent, FooterComponent, MatProgressBar, MatMenuModule, CommonModule, RouterLink],
   templateUrl: './app.html',
 })
 export class App {
