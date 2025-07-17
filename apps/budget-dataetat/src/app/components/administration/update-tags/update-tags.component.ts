@@ -7,15 +7,16 @@ import { Clipboard } from '@angular/cdk/clipboard';
 // import { ColonneLibelles, ColonnesService } from '@services/colonnes.service';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
-import { BudgetDataHttpService } from '../../services/http/budget-lines-http.service';
-import { Tag, tag_fullname } from '../../models/refs/tag.model';
-import { ColonneLibelles, ColonnesService } from '../../services/colonnes.service';
+import { BudgetDataHttpService } from '../../../services/http/budget-lines-http.service';
+import { Tag, tag_fullname } from '../../../models/refs/tag.model';
+import { ColonneLibelles, ColonnesService } from '../../../services/colonnes.service';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'budget-update-tags',
   templateUrl: './update-tags.component.html',
   styleUrls: ['./update-tags.component.scss'],
-  imports: [MatIconModule, MatCardModule]
+  imports: [MatIconModule, MatCardModule, MatButtonModule]
 })
 export class UpdateTagsComponent {
   private _service = inject(BudgetDataHttpService);

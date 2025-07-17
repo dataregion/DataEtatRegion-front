@@ -1,0 +1,18 @@
+<div mat-dialog-title>
+  <div class="dialog-title">
+    <h2>Êtes-vous sûr de vouloir importer les données pour l'année {{ year }} ?</h2>
+    <button aria-label="Fermer" mat-dialog-close mat-icon-button matTooltip="Fermer" type="button">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+  <div mat-dialog-content>
+    <p>Attention, les données AE (autorisation d'engagement) et CP (crédit de Paiement) déjà présentes pour l'année
+      sélectionnée ({{ year }}) vont être
+      supprimées et remplacées. Voulez-vous continuer ? </p>
+  </div>
+</div>
+
+<mat-dialog-actions align="end">
+  <button (click)="validate()" color="warn" mat-button type="button">Oui</button>
+  <button mat-button mat-dialog-close type="button">Non</button>
+</mat-dialog-actions>

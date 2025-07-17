@@ -1,4 +1,4 @@
-import { ApplicationConfig, LOCALE_ID, provideBrowserGlobalErrorListeners, Provider, provideZonelessChangeDetection } from '@angular/core';
+import { ApplicationConfig, provideBrowserGlobalErrorListeners, Provider, provideZonelessChangeDetection } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { routes } from './app.routes';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
@@ -39,10 +39,6 @@ export function providerBugdetConfiguration(settingsService: SettingsBudgetServi
 export const configApp: ApplicationConfig = {
   providers: [
     DatePipe,
-    {
-      provide: LOCALE_ID,
-      useValue: 'fr-FR'
-    },
     provideBrowserGlobalErrorListeners(),
     provideZonelessChangeDetection(),
     provideRouter(routes),
@@ -51,4 +47,3 @@ export const configApp: ApplicationConfig = {
     ),
   ]
 };
-

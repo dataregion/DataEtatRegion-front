@@ -8,10 +8,11 @@ import { TermOfUseComponent } from 'apps/common-lib/src/lib/components/term-of-u
 import { inject } from '@angular/core';
 import Keycloak from 'keycloak-js';
 import { PreferenceComponent } from './components/preference/preference.component';
-import { UpdateTagsComponent } from './components/update-tags/update-tags.component';
+import { UpdateTagsComponent } from './components/administration/update-tags/update-tags.component';
+import { BudgetFinancialComponent } from './components/administration/upload-financial/budget-financial.component';
 
 
-export const profiles_required_for_upload_page = [Profil.ADMIN];
+export const profiles_required_for_upload_financial_page = [Profil.ADMIN, Profil.COMPTABLE];
 export const profiles_required_for_tags_page = [Profil.USERS];
 export const profiles_required_for_demarches = [Profil.USERS];
 
@@ -48,11 +49,30 @@ export const routes: Routes = [
                 path: 'update-tags',
                 title: "Gestion des tags",
                 component: UpdateTagsComponent,
-                // canActivate: [canActivateAuthRole],
-                // data: {
-                //     roles: profiles_required_for_tags_page
-                // }
+                canActivate: [canActivateAuthRole],
+                data: {
+                    roles: profiles_required_for_tags_page
+                }
             },
+            {
+                path: 'upload',
+                title: "Charger les données",
+                component: BudgetFinancialComponent,
+                canActivate: [canActivateAuthRole],
+                data: {
+                    roles: profiles_required_for_upload_financial_page
+                }
+            },
+            //  {
+            //     path: 'demarches',
+            //     title: "Gestion des démarches",
+            //     canActivate: [canActivateAuthRole],
+            //     data: {
+            //       roles: profiles_required_for_demarches
+            //     },
+            //     loadChildren: () =>
+            //       import('./compagnon-ds/compagnon-ds.module').then((m) => m.CompagnonDSModule)
+            //   }
         ]
     },
     {

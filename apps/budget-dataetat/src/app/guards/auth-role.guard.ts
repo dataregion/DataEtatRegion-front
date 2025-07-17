@@ -4,6 +4,7 @@ import { ActivatedRouteSnapshot, CanActivateFn, RouterStateSnapshot, UrlTree } f
 import { inject } from '@angular/core';
 import { SessionService } from 'apps/common-lib/src/public-api';
 import { jwtDecode } from 'jwt-decode';
+import { LoggerService } from 'apps/common-lib/src/lib/services/logger.service';
 
 /**
  * The logic below is a simple example, please make it more robust when implementing in your application.
@@ -19,6 +20,9 @@ const isAccessAllowed = async (
     const { authenticated, grantedRoles } = authData;
     const keycloak = inject(Keycloak);
     const sessionService = inject(SessionService);
+    const logger = inject(LoggerService);
+
+    logger.debug('check isAccessAllowed');
 
     // si non authentifié, on redirige vers le login
     if (authenticated === false) {
@@ -40,7 +44,6 @@ const isAccessAllowed = async (
             code_region
         );
     }
-
     const user = sessionService.user();
     if (user === null) return false;
     const currentRoleUser: string[] = user.roles;
@@ -49,6 +52,7 @@ const isAccessAllowed = async (
     // Allow the user to to proceed if no additional roles are required to access the route.
     if (!(requiredRoles instanceof Array) || requiredRoles.length === 0) return authenticated;
 
+    logger.debug('check hasRequiredRole ', requiredRoles);
     const hasRequiredRole = (rolesUser: string[]): boolean =>
         rolesUser.some((role) => currentRoleUser.includes(role))
 
