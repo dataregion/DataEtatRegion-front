@@ -70,7 +70,7 @@ export class BudgetFinancialComponent implements OnInit {
   }
 
   public get isAdmin(): boolean {
-    return this._session.isAdmin();
+    return this._session.hasRoleAdmin();
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
