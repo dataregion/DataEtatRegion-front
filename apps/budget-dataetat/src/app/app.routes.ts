@@ -65,16 +65,17 @@ export const routes: Routes = [
                     roles: profiles_required_for_upload_financial_page
                 }
             },
-            //  {
-            //     path: 'demarches',
-            //     title: "Gestion des démarches",
-            //     canActivate: [canActivateAuthRole],
-            //     data: {
-            //       roles: profiles_required_for_demarches
-            //     },
-            //     loadChildren: () =>
-            //       import('./compagnon-ds/compagnon-ds.module').then((m) => m.CompagnonDSModule)
-            //   }
+            {
+                path: 'demarches',
+                title: "Gestion des démarches",
+                canActivate: [canAccess],
+                data: {
+                    roles: profiles_required_for_demarches
+                },
+                runGuardsAndResolvers: 'always',
+                loadChildren: () =>
+                    import('./modules/compagnon-ds/compagnon-ds.module').then((m) => m.CompagnonDSModule)
+            }
         ]
     },
     {

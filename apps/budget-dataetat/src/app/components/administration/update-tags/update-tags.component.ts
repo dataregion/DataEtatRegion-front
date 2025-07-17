@@ -4,7 +4,6 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AlertService } from 'apps/common-lib/src/public-api';
 import { BehaviorSubject, finalize } from 'rxjs';
 import { Clipboard } from '@angular/cdk/clipboard';
-// import { ColonneLibelles, ColonnesService } from '@services/colonnes.service';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
 import { BudgetDataHttpService } from '../../../services/http/budget-lines-http.service';

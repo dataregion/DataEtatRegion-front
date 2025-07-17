@@ -38,7 +38,8 @@ export function provideKeycloakAngularDynamic(settingsService: SettingsBudgetSer
     settingsService.apiFinancialDataV2,
     settingsService.apiReferentiel,
     settingsService.apiAdministration,
-    settingsService.apiRessource
+    settingsService.apiRessource,
+    settingsService.apiDemarches
   ];
   const regexPattern = new RegExp(urls.map(url => escapeRegex(url)).join('|'), 'i');
 
