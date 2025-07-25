@@ -4,6 +4,7 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class GridInFullscreenStateService {
+  // @TODO Passer en signals
   private _is_fullscreen = false;
 
   public get fullscreen(): boolean {

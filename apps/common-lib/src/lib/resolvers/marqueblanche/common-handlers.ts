@@ -4,8 +4,8 @@ import { MarqueBlancheParsedParams } from '../../models/marqueblanche/marqueblan
 import { QueryParam } from '../../models/marqueblanche/query-params.enum';
 import { GeoHttpService, ReferentielsHttpService, SearchByCodeParamsBuilder, TypeLocalisation } from 'apps/common-lib/src/public-api';
 import { ActivatedRouteSnapshot } from '@angular/router';
-import { NGXLogger } from 'ngx-logger';
 import { synonymes_from_types_localisation, to_type_localisation } from './niveau-localisation.model';
+import { LoggerService } from '../../services/logger.service';
 
  
 export type Handler<T extends MarqueBlancheParsedParams, V extends HandlerContext> = (
@@ -24,7 +24,7 @@ export const niveauxLocalisationLegaux = [
 /** Paramètres pour une fonction qui calcule les pré-filtres*/
 export interface _HandlerContext extends HandlerContext {
   route: ActivatedRouteSnapshot,
-  logger: NGXLogger,
+  logger: LoggerService,
   api_geo: GeoHttpService,
   api_ref: ReferentielsHttpService,
 }
@@ -119,7 +119,7 @@ export function filterGeo(api_geo: GeoHttpService, code_geo: string, niveau_geo:
 }
 
 export function common_annee_min_max(
-  logger: NGXLogger,
+  logger: LoggerService,
   annee_courante: number,
   p_annee_min: string | null,
   p_annee_max: string | null

@@ -4,10 +4,10 @@ import { KeycloakService } from 'keycloak-angular';
 import { firstValueFrom } from 'rxjs';
 import { Keycloak as KeycloakSettings, Settings } from 'apps/common-lib/src/public-api';
 import { ISettingsService } from './interface-settings.service';
-import { NGXLogger, NgxLoggerLevel } from 'ngx-logger';
 import { assert } from '../utilities/assert.function';
 import { MultiRegionClientIdMapper } from './mutli-region.mapper.service';
 import { MatomoInitializerService } from 'ngx-matomo-client';
+import { LoggerService, LogLevel } from '../services/logger.service';
 
 export const SETTINGS = new InjectionToken<ISettingsService>('SETTINGS');
 /**
@@ -19,7 +19,7 @@ export class SettingsHttpService {
   private _settingsService = inject<ISettingsService>(SETTINGS);
   private _keycloak = inject(KeycloakService);
   private _hostname_mapper = inject(MultiRegionClientIdMapper);
-  private _logger = inject(NGXLogger);
+  private _logger = inject(LoggerService);
   private _matomoInitializer = inject(MatomoInitializerService);
 
 
@@ -37,16 +37,10 @@ export class SettingsHttpService {
       .then(async () => {
         const is_in_production = this._settingsService.getSetting().production;
         if (is_in_production) {
-          this._logger.partialUpdateConfig({
-            level: NgxLoggerLevel.WARN,
-            disableFileDetails: true
-          });
+          this._logger.setLogLevel(LogLevel.WARN);
         } else {
-          this._logger.partialUpdateConfig({
-            level: NgxLoggerLevel.TRACE,
-            enableSourceMaps: true
-          });
-          this._logger.info('Application en mode développement. Les logs sont en mode trace');
+          this._logger.setLogLevel(LogLevel.DEBUG);
+          this._logger.info('Application en mode développement. Les logs sont en mode debug');
         }
       })
       .then(async () => {

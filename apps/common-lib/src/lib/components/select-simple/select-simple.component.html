@@ -17,12 +17,16 @@
     <mat-option *ngFor="let opt of filteredOptions" [value]="opt">{{ renderLabelFunction(opt) }}</mat-option>
 
   </mat-select>
-
-  <mat-icon *ngIf="icon" matSuffix>{{ icon }}</mat-icon>
+  @if(icon) {
+    <mat-icon  matSuffix>{{ icon }}</mat-icon>
+  }
   <button (click)="emptySelected()" *ngIf="canClear && !icon && hasSelected()" mat-icon-button matSuffix>
     <mat-icon>close</mat-icon>
   </button>
 
-  <mat-error *ngIf="error">{{ error }}</mat-error>
+  @if(error) {
+    <mat-error>{{ error }}</mat-error>
+  }
+  
 
 </mat-form-field>

@@ -9,9 +9,9 @@ import {
 } from '@angular/router';
 import { KeycloakAuthGuard, KeycloakService } from 'keycloak-angular';
 import { SessionService } from 'apps/common-lib/src/public-api';
-import { NGXLogger } from 'ngx-logger';
 import { AuthUtils } from '../services/auth-utils.service';
 import { jwtDecode } from 'jwt-decode';
+import { LoggerService } from '../services/logger.service';
  
 
 /**
@@ -27,7 +27,7 @@ export class AuthGuard extends KeycloakAuthGuard {
   protected location = inject(Location);
   protected sessionService = inject(SessionService);
   protected auth_utils = inject(AuthUtils);
-  private _logger = inject(NGXLogger);
+  private _logger = inject(LoggerService);
 
   constructor() {
     const router = inject(Router);

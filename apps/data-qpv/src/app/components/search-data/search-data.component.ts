@@ -34,7 +34,6 @@ import {
   TypeLocalisation,
 } from 'apps/common-lib/src/public-api';
 import { BudgetService } from 'apps/data-qpv/src/app/services/budget.service';
-import { NGXLogger } from 'ngx-logger';
 import { PreFilters } from 'apps/data-qpv/src/app/models/search/prefilters.model';
 import { MarqueBlancheParsedParamsResolverModel } from '../../resolvers/marqueblanche-parsed-params.resolver';
 import { SearchForm } from './search-form.interface';
@@ -50,6 +49,7 @@ import { SearchParameters, SearchParameters_empty, SearchTypeCategorieJuridique 
 import { ModalAdditionalParamsComponent } from '../modal-additional-params/modal-additional-params.component';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RefGeoQpv, RefQpvWithCommune } from '../../models/refs/qpv.model';
+import { LoggerService } from 'apps/common-lib/src/lib/services/logger.service';
 
 
 
@@ -66,7 +66,7 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
   private _route = inject(ActivatedRoute);
   private _alertService = inject(AlertService);
   private _budgetService = inject(BudgetService);
-  private _logger = inject(NGXLogger);
+  private _logger = inject(LoggerService);
   private _refService = inject(ReferentielsHttpService);
 
   public readonly TypeLocalisation = TypeLocalisation;
