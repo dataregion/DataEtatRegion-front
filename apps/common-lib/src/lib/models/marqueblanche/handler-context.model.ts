@@ -1,7 +1,7 @@
 import { ActivatedRouteSnapshot } from '@angular/router';
-import { NGXLogger } from 'ngx-logger';
+import { LoggerService } from '../../services/logger.service';
 
 export interface HandlerContext {
   route: ActivatedRouteSnapshot;
-  logger: NGXLogger;
+  logger: LoggerService;
 }

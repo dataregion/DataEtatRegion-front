@@ -5,7 +5,6 @@ import { GeoHttpService } from 'apps/common-lib/src/lib/services/geo-http.servic
 import { ReferentielsHttpService } from 'apps/common-lib/src/lib/services/referentiels.service';
 import { GeoModel, TypeLocalisation } from 'apps/common-lib/src/public-api';
 import { JSONObject } from "apps/common-lib/src/lib/models/jsonobject";
-import { NGXLogger } from 'ngx-logger';
 import { Observable, of } from 'rxjs';
 import { mergeMap, map } from 'rxjs/operators';
 
@@ -18,6 +17,7 @@ import { QueryParam } from 'apps/common-lib/src/lib/models/marqueblanche/query-p
 import { passing_errors } from 'apps/common-lib/src/lib/resolvers/marqueblanche/utils';
 import { to_types_categories_juridiques } from 'apps/common-lib/src/lib/resolvers/marqueblanche/type-etablissement.model';
 import { _extract_multiple_queryparams, _HandlerContext, common_annee_min_max, common_localisation, filterGeo } from 'apps/common-lib/src/lib/resolvers/marqueblanche/common-handlers';
+import { LoggerService } from 'apps/common-lib/src/lib/services/logger.service';
 
 export interface MarqueBlancheParsedParams extends Params {
   preFilters: PreFilters,
@@ -30,7 +30,7 @@ export const resolveMarqueBlancheParsedParams: ResolveFn<MarqueBlancheParsedPara
 
 function _resolver(route: ActivatedRouteSnapshot): Observable<{ data: MarqueBlancheParsedParams }> {
 
-  const logger = inject(NGXLogger);
+  const logger = inject(LoggerService);
   const api_geo = inject(GeoHttpService)
   const api_ref = inject(ReferentielsHttpService)
 

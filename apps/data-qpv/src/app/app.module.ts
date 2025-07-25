@@ -2,7 +2,6 @@ import { inject, LOCALE_ID, NgModule, provideAppInitializer, provideZonelessChan
 import { BrowserModule } from '@angular/platform-browser';
 import { KeycloakAngularModule } from 'keycloak-angular';
 import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
-import { LoggerModule, NgxLoggerLevel } from 'ngx-logger';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -98,7 +97,6 @@ registerLocaleData(localeFr);
     KeycloakAngularModule,
     BrowserAnimationsModule,
     ReactiveFormsModule,
-    LoggerModule.forRoot({ level: NgxLoggerLevel.WARN }),
     MaterialModule,
     GroupingTableModule,
     MatDialogModule,

@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild } from '@angular/core';
-import { CommonModule, NgFor } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, ValidationErrors } from '@angular/forms';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -26,7 +26,6 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
         FormsModule,
         ReactiveFormsModule,
         MatTooltipModule,
-        NgFor,
         MatInputModule,
         MatButtonModule,
         MatCheckboxModule

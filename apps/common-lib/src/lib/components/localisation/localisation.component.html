@@ -5,9 +5,11 @@
     [matTooltip]="textTooltip"
     matTooltipPosition="above">
       <mat-option />
-      <mat-option *ngFor="let niveau of niveaux" [value]="niveau">
+      @for(niveau of niveaux; track niveau) {
+      <mat-option [value]="niveau">
         {{ wordingNiveaux !== null && wordingNiveaux.has(niveau) ? wordingNiveaux.get(niveau) : niveau }}
       </mat-option>
+      }
     </mat-select>
     <mat-icon matSuffix>map</mat-icon>
   </mat-form-field>

@@ -98,6 +98,15 @@ export default [
         files: ["apps/budget-dataetat/**/*.ts"], // on applique la règle pour le nouveau front budget
         rules: {
             "@angular-eslint/prefer-standalone": "error",
+            "@typescript-eslint/naming-convention": [
+                "error",
+                {
+                    "selector": "method",
+                    "format": ["camelCase"],
+                    "leadingUnderscore": "allow"
+                  }
+
+            ],
             "@angular-eslint/component-selector": [
                 "error",
                 {

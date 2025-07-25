@@ -10,6 +10,7 @@ import { aeConfiguration, aeConfigurationParameters } from 'apps/clients/apis-ex
 import { API_PREFERENCE_PATH } from 'apps/preference-users/src/public-api';
 import { SETTINGS } from 'apps/common-lib/src/lib/environments/settings.http.service';
 import { budgetHttpInterceptorInterceptor } from './interceptors/budget-http-interceptor.interceptor';
+import { API_GEO_PATH, API_REF_PATH } from 'apps/common-lib/src/public-api';
 
 
 export function providerBugdetConfiguration(settingsService: SettingsBudgetService): Provider[] {
@@ -32,6 +33,12 @@ export function providerBugdetConfiguration(settingsService: SettingsBudgetServi
     }, {
       provide: API_PREFERENCE_PATH,
       useValue: settingsService.apiAdministration
+    },{
+      provide: API_GEO_PATH,
+      useValue: settingsService.apiGeo
+    },{
+      provide: API_REF_PATH,
+      useValue: settingsService.apiReferentiel
     },]
 }
 

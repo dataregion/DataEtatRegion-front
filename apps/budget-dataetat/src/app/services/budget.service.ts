@@ -5,6 +5,8 @@ import { DataPagination } from 'apps/common-lib/src/lib/models/pagination/pagina
 import { SettingsBudgetService } from '../environments/settings-budget.service';
 import { ReferentielProgrammation } from '../models/refs/referentiel_programmation.model';
 import { BopModel } from '../models/refs/bop.models';
+import { RefSiret } from 'apps/common-lib/src/lib/models/refs/RefSiret';
+import { Tag } from '../models/refs/tag.model';
 
 
 
@@ -18,6 +20,26 @@ export class BudgetService {
   constructor() {
     this._apiRef = this.settings.apiReferentiel;
   }
+
+  public getRefSiretFromCode(code: string): Observable<RefSiret> {
+    const url = `${this._apiRef}/beneficiaire/${code}`;
+    return this.http.get<RefSiret>(url).pipe(
+      map((response) => {
+        return response as RefSiret;
+      })
+    );
+  }
+
+  public allTags$(): Observable<Tag[]> {
+      const url = `${this._apiRef}/tags`;
+  
+      return this.http.get<Tag[]>(url).pipe(
+        map((response) => {
+          if (response == null) return [];
+          return response;
+        })
+      );
+    }
 
   public getBop(): Observable<BopModel[]> {
     const params = 'limit=500';

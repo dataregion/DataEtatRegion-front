@@ -23,7 +23,6 @@ import { StructureColumnsDialogComponent } from 'apps/grouping-table/src/lib/com
 import { InformationsSupplementairesDialogComponent } from '../../modules/informations-supplementaires/informations-supplementaires-dialog/informations-supplementaires-dialog.component';
 import { AuditHttpService } from '@services/http/audit.service';
 import { MarqueBlancheParsedParamsResolverModel } from '../../resolvers/marqueblanche-parsed-params.resolver';
-import { NGXLogger } from 'ngx-logger';
 import { delay } from 'rxjs';
 import { PreFilters } from '@models/search/prefilters.model';
 import {
@@ -38,6 +37,7 @@ import { BudgetService } from '@services/budget.service';
 import { DatePipe } from '@angular/common';
 import { ExportDataService } from 'apps/appcommon/src/lib/export-data.service';
 import { MatomoTracker } from 'ngx-matomo-client';
+import { LoggerService } from 'apps/common-lib/src/lib/services/logger.service';
 
 @Component({
   selector: 'financial-poc',
@@ -51,7 +51,7 @@ export class PocComponent implements OnInit {
   private _preferenceService = inject(PreferenceUsersHttpService);
   private _auditService = inject(AuditHttpService);
   private _gridFullscreen = inject(GridInFullscreenStateService);
-  private _logger = inject(NGXLogger);
+  private _logger = inject(LoggerService);
   private _budgetService = inject(BudgetService);
   private _exportDataService = inject(ExportDataService);
   private _datePipe = inject(DatePipe);

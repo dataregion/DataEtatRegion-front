@@ -1,1 +1,18 @@
-<router-outlet class="page-content-outlet" />
+<main role="main">
+    <div class="fr-container--fluid">
+        <section class="fr-mt-1w">
+            <div class="fr-grid-row">
+                <div class="fr-col-12 fr-col-md-12">
+                    <p>Rechercher des données financières</p>
+                </div>
+            </div>
+
+            <div class="fr-grid-row fr-grid-row--gutters">
+                <budget-search-data (currentFilter)="newFilter = $event"
+                    [ngClass]="{ 'hidden': grid_fullscreen }"
+                    [preFilter]="preFilter" />
+
+            </div>
+        </section>
+    </div>
+</main>

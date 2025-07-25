@@ -40,7 +40,6 @@
     "geoportal-extensions-openlayers": "^3.4.4",
     "keycloak-angular": "^20.0.0",
     "keycloak-js": "^25.0.6",
-    "ngx-logger": "^5.0.12",
     "ngx-matomo-client": "^8.0.0",
     "ol": "^10.2.1",
     "ol-mapbox-style": "^12.3.5",

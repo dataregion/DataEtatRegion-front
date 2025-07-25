@@ -26,7 +26,9 @@
     @if (canFilter && (filteredOptions === null || filteredOptions.length === 0)) {
       <mat-option class="no-result" disabled>Aucun résultat</mat-option>
     }
-    <mat-option *ngFor="let opt of filteredOptions" [value]="opt">{{ render(opt) }}</mat-option>
+    @for(opt of filteredOptions; track opt) {
+    <mat-option [value]="opt">{{ render(opt) }}</mat-option>
+    }
 
   </mat-select>
 

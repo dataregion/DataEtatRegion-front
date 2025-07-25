@@ -4,7 +4,6 @@ import { GeoHttpService } from 'apps/common-lib/src/lib/services/geo-http.servic
 import { ReferentielsHttpService } from 'apps/common-lib/src/lib/services/referentiels.service';
 import { GeoModel } from 'apps/common-lib/src/public-api';
 import { JSONObject } from 'apps/common-lib/src/lib/models/jsonobject';
-import { NGXLogger } from 'ngx-logger';
 import { Observable, of } from 'rxjs';
 import { map, mergeMap } from 'rxjs/operators';
 
@@ -32,6 +31,7 @@ import { assert_is_a_GroupByFieldname } from '../models/marqueblanche/groupby-fi
 import { groupby_mapping } from '../models/marqueblanche/groupby-mapping.model';
 import { ReferentielProgrammation } from '../models/refs/referentiel_programmation.model';
 import { Beneficiaire } from '../models/search/beneficiaire.model';
+import { LoggerService } from 'apps/common-lib/src/lib/services/logger.service';
 
 export interface MarqueBlancheParsedParams extends Params {
   preFilters: PreFilters;
@@ -45,7 +45,7 @@ export const resolveMarqueBlancheParsedParams: ResolveFn<MarqueBlancheParsedPara
 
 
 function _resolver(route: ActivatedRouteSnapshot): Observable<{ data: MarqueBlancheParsedParams }> {
-  const logger = inject(NGXLogger);
+  const logger = inject(LoggerService);
   const api_geo = inject(GeoHttpService);
   const api_ref = inject(ReferentielsHttpService);
 

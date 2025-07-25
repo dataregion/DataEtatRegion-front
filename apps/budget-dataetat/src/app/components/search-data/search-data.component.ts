@@ -1,30 +1,18 @@
 import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output, inject } from '@angular/core';
-import { FormControl, FormGroup, ValidationErrors, Validators } from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { ActivatedRoute, Data } from '@angular/router';
 import {
   BehaviorSubject,
   debounceTime,
-  finalize,
   forkJoin,
   Observable,
   of,
   startWith,
-  Subscription,
   switchMap
 } from 'rxjs';
-import { BopModel } from '@models/refs/bop.models';
-import {
-  FinancialData,
-  FinancialDataResolverModel
-} from '@models/financial/financial-data-resolvers.models';
-import { FinancialDataModel } from '@models/financial/financial-data.models';
 import { Preference } from 'apps/preference-users/src/lib/models/preference.models';
 import { JSONObject } from 'apps/common-lib/src/lib/models/jsonobject';
-import { AlertService, GeoModel, TypeLocalisation } from 'apps/common-lib/src/public-api';
-import { Bop } from '@models/search/bop.model';
-import { ReferentielProgrammation } from '@models/refs/referentiel_programmation.model';
-import { BudgetService } from '@services/budget.service';
-import { PreFilters } from '@models/search/prefilters.model';
+import { GeoModel, TypeLocalisation } from 'apps/common-lib/src/public-api';
 import { MarqueBlancheParsedParamsResolverModel } from '../../resolvers/marqueblanche-parsed-params.resolver';
 import {
   AdditionalSearchParameters,
@@ -33,36 +21,40 @@ import {
 import { BeneficiaireFieldData } from './beneficiaire-field-data.model';
 import { SearchForm } from './search-form.interface';
 import { AutocompleteBeneficiaireService } from './autocomplete-beneficiaire.service';
-import { SelectedData } from 'apps/common-lib/src/lib/components/advanced-chips-multiselect/advanced-chips-multiselect.component';
-import { Beneficiaire } from '@models/search/beneficiaire.model';
+import { AdvancedChipsMultiselectComponent, SelectedData } from 'apps/common-lib/src/lib/components/advanced-chips-multiselect/advanced-chips-multiselect.component';
 import { TagFieldData } from './tags-field-data.model';
 import { AutocompleteTagsService } from './autocomplete-tags.service';
-import { TypeCategorieJuridique } from '@models/financial/common.models';
-import { tag_fullname } from '@models/refs/tag.model';
-import { AutocompleteRefProgrammationService } from './autocomplete-ref-programmation.service';
-import {
-  OtherTypeCategorieJuridique,
-  SearchParameters,
-  SearchParameters_empty,
-  SearchTypeCategorieJuridique
-} from '@services/interface-data.service';
 import { LoggerService } from 'apps/common-lib/src/lib/services/logger.service';
+import { BopModel } from '../../models/refs/bop.models';
+import { ReferentielProgrammation } from '../../models/refs/referentiel_programmation.model';
+import { OtherTypeCategorieJuridique, SearchTypeCategorieJuridique } from '../../services/interface-data.service';
+import { TypeCategorieJuridique } from '../../models/financial/common.models';
+import { PreFilters } from '../../models/search/prefilters.model';
+import { Beneficiaire } from '../../models/search/beneficiaire.model';
+import { Bop } from '../../models/search/bop.model';
+import { MatIconModule } from '@angular/material/icon';
+import { CommonModule } from '@angular/common';
+import { SelectMultipleComponent } from 'apps/common-lib/src/lib/components/select-multiple/select-multiple.component';
+import { LocalisationComponent } from 'apps/common-lib/src/lib/components/localisation/localisation.component';
+import { BopsReferentielsComponent } from 'apps/common-lib/src/lib/components/bops-referentiels/bops-referentiels.component';
+import { FinancialData, FinancialDataResolverModel } from '../../models/financial/financial-data-resolvers.models';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
-    selector: 'financial-search-data',
-    templateUrl: './search-data.component.html',
-    styleUrls: ['./search-data.component.scss'],
-    providers: [AutocompleteBeneficiaireService, AutocompleteTagsService],
-    standalone: false
+  selector: 'budget-search-data',
+  templateUrl: './search-data.component.html',
+  styleUrls: ['./search-data.component.scss'],
+  providers: [AutocompleteBeneficiaireService, AutocompleteTagsService],
+  imports: [MatIconModule, ReactiveFormsModule,MatButtonModule, CommonModule, BopsReferentielsComponent,AdvancedChipsMultiselectComponent, LocalisationComponent, SelectMultipleComponent]
 })
 export class SearchDataComponent implements OnInit, AfterViewInit {
   private _route = inject(ActivatedRoute);
-  private _alertService = inject(AlertService);
-  private _budgetService = inject(BudgetService);
+  // private _alertService = inject(AlertService);
+  // private _budgetService = inject(BudgetService);
   private _logger = inject(LoggerService);
   private _autocompleteBeneficiaires = inject(AutocompleteBeneficiaireService);
   private _autocompleteTags = inject(AutocompleteTagsService);
-  private _autocompleteReferentiels = inject(AutocompleteRefProgrammationService);
+  // private _autocompleteReferentiels = inject(AutocompleteRefProgrammationService);
 
   public readonly TypeLocalisation = TypeLocalisation;
 
@@ -225,22 +217,22 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
    * Affiche une erreur
    */
   public displayError = false;
-   // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   public error: Error | any | null = null;
 
-  /**
-   * Resultats de la recherche.
-   */
-  @Output() searchResultsEventEmitter = new EventEmitter<FinancialDataModel[]>();
+  // /**
+  //  * Resultats de la recherche.
+  //  */
+  // @Output() searchResultsEventEmitter = new EventEmitter<FinancialDataModel[]>();
 
-  /**
-   * Les donnees de la recherche
-   */
-  private _searchResult: FinancialDataModel[] | null = null;
+  // /**
+  //  * Les donnees de la recherche
+  //  */
+  // private _searchResult: FinancialDataModel[] | null = null;
 
-  searchResult(): FinancialDataModel[] | null {
-    return this._searchResult;
-  }
+  // searchResult(): FinancialDataModel[] | null {
+  //   return this._searchResult;
+  // }
 
   /**
    * Resultats de la recherche.
@@ -250,7 +242,7 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
   @Input()
   public set preFilter(value: PreFilters | undefined) {
     try {
-      this._apply_prefilters(value);
+      this._applyPrefilters(value);
     } catch (e) {
       this.displayError = true;
       this.error = e;
@@ -329,55 +321,9 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
     return this.searchForm.errors != null ? this.searchForm.errors['benefOrBopRequired'] : null;
   }
 
-  /**
-   * lance la recherche des lignes d'engagement financière
-   */
-  private _search_subscription?: Subscription;
 
   public doSearch(): void {
-    this._search_subscription?.unsubscribe();
-
-    const formValue = this.searchForm.value;
-    this.searchInProgress.next(true);
-
-    const search_parameters: SearchParameters = {
-      ...SearchParameters_empty,
-      themes: formValue.theme || null,
-      bops: formValue.bops || null,
-      referentiels_programmation: this.selectedReferentiels || null, //this.additional_searchparams?.referentiels_programmation || null,
-      niveau: formValue.niveau || null,
-      locations: formValue.location,
-      years: this.selectedYear,
-      beneficiaires: this.selectedBeneficiaires || null,
-      types_beneficiaires: this.selectedTypesBenef || null, //this.additional_searchparams.types_beneficiaires,
-      tags: formValue.tags?.map((tag) => tag_fullname(tag)) ?? null,
-      domaines_fonctionnels: this.additional_searchparams?.domaines_fonctionnels || null,
-      source_region: this.additional_searchparams?.sources_region || null
-    };
-
-    this._search_subscription = this._budgetService
-      .search(search_parameters)
-      .pipe(
-        finalize(() => {
-          this.searchInProgress.next(false);
-        })
-      )
-      .subscribe({
-        next: (response: FinancialDataModel[] | Error) => {
-          this.searchFinish = true;
-          this.currentFilter.next(this._buildPreference(formValue as JSONObject));
-          this._searchResult = response as FinancialDataModel[];
-          this.searchResultsEventEmitter.next(this._searchResult);
-        },
-        error: (err: Error) => {
-          this.searchFinish = true;
-          this._searchResult = [];
-          this.currentFilter.next(this._buildPreference(formValue as JSONObject));
-          this.searchResultsEventEmitter.next(this._searchResult);
-          this._alertService.openAlert('error', err, 8);
-          throw err;
-        }
-      });
+    // TODO
   }
 
   /**
@@ -430,7 +376,7 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
   }
 
   /** Applique les filtres selectionnés au préalable*/
-  private _apply_prefilters(preFilter?: PreFilters) {
+  private _applyPrefilters(preFilter?: PreFilters) {
     if (preFilter == null) return;
 
     // Set de la zone géographique et du niveau de localisation
@@ -478,7 +424,7 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
       forkJoin(
         this.selectedBeneficiaires
           .map((ref) => ref.siret)
-          .map((siret) => this._autocompleteBeneficiaires.autocomplete_single$(siret))
+          .map((siret) => this._autocompleteBeneficiaires.autocompleteSingleBeneficiaire$(siret))
       ).subscribe((joined) => {
         this.selectedBeneficiaires = joined;
       });
@@ -519,11 +465,4 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
     this.doSearch();
   }
 
-  //region: Fonctions utilitaires
-
-  private _isArrayIncluded(a1: number[], a2: number[]): boolean {
-    return a1.every((num) => a2.includes(num));
-  }
-
-  //endregion
 }
