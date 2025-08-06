@@ -4,7 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { DataPagination } from 'apps/common-lib/src/lib/models/pagination/pagination.models';
 import { SettingsBudgetService } from '../environments/settings-budget.service';
 import { ReferentielProgrammation } from '../models/refs/referentiel_programmation.model';
-import { BopModel } from '../models/refs/bop.models';
+import { BopModel, ThemeModel } from '../models/refs/bop.models';
 
 
 
@@ -17,6 +17,13 @@ export class BudgetService {
 
   constructor() {
     this._apiRef = this.settings.apiReferentiel;
+  }
+
+  public getThemes(): Observable<ThemeModel[]> {
+    const params = 'limit=500';
+    return this.http
+      .get<DataPagination<ThemeModel>>(`${this._apiRef}/themes?${params}`)
+      .pipe(map((response) => response.items));
   }
 
   public getBop(): Observable<BopModel[]> {

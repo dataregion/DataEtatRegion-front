@@ -7,3 +7,7 @@ export interface BopModel extends BopModelCode {
   code_ministere: string;
   label_theme: string;
 }
+
+export interface ThemeModel extends BopModelCode {
+  label: string;
+}

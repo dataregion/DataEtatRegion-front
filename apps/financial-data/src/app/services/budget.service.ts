@@ -2,7 +2,7 @@
 
 import { Injectable, InjectionToken, inject } from '@angular/core';
 import { FinancialDataModel } from '@models/financial/financial-data.models';
-import { BopModel } from '@models/refs/bop.models';
+import { BopModel, ThemeModel } from '@models/refs/bop.models';
 import { map, Observable } from 'rxjs';
 import { SettingsService } from '../../environments/settings.service';
 import { SETTINGS } from 'apps/common-lib/src/lib/environments/settings.http.service';
@@ -66,6 +66,13 @@ export class BudgetService {
         return response as RefSiret;
       })
     );
+  }
+
+  public getThemes(): Observable<ThemeModel[]> {
+    const params = 'limit=500';
+    return this.http
+      .get<DataPagination<ThemeModel>>(`${this._apiRef}/themes?${params}`)
+      .pipe(map((response) => response.items));
   }
 
   public getBop(): Observable<BopModel[]> {
