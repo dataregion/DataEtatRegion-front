@@ -1,18 +1,35 @@
-<main role="main">
-    <div class="fr-container--fluid">
-        <section class="fr-mt-1w">
-            <div class="fr-grid-row">
-                <div class="fr-col-12 fr-col-md-12">
-                    <p>Rechercher des données financières</p>
-                </div>
-            </div>
+<budget-search-data 
+  (currentFilter)="newFilter = $event"
+  (searchResultsEventEmitter)="tableData = $event"
+  [ngClass]="{ 'hidden': grid_fullscreen }"
+  [preFilter]="preFilter" />
 
-            <div class="fr-grid-row fr-grid-row--gutters">
-                <budget-search-data (currentFilter)="newFilter = $event"
-                    [ngClass]="{ 'hidden': grid_fullscreen }"
-                    [preFilter]="preFilter" />
+<!-- <div class="main-content overlay-container no-content"> -->
+<div class="main-content overlay-container" style="margin-top:15px;">
+  @if (tableData && tableData.length === 0) {
+    <div><i>Aucune donnée ne correspond à vos critères de recherche.</i></div>
+  }
+  @else {
+    <budget-table-toolbar [grouped]="grouped"></budget-table-toolbar>
 
-            </div>
-        </section>
+    @if (grouped) {
+      <budget-groups-table></budget-groups-table>
+    }
+    @else {
+      <budget-lines-table></budget-lines-table>
+    }
+
+  }
+</div>
+
+@if(lastImportDate) {
+  <div  class="last-import">
+    <span aria-hidden="false" aria-label="Example home icon" class="info-icon" fontIcon="info"></span>
+    <div>
+      Le dernier chargement complet des données financières date du
+      <lib-display-date [date]="lastImportDate" />
+      . <br>
+      Les données prennent donc en compte la situation au dernier jour du mois précédent.
     </div>
-</main>
+  </div>
+}

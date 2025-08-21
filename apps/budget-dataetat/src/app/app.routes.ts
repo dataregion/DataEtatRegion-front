@@ -1,5 +1,6 @@
 import { CanActivateFn, Routes } from '@angular/router';
 import { authConnected, canAccess } from './guards/auth-role.guard';
+import { resolveColonnes } from './resolvers/colonnes.resolver';
 import { resolveFinancialData } from './resolvers/financial-data.resolver';
 import { resolveMarqueBlancheParsedParams } from './resolvers/marqueblanche-parsed-params.resolver';
 import { Profil } from 'apps/common-lib/src/lib/models/profil.enum.model';
@@ -30,7 +31,8 @@ export const routes: Routes = [
                 loadComponent: () => import('./components/home/home.component').then((m) => m.HomeComponent),
                 resolve: {
                     financial: resolveFinancialData,
-                    mb_parsed_params: resolveMarqueBlancheParsedParams
+                    mb_parsed_params: resolveMarqueBlancheParsedParams,
+                    colonnes: resolveColonnes
                 },
             },
             {

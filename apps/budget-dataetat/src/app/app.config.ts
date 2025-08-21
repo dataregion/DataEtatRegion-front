@@ -11,6 +11,8 @@ import { API_PREFERENCE_PATH } from 'apps/preference-users/src/public-api';
 import { SETTINGS } from 'apps/common-lib/src/lib/environments/settings.http.service';
 import { budgetHttpInterceptorInterceptor } from './interceptors/budget-http-interceptor.interceptor';
 import { API_GEO_PATH, API_REF_PATH } from 'apps/common-lib/src/public-api';
+import { DATA_HTTP_SERVICE } from '@services/budget.service';
+import { BudgetDataHttpService } from '@services/http/budget-lines-http.service';
 
 
 export function providerBugdetConfiguration(settingsService: SettingsBudgetService): Provider[] {
@@ -39,7 +41,11 @@ export function providerBugdetConfiguration(settingsService: SettingsBudgetServi
     },{
       provide: API_REF_PATH,
       useValue: settingsService.apiReferentiel
-    },]
+    },{
+      provide: DATA_HTTP_SERVICE,
+      useClass: BudgetDataHttpService
+    },
+  ]
 }
 
 

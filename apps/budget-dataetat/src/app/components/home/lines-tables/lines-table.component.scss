@@ -1,0 +1,12 @@
+.fr-badge.fr-badge--info:before {
+  display: none;
+}
+.fr-badge.fr-badge--success:before {
+  display: none;
+}
+
+.fr-table thead th {
+  position: sticky;
+  top: var(--app-header-height, 0px);
+  z-index: 10;
+}

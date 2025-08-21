@@ -1,0 +1,21 @@
+:host {
+  display: block;              /* no need for grid if you want main scroll */
+  min-height: 100dvh;
+  width: 100%;
+  background-color: white;
+  zoom: 0.8;
+}
+
+// .fr-header,
+// .fr-footer {
+//   position: sticky;
+//   z-index: 10;
+//   background: white;
+// }
+
+// .fr-header { top: 0; }
+// .fr-footer { bottom: 0; }
+
+.site-main {
+  padding: 5px 15px;
+}

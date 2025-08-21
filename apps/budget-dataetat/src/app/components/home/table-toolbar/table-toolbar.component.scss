@@ -1,0 +1,27 @@
+:host {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+}
+/* make the toolbar a full-width flex row */
+.table-toolbar {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  gap: 0.5rem;
+  background-color: #eee;
+  padding: 15px;
+}
+
+/* lay out the buttons inside each group horizontally */
+.left-buttons,
+.right-buttons {
+  display: flex;
+  gap: 0.5rem;              /* spacing between buttons */
+  flex-wrap: wrap;          /* allow wrapping on small screens */
+}
+
+/* push the right group to the far right */
+.right-buttons {
+  margin-left: auto;
+}
