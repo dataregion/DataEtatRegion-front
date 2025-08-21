@@ -1,0 +1,15 @@
+
+:host {
+  width: 100%;
+}
+
+.dsfrx-dropdown {
+  container-type: normal !important;
+  min-inline-size: 100%;       /* at least as wide as the select */
+  inline-size: max-content;    /* grow to fit longest item */
+  max-inline-size: min(90vw, 48rem); 
+}
+
+lib-localisation {
+    display: contents;
+}

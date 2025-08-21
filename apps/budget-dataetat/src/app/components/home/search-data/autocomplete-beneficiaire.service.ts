@@ -5,7 +5,7 @@ import { BeneficiaireFieldData } from './beneficiaire-field-data.model';
 import { Beneficiaire } from '@models/search/beneficiaire.model';
 import { RefSiret } from 'apps/common-lib/src/lib/models/refs/RefSiret';
 import { ReferentielsHttpService } from 'apps/common-lib/src/lib/services/referentiels.service';
-import { BudgetService } from '../../services/budget.service';
+import { BudgetService } from '../../../services/budget.service';
 
 @Injectable()
 export class AutocompleteBeneficiaireService {

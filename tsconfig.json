@@ -25,10 +25,10 @@
     ],
     "paths": {
       "@models/*": [
-        "apps/financial-data/src/app/models/*"
+        "apps/budget-dataetat/src/app/models/*"
       ],
       "@services/*": [
-        "apps/financial-data/src/app/services/*"
+        "apps/budget-dataetat/src/app/services/*"
       ],
       "@preference-users": [
         "dist/preference-users"

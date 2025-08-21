@@ -1,4 +1,7 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable, OnInit } from '@angular/core';
+import { ActivatedRoute, Data } from '@angular/router';
+import { Colonne, ColonnesResolved, ColonnesResolvedModel } from '@models/financial/colonnes.models';
+import { BehaviorSubject } from 'rxjs';
 
  
 
@@ -83,60 +86,68 @@ export enum ColonneLibelles {
 }
 
 @Injectable({ providedIn: 'root' })
-export class ColonnesService {
-  private _codesLibelles: { [key in ColonneCodes]: ColonneLibelles[] } = {
-    [ColonneCodes.SOURCE]: [ColonneLibelles.SOURCE],
-    [ColonneCodes.N_EJ]: [ColonneLibelles.N_EJ],
-    [ColonneCodes.POSTE_EJ]: [ColonneLibelles.POSTE_EJ],
-    [ColonneCodes.MONTANT_AE]: [ColonneLibelles.MONTANT_AE],
-    [ColonneCodes.MONTANT_CP]: [ColonneLibelles.MONTANT_CP],
-    [ColonneCodes.THEME]: [ColonneLibelles.THEME],
-    [ColonneCodes.CODE_PROGRAMME]: [ColonneLibelles.CODE_PROGRAMME],
-    [ColonneCodes.PROGRAMME]: [ColonneLibelles.PROGRAMME],
-    [ColonneCodes.CODE_DOMAINE]: [ColonneLibelles.CODE_DOMAINE],
-    [ColonneCodes.DOMAINE]: [ColonneLibelles.DOMAINE],
-    [ColonneCodes.REFERENTIEL_PROGRAMMATION]: [ColonneLibelles.REFERENTIEL_PROGRAMMATION],
-    [ColonneCodes.COMMUNE]: [ColonneLibelles.COMMUNE],
-    [ColonneCodes.CRTE]: [ColonneLibelles.CRTE],
-    [ColonneCodes.EPCI]: [ColonneLibelles.EPCI],
-    [ColonneCodes.ARRONDISSEMENT]: [ColonneLibelles.ARRONDISSEMENT],
-    [ColonneCodes.DEPARTEMENT]: [ColonneLibelles.DEPARTEMENT],
-    [ColonneCodes.REGION]: [ColonneLibelles.REGION],
-    [ColonneCodes.CODE_LOC_INTER]: [ColonneLibelles.CODE_LOC_INTER],
-    [ColonneCodes.LOC_INTER]: [ColonneLibelles.LOC_INTER],
-    [ColonneCodes.COMPTE_BUDGETAIRE]: [ColonneLibelles.COMPTE_BUDGETAIRE],
-    [ColonneCodes.CPER]: [ColonneLibelles.CPER],
-    [ColonneCodes.CODE_GROUPE_MARCHANDISE]: [ColonneLibelles.CODE_GROUPE_MARCHANDISE],
-    [ColonneCodes.GROUPE_MARCHANDISE]: [ColonneLibelles.GROUPE_MARCHANDISE],
-    [ColonneCodes.SIRET]: [ColonneLibelles.SIRET],
-    [ColonneCodes.BENEFICIAIRE]: [ColonneLibelles.BENEFICIAIRE],
-    [ColonneCodes.TYPE_ETABLISSEMENT]: [ColonneLibelles.TYPE_ETABLISSEMENT],
-    [ColonneCodes.CODE_QPV]: [ColonneLibelles.CODE_QPV],
-    [ColonneCodes.QPV]: [ColonneLibelles.QPV],
-    [ColonneCodes.DATE_DERNIER_PAIEMENT]: [ColonneLibelles.DATE_DERNIER_PAIEMENT],
-    [ColonneCodes.DATE_CREATION_EJ]: [ColonneLibelles.DATE_CREATION_EJ],
-    [ColonneCodes.ANNEE_ENGAGEMENT]: [ColonneLibelles.ANNEE_ENGAGEMENT],
-    [ColonneCodes.CODE_CENTRE_COUTS]: [ColonneLibelles.CODE_CENTRE_COUTS],
-    [ColonneCodes.LABEL_CENTRE_COUTS]: [ColonneLibelles.LABEL_CENTRE_COUTS],
-    [ColonneCodes.CENTRE_COUTS]: [ColonneLibelles.CENTRE_COUTS],
-    [ColonneCodes.TAGS]: [ColonneLibelles.TAGS],
-    [ColonneCodes.DATA_SOURCE]: [ColonneLibelles.DATA_SOURCE],
-    [ColonneCodes.DATE_MODIFICATION]: [ColonneLibelles.DATE_MODIFICATION]
-  };
+export class ColonnesService implements OnInit {
 
-  public getLibellesByCode(code: ColonneCodes): ColonneLibelles[] {
-    return this._codesLibelles[code];
+  private _route = inject(ActivatedRoute)
+
+  private groupedSubject = new BehaviorSubject<Boolean>(false);
+  grouped$ = this.groupedSubject.asObservable();
+
+  private colonnesTableSubject = new BehaviorSubject<Colonne[]>([]);
+  colonnesTable$ = this.colonnesTableSubject.asObservable();
+
+  private selectedColonnesTableSubject = new BehaviorSubject<Colonne[]>([]);
+  selectedColonnesTable$ = this.selectedColonnesTableSubject.asObservable();
+
+  private colonnesGroupingSubject = new BehaviorSubject<Colonne[]>([]);
+  colonnesGrouping$ = this.colonnesGroupingSubject.asObservable();
+  
+  private selectedColonnesGroupingSubject = new BehaviorSubject<Colonne[]>([]);
+  selectedColonnesGrouping$ = this.selectedColonnesGroupingSubject.asObservable();
+
+  getGrouped(): boolean {
+    return this.selectedColonnesGroupingSubject.value.length != 0;
   }
 
-  public getCodeByLibelle(libelle: ColonneLibelles): ColonneCodes | null {
-    let result: string | null = null;
-    Object.keys(this._codesLibelles).forEach((key) => {
-      const k = key as ColonneCodes;
-      const libelles = this._codesLibelles[k];
-      if (key in this._codesLibelles && libelles.includes(libelle as ColonneLibelles)) {
-        result = key;
-      }
+  getAllColonnesTable(): Colonne[] {
+    return this.colonnesTableSubject.value;
+  }
+
+  setAllColonnesTable(cols: Colonne[]) {
+    this.colonnesTableSubject.next(cols);
+  }
+
+  getSelectedColonnesTable(): Colonne[] {
+    return this.selectedColonnesTableSubject.value;
+  }
+
+  setSelectedColonnesTable(cols: Colonne[]) {
+    this.selectedColonnesTableSubject.next(cols);
+  }
+
+  getAllColonnesGrouping(): Colonne[] {
+    return this.colonnesGroupingSubject.value;
+  }
+
+  setAllColonnesGrouping(cols: Colonne[]) {
+    this.colonnesGroupingSubject.next(cols);
+  }
+
+  getSelectedColonnesGrouping(): Colonne[] {
+    return this.selectedColonnesGroupingSubject.value;
+  }
+
+  setSelectedColonnesGrouping(cols: Colonne[]) {
+    this.selectedColonnesGroupingSubject.next(cols);
+  }
+
+  ngOnInit(): void {
+    this._route.data.subscribe((data: Data) => {
+      const colonnes = data['colonnes'] as ColonnesResolved
+      console.log(colonnes)
+      this.setAllColonnesTable(colonnes.colonnesTable);
+      this.setAllColonnesGrouping(colonnes.colonnesGrouping);
     });
-    return result;
   }
+
 }

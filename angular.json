@@ -603,6 +603,9 @@
               "./node_modules/@gouvfr/dsfr/dist/dsfr/dsfr.min.css",
               "./node_modules/@gouvfr/dsfr/dist/utility/utility.min.css",
               "apps/budget-dataetat/src/styles.scss"
+            ],
+            "scripts": [
+              "./node_modules/@gouvfr/dsfr/dist/dsfr/dsfr.module.js"
             ]
           },
           "configurations": {

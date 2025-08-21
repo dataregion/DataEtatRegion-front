@@ -17,6 +17,7 @@ import { FooterComponent } from 'apps/common-lib/src/lib/components/footer/foote
   selector: 'budget-root',
   imports: [RouterOutlet, HeaderComponent, FooterComponent, MatProgressBar, MatMenuModule, CommonModule, RouterLink],
   templateUrl: './app.html',
+  styleUrls: ['./app.scss'],
 })
 export class App {
   private _loaderService = inject(LoaderService);

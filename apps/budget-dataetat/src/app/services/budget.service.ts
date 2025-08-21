@@ -1,4 +1,4 @@
-import { Injectable, inject } from '@angular/core';
+import { Injectable, InjectionToken, inject } from '@angular/core';
 import { map, Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { DataPagination } from 'apps/common-lib/src/lib/models/pagination/pagination.models';
@@ -7,13 +7,18 @@ import { ReferentielProgrammation } from '../models/refs/referentiel_programmati
 import { BopModel } from '../models/refs/bop.models';
 import { RefSiret } from 'apps/common-lib/src/lib/models/refs/RefSiret';
 import { Tag } from '../models/refs/tag.model';
+import { DataHttpService, SearchParameters } from './interface-data.service';
+import { FinancialDataModel } from '@models/financial/financial-data.models';
 
-
+export const DATA_HTTP_SERVICE = new InjectionToken<DataHttpService<any, FinancialDataModel>>(
+  'DataHttpService'
+);
 
 @Injectable({ providedIn: 'root' })
 export class BudgetService {
   private http = inject(HttpClient);
   readonly settings = inject(SettingsBudgetService);
+  private service= inject(DATA_HTTP_SERVICE);
 
   private _apiRef!: string;
 
@@ -61,5 +66,20 @@ export class BudgetService {
         })
       );
   }
+  
+    public search(search_params: SearchParameters): Observable<FinancialDataModel[]> {
+      return this.service.search(search_params).pipe(
+          map((resultIncPagination) => {
+  
+            if (resultIncPagination === null) return [];
+            if (resultIncPagination.pagination.hasNext) {
+              throw new Error(`La limite de lignes de résultat est atteinte. Veuillez affiner vos filtres afin d'obtenir un résultat complet.`);
+            }
+            return resultIncPagination.items;
+          }),
+          map((items) => items.map((data) =>  this.service.mapToGeneric(data)))
+        );
+    }
+  
 
 }

@@ -67,7 +67,13 @@
 </div>
 }
 
-<router-outlet class="page-content-outlet" />
+<div class="fr-container--fluid site-main" style="margin: 0px 15px;">
+  <div class="fr-grid-row">
+    <div class="fr-col-12">
+      <router-outlet class="page-content-outlet" />
+    </div>
+  </div>
+</div>
 
 @if(isAuthenticated) {
 <lib-footer [logo]="'DataEtat.svg'" [ngClass]="{'hidden': grid_fullscreen }">

@@ -1,0 +1,45 @@
+<dialog id="modalSauvegarde" class="fr-modal" aria-labelledby="modal-title" aria-modal="true">
+  <div class="fr-container fr-container--fluid fr-container-sm">
+    <div class="fr-grid-row fr-grid-row--center">
+      <div class="fr-col-12 fr-col-md-6 fr-col-lg-4">
+        <div class="fr-modal__body">
+          <div class="fr-modal__header">
+            <button aria-controls="modalSauvegarde" title="Fermer" type="button"
+              class="fr-btn--close fr-btn">Fermer</button>
+          </div>
+          <div class="fr-modal__content">
+            <h2 id="modal-title" class="fr-modal__title">
+              <span class="fr-icon-arrow-right-line fr-icon--lg" aria-hidden="true"></span>
+              Sauvegarder la recherche
+            </h2>
+            
+            <div class="fr-input-group" id="input-group-16">
+              <!-- <label class="fr-label" for="input-0">Nom de votre recherche</label> -->
+              <input class="fr-input" aria-describedby="input-0-messages" id="input-0" type="text" placeholder="Nom de votre recherche">
+              <div class="fr-messages-group" id="input-0-messages" aria-live="polite">
+              </div>
+            </div>
+            <div class="fr-checkbox-group">
+              <input name="checkbox" id="checkbox-0" [(ngModel)]="shareSearch" type="checkbox" aria-describedby="checkbox-0-messages">
+              <label class="fr-label" for="checkbox-0">Partager la recherche</label>
+              <div class="fr-messages-group" id="checkbox-0-messages" aria-live="polite">
+              </div>
+            </div>
+            @if (shareSearch) {
+              <dsfrx-autocomplete
+                placeholder="Rechercher un utilisateur (mail)"
+                [minLength]="4"
+                [suggestions]="filterUser"
+                (filterChange)="searchUser($event)"></dsfrx-autocomplete>
+            }
+          </div>
+          <div class="fr-modal__footer">
+            <div class="fr-btns-group fr-btns-group--right fr-btns-group--inline-reverse fr-btns-group--inline-lg fr-btns-group--icon-left">
+              <button class="fr-btn fr-icon-checkbox-circle-line fr-btn--icon-left">Valider</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</dialog>

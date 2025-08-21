@@ -36,7 +36,7 @@ import {
   aeConfiguration,
   aeConfigurationParameters
 } from 'apps/clients/apis-externes';
-import { DATA_HTTP_SERVICE } from '@services/budget.service';
+import { DATA_HTTP_SERVICE } from './services/budget.service';
 
 import { budgetApiModule, budgetConfiguration } from 'apps/clients/budget';
 import { BudgetDataHttpService } from '@services/http/budget-lines-http.service';
