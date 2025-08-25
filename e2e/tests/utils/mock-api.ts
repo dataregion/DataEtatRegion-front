@@ -1,4 +1,5 @@
 import { default as programmes } from '../../mock-data/financial-data/programme.json';
+import { default as themes } from '../../mock-data/financial-data/themes.json';
 import { default as financial } from '../../mock-data/financial-data/financial.json';
 
 import { default as demarcheDS } from '../../mock-data/demarches/demarcheDS.json';
@@ -14,6 +15,10 @@ function is_url_ae_annees(url: URL) {
 
 function is_url_budget_programmes(url: URL) {
   return url.pathname == '/budget/api/v1/programme';
+}
+
+function is_url_budget_themes(url: URL) {
+  return url.pathname == '/budget/api/v1/themes';
 }
 
 function is_url_lignes_budgetaires(url: URL) {
@@ -37,6 +42,11 @@ function is_url_data_demarche_reconciliation(url: URL) {
 }
 
 async function mockRefApi(page: Page) {
+   await page.route(is_url_budget_themes, async (route: Route) => {
+    const json = themes;
+    await route.fulfill({ json });
+  });
+
   await page.route(is_url_budget_programmes, async (route: Route) => {
     const json = programmes;
     await route.fulfill({ json });
