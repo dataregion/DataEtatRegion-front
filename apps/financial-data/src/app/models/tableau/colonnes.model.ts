@@ -1,7 +1,7 @@
-import { LocalisationInterministerielle } from '@models/financial/common.models';
-import { FinancialDataModel } from '@models/financial/financial-data.models';
-import { Tag } from '@models/refs/tag.model';
-import { ColonneCodes, ColonneLibelles } from '@services/colonnes.service';
+import { LocalisationInterministerielle } from '../../models/financial/common.models';
+import { FinancialDataModel } from '../../models/financial/financial-data.models';
+import { Tag } from '../../models/refs/tag.model';
+import { ColonneCodes, ColonneLibelles } from '../../services/colonnes.service';
 import { Optional } from 'apps/common-lib/src/lib/utilities/optional.type';
 import {
   AggregatorFns,

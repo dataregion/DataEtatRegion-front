@@ -12,12 +12,19 @@ import {
 import { FinancialDataModel } from '@models/financial/financial-data.models';
 import { ReferentielProgrammation } from '@models/refs/referentiel_programmation.model';
 import { Tag, tag_fullname } from '@models/refs/tag.model';
-import { ColonneLibelles } from '@services/colonnes.service';
 import { EnrichedFlattenFinancialLinesSchema, TagsSchema } from 'apps/clients/budget';
 import { Optional } from 'apps/common-lib/src/lib/utilities/optional.type';
 import { JSONObject } from 'apps/common-lib/src/lib/models/jsonobject';
+import { inject, Injectable } from '@angular/core';
+import { ColonnesMapperService } from './colonnes-mapper.service';
 
-export class BudgetLineHttpMapper {
+@Injectable({
+  providedIn: 'root'
+})
+export class BudgetMapper {
+
+  private _colonnesMapperService: ColonnesMapperService = inject(ColonnesMapperService)
+
   _sourceFinancialDataFromEnrichedFlattenBudgetSource(
     source?: EnrichedFlattenFinancialLinesSchema.SourceEnum
   ): SourceFinancialData {
@@ -36,86 +43,62 @@ export class BudgetLineHttpMapper {
 
   /** Mappe une réponse API vers un modèle générique */
   map(object: EnrichedFlattenFinancialLinesSchema): FinancialDataModel {
+    const that = this
     return {
       id: object.id!,
       source: this._sourceFinancialDataFromEnrichedFlattenBudgetSource(object.source),
-
       n_ej: object.n_ej,
       n_poste_ej: object.n_poste_ej,
-
       montant_ae: object.montant_ae,
       montant_cp: object.montant_cp,
-
       commune: this._mapBeneficiaireCommune(object),
-
       domaine_fonctionnel: this._mapDomaineFonctionnel(object),
-
       centre_couts: this._mapCentreCouts(object),
-
       programme: this._mapProgramme(object),
-
       referentiel_programmation: this._mapRefProg(object),
-
       compte_budgetaire: object.compte_budgetaire,
       contrat_etat_region: object.contrat_etat_region,
-
       groupe_marchandise: this._mapGroupeMarchandise(object),
-
       localisation_interministerielle: this._mapLocInterministerielle(object),
-
       annee: object.annee!,
       data_source: object.data_source,
       date_modification: object.date_modification,
-
       siret: this._mapBeneficiaireSiret(object),
-
       date_cp: object.dateDeDernierPaiement,
       date_replication: object.dateDeCreation,
-
       tags: this._mapTags(object),
-
-      financial_cp: null, // XXX: On ne résoud pas les CPs ici. C'est fait dans un appel séparé.
-
+      financial_cp: null,
       exportAsJson(): JSONObject {
         return {
-          [ColonneLibelles.SOURCE]: this.source,
-          [ColonneLibelles.DATE_MODIFICATION]: this.date_modification ?? '',
-          [ColonneLibelles.N_EJ]: this.n_ej ?? '',
-          [ColonneLibelles.POSTE_EJ]: this.n_poste_ej ?? '',
-          [ColonneLibelles.MONTANT_AE]: this.montant_ae ?? '',
-          [ColonneLibelles.MONTANT_CP]: this.montant_cp ?? '',
-          [ColonneLibelles.THEME]: this.programme?.theme ?? '',
-          [ColonneLibelles.CODE_PROGRAMME]: this.programme?.code ?? '',
-          [ColonneLibelles.PROGRAMME]: this.programme?.label ?? '',
-          [ColonneLibelles.CODE_DOMAINE]: this.domaine_fonctionnel?.code ?? '',
-          [ColonneLibelles.DOMAINE]: this.domaine_fonctionnel?.label ?? '',
-          [ColonneLibelles.REFERENTIEL_PROGRAMMATION]: this.referentiel_programmation?.label ?? '',
-          [ColonneLibelles.CODE_CENTRE_COUTS]: this.centre_couts?.code ?? '',
-          [ColonneLibelles.LABEL_CENTRE_COUTS]: this.centre_couts?.label ?? '',
-          [ColonneLibelles.CENTRE_COUTS]: this.centre_couts?.description ?? '',
-          [ColonneLibelles.COMMUNE]: this.commune?.label ?? '',
-          [ColonneLibelles.CRTE]: this.commune?.label_crte ?? '',
-          [ColonneLibelles.EPCI]: this.commune?.label_epci ?? '',
-          [ColonneLibelles.ARRONDISSEMENT]: this.commune?.arrondissement?.label ?? '',
-          [ColonneLibelles.DEPARTEMENT]: this.commune?.label_departement ?? '',
-          [ColonneLibelles.REGION]: this.commune?.label_region ?? '',
-          [ColonneLibelles.CODE_LOC_INTER]: this.localisation_interministerielle?.code ?? '',
-          [ColonneLibelles.LOC_INTER]: this.localisation_interministerielle?.label ?? '',
-          [ColonneLibelles.COMPTE_BUDGETAIRE]: this.compte_budgetaire ?? '',
-          [ColonneLibelles.CPER]:
-            this.contrat_etat_region && this.contrat_etat_region !== '#'
-              ? this.contrat_etat_region
-              : '',
-          [ColonneLibelles.CODE_GROUPE_MARCHANDISE]: this.groupe_marchandise?.code ?? '',
-          [ColonneLibelles.GROUPE_MARCHANDISE]: this.groupe_marchandise?.label ?? '',
-          [ColonneLibelles.SIRET]: this.siret?.code ?? '',
-          [ColonneLibelles.BENEFICIAIRE]: this.siret?.nom_beneficiaire ?? '',
-          [ColonneLibelles.TYPE_ETABLISSEMENT]: this.siret?.categorie_juridique ?? '',
-          [ColonneLibelles.CODE_QPV]: this.siret?.code_qpv ?? '',
-          [ColonneLibelles.DATE_DERNIER_PAIEMENT]: this.date_cp ?? '',
-          [ColonneLibelles.DATE_CREATION_EJ]: this.date_replication ?? '',
-          [ColonneLibelles.ANNEE_ENGAGEMENT]: this.annee,
-          [ColonneLibelles.TAGS]: this.tags?.map((tag) => tag_fullname(tag)).join(' ')
+          [that._colonnesMapperService.getColonneByKey("SOURCE").label]: this.source,
+          [that._colonnesMapperService.getColonneByKey("DATE_MODIFICATION").label]: this.date_modification ?? '',
+          [that._colonnesMapperService.getColonneByKey("N_EJ").label]: this.n_ej ?? '',
+          [that._colonnesMapperService.getColonneByKey("POSTE_EJ").label]: this.n_poste_ej ?? '',
+          [that._colonnesMapperService.getColonneByKey("MONTANT_AE").label]: this.montant_ae ?? '',
+          [that._colonnesMapperService.getColonneByKey("MONTANT_CP").label]: this.montant_cp ?? '',
+          [that._colonnesMapperService.getColonneByKey("THEME").label]: this.programme?.theme ?? '',
+          [that._colonnesMapperService.getColonneByKey("PROGRAMME").label]: this.programme ? this.programme.code + " - " + this.programme.label : '',
+          [that._colonnesMapperService.getColonneByKey("DOMAINE").label]: this.domaine_fonctionnel ? this.domaine_fonctionnel.code + " - " + this.domaine_fonctionnel.label : '',
+          [that._colonnesMapperService.getColonneByKey("REF_PROGRAMMATION").label]: this.referentiel_programmation ? this.referentiel_programmation.code + " - " + this.referentiel_programmation.label : '',
+          [that._colonnesMapperService.getColonneByKey("CENTRE_COUTS").label]: this.centre_couts ? this.centre_couts.code + " - " + this.centre_couts.label : '',
+          [that._colonnesMapperService.getColonneByKey("COMMUNE").label]: this.commune?.label ?? '',
+          [that._colonnesMapperService.getColonneByKey("CRTE").label]: this.commune?.label_crte ?? '',
+          [that._colonnesMapperService.getColonneByKey("EPCI").label]: this.commune?.label_epci ?? '',
+          [that._colonnesMapperService.getColonneByKey("ARRONDISSEMENT").label]: this.commune?.arrondissement?.label ?? '',
+          [that._colonnesMapperService.getColonneByKey("DEPARTEMENT").label]: this.commune?.label_departement ?? '',
+          [that._colonnesMapperService.getColonneByKey("REGION").label]: this.commune?.label_region ?? '',
+          [that._colonnesMapperService.getColonneByKey("LOC_INTER").label]: this.localisation_interministerielle ? this.localisation_interministerielle.code + " - " + this.localisation_interministerielle.label : '',
+          [that._colonnesMapperService.getColonneByKey("COMPTE_BUDGETAIRE").label]: this.compte_budgetaire ?? '',
+          [that._colonnesMapperService.getColonneByKey("CPER").label]: this.contrat_etat_region && this.contrat_etat_region !== '#' ? this.contrat_etat_region : '',
+          [that._colonnesMapperService.getColonneByKey("GROUPE_MARCHANDISE").label]: this.groupe_marchandise ? this.groupe_marchandise.code + " - " + this.groupe_marchandise.label : '',
+          [that._colonnesMapperService.getColonneByKey("SIRET").label]: this.siret?.code ?? '',
+          [that._colonnesMapperService.getColonneByKey("BENEFICIAIRE").label]: this.siret?.nom_beneficiaire ?? '',
+          [that._colonnesMapperService.getColonneByKey("TYPE_ETABLISSEMENT").label]: this.siret?.categorie_juridique ?? '',
+          [that._colonnesMapperService.getColonneByKey("QPV").label]: this.siret ? this.siret.code_qpv + " - " + this.siret.label_qpv : '',
+          [that._colonnesMapperService.getColonneByKey("DATE_DERNIER_PAIEMENT").label]: this.date_cp ?? '',
+          [that._colonnesMapperService.getColonneByKey("DATE_CREATION_EJ").label]: this.date_replication ?? '',
+          [that._colonnesMapperService.getColonneByKey("ANNEE_ENGAGEMENT").label]: this.annee,
+          [that._colonnesMapperService.getColonneByKey("TAGS").label]: this.tags?.map((tag) => tag_fullname(tag)).join(' ')
         };
       }
     };

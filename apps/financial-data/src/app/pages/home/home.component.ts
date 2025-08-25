@@ -5,7 +5,7 @@ import {
   PreferenceUsersHttpService,
   SavePreferenceDialogComponent
 } from 'apps/preference-users/src/public-api';
-import { Preference } from 'apps/preference-users/src/lib/models/preference.models';
+import { Preference, PreferenceOptions } from 'apps/preference-users/src/lib/models/preference.models';
 import { ActivatedRoute, Data } from '@angular/router';
 import { AlertService, GeoModel } from 'apps/common-lib/src/public-api';
 import { GridInFullscreenStateService } from 'apps/common-lib/src/lib/services/grid-in-fullscreen-state.service';
@@ -21,23 +21,24 @@ import {
 import { GroupingConfigDialogComponent } from 'apps/grouping-table/src/lib/components/grouping-config-dialog/grouping-config-dialog.component';
 import { StructureColumnsDialogComponent } from 'apps/grouping-table/src/lib/components/structure-columns-dialog/structure-columns-dialog.component';
 import { InformationsSupplementairesDialogComponent } from '../../modules/informations-supplementaires/informations-supplementaires-dialog/informations-supplementaires-dialog.component';
-import { AuditHttpService } from '@services/http/audit.service';
+import { AuditHttpService } from '../../services/http/audit.service';
 import { MarqueBlancheParsedParamsResolverModel } from '../../resolvers/marqueblanche-parsed-params.resolver';
 import { delay } from 'rxjs';
-import { PreFilters } from '@models/search/prefilters.model';
+import { PreFilters } from '../../models/search/prefilters.model';
 import {
   colonnes,
   FinancialColumnMetaDataDef,
   groupingOrder
-} from '@models/tableau/colonnes.model';
+} from '../../models/tableau/colonnes.model';
 import { QueryParam } from 'apps/common-lib/src/lib/models/marqueblanche/query-params.enum';
 import { Tag } from '@models/refs/tag.model';
 import { SearchDataComponent } from 'apps/financial-data/src/app/components/search-data/search-data.component';
-import { BudgetService } from '@services/budget.service';
+import { BudgetService } from '../../services/budget.service';
 import { DatePipe } from '@angular/common';
 import { ExportDataService } from 'apps/appcommon/src/lib/export-data.service';
 import { MatomoTracker } from 'ngx-matomo-client';
 import { LoggerService } from '@edugouvfr/ngx-dsfr';
+import { Colonne } from 'apps/clients/v3/financial-data';
 
 @Component({
   selector: 'financial-home',
@@ -217,9 +218,9 @@ export class HomeComponent implements OnInit {
 
   public openSaveFilterDialog(): void {
     if (this.newFilter) {
-      this.newFilter.options = { grouping: this.groupingColumns };
+      this.newFilter.options = { grouping: this.groupingColumns as unknown as Colonne[] } as PreferenceOptions;
       if (this.displayedOrderedColumns.length) {
-        this.newFilter.options['displayOrder'] = this.displayedOrderedColumns;
+        this.newFilter.options['displayOrder'] = this.displayedOrderedColumns as unknown as Colonne[];
       }
       this.newFilter.name = '';
     }

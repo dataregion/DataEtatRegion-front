@@ -6,9 +6,9 @@ import { BehaviorSubject, finalize } from 'rxjs';
 import { Clipboard } from '@angular/cdk/clipboard';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
-import { BudgetDataHttpService } from '../../../services/http/budget-lines-http.service';
+import { BudgetDataHttpService } from '../../../services/budget.service';
 import { Tag, tag_fullname } from '../../../models/refs/tag.model';
-import { ColonneLibelles, ColonnesService } from '../../../services/colonnes.service';
+import { ColonnesService } from '../../../services/colonnes.service';
 import { MatButtonModule } from '@angular/material/button';
 
 @Component({
@@ -51,7 +51,7 @@ export class UpdateTagsComponent {
           const headers: string[] = contentFile.split('\n')[0].split(',');
           const newHeaders: string[] = [];
           headers.forEach((header) => {
-            const code = this._colonnesService.getAllColonnesTable().filter(c => c.label == header)[0].code;
+            const code = this._colonnesService.getAllColonnesTable().filter(c => c.label == header)[0].name;
             if (code) newHeaders.push(code);
           });
           // Création du fichier avec les nouveaux headers

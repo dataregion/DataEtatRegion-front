@@ -15,7 +15,7 @@ import { GeoLocalisationComponentService } from 'apps/common-lib/src/lib/compone
 import { Demarche, Donnee } from '../../../models/demarche_simplifie/demarche.model';
 import { CentreCouts, CodeLabel, DomaineFonctionnel } from '../../../models/financial/common.models';
 import { ReferentielProgrammation } from '../../../models/refs/referentiel_programmation.model';
-import { BudgetDataHttpService } from '../../../services/http/budget-lines-http.service';
+import { BudgetDataHttpService } from '../../../services/budget.service';
 
 @Component({
   selector: 'budget-reconciliation-demarche.component',

@@ -4,7 +4,7 @@ import { RowData } from 'apps/grouping-table/src/lib/components/grouping-table/g
 import { InformationsSupplementairesComponent } from '../informations-supplementaires.component';
 import { FinancialDataModel } from '@models/financial/financial-data.models';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { BudgetDataHttpService } from '@services/http/budget-lines-http.service';
+import { BudgetDataHttpService } from '../../../services/http/budget-lines-http.service';
 
 export interface InformationsSupplementairesDialogData {
   row: RowData;

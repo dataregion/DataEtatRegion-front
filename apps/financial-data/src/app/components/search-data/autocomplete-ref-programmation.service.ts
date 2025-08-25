@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { BudgetService } from '@services/budget.service';
+import { BudgetService } from '../../services/budget.service';
 import { Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { ReferentielProgrammation } from '@models/refs/referentiel_programmation.model';

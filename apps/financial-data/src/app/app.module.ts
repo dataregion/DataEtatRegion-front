@@ -39,8 +39,8 @@ import {
 import { DATA_HTTP_SERVICE } from './services/budget.service';
 
 import { budgetApiModule, budgetConfiguration } from 'apps/clients/budget';
-import { BudgetDataHttpService } from '@services/http/budget-lines-http.service';
-import { MultiregionsService } from '@services/multiregions.service';
+import { BudgetDataHttpService } from './services/http/budget-lines-http.service';
+import { MultiregionsService } from './services/multiregions.service';
 import { MatomoModule, MatomoRouteDataInterceptor, MatomoRouterModule } from 'ngx-matomo-client';
 import { PocComponent } from './pages/poc/poc.component';
 import { FooterComponent } from 'apps/common-lib/src/lib/components/footer/footer.component';

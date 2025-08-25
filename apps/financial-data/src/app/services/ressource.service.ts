@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { SettingsService } from '../../environments/settings.service';
 import { SETTINGS } from 'apps/common-lib/src/lib/environments/settings.http.service';
-import { Ressources } from '@models/ressource/ressource.models';
+import { Ressources } from '../models/ressource/ressource.models';
 
 @Injectable({
   providedIn: 'root'

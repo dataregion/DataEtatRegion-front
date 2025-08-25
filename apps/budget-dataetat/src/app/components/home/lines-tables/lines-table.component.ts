@@ -12,7 +12,6 @@ import { DsfrColumn, DsfrRowOptions, DsfrTableOptions } from '@edugouvfr/ngx-dsf
 })
 export class LinesTableComponent implements OnInit {
   ngOnInit(): void {
-    console.log('Method not implemented.');
   }
   
   columns: DsfrColumn[] = [

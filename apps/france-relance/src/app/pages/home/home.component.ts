@@ -5,7 +5,7 @@ import {
   PreferenceUsersHttpService,
   SavePreferenceDialogComponent
 } from 'apps/preference-users/src/public-api';
-import { Preference } from 'apps/preference-users/src/lib/models/preference.models';
+import { Preference, PreferenceOptions } from 'apps/preference-users/src/lib/models/preference.models';
 import { ActivatedRoute } from '@angular/router';
 import { AlertService, GeoModel } from 'apps/common-lib/src/public-api';
 import { GridInFullscreenStateService } from 'apps/common-lib/src/lib/services/grid-in-fullscreen-state.service';
@@ -29,6 +29,7 @@ import { DatePipe } from '@angular/common';
 import { SearchDataComponent } from '../../components/search-data.component';
 import { SousAxePlanRelance } from '../../models/axe.models';
 import { SlugifyPipe } from 'apps/common-lib/src/lib/pipes/slugify.pipe';
+import { Colonne } from 'apps/clients/v3/financial-data';
 
 @Component({
     selector: 'france-relance-home',
@@ -165,9 +166,9 @@ export class HomeComponent implements OnInit {
 
   public openSaveFilterDialog(): void {
     if (this.newFilter) {
-      this.newFilter.options = { grouping: this.groupingColumns };
+      this.newFilter.options = { grouping: this.groupingColumns as unknown as Colonne[]  } as PreferenceOptions;
       if (this.displayedOrderedColumns.length) {
-        this.newFilter.options['displayOrder'] = this.displayedOrderedColumns;
+        this.newFilter.options['displayOrder'] = this.displayedOrderedColumns as unknown as Colonne[];
       }
       this.newFilter.name = '';
     }

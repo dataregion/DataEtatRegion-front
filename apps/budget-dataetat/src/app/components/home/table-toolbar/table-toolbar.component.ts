@@ -10,7 +10,7 @@ import { ModalGroupingComponent } from './modal-grouping/modal-grouping.componen
 import { ModalColonnesComponent } from "./modal-colonnes/modal-colonnes.component";
 import { ModalSauvegardeComponent } from "./modal-sauvegarde/modal-sauvegarde.component";
 import { MatMenu } from "@angular/material/menu";
-import { BudgetDataHttpService } from '@services/http/budget-lines-http.service';
+import { BudgetDataHttpService } from '@services/budget.service';
 import { ExportDataService } from 'apps/appcommon/src/lib/export-data.service';
 import { FinancialDataModel } from '@models/financial/financial-data.models';
 import { ColonnesService } from '@services/colonnes.service';
@@ -57,16 +57,6 @@ export class TableToolbarComponent implements OnInit {
   }
 
   ngOnInit() {
-  }
-
-  openGroupConfigDialog() {
-
-  }
-  openSortColumnsDialog() {
-    
-  }
-  openSaveFilterDialog() {
-
   }
 
   // public downloadData(extension: string, allColumns: boolean): void {

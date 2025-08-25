@@ -6,15 +6,15 @@
   zoom: 0.8;
 }
 
-// .fr-header,
-// .fr-footer {
-//   position: sticky;
-//   z-index: 10;
-//   background: white;
-// }
+.fr-header,
+.fr-footer {
+  position: sticky;
+  z-index: 10;
+  background: white;
+}
 
-// .fr-header { top: 0; }
-// .fr-footer { bottom: 0; }
+.fr-header { top: 0; }
+.fr-footer { bottom: 0; }
 
 .site-main {
   padding: 5px 15px;

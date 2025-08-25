@@ -1,72 +1,128 @@
-import { CommonModule } from '@angular/common';
-import { Component, inject, input, Input, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { AsyncPipe, CommonModule } from '@angular/common';
+import { Component, ElementRef, inject, input, Input, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 
 import { GridInFullscreenStateService } from 'apps/common-lib/src/lib/services/grid-in-fullscreen-state.service';
 import {
   TableData,
   VirtualGroup
 } from 'apps/grouping-table/src/lib/components/grouping-table/group-utils';
-import { MaterialModule } from "apps/common-lib/src/public-api";
+import { AlertService, MaterialModule } from "apps/common-lib/src/public-api";
 import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
 import { MatSelectChange } from '@angular/material/select';
-import { Colonne } from '@models/financial/colonnes.models';
-import { debounceTime, Subject } from 'rxjs';
+import { catchError, debounceTime, delay, distinctUntilChanged, finalize, map, Observable, of, Subject, switchMap, takeUntil } from 'rxjs';
 import { PreferenceUsersHttpService } from 'apps/preference-users/src/lib/services/preference-users-http.service';
 import { Preference } from 'apps/preference-users/src/lib/models/preference.models';
-import { COMMA, ENTER } from '@angular/cdk/keycodes';
+import { COMMA, ENTER, S } from '@angular/cdk/keycodes';
 import { DsfrAutocompleteComponent, DsfrCompleteEvent } from '@edugouvfr/ngx-dsfr-ext'
-import { FormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormGroup, FormBuilder, FormControl, FormArray } from '@angular/forms';
+import { PreferenceService } from 'apps/preference-users/src/lib/services/preference.service';
 
+
+export interface FormPreference {
+  name: FormControl<string>;
+  shared: FormControl<boolean>;
+  users: FormArray<FormControl<string>>;
+}
 
 @Component({
   selector: 'budget-modal-sauvegarde',
   templateUrl: './modal-sauvegarde.component.html',
   encapsulation: ViewEncapsulation.None,
   styleUrls: ['./modal-sauvegarde.component.scss'],
-  imports: [DsfrAutocompleteComponent, FormsModule ]
+  imports: [DsfrAutocompleteComponent, ReactiveFormsModule, AsyncPipe]
 })
-export class ModalSauvegardeComponent implements OnInit {
+export class ModalSauvegardeComponent implements OnInit, OnDestroy {
+
+  private _preferenceHttpService = inject(PreferenceUsersHttpService);
+  private _preferenceService = inject(PreferenceService);
+  private _alertService = inject(AlertService);
+  private _formBuilder = inject(FormBuilder);
   
-  private _service = inject(PreferenceUsersHttpService);
+  public formPreference: FormGroup<FormPreference> = new FormGroup({
+    name: new FormControl<string>("", { nonNullable: true }),
+    shared: new FormControl<boolean>(false, { nonNullable: true }),
+    users: new FormArray<FormControl<string>>([]),
+  });
 
   public shareSearch: boolean = false;
   public search: string = '';
   public filterUser: any[] = [];
   
   public separatorKeysCodes: number[] = [ENTER, COMMA];
-  // public preference: Preference;
+
+  public preference: Preference | null = null;
 
   public searchUserChanged = new Subject<string>();
+  private destroy$ = new Subject<void>();
 
-  constructor() {
-    // this.searchUserChanged.pipe(debounceTime(300)).subscribe(() => {
-    //   this._searchUser();
-    // });
-  }
+  public suggestions$: Observable<string[]> = of([]);
+  public loading: boolean = false;
+  public delay: number = 500
 
   ngOnInit() {
-    
-  }
-
-  public searchUser(event: DsfrCompleteEvent) {
-    if (this.search.length > 3) {
-      this._service.searchUser(this.search).subscribe((response) => {
-        if (response.length > 0) {
-          // on filtre pour éviter les doublons
-          this.filterUser = response.filter(
-            (userInResponse: { username: string }) =>
-              console.log(userInResponse)
-              // this.preference?.shares?.findIndex(
-              //   (userSelect) => userSelect.shared_username_email === userInResponse.username
-              // ) === -1
-          );
-        } else if (this._isValidEmail(this.search)) {
-          this.filterUser = [{ username: this.search }];
-        } else {
-          this.filterUser = [];
-        }
+    this.preference = this._preferenceService.getCurrentPreference()
+    if (this.preference) {
+      this.formPreference = this._formBuilder.group({
+        name: this._formBuilder.control<string>(this.preference.name ?? "", { nonNullable: true }),
+        shared: this._formBuilder.control<boolean>(this.preference.shares?.length !== 0, { nonNullable: true }),
+        users: this._formBuilder.array((this.preference.shares ?? []).map(s =>
+          this._formBuilder.control(s.shared_username_email, { nonNullable: true })
+        ))
       });
     }
+
+    this.suggestions$ = this.searchUserChanged.pipe(
+      debounceTime(400),
+      distinctUntilChanged(),
+      switchMap((term: string): Observable<string[]> => {
+        this.loading = true;
+        return this._preferenceHttpService.searchUser(term).pipe(
+          map((response: { username: string }[]) => {
+            if (response.length > 0) {
+              return response
+                .filter(userFound => this.formPreference.controls.users.value.findIndex(userSelect => userSelect === userFound.username) === -1)
+                .map(u => u.username);
+            } else if (this._isValidEmail(term)) {
+              return [term];
+            } else {
+              return [];
+            }
+          }),
+          finalize(() => (this.loading = false))
+        );
+      }),
+      takeUntil(this.destroy$)
+    );
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+  
+  public onSearchAsync(event: DsfrCompleteEvent) {
+    const value = event?.query?.toLowerCase() ?? '';
+    this.searchUserChanged.next(value);
+  }
+
+  
+  public validate(): void {
+    
+    const { name, shared, users } = this.formPreference.getRawValue();
+    this.preference = {
+      uuid: this.preference?.uuid,
+      name,
+      filters: this.preference?.filters ?? {},
+      options: {
+        grouping: [],
+        displayOrder: []
+      },
+      shares: shared ? users.map(u => ({ shared_username_email: u })) : []
+    }
+
+    this._preferenceHttpService.savePreference(this.preference).subscribe((_response) => {
+      this._alertService.openAlertSuccess('Filtre enregistré avec succès');
+    });
   }
 
   /**
