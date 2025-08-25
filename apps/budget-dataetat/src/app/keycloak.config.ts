@@ -36,7 +36,9 @@ export function provideKeycloakAngularDynamic(settingsService: SettingsBudgetSer
     settingsService.apiExternes,
     settingsService.apiFinancialData,
     settingsService.apiFinancialDataV2,
+    settingsService.apiFinancialDataV3,
     settingsService.apiReferentiel,
+    settingsService.apiReferentielsV3,
     settingsService.apiAdministration,
     settingsService.apiRessource,
     settingsService.apiDemarches

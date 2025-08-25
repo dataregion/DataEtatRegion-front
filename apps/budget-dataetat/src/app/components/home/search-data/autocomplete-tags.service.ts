@@ -3,11 +3,11 @@ import { TagFieldData } from './tags-field-data.model';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Tag, tag_fullname } from '@models/refs/tag.model';
-import { BudgetService } from '../../../services/budget.service';
+import { BudgetDataHttpService } from '../../../services/budget.service';
 
 @Injectable()
 export class AutocompleteTagsService {
-  private _budgetService = inject(BudgetService);
+  private _budgetService = inject(BudgetDataHttpService);
 
 
   autocomplete$(input: string): Observable<TagFieldData[]> {

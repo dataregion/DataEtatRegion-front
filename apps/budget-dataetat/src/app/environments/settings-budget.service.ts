@@ -14,6 +14,8 @@ class Api implements IApi {
   financial_data = '';
   laureats_data = '';
   financial_data_v2 = '';
+  financial_data_v3 = '';
+  referentiels_v3 = '';
   administration = '';
   geo = '';
   referentiel = '';
@@ -90,6 +92,14 @@ export class SettingsBudgetService implements ISettingsService {
 
   public get apiFinancialDataV2(): string {
     return (this.settings.apis as Api).financial_data_v2;
+  }
+
+  public get apiFinancialDataV3(): string {
+    return (this.settings.apis as Api).financial_data_v3;
+  }
+
+  public get apiReferentielsV3(): string {
+    return (this.settings.apis as Api).referentiels_v3;
   }
 
   public get apiAdministration(): string {

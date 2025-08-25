@@ -21,10 +21,10 @@ import { FinancialDataModel } from '@models/financial/financial-data.models';
 import { Preference } from 'apps/preference-users/src/lib/models/preference.models';
 import { JSONObject } from 'apps/common-lib/src/lib/models/jsonobject';
 import { AlertService, GeoModel, TypeLocalisation } from 'apps/common-lib/src/public-api';
-import { Bop } from '@models/search/bop.model';
-import { ReferentielProgrammation } from '@models/refs/referentiel_programmation.model';
-import { BudgetService } from '@services/budget.service';
-import { PreFilters } from '@models/search/prefilters.model';
+import { Bop } from '../../models/search/bop.model';
+import { ReferentielProgrammation } from '../../models/refs/referentiel_programmation.model';
+import { BudgetService } from '../../services/budget.service';
+import { PreFilters } from '../../models/search/prefilters.model';
 import { MarqueBlancheParsedParamsResolverModel } from '../../resolvers/marqueblanche-parsed-params.resolver';
 import {
   AdditionalSearchParameters,

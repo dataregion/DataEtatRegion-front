@@ -5,12 +5,12 @@ import { BeneficiaireFieldData } from './beneficiaire-field-data.model';
 import { Beneficiaire } from '@models/search/beneficiaire.model';
 import { RefSiret } from 'apps/common-lib/src/lib/models/refs/RefSiret';
 import { ReferentielsHttpService } from 'apps/common-lib/src/lib/services/referentiels.service';
-import { BudgetService } from '../../../services/budget.service';
+import { ReferentielsService } from '../../../services/referentiels.service';
 
 @Injectable()
 export class AutocompleteBeneficiaireService {
   private _refService = inject(ReferentielsHttpService);
-  private _budgetService = inject(BudgetService);
+  private _referentielsService = inject(ReferentielsService);
 
 
   autocomplete$(input: string): Observable<BeneficiaireFieldData[]> {
@@ -33,7 +33,7 @@ export class AutocompleteBeneficiaireService {
   }
 
   autocompleteSingleBeneficiaire$(code: string): Observable<BeneficiaireFieldData> {
-    const autocompletion$ = this._budgetService
+    const autocompletion$ = this._referentielsService
       .getRefSiretFromCode(code)
       .pipe(map((response: Beneficiaire) => this._mapBeneficiaireToFieldData(response)));
 

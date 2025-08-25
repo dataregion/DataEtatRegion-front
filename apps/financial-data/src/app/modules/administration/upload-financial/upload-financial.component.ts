@@ -2,11 +2,11 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Component, ElementRef, inject, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { AuditUpdateData, DataType } from '@models/audit/audit-update-data.models';
-import { AuditHttpService } from '@services/http/audit.service';
+import { AuditHttpService } from '@services/audit.service';
 import { AlertService, SessionService } from 'apps/common-lib/src/public-api';
 import { BehaviorSubject, catchError, finalize, forkJoin, of, Subscription } from 'rxjs';
 import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
-import { BudgetDataHttpService } from '@services/http/budget-lines-http.service';
+import { BudgetDataHttpService } from '../../../services/http/budget-lines-http.service';
 
 @Component({
     selector: 'financial-upload-financial-component',

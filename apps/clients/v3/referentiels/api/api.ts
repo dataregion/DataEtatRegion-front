@@ -1,0 +1,10 @@
+export * from './healthcheck.service';
+import { HealthcheckService } from './healthcheck.service';
+export * from './healthcheck.serviceInterface';
+export * from './programmes.service';
+import { ProgrammesService } from './programmes.service';
+export * from './programmes.serviceInterface';
+export * from './qpv.service';
+import { QpvService } from './qpv.service';
+export * from './qpv.serviceInterface';
+export const APIS = [HealthcheckService, ProgrammesService, QpvService];

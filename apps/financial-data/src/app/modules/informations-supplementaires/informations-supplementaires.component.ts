@@ -18,8 +18,8 @@ import { OuNonRenseignePipe } from 'apps/common-lib/src/public-api';
 import { EtablissementLight } from './models/EtablissementLight';
 import { SubventionLight } from './models/SubventionLight';
 import { DetailApiDemarcheSimplifieComponent } from './detail-api-demarche-simplifie/detail-api-demarche-simplifie.component';
-import { FinancialDataModel } from '@models/financial/financial-data.models';
-import { AffichageDossier } from '@models/demarche_simplifie/demarche.model';
+import { FinancialDataModel } from '../../models/financial/financial-data.models';
+import { AffichageDossier } from '../../models/demarche_simplifie/demarche.model';
 
  
 export enum View {

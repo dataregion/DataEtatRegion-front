@@ -6,6 +6,7 @@ import {
   debounceTime,
   finalize,
   forkJoin,
+  map,
   Observable,
   of,
   startWith,
@@ -42,7 +43,7 @@ import { BopsReferentielsComponent } from 'apps/common-lib/src/lib/components/bo
 import { FinancialData, FinancialDataResolverModel } from '../../../models/financial/financial-data-resolvers.models';
 import { MatButtonModule } from '@angular/material/button';
 import { FinancialDataModel } from '@models/financial/financial-data.models';
-import { BudgetService } from '@services/budget.service';
+import { BudgetDataHttpService } from '@services/budget.service';
 import { tag_fullname } from '@models/refs/tag.model';
 
 @Component({
@@ -55,7 +56,7 @@ import { tag_fullname } from '@models/refs/tag.model';
 export class SearchDataComponent implements OnInit, AfterViewInit {
   private _route = inject(ActivatedRoute);
   private _alertService = inject(AlertService);
-  private _budgetService = inject(BudgetService);
+  private _budgetService = inject(BudgetDataHttpService);
   private _logger = inject(LoggerService);
   private _autocompleteBeneficiaires = inject(AutocompleteBeneficiaireService);
   private _autocompleteTags = inject(AutocompleteTagsService);
@@ -355,6 +356,15 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
       this._search_subscription = this._budgetService
         .search(search_parameters)
         .pipe(
+          map((resultIncPagination) => {
+  
+            if (resultIncPagination === null) return [];
+            if (resultIncPagination.pagination.hasNext) {
+              throw new Error(`La limite de lignes de résultat est atteinte. Veuillez affiner vos filtres afin d'obtenir un résultat complet.`);
+            }
+            return resultIncPagination.items;
+          }),
+          map((items) => items.map((data) =>  this._budgetService.mapToGeneric(data))),
           finalize(() => {
             this.searchInProgress.next(false);
           })

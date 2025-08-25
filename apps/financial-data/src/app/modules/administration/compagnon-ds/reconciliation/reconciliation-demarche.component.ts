@@ -8,14 +8,14 @@ import {
   TypeLocalisation
 } from 'apps/common-lib/src/public-api';
 import { CompagnonDSService } from '../compagnon-ds.service';
-import { Demarche, Donnee } from '@models/demarche_simplifie/demarche.model';
+import { Demarche, Donnee } from '../../../../models/demarche_simplifie/demarche.model';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { combineLatest, Observable } from 'rxjs';
 import { GeoLocalisationComponentService } from '../../../../../../../common-lib/src/lib/components/localisation/geo.localisation.componentservice';
-import { BudgetDataHttpService } from '@services/http/budget-lines-http.service';
-import { ReferentielProgrammation } from '@models/refs/referentiel_programmation.model';
-import { CentreCouts, CodeLabel, DomaineFonctionnel } from '@models/financial/common.models';
+import { BudgetDataHttpService } from '../../../../services/http/budget-lines-http.service';
+import { ReferentielProgrammation } from '../../../../models/refs/referentiel_programmation.model';
+import { CentreCouts, CodeLabel, DomaineFonctionnel } from '../../../../models/financial/common.models';
 
 @Component({
     selector: 'financial-reconciliation-demarche.component',

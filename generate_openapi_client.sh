@@ -119,10 +119,10 @@ fix_swagger_json_replace_oauth() {
   json_f="$1"
   temp_f=$(mktemp)
 
-  echo >&2 "Corrige le fichier swagger en remplaçant l'utilisation de 'OAuth2AuthorizationCodeBearer' par 'Bearer'"
+  echo >&2 "Corrige le fichier swagger en remplaçant l'utilisation de 'OAuth2PasswordBearer' par 'Bearer'"
 
   cp -a "$json_f" "$temp_f"
-  jq 'walk(if type == "object" then with_entries(if .value == [] and .key == "OAuth2AuthorizationCodeBearer" then .key = "Bearer" else . end) else . end)' "$temp_f" > "$json_f"
+  jq 'walk(if type == "object" then with_entries(if .value == [] and .key == "OAuth2PasswordBearer" then .key = "Bearer" else . end) else . end)' "$temp_f" > "$json_f"
 
   echo >&2 "Fichier sauvegardé ici: '$json_f'"
 }
@@ -158,8 +158,8 @@ fi
 #
 # Applique les fixes si nécessaire
 #
-fix_swagger_json_remove_additionalProperties "$temp_swagger"
-fix_swagger_json_take_firstof_type "$temp_swagger"
+# fix_swagger_json_remove_additionalProperties "$temp_swagger"
+# fix_swagger_json_take_firstof_type "$temp_swagger"
 fix_swagger_json_replace_oauth "$temp_swagger"
 
 #

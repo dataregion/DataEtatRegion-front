@@ -2,7 +2,7 @@
   <div class="fr-container fr-container--fluid fr-container-sm">
     <div class="fr-grid-row fr-grid-row--center">
       <div class="fr-col-12 fr-col-md-6 fr-col-lg-4">
-        <div class="fr-modal__body">
+        <form [formGroup]="formGrouping" (ngSubmit)="validate()" class="fr-modal__body">
           <div class="fr-modal__header">
             <button aria-controls="modalGrouping" title="Fermer" type="button"
               class="fr-btn--close fr-btn">Fermer</button>
@@ -16,49 +16,47 @@
               Choisissez les groupes pour modifier l'affichage des résultats et obtenir des montants agrégés.
             </p>
 
-            @if (selectedColonnes.length === 0) {
+            @if (formGrouping.controls.colonnes.length === 0) {
             <label style="font-weight: bold;">Groupement désactivé, sélectionner des colonnes ci-dessous pour l'activer.</label>
             } @else {
             <div>
               <p style="font-weight: bold;">Cliquer-glisser pour réordonner les groupes :</p>
               <div>
-                <div (cdkDropListDropped)="moveGroup($event)" cdkDropList [cdkDropListData]="selectedColonnes"
-                  class="column-list">
-                  @for (col of selectedColonnes; let i = $index; track $index) {
-                  <div cdkDrag class="column-box">
-                    <span class="fr-icon-drag-move-2-line" aria-hidden="true"></span>
-                    <div>{{ col.label }}</div>
-                    <button type="button" class="fr-btn fr-icon-delete-fill" (click)="removeGroup(i)"></button>
-                  </div>
+                <div formArrayName="colonnes" cdkDropList class="column-list" [cdkDropListData]="formGrouping.controls.colonnes.controls" (cdkDropListDropped)="moveGroup($event)">
+                  @for (group of formGrouping.controls.colonnes.controls; let i = $index; track $index) {
+                    <div [formGroupName]="i" cdkDrag class="column-box">
+                      <span class="fr-icon-drag-move-2-line" aria-hidden="true"></span>
+                      <div>{{ group.controls.label.value }}</div>
+                      <button type="button" class="fr-btn fr-icon-delete-fill" (click)="removeGroup(i)"></button>
+                    </div>
                   }
                 </div>
               </div>
             </div>
             }
-            @if ((selectedColonnes.length + 1) < colonnes.length) { <div class="fr-select-group"
-              style="margin-top: 30px;">
-              @if (selectedColonnes.length < 4) { <label class="fr-label" style="font-weight: bold;"
-                for="selectColonne">Ajouter un groupement supplémentaire</label>
+            @if ((formGrouping.controls.colonnes.length + 1) < colonnes.length) {
+              <div class="fr-select-group" style="margin-top: 30px;">
+                @if (formGrouping.controls.colonnes.length < 4) {
+                  <label class="fr-label" style="font-weight: bold;" for="selectColonne">Ajouter un groupement supplémentaire</label>
                 } @else {
-                <label class="fr-label" style="font-weight: bold;" for="selectColonne">Vous ne pouvez pas sélectionner
-                  plus de 4 groupements simultanés</label>
+                  <label class="fr-label" style="font-weight: bold;" for="selectColonne">Vous ne pouvez pas sélectionner plus de 4 groupements simultanés</label>
                 }
                 <select class="fr-select" aria-describedby="selectColonne-messages" id="selectColonne"
-                  name="selectColonne" (change)="addGroup($event)" [disabled]="selectedColonnes.length >= 4">
+                  name="selectColonne" (change)="addGroup($event)" [disabled]="formGrouping.controls.colonnes.length >= 4">
                   <option value="">Sélectionner un groupement</option>
-                  @for(column of remainingColonnes; track column) {
-                  <option [value]="column.code">{{ column.label }}</option>
+                  @for (column of remainingColonnes; track column) {
+                    <option [value]="column.name">{{ column.label }}</option>
                   }
                 </select>
+              </div>
+            }
           </div>
-          }
-        </div>
           <div class="fr-modal__footer">
             <div class="fr-btns-group fr-btns-group--right fr-btns-group--inline-reverse fr-btns-group--inline-lg fr-btns-group--icon-left">
-              <button class="fr-btn fr-icon-checkbox-circle-line fr-btn--icon-left">Valider</button>
+              <button (click)="validate()" aria-controls="modalGrouping" class="fr-btn fr-icon-checkbox-circle-line fr-btn--icon-left">Valider</button>
             </div>
           </div>
-      </div>
+        </form>
     </div>
   </div>
   </div>

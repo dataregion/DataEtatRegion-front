@@ -11,7 +11,7 @@ import { SettingsService } from 'apps/financial-data/src/environments/settings.s
 import { map, Observable, of } from 'rxjs';
 import { BudgetLineHttpMapper } from './budget-lines-http.mapper.service';
 import { Optional } from 'apps/common-lib/src/lib/utilities/optional.type';
-import { DataHttpService, SearchParameters } from '@services/interface-data.service';
+import { DataHttpService, SearchParameters } from '../interface-data.service';
 import { SearchUtilsService } from 'apps/common-lib/src/lib/services/search-utils.service';
 
 @Injectable({

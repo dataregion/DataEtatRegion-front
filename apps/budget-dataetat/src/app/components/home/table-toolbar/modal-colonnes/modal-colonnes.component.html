@@ -2,7 +2,7 @@
   <div class="fr-container fr-container--fluid fr-container-sm">
     <div class="fr-grid-row fr-grid-row--center">
       <div class="fr-col-12 fr-col-md-6 fr-col-lg-4">
-        <div class="fr-modal__body">
+        <form [formGroup]="formColonnes" (ngSubmit)="validate()"  class="fr-modal__body">
           <div class="fr-modal__header">
             <button aria-controls="modalColonnes" title="Fermer" type="button"
               class="fr-btn--close fr-btn">Fermer</button>
@@ -10,36 +10,41 @@
           <div class="fr-modal__content">
             <h2 id="modal-title" class="fr-modal__title">
               <span class="fr-icon-arrow-right-line fr-icon--lg" aria-hidden="true"></span>
-              Afficher les données
+              Afficher et ordonner les données
             </h2>
-            <p>
-              
-            </p>
 
-            <fieldset class="fr-fieldset" id="storybook-form" aria-labelledby="storybook-form-legend storybook-form-messages">
-              <legend class="fr-fieldset__legend--regular fr-fieldset__legend" id="storybook-form-legend">Choisissez les données des lignes financières que vous souhaitez voir apparaître dans le tableau.</legend>
-              
-              @for (col of colonnes; track col.code) {
-                <div class="fr-fieldset__element">
-                  <div class="fr-checkbox-group">
-                    <input name="checkbox-{{ col.code }}" id="checkbox-{{ col.code }}" type="checkbox" [attr.aria-describedby]="'checkbox-' + col.code + '-messages'">
-                    <label class="fr-label" for="checkbox-{{ col.code }}"> {{ col.label }} </label>
-                    <div class="fr-messages-group" id="checkbox-{{ col.code }}-messages" aria-live="polite">
+            <div class="select-all-container">
+              <button type="button" class="fr-btn" [ngClass]="allSelected() ? 'fr-btn--secondary' : 'fr-btn--primary'" (click)="toggleAll(!allSelected())">
+                <span class="fr-icon" [ngClass]="allSelected() ? 'fr-icon-close-line' : 'fr-icon-checkbox-line'" aria-hidden="true"></span>
+                {{ allSelected() ? 'Tout désélectionner' : 'Tout sélectionner' }}
+              </button>
+            </div>
+
+            <p style="margin-top: 15px; font-weight: bold;">Sélectionner et ordonner les colonnes :</p>
+            <div>
+              <div formArrayName="colonnes" cdkDropList class="column-list" [cdkDropListData]="formColonnes.controls.colonnes.controls" (cdkDropListDropped)="moveGroup($event)">
+                @for (group of formColonnes.controls.colonnes.controls; let i = $index; track $index) {
+                  <div [formGroupName]="i" cdkDrag class="column-box">
+                    <span class="fr-icon-drag-move-2-line" aria-hidden="true"></span>
+                    <div>{{ group.controls.label.value }}</div>
+                    <div class="fr-checkbox-group" style="margin-top: -25px;">
+                      <input type="checkbox" formControlName="selected" id="colonne-{{i}}" [attr.aria-describedby]="'colonne-' + i + '-messages'">
+                      <label [attr.for]="'colonne-' + i"></label>
+                      <div class="fr-messages-group" id="colonne-{{i}}-messages" aria-live="polite">
+                      </div>
                     </div>
                   </div>
-                </div>
-              }
-              <div class="fr-messages-group" id="storybook-form-messages" aria-live="polite">
+                }
               </div>
-            </fieldset>
+            </div>
 
           </div>
           <div class="fr-modal__footer">
             <div class="fr-btns-group fr-btns-group--right fr-btns-group--inline-reverse fr-btns-group--inline-lg fr-btns-group--icon-left">
-              <button class="fr-btn fr-icon-checkbox-circle-line fr-btn--icon-left">Valider</button>
+              <button (click)="validate()" aria-controls="modalColonnes" class="fr-btn fr-icon-checkbox-circle-line fr-btn--icon-left">Valider</button>
             </div>
           </div>
-        </div>
+        </form>
       </div>
     </div>
   </div>

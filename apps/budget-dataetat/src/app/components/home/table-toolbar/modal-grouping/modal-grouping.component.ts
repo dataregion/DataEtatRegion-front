@@ -9,58 +9,101 @@ import {
 import { MaterialModule } from "apps/common-lib/src/public-api";
 import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
 import { MatSelectChange } from '@angular/material/select';
+import { ColonnesMapperService, ColonneTableau } from '@services/colonnes-mapper.service';
 import { ColonnesService } from '@services/colonnes.service';
-import { Colonne } from '@models/financial/colonnes.models';
+import { FinancialDataModel } from '@models/financial/financial-data.models';
+import { Colonne } from 'apps/clients/v3/financial-data';
+import { FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 
+
+export interface ColonneFormValues {
+  name: FormControl<string>;
+  label: FormControl<string>;
+}
+
+export interface FormColonnes {
+  colonnes: FormArray<FormGroup<ColonneFormValues>>;
+}
 
 @Component({
   selector: 'budget-modal-grouping',
   templateUrl: './modal-grouping.component.html',
   encapsulation: ViewEncapsulation.None,
   styleUrls: ['./modal-grouping.component.scss'],
-  imports: [MaterialModule, DragDropModule]
+  imports: [ReactiveFormsModule, MaterialModule, DragDropModule]
 })
 export class ModalGroupingComponent implements OnInit {
 
+  private _formBuilder = inject(FormBuilder);
   private _colonnesService = inject(ColonnesService)
 
-  @Input()
-  public colonnes: Colonne[] = []
-  @Input()
-  public selectedColonnes: Colonne[] = []
-  public remainingColonnes: Colonne[] = []
+  public formGrouping: FormGroup<FormColonnes> = new FormGroup({
+    colonnes: new FormArray<FormGroup<ColonneFormValues>>([])
+  });
+
+  public colonnes: ColonneTableau<FinancialDataModel>[] = []
+  public selectedColonnes: ColonneTableau<FinancialDataModel>[] = []
+  public remainingColonnes: ColonneTableau<FinancialDataModel>[] = []
 
   ngOnInit() {
+    // Récupération des colonnes du tableau, les sélectionnées mappées sur les colonnes du back
     this.colonnes = this._colonnesService.getAllColonnesGrouping()
-    this.remainingColonnes = this.calculateRemainingColumns(this.colonnes, this.selectedColonnes);
+    this.selectedColonnes = this._colonnesService.getSelectedColonnesGrouping()
+    this.remainingColonnes = this.calculateRemainingColumns();
+
+    // Build du formulaire
+    this.formGrouping = this._formBuilder.group({
+      colonnes: this._formBuilder.array(
+        this.selectedColonnes.map(col => {
+          return this._formBuilder.group({
+            name: this._formBuilder.control(col.name, { nonNullable: true }),
+            label: this._formBuilder.control(col.label, { nonNullable: true }),
+          })
+        })
+      )
+    });
   }
 
   /**
    * Retourne les colonnes qui ne sont pas déjà utilisées pour le grouping (pour proposer leur ajout).
    */
-  private calculateRemainingColumns(colonnes: Colonne[], selectedColonnes: Colonne[]) {
-    // On construit un set contenant les noms de colonnes utilisées pour le grouping.
-    const usedColumnNames = new Set<string>();
-    for (const col of selectedColonnes) {
-      usedColumnNames.add(col.name);
-    }
-    // On retourne les colonnes dont les noms ne sont pas dans le set.
-    return colonnes.filter((col) => !usedColumnNames.has(col.name));
+  private calculateRemainingColumns() {
+    const formArray = this.formGrouping.controls.colonnes;
+    const usedNames = new Set(formArray.controls.map(group => group.controls.name.value));
+    return this.colonnes.filter(col => !usedNames.has(col.name));
   }
 
-  moveGroup(event: CdkDragDrop<Colonne[]>) {
-    moveItemInArray(this.selectedColonnes, event.previousIndex, event.currentIndex);
+  moveGroup(event: CdkDragDrop<FormGroup<ColonneFormValues>[]>) {
+    const colonnes = this.formGrouping.controls.colonnes;
+    const control = colonnes.at(event.previousIndex);
+    colonnes.removeAt(event.previousIndex);
+    colonnes.insert(event.currentIndex, control);
   }
 
   addGroup(event: Event) {
     const target = event.target as HTMLSelectElement;
-    this.selectedColonnes.push(this.colonnes.filter(c => c.code === target.selectedOptions[0].value)[0]);
-    this.remainingColonnes = this.calculateRemainingColumns(this.colonnes, this.selectedColonnes);
+    const selectedName = target.selectedOptions[0].value;
+    
+    const col = this.colonnes.find(c => c.name === selectedName);
+    if (!col) return;
+    
+    this.formGrouping.controls.colonnes.push(
+      this._formBuilder.group({
+        name: this._formBuilder.control(col.name, { nonNullable: true }),
+        label: this._formBuilder.control(col.label, { nonNullable: true }),
+      })
+    );
+    this.remainingColonnes = this.calculateRemainingColumns();
   }
 
   removeGroup(index: number) {
-    this.selectedColonnes.splice(index, 1);
-    this.remainingColonnes = this.calculateRemainingColumns(this.colonnes, this.selectedColonnes);
+    const formArray = this.formGrouping.controls.colonnes;
+    formArray.removeAt(index);
+    this.remainingColonnes = this.calculateRemainingColumns();
+  }
+
+  public validate(): void {
+    this._colonnesService.setSelectedColonnesGrouping(this.selectedColonnes)
   }
 
 }

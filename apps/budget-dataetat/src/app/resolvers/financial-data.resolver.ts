@@ -2,18 +2,19 @@ import { inject } from '@angular/core';
 import { ResolveFn } from '@angular/router';
 import { forkJoin } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { BudgetDataHttpService } from '../services/http/budget-lines-http.service';
-import { BudgetService } from '../services/budget.service';
+import { BudgetDataHttpService } from '../services/budget.service';
 import { FinancialData, FinancialDataResolverModel } from '../models/financial/financial-data-resolvers.models';
+import { ReferentielsService } from '@services/referentiels.service';
 
 export const resolveFinancialData: ResolveFn<FinancialDataResolverModel> = () => {
-  const budgetService: BudgetService = inject(BudgetService);
-  const financialService: BudgetDataHttpService = inject(BudgetDataHttpService);
+
+  const budgetService: BudgetDataHttpService = inject(BudgetDataHttpService);
+  const referentielsService: ReferentielsService = inject(ReferentielsService);
 
   return forkJoin([
-    budgetService.getBop(),
-    budgetService.getReferentielsProgrammation(null),
-    financialService.getAnnees()
+    referentielsService.getBop(),
+    referentielsService.getReferentielsProgrammation(null),
+    budgetService.getAnnees()
   ]).pipe(
     map(([fetchedBop, fetchedRefs, fetchedAnnees]) => {
       const themes = Array.from(new Set(fetchedBop.map((bop) => bop.label_theme))).sort();

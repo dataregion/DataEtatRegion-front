@@ -331,7 +331,6 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
       debounceTime(300),
       takeUntilDestroyed(this._destroyRef)
     ).subscribe(() => {
-      console.log("dans le filtre")
       const term = this.inputQPV !== '' ? this.inputQPV : null;
       if (this.searchForm.get('localisations')?.value) {
         const localisations = this.searchForm.get('localisations')?.value as GeoModel[];
