@@ -94,7 +94,11 @@ export class ModalColonnesComponent implements OnInit {
    * A la validation, on sauvegarde les colonnes sélectionnées dans le service
    */
   public validate(): void {
-    this._colonnesService.setSelectedColonnesTable(this.selectedColonnes)
+    const formArray = this.formColonnes.controls.colonnes;
+    const selectedNames = new Set(
+      formArray.controls.filter(group => group.controls.selected.value).map(group => group.controls.name.value)
+    );
+    this._colonnesService.setSelectedColonnesTable(this.colonnes.filter(c => selectedNames.has(c.name)));
   }
 
 }
