@@ -20,6 +20,8 @@ import { VectorTile as VectorTileSource } from "ol/source";
 import { QpvSearchArgs } from "../../models/qpv-search/qpv-search.models";
 import { FinancialDataModel } from "../../models/financial/financial-data.models";
 import { QpvWithMontant, RefQpvWithCommune } from '../../models/refs/qpv.model';
+import { createEmpty, extend, Extent } from 'ol/extent';
+import { TypeLocalisation } from 'apps/common-lib/src/public-api';
 
 @Component({
   selector: 'data-qpv-map',
@@ -88,6 +90,9 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     this.qpvWithMontant().reduce((acc, qpv) => acc + qpv.montant, 0)
   );
 
+  // Zoom de base
+  private _pendingExtent: Extent | null = null;
+
   constructor() {
     this.mapId = `ol-map-${Math.floor(Math.random() * 100)}`;
 
@@ -116,6 +121,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       this._loadDataMap(qpvWithMontant);
     });
   }
+
 
   ngAfterViewInit(): void {
     const franceCoordinates = fromLonLat([1.888334, 46.603354]);
@@ -159,6 +165,12 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
     this.map?.addLayer(this.contourLayer);
     this.map?.addLayer(this.clusterLayer);
+
+    if (this._pendingExtent) {
+      this.map.getView().fit(this._pendingExtent, { padding: [50, 50, 50, 50], duration: 500 });
+      this._pendingExtent = null;
+    }
+    
   }
 
   private _loadDataMap(qpvWithMontant: QpvWithMontant[]) {
@@ -191,37 +203,47 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       feature_countour.setStyle(this.selectedContourStyleFuction);
       features_countours.push(feature_countour);
       features_points.push(feature_point);
-
     });
 
     this.contourLayer.getSource()?.addFeatures(features_countours);
 
-    const clusterSource = this.clusterLayer.getSource() as Cluster<Feature>; // Get the Cluster source
-    const vectorSource = clusterSource.getSource() as VectorSource; // Get the underlying VectorSource
+    const clusterSource = this.clusterLayer.getSource() as Cluster<Feature>;
+    const vectorSource = clusterSource.getSource() as VectorSource;
+    vectorSource.clear();
     vectorSource.addFeatures(features_points);
+    // ✅ Calcul de l’extent des contours
+    const extent = createEmpty();
+    features_countours.forEach(f => {
+      extend(extent, f.getGeometry()!.getExtent());
+    });
+    this._pendingExtent = extent;
+    // ✅ Fit sur la vue
+    if (this.map && extent) {
+      this.map.getView().fit(extent, {
+        padding: [50, 50, 50, 50],
+        duration: 500,
+        maxZoom: 14, // optionnel : limite le zoom trop près
+      });
+    } else { // on est dans le cas où la map n'est pas encore chargé dans le dom
+      this._pendingExtent = extent;
+    }
     this.updateCustomControl();
   }
 
   private updateCustomControl(): void {
 
-    const selectedQpv = this._searchArgs?.qpv_codes?.map(qpv => qpv.code)
-    const selectedAnnees = this._searchArgs?.annees
-    const selectedNiveau = this._searchArgs?.niveau
+    const selectedQpv = this._searchArgs?.qpv_codes?.map(qpv => qpv.label);
+    const selectLocalisation = this._searchArgs?.localisations?.map(loc => loc.nom);
+    
+    const selectElement = selectedQpv ?? selectLocalisation;
+    const selectedAnnees = this._searchArgs?.annees;
+    const selectedNiveau = selectedQpv ? TypeLocalisation.QPV : this._searchArgs?.niveau;
 
     const clusterSource = this.clusterLayer.getSource() as Cluster<Feature>; // Get the Cluster source
     const vectorSource = clusterSource.getSource() as VectorSource;
-    const selectedFeatures: Feature[] | null | undefined = this.findFeaturesByCodes(vectorSource.getFeatures(), selectedQpv);
-    this.mapLevelControl?.updateSelectedQpv(selectedQpv, selectedAnnees, selectedNiveau, selectedFeatures);
+    this.mapLevelControl?.updateControl(selectElement, selectedAnnees, selectedNiveau, vectorSource.getFeatures());
   }
 
-  private findFeaturesByCodes(
-    features: Feature[],
-    codes: string[] | null | undefined
-  ): Feature[] | null | undefined {
-    return features.filter(function (feature) {
-      return codes?.includes(feature.get('code'));
-    });
-  }
 
   private clusterStyleFunction(feature: FeatureLike): Style[] {
     const size = feature.get('features').length; // Get number of features in the cluster
@@ -267,7 +289,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     if (this.map && this.map.getView && typeof this.map.getView === 'function') {
       zoomLevel = this.map.getView().getZoom();
     }
-    const  circleColor = this.colorLavande;
+    const circleColor = this.colorLavande;
 
     const nomStyle = new Style({
       text: new Text({
@@ -298,7 +320,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       }),
       zIndex: 100
     });
-    return [nomStyle,montantStyle];
+    return [nomStyle, montantStyle];
   }
 
   private contourStyleFuction() {
@@ -327,14 +349,14 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
   private computeRadius(montant: number): number {
     const total = this.totalMontant();
-    if (!total ||montant <=0) return 20;
+    if (!total || montant <= 0) return 20;
 
     if (total === montant) return 60;
 
     const minRadius = 30;
-    const maxAdditional = 60; 
-   
-    const radius =  minRadius + (montant / total) * maxAdditional;
+    const maxAdditional = 60;
+
+    const radius = minRadius + (montant / total) * maxAdditional;
     return radius
   }
 

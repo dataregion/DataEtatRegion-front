@@ -4,6 +4,7 @@ import Map from "ol/Map";
 import {Feature} from "ol";
 import { extend as olExtend, createEmpty as olCreateEmptyExtend } from 'ol/extent';
 import {Coordinate} from "ol/coordinate";
+import { TypeLocalisation } from 'apps/common-lib/src/lib/models/geo.models';
 
 @Injectable({
   providedIn: 'root',
@@ -29,7 +30,7 @@ export class LevelControl extends Control {
 
   private currentMap: Map | undefined;
   private zoomByLevel: { [key: string]: number } = {
-    'departement': 9,
+    'département': 9,
     'epci': 11,
     'commune': 13,
     'qpv': 15,
@@ -122,7 +123,7 @@ export class LevelControl extends Control {
 
   handleSelectChange(event: Event): void {
     const selectedValue: string = (event.target as HTMLSelectElement).value;
-    this.updateLevel(selectedValue);
+    this.updateLevel(selectedValue as TypeLocalisation);
   }
 
   gotoCurrentCenter() {
@@ -131,17 +132,17 @@ export class LevelControl extends Control {
     }
   }
 
-  updateSelectedQpv(
+  updateControl(
     searchedNames: string[] | null | undefined,
     searchedYears: number[] | null | undefined,
-    localisation: string | null | undefined,
+    localisation: TypeLocalisation | null | undefined,
     searchedFeatures: Feature[] | null | undefined,
   ) {
-    this.updateTitle(searchedNames, searchedYears);
+    this.updateTitle(searchedNames, searchedYears, localisation);
     this.fitViewForFeatures(searchedFeatures, localisation);
   }
 
-  fitViewForFeatures(searchedFeatures: Feature[] | null | undefined, localisation: string | null | undefined): void {
+  fitViewForFeatures(searchedFeatures: Feature[] | null | undefined, localisation: TypeLocalisation | null | undefined): void {
     if (searchedFeatures && searchedFeatures?.length > 0) {
       const selectedExtent = olCreateEmptyExtend();
       searchedFeatures.forEach(function(feature) {
@@ -151,33 +152,36 @@ export class LevelControl extends Control {
         }
       });
       // On zoom sur le niveau QPV
-      this.currentMap?.getView().fit(selectedExtent, { size: this.currentMap?.getSize(), maxZoom: this.zoomByLevel['qpv'], padding: [100, 100, 100, 100] });
-      this.currentCenter = this.currentMap?.getView().getCenter();
-      if (localisation && searchedFeatures.length === 1) {
+      this.currentMap?.getView().fit(selectedExtent, { size: this.currentMap?.getSize(), padding: [100, 100, 100, 100] });
+      if (localisation) {
         this.updateLevel(localisation);
       }
+      this.currentCenter = this.currentMap?.getView().getCenter();
     }
   }
 
-  updateLevel(localisation: string | null | undefined): void {
+  updateLevel(localisation: TypeLocalisation | null | undefined): void {
     if (localisation) {
       this.selectMapLevel.value = localisation.toLowerCase();
       this.currentMap?.getView()?.setZoom(this.zoomByLevel[localisation.toLowerCase()]);
     }
   }
 
-  updateTitle(searchedQpvNames: string[] | null | undefined, searchedYears: number[] | null | undefined): void {
-    let yearsString = "/";
-    let namesString = "/";
+  updateTitle(searchedQpvNames: string[] | null | undefined, searchedYears: number[] | null | undefined,  localisation: TypeLocalisation | null | undefined,): void {
+    let title = "";
 
-    if (searchedYears) {
-      yearsString = `${searchedYears.join(', ')}`;
+    if (localisation) {
+      title = localisation + ": ";
     }
-
+   
     if (searchedQpvNames) {
-      namesString = `${searchedQpvNames.join(', ')}`;
+      title += `${searchedQpvNames.join(', ')}`;
     }
 
-    this.titleElement.innerHTML = `${namesString} - ${yearsString}`;
+     if (searchedYears) {
+      title +=   ` Années :  ${searchedYears.join(', ')}`;
+    }
+
+    this.titleElement.innerHTML = title;
   }
 }
