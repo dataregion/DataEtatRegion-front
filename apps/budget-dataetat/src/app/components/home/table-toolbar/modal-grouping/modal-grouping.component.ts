@@ -103,7 +103,11 @@ export class ModalGroupingComponent implements OnInit {
   }
 
   public validate(): void {
-    this._colonnesService.setSelectedColonnesGrouping(this.selectedColonnes)
+    const formArray = this.formGrouping.controls.colonnes;
+    const selectedNames = new Set(
+      formArray.controls.map(group => group.controls.name.value)
+    );
+    this._colonnesService.setSelectedColonnesGrouping(this.colonnes.filter(c => selectedNames.has(c.name)));
   }
 
 }
