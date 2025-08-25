@@ -530,7 +530,6 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
   public reset(): void {
     this.searchFinish = false;
     this.searchForm.reset();
-    this.searchArgsEventEmitter.next(null)
   }
 
 
