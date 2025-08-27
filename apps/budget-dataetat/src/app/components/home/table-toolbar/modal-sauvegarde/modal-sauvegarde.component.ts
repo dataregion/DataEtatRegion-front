@@ -1,21 +1,14 @@
-import { AsyncPipe, CommonModule } from '@angular/common';
-import { Component, ElementRef, inject, input, Input, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { AsyncPipe } from '@angular/common';
+import { Component, inject, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 
-import { GridInFullscreenStateService } from 'apps/common-lib/src/lib/services/grid-in-fullscreen-state.service';
-import {
-  TableData,
-  VirtualGroup
-} from 'apps/grouping-table/src/lib/components/grouping-table/group-utils';
-import { AlertService, MaterialModule } from "apps/common-lib/src/public-api";
-import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
-import { MatSelectChange } from '@angular/material/select';
-import { catchError, debounceTime, delay, distinctUntilChanged, finalize, map, Observable, of, Subject, switchMap, takeUntil } from 'rxjs';
+import { AlertService } from "apps/common-lib/src/public-api";
+import { debounceTime, distinctUntilChanged, finalize, map, Observable, of, Subject, switchMap, takeUntil } from 'rxjs';
 import { PreferenceUsersHttpService } from 'apps/preference-users/src/lib/services/preference-users-http.service';
 import { Preference } from 'apps/preference-users/src/lib/models/preference.models';
 import { COMMA, ENTER, S } from '@angular/cdk/keycodes';
 import { DsfrAutocompleteComponent, DsfrCompleteEvent } from '@edugouvfr/ngx-dsfr-ext'
 import { ReactiveFormsModule, FormGroup, FormBuilder, FormControl, FormArray } from '@angular/forms';
-import { PreferenceService } from 'apps/preference-users/src/lib/services/preference.service';
+import { PreferenceService } from '@services/preference.service';
 
 
 export interface FormPreference {
@@ -60,7 +53,7 @@ export class ModalSauvegardeComponent implements OnInit, OnDestroy {
   public delay: number = 500
 
   ngOnInit() {
-    this.preference = this._preferenceService.getCurrentPreference()
+    this.preference = this._preferenceService.currentPreference
     if (this.preference) {
       this.formPreference = this._formBuilder.group({
         name: this._formBuilder.control<string>(this.preference.name ?? "", { nonNullable: true }),

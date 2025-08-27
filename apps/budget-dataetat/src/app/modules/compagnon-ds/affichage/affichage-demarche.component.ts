@@ -8,7 +8,7 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { combineLatest } from 'rxjs';
 import { Cadre, Demarche, Donnee, Reconciliation, ValeurDonnee } from '../../../models/demarche_simplifie/demarche.model';
-import { SearchParameters, SearchParameters_empty } from '../../../services/interface-data.service';
+import { SearchParameters, SearchParamsService } from '../../../services/search-params.service';
 
 interface AffichageFormData {
   nomProjet: string | undefined;
@@ -32,6 +32,7 @@ export class AffichageDemarcheComponent implements OnInit {
   private _router = inject(Router);
   private _alertService = inject(AlertService);
   private _compagnonDS = inject(CompagnonDSService);
+  private _searchParamsService = inject(SearchParamsService);
 
   private _destroyRef = inject(DestroyRef);
 
@@ -111,10 +112,9 @@ export class AffichageDemarcheComponent implements OnInit {
           next: (valeurs: ValeurDonnee[] | null) => {
             if (valeurs) {
               this.nbDossiers = valeurs.length;
-              const search_parameters: SearchParameters = {
-                ...SearchParameters_empty,
-                source: 'FINANCIAL_DATA_AE'
-              } as const;
+              const search_parameters: SearchParameters = this._searchParamsService.getEmpty();
+              search_parameters.source = 'FINANCIAL_DATA_AE'
+
               if (reconciliation.champEJ) {
                 const idDonnee: number = parseInt(reconciliation.champEJ);
                 search_parameters.n_ej = valeurs

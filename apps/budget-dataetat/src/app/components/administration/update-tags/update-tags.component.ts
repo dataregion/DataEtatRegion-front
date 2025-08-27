@@ -6,10 +6,10 @@ import { BehaviorSubject, finalize } from 'rxjs';
 import { Clipboard } from '@angular/cdk/clipboard';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
-import { BudgetDataHttpService } from '../../../services/budget.service';
 import { Tag, tag_fullname } from '../../../models/refs/tag.model';
 import { ColonnesService } from '../../../services/colonnes.service';
 import { MatButtonModule } from '@angular/material/button';
+import { BudgetDataHttpService } from '@services/http/budget.service';
 
 @Component({
   selector: 'budget-update-tags',
@@ -18,7 +18,7 @@ import { MatButtonModule } from '@angular/material/button';
   imports: [MatIconModule, MatCardModule, MatButtonModule]
 })
 export class UpdateTagsComponent {
-  private _service = inject(BudgetDataHttpService);
+  private _budgetService = inject(BudgetDataHttpService);
   private _colonnesService = inject(ColonnesService);
   private _alertService = inject(AlertService);
   private _clipboard = inject(Clipboard);
@@ -33,7 +33,7 @@ export class UpdateTagsComponent {
   private _destroyRef = inject(DestroyRef);
 
   constructor() {
-    this._service
+    this._budgetService
       .allTags$()
       .pipe(takeUntilDestroyed(this._destroyRef))
       .subscribe((tags) => (this.tags = tags));
@@ -51,7 +51,7 @@ export class UpdateTagsComponent {
           const headers: string[] = contentFile.split('\n')[0].split(',');
           const newHeaders: string[] = [];
           headers.forEach((header) => {
-            const code = this._colonnesService.getAllColonnesTable().filter(c => c.label == header)[0].name;
+            const code = this._colonnesService.allColonnesTable.filter(c => c.label == header)[0].name;
             if (code) newHeaders.push(code);
           });
           // Création du fichier avec les nouveaux headers
@@ -63,7 +63,7 @@ export class UpdateTagsComponent {
         // Envoi du fichier modifié au back
         .finally(() => {
           this.uploadInProgress.next(true);
-          this._service
+          this._budgetService
             .loadMajTagsFile(fileToUpload)
             .pipe(
               finalize(() => {

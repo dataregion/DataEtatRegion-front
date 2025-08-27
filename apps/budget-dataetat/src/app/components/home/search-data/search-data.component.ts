@@ -1,36 +1,29 @@
-import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output, inject } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
-import { ActivatedRoute, Data } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import {
   BehaviorSubject,
+  combineLatest,
   debounceTime,
+  filter,
   finalize,
-  forkJoin,
-  map,
   Observable,
   of,
   startWith,
-  Subscription,
-  switchMap
+  switchMap,
+  tap
 } from 'rxjs';
-import { Preference } from 'apps/preference-users/src/lib/models/preference.models';
-import { JSONObject } from 'apps/common-lib/src/lib/models/jsonobject';
-import { AlertService, GeoModel, TypeLocalisation } from 'apps/common-lib/src/public-api';
+import { GeoModel, TypeLocalisation } from 'apps/common-lib/src/public-api';
 import { MarqueBlancheParsedParamsResolverModel } from '../../../resolvers/marqueblanche-parsed-params.resolver';
-import {
-  AdditionalSearchParameters,
-  empty_additional_searchparams
-} from './additional-searchparams';
-import { BeneficiaireFieldData } from './beneficiaire-field-data.model';
-import { SearchForm } from './search-form.interface';
-import { AutocompleteBeneficiaireService } from './autocomplete-beneficiaire.service';
+import { BeneficiaireFieldData } from './autocomplete/autocomplete-beneficiaire.service';
+import { AutocompleteBeneficiaireService } from './autocomplete/autocomplete-beneficiaire.service';
 import { AdvancedChipsMultiselectComponent, SelectedData } from 'apps/common-lib/src/lib/components/advanced-chips-multiselect/advanced-chips-multiselect.component';
-import { TagFieldData } from './tags-field-data.model';
-import { AutocompleteTagsService } from './autocomplete-tags.service';
+import { TagFieldData } from './autocomplete/autocomplete-tags.service';
+import { AutocompleteTagsService } from './autocomplete/autocomplete-tags.service';
 import { LoggerService } from 'apps/common-lib/src/lib/services/logger.service';
 import { BopModel } from '../../../models/refs/bop.models';
 import { ReferentielProgrammation } from '../../../models/refs/referentiel_programmation.model';
-import { OtherTypeCategorieJuridique, SearchParameters, SearchParameters_empty, SearchTypeCategorieJuridique } from '../../../services/interface-data.service';
+import { OtherTypeCategorieJuridique, SearchParameters, SearchParamsService, SearchTypeCategorieJuridique } from '../../../services/search-params.service';
 import { TypeCategorieJuridique } from '../../../models/financial/common.models';
 import { PreFilters } from '../../../models/search/prefilters.model';
 import { Beneficiaire } from '../../../models/search/beneficiaire.model';
@@ -42,9 +35,29 @@ import { LocalisationComponent } from 'apps/common-lib/src/lib/components/locali
 import { BopsReferentielsComponent } from 'apps/common-lib/src/lib/components/bops-referentiels/bops-referentiels.component';
 import { FinancialData, FinancialDataResolverModel } from '../../../models/financial/financial-data-resolvers.models';
 import { MatButtonModule } from '@angular/material/button';
-import { FinancialDataModel } from '@models/financial/financial-data.models';
-import { BudgetDataHttpService } from '@services/budget.service';
 import { tag_fullname } from '@models/refs/tag.model';
+import { PrefilterMapperService } from './prefilter-mapper.services';
+import { PreferenceService } from '@services/preference.service';
+import { SearchDataService } from '@services/search-data.service';
+import { LignesFinancieres, LignesResponse } from 'apps/clients/v3/financial-data';
+import { ColonnesService } from '@services/colonnes.service';
+
+/**
+ * Interface du formulaire de recherche
+ */
+export interface FormSearch {
+  themes: FormControl<string[] | null>;
+  programmes: FormControl<Bop[] | null>;
+  referentiels_programmation: FormControl<ReferentielProgrammation[] | null>;
+  niveau: FormControl<TypeLocalisation | null>;
+  localisations: FormControl<GeoModel[] | null>;
+  annees: FormControl<number[] | null>;
+  beneficiaires: FormControl<Beneficiaire[] | null>;
+  types_beneficiaires: FormControl<SearchTypeCategorieJuridique[] | null>;
+  tags: FormControl<TagFieldData[] | null>;
+  domaines_fonctionnels: FormControl<string[] | null>;
+  sources_region: FormControl<string[] | null>;
+}
 
 @Component({
   selector: 'budget-search-data',
@@ -53,88 +66,99 @@ import { tag_fullname } from '@models/refs/tag.model';
   providers: [AutocompleteBeneficiaireService, AutocompleteTagsService],
   imports: [MatIconModule, ReactiveFormsModule,MatButtonModule, CommonModule, BopsReferentielsComponent,AdvancedChipsMultiselectComponent, LocalisationComponent, SelectMultipleComponent]
 })
-export class SearchDataComponent implements OnInit, AfterViewInit {
+export class SearchDataComponent implements OnInit {
+
   private _route = inject(ActivatedRoute);
-  private _alertService = inject(AlertService);
-  private _budgetService = inject(BudgetDataHttpService);
+  private _preferenceService = inject(PreferenceService)
+  private _prefilterMapperService = inject(PrefilterMapperService);
+  private _searchDataService = inject(SearchDataService);
+  private _searchParamsService = inject(SearchParamsService);
   private _logger = inject(LoggerService);
   private _autocompleteBeneficiaires = inject(AutocompleteBeneficiaireService);
   private _autocompleteTags = inject(AutocompleteTagsService);
-  // private _autocompleteReferentiels = inject(AutocompleteRefProgrammationService);
+  private _colonnesService = inject(ColonnesService)
 
-  public readonly TypeLocalisation = TypeLocalisation;
-
-  public searchForm!: FormGroup<SearchForm>;
-
-  public additional_searchparams: AdditionalSearchParameters = empty_additional_searchparams;
+  /**
+   * Formulaire de recherche
+   */
+  public formSearch: FormGroup<FormSearch> = new FormGroup<FormSearch>({
+    themes: new FormControl<string[] | null>(null),
+    programmes: new FormControl<Bop[] | null>(null),
+    referentiels_programmation: new FormControl<ReferentielProgrammation[] | null>(null),
+    niveau: new FormControl<TypeLocalisation | null>(null),
+    localisations: new FormControl<GeoModel[] | null>([]),
+    annees: new FormControl<number[] | null>(null, {
+      validators: [Validators.min(2000), Validators.max(new Date().getFullYear())]
+    }),
+    beneficiaires: new FormControl<Beneficiaire[] | null>(null),
+    types_beneficiaires: new FormControl<SearchTypeCategorieJuridique[] | null>(null),
+    tags: new FormControl<TagFieldData[] | null>(null),
+    domaines_fonctionnels: new FormControl<string[] | null>(null),
+    sources_region: new FormControl<string[] | null>(null),
+  });
 
   public bops: BopModel[] = [];
   public themes: string[] = [];
   public annees: number[] = [];
-  public filteredBops: BopModel[] | null = null;
-  public filteredReferentiels: ReferentielProgrammation[] | null = null;
+  public filteredBops: BopModel[] = [];
+  public filteredReferentiels: ReferentielProgrammation[] = [];
 
   /**
    * Thèmes, Programmes, Référentiels programmation
    */
   get selectedThemes(): string[] | null {
-    return this.searchForm.get('theme')?.value ?? null;
+    return this.formSearch.controls.themes.value ?? null;
   }
-
   set selectedThemes(data: string[] | null) {
-    this.searchForm.get('theme')?.setValue(data ?? null);
+    this.formSearch.controls.themes.setValue(data ?? null);
   }
-
-  get selectedBops(): BopModel[] | null {
-    return this.searchForm.get('bops')?.value ?? null;
+  get selectedBops(): Bop[] | null {
+    return this.formSearch.controls.programmes.value ?? null;
   }
-
-  set selectedBops(data: BopModel[] | null) {
-    this.searchForm.get('bops')?.setValue(data ?? null);
+  set selectedBops(data: Bop[] | null) {
+    this.formSearch.controls.programmes.setValue(data ?? null);
   }
-
   get selectedReferentiels(): ReferentielProgrammation[] | null {
-    return this.searchForm.get('referentiels_programmation')?.value ?? null;
+    return this.formSearch.controls.referentiels_programmation.value ?? null;
   }
-
   set selectedReferentiels(data: ReferentielProgrammation[] | null) {
-    this.searchForm.get('referentiels_programmation')?.setValue(data ?? null);
+    this.formSearch.controls.referentiels_programmation.setValue(data ?? null);
   }
 
   /**
    * Localisations
    */
   get selectedNiveau(): TypeLocalisation | null {
-    return this.searchForm.get('niveau')?.value ?? null;
+    return this.formSearch.controls.niveau.value ?? null;
   }
-
   set selectedNiveau(data: TypeLocalisation | null) {
-    this.searchForm.get('niveau')?.setValue(data ?? null);
+    this.formSearch.controls.niveau.setValue(data ?? null);
   }
-
   get selectedLocation(): GeoModel[] | null {
-    return this.searchForm.get('location')?.value ?? null;
+    return this.formSearch.controls.localisations.value ?? null;
   }
-
   set selectedLocation(data: GeoModel[] | null) {
-    this.searchForm.get('location')?.setValue(data ?? null);
+    this.formSearch.controls.localisations.setValue(data ?? null);
   }
 
   /**
    * Années
    */
   get selectedYear(): number[] | null {
-    const annees = this.searchForm.get('year')?.value;
+    const annees = this.formSearch.controls.annees.value;
     return annees && annees.length != 0 ? annees : null;
   }
-
   set selectedYear(data: number[] | null) {
-    this.searchForm.get('year')?.setValue(data ?? null);
+    this.formSearch.controls.annees.setValue(data ?? null);
   }
 
-  /**
-   * Type bénéficiaire
-   */
+
+  get selectedTypesBenef(): SearchTypeCategorieJuridique[] | null {
+    return this.formSearch.controls.types_beneficiaires.value ?? null;
+  }
+  set selectedTypesBenef(data: SearchTypeCategorieJuridique[] | null) {
+    this.formSearch.controls.types_beneficiaires.setValue(data ?? null);
+  }
   public typesBenef: SearchTypeCategorieJuridique[] = [
     TypeCategorieJuridique.COLLECTIVITE,
     TypeCategorieJuridique.ASSOCIATION,
@@ -146,15 +170,6 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
     [TypeCategorieJuridique.ETAT, 'État'],
     [OtherTypeCategorieJuridique.AUTRES, 'Autres']
   ]);
-
-  get selectedTypesBenef(): SearchTypeCategorieJuridique[] | null {
-    return this.searchForm.get('types_beneficiaires')?.value ?? null;
-  }
-
-  set selectedTypesBenef(data: SearchTypeCategorieJuridique[] | null) {
-    this.searchForm.get('types_beneficiaires')?.setValue(data ?? null);
-  }
-
   public renderTypesBenefOption = (t: SearchTypeCategorieJuridique): string => {
     const type: string | undefined = this._prettyTypes.has(t) ? this._prettyTypes.get(t) : t;
     return type ? type.charAt(0).toUpperCase() + type.slice(1) : '';
@@ -166,157 +181,164 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
   /**
    * Beneficiaires
    */
-  get selectedBeneficiaires(): BeneficiaireFieldData[] {
-    return this.searchForm.get('beneficiaires')?.value as BeneficiaireFieldData[];
-  }
+     get selectedBeneficiaires(): BeneficiaireFieldData[] {
+       return this.formSearch.get('beneficiaires')?.value as BeneficiaireFieldData[];
+     }
+   
+     set selectedBeneficiaires(data: SelectedData[]) {
+       this.formSearch.get('beneficiaires')?.setValue(data as BeneficiaireFieldData[]);
+     }
+   
+     public filteredBeneficiaire$: Observable<BeneficiaireFieldData[]> = of([]);
+   
+     public get beneficiaireFieldOptions$(): Observable<BeneficiaireFieldData[]> {
+       return this.filteredBeneficiaire$;
+     }
+   
+     public beneficiaireInputChange$ = new BehaviorSubject<string>('');
+   
+     public onBeneficiaireInputChange(v: string) {
+       this.beneficiaireInputChange$.next(v);
+     }
 
-  set selectedBeneficiaires(data: SelectedData[]) {
-    this.searchForm.get('beneficiaires')?.setValue(data as BeneficiaireFieldData[]);
-  }
-
-  public filteredBeneficiaire$: Observable<BeneficiaireFieldData[]> = of([]);
-
-  public get beneficiaireFieldOptions$(): Observable<BeneficiaireFieldData[]> {
-    return this.filteredBeneficiaire$;
-  }
-
-  public beneficiaireInputChange$ = new BehaviorSubject<string>('');
-
-  public onBeneficiaireInputChange(v: string) {
-    this.beneficiaireInputChange$.next(v);
-  }
 
   /**
    * Tags
    */
-  public get selectedTags(): TagFieldData[] {
-    return this.searchForm.get('tags')?.value as TagFieldData[];
-  }
+     public get selectedTags(): TagFieldData[] {
+       return this.formSearch.get('tags')?.value as TagFieldData[];
+     }
+   
+     public set selectedTags(value: SelectedData[]) {
+       this.formSearch.get('tags')?.setValue(value as TagFieldData[]);
+     }
+   
+     public _filteredTags$: Observable<TagFieldData[]> = of([]);
+   
+     public get tagsFieldOptions$(): Observable<TagFieldData[]> {
+       return this._filteredTags$;
+     }
+   
+     public tagsInputChange$ = new BehaviorSubject<string>('');
+   
+     public onTagInputChange(v: string) {
+       this.tagsInputChange$.next(v);
+     }
 
-  public set selectedTags(value: SelectedData[]) {
-    this.searchForm.get('tags')?.setValue(value as TagFieldData[]);
-  }
 
-  public _filteredTags$: Observable<TagFieldData[]> = of([]);
-
-  public get tagsFieldOptions$(): Observable<TagFieldData[]> {
-    return this._filteredTags$;
-  }
-
-  public tagsInputChange$ = new BehaviorSubject<string>('');
-
-  public onTagInputChange(v: string) {
-    this.tagsInputChange$.next(v);
-  }
-
-  /**
-   * Indique si la recherche a été effectué
-   */
-  public searchFinish = false;
-
-  /**
-   * Indique si la recherche est en cours
-   */
-  public searchInProgress = new BehaviorSubject(false);
-
-  /**
-   * Affiche une erreur
-   */
-  public displayError = false;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  public error: Error | any | null = null;
-
-  /**
-   * Resultats de la recherche.
-   */
-  @Output() searchResultsEventEmitter = new EventEmitter<FinancialDataModel[]>();
-
-  /**
-   * Les donnees de la recherche
-   */
-  private _searchResult: FinancialDataModel[] | null = null;
-
-  searchResult(): FinancialDataModel[] | null {
-    return this._searchResult;
-  }
-
-  /**
-   * Resultats de la recherche.
-   */
-  @Output() currentFilter = new EventEmitter<Preference>();
-
-  @Input()
-  public set preFilter(value: PreFilters | undefined) {
-    try {
-      this._applyPrefilters(value);
-    } catch (e) {
-      this.displayError = true;
-      this.error = e;
-    }
-  }
-
-  constructor() {
-    // Formulaire avc champs déclarés dans l'ordre
-    this.searchForm = new FormGroup<SearchForm>({
-      theme: new FormControl<string[] | null>(null),
-      bops: new FormControl<Bop[] | null>(null),
-      referentiels_programmation: new FormControl<ReferentielProgrammation[] | null>(null),
-      niveau: new FormControl<TypeLocalisation | null>(null),
-      location: new FormControl({ value: null, disabled: false }, []),
-      year: new FormControl<number[]>([], {
-        validators: [Validators.min(2000), Validators.max(new Date().getFullYear())]
-      }),
-      beneficiaires: new FormControl<Beneficiaire[] | null>(null),
-      types_beneficiaires: new FormControl<SearchTypeCategorieJuridique[] | null>(null),
-      tags: new FormControl<TagFieldData[] | null>(null)
-    });
-  }
-
-  private _onRouteData(data: Data) {
-    const response = data as {
-      financial: FinancialDataResolverModel;
-      mb_parsed_params: MarqueBlancheParsedParamsResolverModel;
-    };
-
-    const error = response.financial.error || response.mb_parsed_params?.error;
-
-    if (error) {
-      this.displayError = true;
-      this.error = error;
-      return;
-    }
-
-    const financial = response.financial.data! as FinancialData;
-    const mb_has_params = response.mb_parsed_params?.data?.has_marqueblanche_params;
-    const mb_prefilter = response.mb_parsed_params?.data?.preFilters;
-
-    this.displayError = false;
-    this.themes = financial.themes;
-    this.bops = financial.bop;
-    this.filteredReferentiels = financial.referentiels_programmation;
-    this.annees = financial.annees;
-
-    this.filteredBops = this.bops;
-
-    if (!mb_has_params) return;
-
-    this._logger.debug(`Mode marque blanche actif.`);
-    if (mb_prefilter) {
-      this._logger.debug(`Application des filtres`);
-      this.preFilter = mb_prefilter;
-    }
+  get searchFinish() {
+    return this._searchDataService.searchFinish
   }
 
   ngOnInit(): void {
-    this._setupFilters();
-  }
+    // Subscribe pour l'autocomplete des beneficiaires
+    this.filteredBeneficiaire$ = this.beneficiaireInputChange$.pipe(
+      startWith(''),
+      debounceTime(300),
+      switchMap((value) => {
+        if (!value || value.length <= 3)
+          return of([]);
+        return this._autocompleteBeneficiaires.autocomplete$(value);
+      })
+    );
+    // Subscribe pour l'autocomplete des tags
+    this._filteredTags$ = this.tagsInputChange$.pipe(
+      startWith(''),
+      debounceTime(300),
+      switchMap((value) => {
+        const term = value || '';
+        if (term && term?.length < 1)
+          return of([]);
+        return this._autocompleteTags.autocomplete$(term);
+      })
+    );
 
-  ngAfterViewInit(): void {
-    // récupération des themes dans le resolver
-    this._route.data.subscribe((data: Data) => {
-      setTimeout(() => {
-        this._onRouteData(data);
-      }, 0);
+    // Resolve des référentiels et de la marque blanche
+    const resolvedFinancial = this._route.snapshot.data['financial'] as FinancialDataResolverModel;
+    const resolvedMarqueBlanche = this._route.snapshot.data['mb_parsed_params'] as MarqueBlancheParsedParamsResolverModel;
+    
+    // Erreur lors du resolve ?
+    const error = resolvedFinancial.error || resolvedMarqueBlanche.error;
+    if (error) {
+      // this.displayError = true;
+      // this.error = error;
+      return;
+    }
+    
+    // Sauvegarde des référentiels dans les listes
+    this.themes = resolvedFinancial.data?.themes ?? [];
+    this.bops = resolvedFinancial.data?.bop ?? [];
+    this.filteredBops = this.bops ?? []
+    this.filteredReferentiels = resolvedFinancial.data?.referentiels_programmation ?? [];
+    this.annees = resolvedFinancial.data?.annees ?? [];
+
+    // Création d'un prefilter avec la marque blanche
+    const mb_hasParams = resolvedMarqueBlanche.data?.has_marqueblanche_params;
+    const mb_prefilter = resolvedMarqueBlanche.data?.preFilters;
+    this._preferenceService.currentPrefilter = mb_prefilter ?? null
+
+    if (mb_hasParams) {
+      this._logger.debug(`Mode marque blanche actif.`);
+      if (mb_prefilter) {
+        this._logger.debug(`Application des filtres`);
+        this._preferenceService.currentPrefilter = mb_prefilter;
+        // Mapping du prefilter vers le formulaire
+        this._prefilterMapperService.initService(this.themes, this.filteredBops, this.filteredReferentiels, this.annees)
+        this._searchDataService.searchParams = this._prefilterMapperService.mapToSearchParams(mb_prefilter)
+      }
+    }
+
+    // Subscribe sur les paramètres de la recherche pour lancer la recherche
+    this._searchDataService.searchParams$
+      .pipe(
+        filter((params): params is SearchParameters => !!params),
+        tap(params => {
+          this.formSearch = this._prefilterMapperService.mapSearchParamsToForm(params);
+          this._searchDataService.searchInProgress = true;
+        }),
+        switchMap(params => 
+          this._searchDataService.search(params).pipe(
+            finalize(() => {
+              this._searchDataService.searchFinish = true;
+              this._searchDataService.searchInProgress = false;
+            })
+          )
+        ),
+      )
+      .subscribe({
+        next: (response: LignesResponse) => {
+          console.log("==> Résultat de la recherche");
+          console.log(response);
+          if (response.code == 204 && !response.data) {
+            this._searchDataService.searchResults = []
+            return
+          }
+          if (response.data?.type === 'groupings') {
+            this._searchDataService.searchResults = response.data?.groupings;
+          } else if (response.data?.type === 'lignes_financieres') {
+            this._searchDataService.searchResults = response.data?.lignes.map(r => this._searchDataService.unflatten(r)) ?? [];
+          }
+        },
+        error: (err: unknown) => {
+          console.error("Erreur lors de la recherche :", err);
+        }
+      });
+      
+
+    // On subscribe également le changement des colonnes de tableau ou de grouping sélectionnées
+    combineLatest([
+      this._colonnesService.selectedColonnesTable$,
+      this._colonnesService.selectedColonnesGrouping$
+    ])
+    .subscribe(([tableCols, groupingCols]) => {
+      const currentParams = this._searchDataService.searchParams
+      if (!currentParams)
+        return;
+      this._searchDataService.searchParams = {
+        ...currentParams,
+        colonnes: tableCols.map(c => c.back.map(b => b.code)).flat().filter(c => c !== undefined && c !== null),
+        grouping: groupingCols.map(c => c.grouping?.code).filter(c => c !== undefined && c !== null)
+      };
     });
   }
 
@@ -324,206 +346,38 @@ export class SearchDataComponent implements OnInit, AfterViewInit {
    * Retourne le ValidationErrors benefOrBopRequired
    */
   public get errorsBenefOrBop(): ValidationErrors | null {
-    return this.searchForm.errors != null ? this.searchForm.errors['benefOrBopRequired'] : null;
+    return this.formSearch.errors != null ? this.formSearch.errors['benefOrBopRequired'] : null;
   }
 
-  /**
-   * lance la recherche des lignes d'engagement financière
-   */
-  private _search_subscription?: Subscription;
-  
   public doSearch(): void {
-      this._search_subscription?.unsubscribe();
-  
-      const formValue = this.searchForm.value;
-      this.searchInProgress.next(true);
-  
-      const search_parameters: SearchParameters = {
-        ...SearchParameters_empty,
-        themes: formValue.theme || null,
-        bops: formValue.bops || null,
-        referentiels_programmation: this.selectedReferentiels || null, //this.additional_searchparams?.referentiels_programmation || null,
-        niveau: formValue.niveau || null,
-        locations: formValue.location,
-        years: this.selectedYear,
-        beneficiaires: this.selectedBeneficiaires || null,
-        types_beneficiaires: this.selectedTypesBenef || null, //this.additional_searchparams.types_beneficiaires,
-        tags: formValue.tags?.map((tag) => tag_fullname(tag)) ?? null,
-        domaines_fonctionnels: this.additional_searchparams?.domaines_fonctionnels || null,
-        source_region: this.additional_searchparams?.sources_region || null
-      };
-  
-      this._search_subscription = this._budgetService
-        .search(search_parameters)
-        .pipe(
-          map((resultIncPagination) => {
-  
-            if (resultIncPagination === null) return [];
-            if (resultIncPagination.pagination.hasNext) {
-              throw new Error(`La limite de lignes de résultat est atteinte. Veuillez affiner vos filtres afin d'obtenir un résultat complet.`);
-            }
-            return resultIncPagination.items;
-          }),
-          map((items) => items.map((data) =>  this._budgetService.mapToGeneric(data))),
-          finalize(() => {
-            this.searchInProgress.next(false);
-          })
-        )
-        .subscribe({
-          next: (response: FinancialDataModel[] | Error) => {
-            this.searchFinish = true;
-            this.currentFilter.next(this._buildPreference(formValue as JSONObject));
-            this._searchResult = response as FinancialDataModel[];
-            this.searchResultsEventEmitter.next(this._searchResult);
-          },
-          error: (err: Error) => {
-            this.searchFinish = true;
-            this._searchResult = [];
-            this.currentFilter.next(this._buildPreference(formValue as JSONObject));
-            this.searchResultsEventEmitter.next(this._searchResult);
-            this._alertService.openAlert('error', err, 8);
-            throw err;
-          }
-        });
+    // Récupération des infos du formulaire
+    const formValue = this.formSearch.value;
+    console.log("==> New SearchParameters")
+    console.log(formValue)
+    const search_parameters: SearchParameters = {
+      ...this._searchParamsService.getEmpty(),
+      themes: formValue.themes || undefined,
+      bops: formValue.programmes || undefined,
+      referentiels_programmation: formValue.referentiels_programmation || undefined,
+      niveau: formValue.niveau || undefined,
+      locations: formValue.localisations || undefined,
+      years: formValue.annees || undefined,
+      beneficiaires: formValue.beneficiaires || undefined,
+      types_beneficiaires: formValue.types_beneficiaires || undefined,
+      tags: formValue.tags?.map((tag) => tag_fullname(tag)) ?? undefined,
+      domaines_fonctionnels: formValue.domaines_fonctionnels || undefined,
+      source_region: formValue.sources_region || undefined
+    };
+    // Set des paramètres qui trigger la recherche
+    this._searchDataService.searchParams = search_parameters
   }
 
   /**
-   * Clean les donners undefined, null et vide pour enregistrer en tant que preference
-   * @param object
-   * @returns
+   * Reset du formulaire
    */
-  private _buildPreference(object: JSONObject): Preference {
-    const preference: Preference = { filters: {} };
-    Object.keys(object).forEach((key) => {
-      if (object[key] !== null && object[key] !== undefined && object[key] !== '') {
-        preference.filters[key] = object[key];
-      }
-    });
-    return preference;
-  }
-
   public reset(): void {
-    this.searchFinish = false;
-    this.searchForm.reset();
-  }
-
-  /**
-   * filtrage des données des formulaires pour les autocomplete
-   */
-  private _setupFilters(): void {
-    // Filtre beneficiaires
-    this.filteredBeneficiaire$ = this.beneficiaireInputChange$.pipe(
-      startWith(''),
-      debounceTime(300),
-      switchMap((value) => {
-        if (!value || value.length <= 3) return of([]);
-
-        return this._autocompleteBeneficiaires.autocomplete$(value);
-      })
-    );
-    // Filtre tags
-    this._filteredTags$ = this.tagsInputChange$.pipe(
-      startWith(''),
-      debounceTime(300),
-      switchMap((value) => {
-        const term = value || '';
-        if (term && term?.length < 1)
-          // On recherche lorsque l'on a commencé à taper une valeur
-          return of([]);
-
-        return this._autocompleteTags.autocomplete$(term);
-      })
-    );
-  }
-
-  /** Applique les filtres selectionnés au préalable*/
-  private _applyPrefilters(preFilter?: PreFilters) {
-    if (preFilter == null) return;
-
-    // Set de la zone géographique et du niveau de localisation
-    this.selectedLocation = preFilter.location as unknown as GeoModel[];
-    this.selectedNiveau =
-      this.selectedLocation != null
-        ? (this.selectedLocation.map((gm) => gm.type)[0] as TypeLocalisation)
-        : null;
-
-    if (preFilter.year) {
-      // Ajout aux options du select des années demandées (filtre ou marque blanche)
-      // .filter() pour supprimer d'éventuels doublons
-      this.annees = this.annees
-        .concat(Array.isArray(preFilter.year) ? preFilter.year : [preFilter.year])
-        .sort()
-        .reverse()
-        .filter((annee, index, annees) => annees.indexOf(annee) === index);
-      this.searchForm.controls['year'].setValue(
-        Array.isArray(preFilter.year) ? preFilter.year : [preFilter.year]
-      );
-    }
-
-    if (preFilter.theme) {
-      const preFilterTheme = Array.isArray(preFilter.theme)
-        ? (preFilter.theme as unknown as string[])
-        : ([preFilter.theme] as unknown as string[]);
-      const themeSelected = this.themes?.filter(
-        (theme) => preFilterTheme.findIndex((themeFilter) => themeFilter === theme) !== -1
-      );
-      this.selectedThemes = themeSelected;
-    }
-
-    if (preFilter.referentiels_programmation) {
-      this.filteredReferentiels =
-        preFilter.referentiels_programmation as ReferentielProgrammation[];
-      this.selectedReferentiels = this.filteredReferentiels;
-    }
-
-    if (preFilter.beneficiaires || preFilter.beneficiaire) {
-      if (preFilter.beneficiaires)
-        this.selectedBeneficiaires = preFilter.beneficiaires as BeneficiaireFieldData[];
-      else if (preFilter.beneficiaire)
-        this.selectedBeneficiaires = [preFilter.beneficiaire as BeneficiaireFieldData];
-
-      forkJoin(
-        this.selectedBeneficiaires
-          .map((ref) => ref.siret)
-          .map((siret) => this._autocompleteBeneficiaires.autocompleteSingleBeneficiaire$(siret))
-      ).subscribe((joined) => {
-        this.selectedBeneficiaires = joined;
-      });
-    }
-
-    if (preFilter.tags) {
-      const prefilterTags = preFilter.tags as unknown as TagFieldData[];
-      this.selectedTags = prefilterTags;
-    }
-
-    // Application du bops
-    // Il faut rechercher dans les filtres "this.filteredBop"
-    if (preFilter.bops) {
-      const prefilterBops = preFilter.bops as unknown as BopModel[];
-      const bopSelect = this.filteredBops?.filter(
-        (bop) => prefilterBops.findIndex((bopFilter) => bop.code === bopFilter.code) !== -1
-      );
-      this.selectedBops = bopSelect ?? null;
-    }
-
-    if (preFilter.types_beneficiaires) {
-      this.selectedTypesBenef = preFilter.types_beneficiaires || null;
-    }
-
-    /* Paramètres additionnels qui n'apparaissent pas dans le formulaire de recherche */
-    let additional_searchparams: AdditionalSearchParameters = empty_additional_searchparams;
-
-    const domaines_fonctionnels = preFilter?.domaines_fonctionnels;
-    if (domaines_fonctionnels)
-      additional_searchparams = { ...additional_searchparams, domaines_fonctionnels };
-
-    const sources_region = preFilter?.sources_region;
-    if (sources_region) additional_searchparams = { ...additional_searchparams, sources_region };
-
-    this.additional_searchparams = additional_searchparams;
-
-    // lance la recherche pour afficher les resultats
-    this.doSearch();
+    this._searchDataService.searchInProgress = false;
+    this.formSearch.reset();
   }
 
 }

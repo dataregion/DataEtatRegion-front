@@ -2,7 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { ReferentielProgrammation } from '@models/refs/referentiel_programmation.model';
-import { ReferentielsService } from '@services/referentiels.service';
+import { ReferentielsService } from '@services/http/referentiels.service';
 
 @Injectable({
   providedIn: 'root'

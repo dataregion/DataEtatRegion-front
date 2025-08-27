@@ -3,6 +3,13 @@
   width: 100%;
 }
 
+.box {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  flex-direction: row;
+}
+
 .dsfrx-dropdown {
   container-type: normal !important;
   min-inline-size: 100%;       /* at least as wide as the select */

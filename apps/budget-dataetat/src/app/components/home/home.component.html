@@ -1,13 +1,13 @@
 @if (!grid_fullscreen) {
-  <budget-search-data 
-    [preFilter]="preFilter"
-    (currentFilter)="newFilter = $event"
-    (searchResultsEventEmitter)="searchData = $event" />
+  <budget-search-data />
 }
 
-<div class="main-content overlay-container" [class.no-content]="searchData.length === 0">
-  @if (searchData.length === 0) {
+<div class="main-content overlay-container" [class.no-content]="!searchInProgress && searchResults.length === 0">
+  @if (searchResults.length === 0) {
     <div><i>Aucune donnée ne correspond à vos critères de recherche.</i></div>
+  }
+  @else if (searchInProgress) {
+    <div><i>Recherche en cours ...</i></div>
   }
   @else {
     <budget-table-toolbar [grouped]="grouped"></budget-table-toolbar>

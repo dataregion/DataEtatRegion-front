@@ -1,13 +1,9 @@
-import { inject, Injectable, OnInit } from '@angular/core';
-import { ActivatedRoute, Data } from '@angular/router';
-import { ColonnesResolved, ColonnesResolvedModel } from '@models/financial/colonnes.models';
+import { Injectable } from '@angular/core';
 import { LocalisationInterministerielle } from '@models/financial/common.models';
 import { FinancialDataModel } from '@models/financial/financial-data.models';
-import { Colonne, EnrichedFlattenFinancialLines, EnrichedFlattenFinancialLines1, EnrichedFlattenFinancialLines2 } from 'apps/clients/v3/financial-data';
+import { Colonne, EnrichedFlattenFinancialLines } from 'apps/clients/v3/financial-data';
 import { JSONObject } from 'apps/common-lib/src/lib/models/jsonobject';
 import { Optional } from 'apps/common-lib/src/lib/utilities/optional.type';
-import { BehaviorSubject } from 'rxjs';
-import { ColonnesService } from './colonnes.service';
 
 
 export interface ColonneFromPreference {
@@ -26,7 +22,6 @@ export interface ColonneTableau<T> {
   format?: Format;
   render?: (row: T) => string;
 }
-
 
 @Injectable({ providedIn: 'root' })
 export class ColonnesMapperService {

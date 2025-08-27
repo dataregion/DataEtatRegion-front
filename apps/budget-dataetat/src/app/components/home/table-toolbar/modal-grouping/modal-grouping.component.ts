@@ -1,18 +1,9 @@
-import { CommonModule } from '@angular/common';
-import { Component, inject, input, Input, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
-
-import { GridInFullscreenStateService } from 'apps/common-lib/src/lib/services/grid-in-fullscreen-state.service';
-import {
-  TableData,
-  VirtualGroup
-} from 'apps/grouping-table/src/lib/components/grouping-table/group-utils';
+import { Component, inject, OnInit, ViewEncapsulation } from '@angular/core';
 import { MaterialModule } from "apps/common-lib/src/public-api";
 import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
-import { MatSelectChange } from '@angular/material/select';
-import { ColonnesMapperService, ColonneTableau } from '@services/colonnes-mapper.service';
+import { ColonneTableau } from '@services/colonnes-mapper.service';
 import { ColonnesService } from '@services/colonnes.service';
 import { FinancialDataModel } from '@models/financial/financial-data.models';
-import { Colonne } from 'apps/clients/v3/financial-data';
 import { FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 
 
@@ -47,8 +38,8 @@ export class ModalGroupingComponent implements OnInit {
 
   ngOnInit() {
     // Récupération des colonnes du tableau, les sélectionnées mappées sur les colonnes du back
-    this.colonnes = this._colonnesService.getAllColonnesGrouping()
-    this.selectedColonnes = this._colonnesService.getSelectedColonnesGrouping()
+    this.colonnes = this._colonnesService.allColonnesGrouping
+    this.selectedColonnes = this._colonnesService.selectedColonnesGrouping
     this.remainingColonnes = this.calculateRemainingColumns();
 
     // Build du formulaire
@@ -107,7 +98,7 @@ export class ModalGroupingComponent implements OnInit {
     const selectedNames = new Set(
       formArray.controls.map(group => group.controls.name.value)
     );
-    this._colonnesService.setSelectedColonnesGrouping(this.colonnes.filter(c => selectedNames.has(c.name)));
+    this._colonnesService.selectedColonnesGrouping = this.colonnes.filter(c => selectedNames.has(c.name));
   }
 
 }

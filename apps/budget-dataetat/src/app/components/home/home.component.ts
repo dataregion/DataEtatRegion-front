@@ -21,11 +21,15 @@ import { QueryParam } from 'apps/common-lib/src/lib/models/marqueblanche/query-p
 import { PreferenceUsersHttpService } from 'apps/preference-users/src/public-api';
 import { AlertService } from 'apps/common-lib/src/public-api';
 import { FinancialDataModel } from '@models/financial/financial-data.models';
-import { AuditHttpService } from '@services/audit.service';
+import { AuditHttpService } from '@services/http/audit.service';
 import { MarqueBlancheParsedParamsResolverModel } from '../../resolvers/marqueblanche-parsed-params.resolver';
-import { PreferenceService } from 'apps/preference-users/src/lib/services/preference.service';
+import { PreferenceService } from '@services/preference.service';
 import { Colonne } from 'apps/clients/v3/financial-data';
 import { ColonneFromPreference, ColonnesMapperService, ColonneTableau } from '@services/colonnes-mapper.service';
+import { SearchResults, SearchDataService } from '@services/search-data.service';
+import { PrefilterMapperService } from './search-data/prefilter-mapper.services';
+import { ReferentielProgrammation } from '@models/refs/referentiel_programmation.model';
+import { Bop } from '@models/search/bop.model';
 
 @Component({
   selector: 'budget-home',
@@ -43,30 +47,29 @@ export class HomeComponent implements OnInit {
   private _colonnesMapperService = inject(ColonnesMapperService);
   private _httpPreferenceService = inject(PreferenceUsersHttpService);
   private _preferenceService = inject(PreferenceService);
+  private _prefilterMapperService = inject(PrefilterMapperService);
   private _gridFullscreen = inject(GridInFullscreenStateService);
+  private _searchDataService = inject(SearchDataService);
 
-  newFilter?: Preference;
-  preFilter?: PreFilters;
-  
   lastImportDate: string | null = null;
-
-  financial?: FinancialData;
-  searchData: FinancialDataModel[] = []
 
   get grid_fullscreen() {
     return this._gridFullscreen.fullscreen;
   }
 
   get grouped(): boolean {
-    return this._colonnesService.getGrouped()
+    return this._colonnesService.grouped
+  }
+  get searchInProgress() {
+    return this._searchDataService.searchInProgress
+  }
+  get searchResults(): SearchResults {
+    return this._searchDataService.searchResults;
   }
 
   ngOnInit() {
-    // Resolve des données pour le formulaire
-    const resolved = this._route.snapshot.data['financial'] as FinancialDataResolverModel;
-    this.financial = resolved?.data;
-
     // Resolve des colonnes (grouping et tableau)
+    const resolvedFinancial = this._route.snapshot.data['financial'] as FinancialDataResolverModel;
     const resolvedColonnes = this._route.snapshot.data['colonnes'] as ColonnesResolvedModel;
     // On init le service de mapper après avoir resolve et set
     this._colonnesMapperService.initService(
@@ -74,8 +77,8 @@ export class HomeComponent implements OnInit {
       resolvedColonnes?.data?.colonnesGrouping ?? []
     )
     // Sauvegarde des colonnes après init
-    this._colonnesService.setAllColonnesTable(this._colonnesMapperService.colonnes)
-    this._colonnesService.setAllColonnesGrouping(this._colonnesMapperService.colonnes.filter(c => c.grouping !== undefined))
+    this._colonnesService.allColonnesTable = this._colonnesMapperService.colonnes
+    this._colonnesService.allColonnesGrouping = this._colonnesMapperService.colonnes.filter(c => c.grouping !== undefined)
 
     // Resolve des paramètres de marque blanche
     const resolvedMarqueBlanche = this._route.snapshot.data['mb_parsed_params'] as MarqueBlancheParsedParamsResolverModel;
@@ -86,35 +89,36 @@ export class HomeComponent implements OnInit {
       this._gridFullscreen.fullscreen = !this.grid_fullscreen;
     if (mb_group_by && mb_group_by?.length > 0) {
       const mapped: ColonneTableau<FinancialDataModel>[] = this._colonnesMapperService.mapNamesFromPreferences(mb_group_by as ColonneFromPreference[])
-      this._colonnesService.setSelectedColonnesGrouping(mapped);
+      this._colonnesService.selectedColonnesGrouping = mapped;
     }
-
 
     // Aplication d'une préférence
     this._route.queryParams.subscribe((param) => {
       // Si une recherche doit être appliquée
       if (param[QueryParam.Uuid]) {
         this._httpPreferenceService.getPreference(param[QueryParam.Uuid]).subscribe((preference) => {
-          // Sauvegarde dans un service
-          this._preferenceService.setCurrentPreference(preference)
-          this.preFilter = preference.filters;
-
           // Application des préférences de grouping des colonnes
           if (preference.options && preference.options['grouping']) {
             const mapped: ColonneTableau<FinancialDataModel>[] = this._colonnesMapperService.mapNamesFromPreferences(preference.options['grouping'] as ColonneFromPreference[])
-            this._colonnesService.setSelectedColonnesGrouping(mapped);
+            this._colonnesService.selectedColonnesGrouping = mapped;
           }
-
           // Application des préférences d'ordre et d'affichage des colonnes
           if (preference.options && preference.options['displayOrder']) {
             const mapped: ColonneTableau<FinancialDataModel>[] = this._colonnesMapperService.mapLabelsFromPreferences(preference.options['displayOrder'] as ColonneFromPreference[])
-            this._colonnesService.setSelectedColonnesTable(mapped);
+            this._colonnesService.selectedColonnesTable = mapped;
           }
 
+          // Mapping des filtres de la préférences dans searchParams
           this._alertService.openInfo(`Application du filtre ${preference.name}`);
+          const themes: string[] = resolvedFinancial.data?.themes ?? [];
+          const programmes: Bop[] = resolvedFinancial.data?.bop ?? [];
+          const referentiels: ReferentielProgrammation[] = resolvedFinancial.data?.referentiels_programmation ?? [];
+          const annees: number[] = resolvedFinancial.data?.annees ?? [];
+          this._prefilterMapperService.initService(themes, programmes, referentiels, annees)
+          this._searchDataService.searchParams = this._prefilterMapperService.mapToSearchParams(preference.filters as PreFilters)
         });
-      } else {
-          this._preferenceService.setCurrentPreference(null)
+      // } else {
+          // this._preferenceService.currentPreference = null
       }
     });
 

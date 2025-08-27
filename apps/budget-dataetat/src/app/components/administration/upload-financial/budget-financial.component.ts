@@ -4,8 +4,8 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { AlertService, SessionService } from 'apps/common-lib/src/public-api';
 import { BehaviorSubject, catchError, finalize, forkJoin, of, Subscription } from 'rxjs';
 import { AuditUpdateData, DataType } from '../../../models/audit/audit-update-data.models';
-import { AuditHttpService } from '../../../services/audit.service';
-import { BudgetDataHttpService } from '../../../services/budget.service';
+import { AuditHttpService } from '../../../services/http/audit.service';
+import { BudgetDataHttpService } from '../../../services/http/budget.service';
 import { ConfirmDialogComponent } from '../../confirm-dialog/confirm-dialog.component';
 import { DisplayDateComponent } from 'apps/common-lib/src/lib/components/display-date/display-date.component';
 import { MatTableModule } from '@angular/material/table';
@@ -22,7 +22,8 @@ import { MatButtonModule } from '@angular/material/button';
   imports: [MatDialogModule, DisplayDateComponent, MatButtonModule, MatTableModule, MatCardModule, MatIconModule, MatSelectModule, FormsModule]
 })
 export class BudgetFinancialComponent implements OnInit {
-  private _service = inject(BudgetDataHttpService);
+
+  private _budgetService = inject(BudgetDataHttpService);
   private _session = inject(SessionService);
   private _auditService = inject(AuditHttpService);
   private _alertService = inject(AlertService);
@@ -99,7 +100,7 @@ export class BudgetFinancialComponent implements OnInit {
   uploadReferentiel() {
     if (this.fileReferentiel !== null) {
       this.uploadInProgress.next(true);
-      this._service
+      this._budgetService
         .loadReferentielFile(this.fileReferentiel)
         .pipe(
           finalize(() => {
@@ -125,7 +126,7 @@ export class BudgetFinancialComponent implements OnInit {
   private _doLoadFiles() {
     if (this.fileFinancialAe !== null && this.fileFinancialCp !== null && this.yearSelected) {
       this.uploadInProgress.next(true);
-      this._service
+      this._budgetService
         .loadFinancialBudget(
           this.fileFinancialAe,
           this.fileFinancialCp,

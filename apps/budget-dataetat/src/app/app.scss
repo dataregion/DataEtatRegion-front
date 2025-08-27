@@ -1,21 +1,16 @@
 :host {
-  display: block;              /* no need for grid if you want main scroll */
-  min-height: 100dvh;
-  width: 100%;
-  background-color: white;
+  display: flex;
+  flex-direction: column;
+  min-height: 120dvh; // 120 car zoom: 0.8
+  height: 100%;
   zoom: 0.8;
+  // overflow: hidden; /* prevent body from scrolling */
 }
-
-.fr-header,
-.fr-footer {
-  position: sticky;
-  z-index: 10;
-  background: white;
-}
-
-.fr-header { top: 0; }
-.fr-footer { bottom: 0; }
 
 .site-main {
+  margin: 0px 15px;
   padding: 5px 15px;
+  flex: 1 0 auto;  /* fills remaining space */
+  min-height: 0;   /* important to allow shrinking */
+  overflow: auto;    /* this becomes the scroll container */
 }

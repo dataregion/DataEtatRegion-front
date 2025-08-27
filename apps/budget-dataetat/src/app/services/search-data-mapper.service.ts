@@ -12,41 +12,30 @@ import {
 import { FinancialDataModel } from '@models/financial/financial-data.models';
 import { ReferentielProgrammation } from '@models/refs/referentiel_programmation.model';
 import { Tag, tag_fullname } from '@models/refs/tag.model';
-import { EnrichedFlattenFinancialLinesSchema, TagsSchema } from 'apps/clients/budget';
+import { TagsSchema } from 'apps/clients/budget';
 import { Optional } from 'apps/common-lib/src/lib/utilities/optional.type';
 import { JSONObject } from 'apps/common-lib/src/lib/models/jsonobject';
 import { inject, Injectable } from '@angular/core';
 import { ColonnesMapperService } from './colonnes-mapper.service';
+import { EnrichedFlattenFinancialLines2, Tags } from 'apps/clients/v3/financial-data';
 
 @Injectable({
   providedIn: 'root'
 })
-export class BudgetMapper {
+export class SearchDataMapper {
 
   private _colonnesMapperService: ColonnesMapperService = inject(ColonnesMapperService)
 
-  _sourceFinancialDataFromEnrichedFlattenBudgetSource(
-    source?: EnrichedFlattenFinancialLinesSchema.SourceEnum
-  ): SourceFinancialData {
-    switch (source) {
-      case 'FINANCIAL_DATA_AE':
-        return SourceFinancialData.FINANCIAL_AE;
-      case 'FINANCIAL_DATA_CP':
-        return SourceFinancialData.FINANCIAL_CP;
-      case 'ADEME':
-        return SourceFinancialData.ADEME;
-
-      default:
-        throw new Error(`${source} ne représente pas un aggregat racine (ie: ae ou ademe...)`);
-    }
-  }
-
-  /** Mappe une réponse API vers un modèle générique */
-  map(object: EnrichedFlattenFinancialLinesSchema): FinancialDataModel {
+  /**
+   * Fonction de mapping structuré
+   * @param object 
+   * @returns 
+   */
+  map(object: EnrichedFlattenFinancialLines2): FinancialDataModel {
     const that = this
     return {
       id: object.id!,
-      source: this._sourceFinancialDataFromEnrichedFlattenBudgetSource(object.source),
+      source: this._sourceFinancialDataFromEnrichedFlattenBudgetSource(object.source ?? undefined),
       n_ej: object.n_ej,
       n_poste_ej: object.n_poste_ej,
       montant_ae: object.montant_ae,
@@ -97,14 +86,30 @@ export class BudgetMapper {
           [that._colonnesMapperService.getColonneByKey("QPV").label]: this.siret ? this.siret.code_qpv + " - " + this.siret.label_qpv : '',
           [that._colonnesMapperService.getColonneByKey("DATE_DERNIER_PAIEMENT").label]: this.date_cp ?? '',
           [that._colonnesMapperService.getColonneByKey("DATE_CREATION_EJ").label]: this.date_replication ?? '',
-          [that._colonnesMapperService.getColonneByKey("ANNEE_ENGAGEMENT").label]: this.annee,
+          [that._colonnesMapperService.getColonneByKey("ANNEE_ENGAGEMENT").label]: this.annee ?? '',
           [that._colonnesMapperService.getColonneByKey("TAGS").label]: this.tags?.map((tag) => tag_fullname(tag)).join(' ')
         };
       }
     };
   }
 
-  private _mapBeneficiaireSiret(object: EnrichedFlattenFinancialLinesSchema): Optional<Siret> {
+  private _sourceFinancialDataFromEnrichedFlattenBudgetSource(
+    source?: EnrichedFlattenFinancialLines2.SourceEnum
+  ): SourceFinancialData {
+    switch (source) {
+      case 'FINANCIAL_DATA_AE':
+        return SourceFinancialData.FINANCIAL_AE;
+      case 'FINANCIAL_DATA_CP':
+        return SourceFinancialData.FINANCIAL_CP;
+      case 'ADEME':
+        return SourceFinancialData.ADEME;
+
+      default:
+        throw new Error(`${source} ne représente pas un aggregat racine (ie: ae ou ademe...)`);
+    }
+  }
+
+  private _mapBeneficiaireSiret(object: EnrichedFlattenFinancialLines2): Optional<Siret> {
     if (!object.beneficiaire_code) return null;
 
     return {
@@ -117,7 +122,7 @@ export class BudgetMapper {
   }
 
   private _mapLocInterministerielle(
-    object: EnrichedFlattenFinancialLinesSchema
+    object: EnrichedFlattenFinancialLines2
   ): Optional<LocalisationInterministerielle> {
     if (!object.localisationInterministerielle_code) return null;
 
@@ -154,7 +159,7 @@ export class BudgetMapper {
     };
   }
 
-  private _mapCentreCouts(object: EnrichedFlattenFinancialLinesSchema): Optional<CentreCouts> {
+  private _mapCentreCouts(object: EnrichedFlattenFinancialLines2): Optional<CentreCouts> {
     return {
       code: object.centreCouts_code ? object.centreCouts_code : '',
       label: object.centreCouts_label!,
@@ -163,7 +168,7 @@ export class BudgetMapper {
   }
 
   private _mapGroupeMarchandise(
-    object: EnrichedFlattenFinancialLinesSchema
+    object: EnrichedFlattenFinancialLines2
   ): Optional<GroupeMarchandise> {
     if (!object.groupeMarchandise_code) return null;
     return {
@@ -173,7 +178,7 @@ export class BudgetMapper {
   }
 
   private _mapRefProg(
-    object: EnrichedFlattenFinancialLinesSchema
+    object: EnrichedFlattenFinancialLines2
   ): Optional<ReferentielProgrammation> {
     return {
       code: object.referentielProgrammation_code || '',
@@ -181,7 +186,7 @@ export class BudgetMapper {
     };
   }
 
-  private _mapProgramme(object: EnrichedFlattenFinancialLinesSchema): Optional<Programme> {
+  private _mapProgramme(object: EnrichedFlattenFinancialLines2): Optional<Programme> {
     if (!object.programme_code) return null;
     return {
       code: object.programme_code,
@@ -191,7 +196,7 @@ export class BudgetMapper {
   }
 
   private _mapDomaineFonctionnel(
-    object: EnrichedFlattenFinancialLinesSchema
+    object: EnrichedFlattenFinancialLines2
   ): Optional<DomaineFonctionnel> {
     return {
       code: object.domaineFonctionnel_code || '',
@@ -200,13 +205,13 @@ export class BudgetMapper {
   }
 
   _mapBeneficiaireCategorieJuridique(
-    object: EnrichedFlattenFinancialLinesSchema
+    object: EnrichedFlattenFinancialLines2
   ): TypeCategorieJuridique {
     return object.beneficiaire_categorieJuridique_type as TypeCategorieJuridique;
   }
 
-  _mapTags(object: EnrichedFlattenFinancialLinesSchema): Tag[] {
-    const _tags_schema: TagsSchema[] = object.tags ?? [];
+  _mapTags(object: EnrichedFlattenFinancialLines2): Tag[] {
+    const _tags_schema: Tags[] = object.tags ?? [];
     const tags: Tag[] = [];
     for (const tag_schema of _tags_schema) {
       const _tag_schema = tag_schema as TagsSchema;
@@ -223,7 +228,7 @@ export class BudgetMapper {
     return tags;
   }
 
-  _mapBeneficiaireCommune(object: EnrichedFlattenFinancialLinesSchema): Optional<Commune> {
+  _mapBeneficiaireCommune(object: EnrichedFlattenFinancialLines2): Optional<Commune> {
     if (!object.beneficiaire_commune_code) return null;
 
     let arrondissement = null;

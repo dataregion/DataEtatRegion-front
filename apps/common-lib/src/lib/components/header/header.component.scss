@@ -1,3 +1,10 @@
+:host {
+  flex: 0 0 auto;
+  position: sticky;
+  top: 0;
+  z-index: 500;
+}
+
 .fr-header__service-title {
   display: flex;
   align-items: center;
