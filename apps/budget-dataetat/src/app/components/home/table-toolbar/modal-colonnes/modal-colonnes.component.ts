@@ -1,8 +1,7 @@
-import { Component, inject, Input, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, inject, OnInit, ViewEncapsulation } from '@angular/core';
 import { MaterialModule } from "apps/common-lib/src/public-api";
 import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
 import { ColonnesService } from '@services/colonnes.service';
-import { Colonne } from 'apps/clients/v3/financial-data';
 import { ReactiveFormsModule, FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { FinancialDataModel } from '@models/financial/financial-data.models';
 import { ColonnesMapperService, ColonneTableau } from '@services/colonnes-mapper.service';
@@ -40,8 +39,8 @@ export class ModalColonnesComponent implements OnInit {
 
   ngOnInit() {
     // Récupération des colonnes du tableau, les sélectionnées mappées sur les colonnes du back
-    this.colonnes = this._colonnesService.getAllColonnesTable()
-    this.selectedColonnes = this._colonnesService.getSelectedColonnesTable()
+    this.colonnes = this._colonnesService.allColonnesTable
+    this.selectedColonnes = this._colonnesService.selectedColonnesTable
     
     // On ordonne les colonnes pour mettre les selected en haut
     const namesSelected = new Set(this.selectedColonnes.map(c => c.name));
@@ -98,7 +97,7 @@ export class ModalColonnesComponent implements OnInit {
     const selectedNames = new Set(
       formArray.controls.filter(group => group.controls.selected.value).map(group => group.controls.name.value)
     );
-    this._colonnesService.setSelectedColonnesTable(this.colonnes.filter(c => selectedNames.has(c.name)));
+    this._colonnesService.selectedColonnesTable = this.colonnes.filter(c => selectedNames.has(c.name));
   }
 
 }

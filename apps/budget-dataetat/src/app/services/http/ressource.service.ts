@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { SettingsBudgetService } from '../environments/settings-budget.service';
+import { SettingsBudgetService } from '../../environments/settings-budget.service';
 import { Ressources } from 'apps/common-lib/src/public-api';
 
 @Injectable({

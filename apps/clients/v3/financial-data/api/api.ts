@@ -1,10 +1,10 @@
 export * from './healthcheck.service';
 import { HealthcheckService } from './healthcheck.service';
 export * from './healthcheck.serviceInterface';
-export * from './lignesFinancires.service';
-import { LignesFinanciresService } from './lignesFinancires.service';
-export * from './lignesFinancires.serviceInterface';
+export * from './lignesFinancieres.service';
+import { LignesFinancieresService } from './lignesFinancieres.service';
+export * from './lignesFinancieres.serviceInterface';
 export * from './listeDesColonnes.service';
 import { ListeDesColonnesService } from './listeDesColonnes.service';
 export * from './listeDesColonnes.serviceInterface';
-export const APIS = [HealthcheckService, LignesFinanciresService, ListeDesColonnesService];
+export const APIS = [HealthcheckService, LignesFinancieresService, ListeDesColonnesService];

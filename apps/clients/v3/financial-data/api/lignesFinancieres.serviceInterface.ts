@@ -14,14 +14,14 @@ import { Observable }                                        from 'rxjs';
 import { APIError } from '../model/models';
 import { APISuccessAnnotatedEnrichedFlattenFinancialLinesPydanticFromMarshmallowSchemaAnnotationTSchema } from '../model/models';
 import { APISuccessListInt } from '../model/models';
-import { APISuccessUnionLignesFinancieresGroupingsNoneType } from '../model/models';
+import { LignesResponse } from '../model/models';
 
 
 import { financialDataV3Configuration }                                     from '../configuration';
 
 
 
-export interface LignesFinanciresServiceInterface {
+export interface LignesFinancieresServiceInterface {
     defaultHeaders: HttpHeaders;
     configuration: financialDataV3Configuration;
 
@@ -88,6 +88,6 @@ export interface LignesFinanciresServiceInterface {
      * @param search 
      * @param fieldsSearch 
      */
-    getLignesFinancieresLignesGet(sourceRegion?: string, dataSource?: string, source?: string, nEj?: string, codeProgramme?: string, niveauGeo?: string, codeGeo?: string, refQpv?: 2015 | 2024, codeQpv?: string, theme?: string, beneficiaireCode?: string, beneficiaireCategorieJuridiqueType?: string, annee?: string, centresCouts?: string, domaineFonctionnel?: string, referentielProgrammation?: string, tags?: string, grouping?: string, grouped?: string, colonnes?: string, page?: number, pageSize?: number, sortBy?: string, sortOrder?: 'asc' | 'desc', search?: string, fieldsSearch?: string, extraHttpRequestParams?: any): Observable<APISuccessUnionLignesFinancieresGroupingsNoneType>;
+    getLignesFinancieresLignesGet(sourceRegion?: string, dataSource?: string, source?: string, nEj?: string, codeProgramme?: string, niveauGeo?: string, codeGeo?: string, refQpv?: 2015 | 2024, codeQpv?: string, theme?: string, beneficiaireCode?: string, beneficiaireCategorieJuridiqueType?: string, annee?: string, centresCouts?: string, domaineFonctionnel?: string, referentielProgrammation?: string, tags?: string, grouping?: string, grouped?: string, colonnes?: string, page?: number, pageSize?: number, sortBy?: string, sortOrder?: 'asc' | 'desc', search?: string, fieldsSearch?: string, extraHttpRequestParams?: any): Observable<LignesResponse>;
 
 }

@@ -16,7 +16,7 @@
   }
 
   @if(ressources(); as r) {
-  <li ressources>
+  <li>
     <button [matMenuTriggerFor]="ressourcesMenu" class="fr-btn fr-btn--tertiary-no-outline fr-icon-book-2-line"
       id="ressources" matTooltip="Ressources">Ressources
     </button>
@@ -67,7 +67,7 @@
 </div>
 }
 
-<div class="fr-container--fluid site-main" style="margin: 0px 15px;">
+<div class="fr-container--fluid site-main">
   <div class="fr-grid-row">
     <div class="fr-col-12">
       <router-outlet class="page-content-outlet" />

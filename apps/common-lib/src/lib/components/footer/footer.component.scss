@@ -3,8 +3,15 @@ a[href]:active, a[href]:hover {
   background-image: none;
 }
 
+:host {
+  flex: 0 0 auto;
+  position: sticky;
+  bottom: 0;
+  z-index: 500;
+}
+
 .fr-footer {
-  box-shadow: none;
+  box-shadow: 0px -5px 5px 0px #eee;
   padding-top: 0.5rem;
   background-color: #fff;
 

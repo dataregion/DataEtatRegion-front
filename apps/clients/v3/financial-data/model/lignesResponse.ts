@@ -11,7 +11,7 @@ import { PaginationMeta } from './paginationMeta';
 import { Data } from './data';
 
 
-export interface APISuccessUnionLignesFinancieresGroupingsNoneType { 
+export interface LignesResponse { 
     code: number;
     success?: boolean | null;
     timestamp?: string;

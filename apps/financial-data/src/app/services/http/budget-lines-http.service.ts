@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { SourceFinancialData } from '@models/financial/common.models';
-import { FinancialCp, FinancialDataModel } from '@models/financial/financial-data.models';
+import { SourceFinancialData } from '../../models/financial/common.models';
+import { FinancialCp, FinancialDataModel } from '../../models/financial/financial-data.models';
 import { BudgetService as GeneratedBudgetApiService } from 'apps/clients/budget';
 import { EnrichedFlattenFinancialLinesSchema } from 'apps/clients/budget/model/enrichedFlattenFinancialLinesSchema';
 import { SETTINGS } from 'apps/common-lib/src/lib/environments/settings.http.service';

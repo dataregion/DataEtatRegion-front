@@ -21,17 +21,17 @@ import {
 import { GroupingConfigDialogComponent } from 'apps/grouping-table/src/lib/components/grouping-config-dialog/grouping-config-dialog.component';
 import { StructureColumnsDialogComponent } from 'apps/grouping-table/src/lib/components/structure-columns-dialog/structure-columns-dialog.component';
 import { InformationsSupplementairesDialogComponent } from '../../modules/informations-supplementaires/informations-supplementaires-dialog/informations-supplementaires-dialog.component';
-import { AuditHttpService } from '@services/audit.service';
+import { AuditHttpService } from '../../services/http/audit.service';
 import { MarqueBlancheParsedParamsResolverModel } from '../../resolvers/marqueblanche-parsed-params.resolver';
 import { delay } from 'rxjs';
-import { PreFilters } from '@models/search/prefilters.model';
+import { PreFilters } from '../../models/search/prefilters.model';
 import {
   colonnes,
   FinancialColumnMetaDataDef,
   groupingOrder
 } from '../../models/tableau/colonnes.model';
 import { QueryParam } from 'apps/common-lib/src/lib/models/marqueblanche/query-params.enum';
-import { Tag } from '@models/refs/tag.model';
+import { Tag } from '../../models/refs/tag.model';
 import { SearchDataComponent } from 'apps/financial-data/src/app/components/search-data/search-data.component';
 import { BudgetService } from '../../services/budget.service';
 import { DatePipe } from '@angular/common';

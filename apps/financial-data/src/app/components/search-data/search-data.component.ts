@@ -12,12 +12,12 @@ import {
   Subscription,
   switchMap
 } from 'rxjs';
-import { BopModel } from '@models/refs/bop.models';
+import { BopModel } from '../../models/refs/bop.models';
 import {
   FinancialData,
   FinancialDataResolverModel
-} from '@models/financial/financial-data-resolvers.models';
-import { FinancialDataModel } from '@models/financial/financial-data.models';
+} from '../../models/financial/financial-data-resolvers.models';
+import { FinancialDataModel } from '../../models/financial/financial-data.models';
 import { Preference } from 'apps/preference-users/src/lib/models/preference.models';
 import { JSONObject } from 'apps/common-lib/src/lib/models/jsonobject';
 import { AlertService, GeoModel, TypeLocalisation } from 'apps/common-lib/src/public-api';
@@ -34,18 +34,18 @@ import { BeneficiaireFieldData } from './beneficiaire-field-data.model';
 import { SearchForm } from './search-form.interface';
 import { AutocompleteBeneficiaireService } from './autocomplete-beneficiaire.service';
 import { SelectedData } from 'apps/common-lib/src/lib/components/advanced-chips-multiselect/advanced-chips-multiselect.component';
-import { Beneficiaire } from '@models/search/beneficiaire.model';
+import { Beneficiaire } from '../../models/search/beneficiaire.model';
 import { TagFieldData } from './tags-field-data.model';
 import { AutocompleteTagsService } from './autocomplete-tags.service';
-import { TypeCategorieJuridique } from '@models/financial/common.models';
-import { tag_fullname } from '@models/refs/tag.model';
+import { TypeCategorieJuridique } from '../../models/financial/common.models';
+import { tag_fullname } from '../../models/refs/tag.model';
 import { AutocompleteRefProgrammationService } from './autocomplete-ref-programmation.service';
 import {
   OtherTypeCategorieJuridique,
   SearchParameters,
   SearchParameters_empty,
   SearchTypeCategorieJuridique
-} from '@services/interface-data.service';
+} from '../../services/interface-data.service';
 import { LoggerService } from 'apps/common-lib/src/lib/services/logger.service';
 
 @Component({

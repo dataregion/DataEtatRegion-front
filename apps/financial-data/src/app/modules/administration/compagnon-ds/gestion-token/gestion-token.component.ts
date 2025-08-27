@@ -5,7 +5,7 @@ import {
   EditTokenDialogType
 } from './edit-token-dialog/edit-token-dialog.component';
 import { CompagnonDSService } from '../compagnon-ds.service';
-import { Token } from '@models/demarche_simplifie/demarche.model';
+import { Token } from '../../../../models/demarche_simplifie/demarche.model';
 
 @Component({
     selector: 'financial-gestion-token',

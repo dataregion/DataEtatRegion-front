@@ -114,7 +114,7 @@ export class BudgetLineHttpMapper {
           [ColonneLibelles.CODE_QPV]: this.siret?.code_qpv ?? '',
           [ColonneLibelles.DATE_DERNIER_PAIEMENT]: this.date_cp ?? '',
           [ColonneLibelles.DATE_CREATION_EJ]: this.date_replication ?? '',
-          [ColonneLibelles.ANNEE_ENGAGEMENT]: this.annee,
+          [ColonneLibelles.ANNEE_ENGAGEMENT]: this.annee ?? '',
           [ColonneLibelles.TAGS]: this.tags?.map((tag) => tag_fullname(tag)).join(' ')
         };
       }

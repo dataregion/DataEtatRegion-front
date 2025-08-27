@@ -6,7 +6,7 @@ import { SettingsBudgetService } from './environments/settings-budget.service';
 import { MatProgressBar } from '@angular/material/progress-bar';
 import { MatMenuModule } from '@angular/material/menu';
 import { CommonModule } from '@angular/common';
-import { ResourceService } from './services/ressource.service';
+import { ResourceService } from './services/http/ressource.service';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { HeaderComponent } from 'apps/common-lib/src/lib/components/header/header.component';
 import { profiles_required_for_demarches, profiles_required_for_tags_page, profiles_required_for_upload_financial_page } from './app.routes';

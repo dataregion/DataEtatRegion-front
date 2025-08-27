@@ -6,8 +6,8 @@ api.module.ts
 api/api.ts
 api/healthcheck.service.ts
 api/healthcheck.serviceInterface.ts
-api/lignesFinancires.service.ts
-api/lignesFinancires.serviceInterface.ts
+api/lignesFinancieres.service.ts
+api/lignesFinancieres.serviceInterface.ts
 api/listeDesColonnes.service.ts
 api/listeDesColonnes.serviceInterface.ts
 configuration.ts
@@ -18,7 +18,6 @@ model/aPIError.ts
 model/aPISuccessAnnotatedEnrichedFlattenFinancialLinesPydanticFromMarshmallowSchemaAnnotationTSchema.ts
 model/aPISuccessListColonne.ts
 model/aPISuccessListInt.ts
-model/aPISuccessUnionLignesFinancieresGroupingsNoneType.ts
 model/colonne.ts
 model/colonne1.ts
 model/data.ts
@@ -28,6 +27,7 @@ model/enrichedFlattenFinancialLines2.ts
 model/groupedData.ts
 model/groupings.ts
 model/lignesFinancieres.ts
+model/lignesResponse.ts
 model/models.ts
 model/paginationMeta.ts
 model/tags.ts

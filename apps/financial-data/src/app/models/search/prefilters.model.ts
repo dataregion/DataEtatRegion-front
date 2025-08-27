@@ -2,8 +2,8 @@ import { JSONObject } from 'apps/common-lib/src/lib/models/jsonobject';
 import { Bop, BopCode } from './bop.model';
 import { Beneficiaire } from './beneficiaire.model';
 import { TagFieldData } from '../../components/search-data/tags-field-data.model';
-import { ReferentielProgrammation } from '@models/refs/referentiel_programmation.model';
-import { SearchTypeCategorieJuridique } from '@services/interface-data.service';
+import { ReferentielProgrammation } from '../../models/refs/referentiel_programmation.model';
+import { SearchTypeCategorieJuridique } from '../../services/interface-data.service';
 
 export type ThemePreFilter = string | null;
 export type BopsPreFilter = Bop | BopCode | null;

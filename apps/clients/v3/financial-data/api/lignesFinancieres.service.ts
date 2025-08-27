@@ -23,22 +23,22 @@ import { APISuccessAnnotatedEnrichedFlattenFinancialLinesPydanticFromMarshmallow
 // @ts-ignore
 import { APISuccessListInt } from '../model/aPISuccessListInt';
 // @ts-ignore
-import { APISuccessUnionLignesFinancieresGroupingsNoneType } from '../model/aPISuccessUnionLignesFinancieresGroupingsNoneType';
+import { LignesResponse } from '../model/lignesResponse';
 
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
 import { financialDataV3Configuration }                                     from '../configuration';
 import { BaseService } from '../api.base.service';
 import {
-    LignesFinanciresServiceInterface
-} from './lignesFinancires.serviceInterface';
+    LignesFinancieresServiceInterface
+} from './lignesFinancieres.serviceInterface';
 
 
 
 @Injectable({
   providedIn: 'root'
 })
-export class LignesFinanciresService extends BaseService implements LignesFinanciresServiceInterface {
+export class LignesFinancieresService extends BaseService implements LignesFinancieresServiceInterface {
 
     constructor(protected httpClient: HttpClient, @Optional() @Inject(BASE_PATH) basePath: string|string[], @Optional() configuration?: financialDataV3Configuration) {
         super(basePath, configuration);
@@ -243,9 +243,9 @@ export class LignesFinanciresService extends BaseService implements LignesFinanc
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getLignesFinancieresLignesGet(sourceRegion?: string, dataSource?: string, source?: string, nEj?: string, codeProgramme?: string, niveauGeo?: string, codeGeo?: string, refQpv?: 2015 | 2024, codeQpv?: string, theme?: string, beneficiaireCode?: string, beneficiaireCategorieJuridiqueType?: string, annee?: string, centresCouts?: string, domaineFonctionnel?: string, referentielProgrammation?: string, tags?: string, grouping?: string, grouped?: string, colonnes?: string, page?: number, pageSize?: number, sortBy?: string, sortOrder?: 'asc' | 'desc', search?: string, fieldsSearch?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<APISuccessUnionLignesFinancieresGroupingsNoneType>;
-    public getLignesFinancieresLignesGet(sourceRegion?: string, dataSource?: string, source?: string, nEj?: string, codeProgramme?: string, niveauGeo?: string, codeGeo?: string, refQpv?: 2015 | 2024, codeQpv?: string, theme?: string, beneficiaireCode?: string, beneficiaireCategorieJuridiqueType?: string, annee?: string, centresCouts?: string, domaineFonctionnel?: string, referentielProgrammation?: string, tags?: string, grouping?: string, grouped?: string, colonnes?: string, page?: number, pageSize?: number, sortBy?: string, sortOrder?: 'asc' | 'desc', search?: string, fieldsSearch?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<APISuccessUnionLignesFinancieresGroupingsNoneType>>;
-    public getLignesFinancieresLignesGet(sourceRegion?: string, dataSource?: string, source?: string, nEj?: string, codeProgramme?: string, niveauGeo?: string, codeGeo?: string, refQpv?: 2015 | 2024, codeQpv?: string, theme?: string, beneficiaireCode?: string, beneficiaireCategorieJuridiqueType?: string, annee?: string, centresCouts?: string, domaineFonctionnel?: string, referentielProgrammation?: string, tags?: string, grouping?: string, grouped?: string, colonnes?: string, page?: number, pageSize?: number, sortBy?: string, sortOrder?: 'asc' | 'desc', search?: string, fieldsSearch?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<APISuccessUnionLignesFinancieresGroupingsNoneType>>;
+    public getLignesFinancieresLignesGet(sourceRegion?: string, dataSource?: string, source?: string, nEj?: string, codeProgramme?: string, niveauGeo?: string, codeGeo?: string, refQpv?: 2015 | 2024, codeQpv?: string, theme?: string, beneficiaireCode?: string, beneficiaireCategorieJuridiqueType?: string, annee?: string, centresCouts?: string, domaineFonctionnel?: string, referentielProgrammation?: string, tags?: string, grouping?: string, grouped?: string, colonnes?: string, page?: number, pageSize?: number, sortBy?: string, sortOrder?: 'asc' | 'desc', search?: string, fieldsSearch?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<LignesResponse>;
+    public getLignesFinancieresLignesGet(sourceRegion?: string, dataSource?: string, source?: string, nEj?: string, codeProgramme?: string, niveauGeo?: string, codeGeo?: string, refQpv?: 2015 | 2024, codeQpv?: string, theme?: string, beneficiaireCode?: string, beneficiaireCategorieJuridiqueType?: string, annee?: string, centresCouts?: string, domaineFonctionnel?: string, referentielProgrammation?: string, tags?: string, grouping?: string, grouped?: string, colonnes?: string, page?: number, pageSize?: number, sortBy?: string, sortOrder?: 'asc' | 'desc', search?: string, fieldsSearch?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<LignesResponse>>;
+    public getLignesFinancieresLignesGet(sourceRegion?: string, dataSource?: string, source?: string, nEj?: string, codeProgramme?: string, niveauGeo?: string, codeGeo?: string, refQpv?: 2015 | 2024, codeQpv?: string, theme?: string, beneficiaireCode?: string, beneficiaireCategorieJuridiqueType?: string, annee?: string, centresCouts?: string, domaineFonctionnel?: string, referentielProgrammation?: string, tags?: string, grouping?: string, grouped?: string, colonnes?: string, page?: number, pageSize?: number, sortBy?: string, sortOrder?: 'asc' | 'desc', search?: string, fieldsSearch?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<LignesResponse>>;
     public getLignesFinancieresLignesGet(sourceRegion?: string, dataSource?: string, source?: string, nEj?: string, codeProgramme?: string, niveauGeo?: string, codeGeo?: string, refQpv?: 2015 | 2024, codeQpv?: string, theme?: string, beneficiaireCode?: string, beneficiaireCategorieJuridiqueType?: string, annee?: string, centresCouts?: string, domaineFonctionnel?: string, referentielProgrammation?: string, tags?: string, grouping?: string, grouped?: string, colonnes?: string, page?: number, pageSize?: number, sortBy?: string, sortOrder?: 'asc' | 'desc', search?: string, fieldsSearch?: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
 
         let localVarQueryParameters = new HttpParams({encoder: this.encoder});
@@ -328,7 +328,7 @@ export class LignesFinanciresService extends BaseService implements LignesFinanc
         }
 
         let localVarPath = `/lignes`;
-        return this.httpClient.request<APISuccessUnionLignesFinancieresGroupingsNoneType>('get', `${this.configuration.basePath}${localVarPath}`,
+        return this.httpClient.request<LignesResponse>('get', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
                 params: localVarQueryParameters,

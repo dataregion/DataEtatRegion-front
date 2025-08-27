@@ -2,9 +2,9 @@ import { inject } from '@angular/core';
 import { ResolveFn } from '@angular/router';
 import { forkJoin } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { BudgetDataHttpService } from '../services/budget.service';
+import { BudgetDataHttpService } from '../services/http/budget.service';
 import { FinancialData, FinancialDataResolverModel } from '../models/financial/financial-data-resolvers.models';
-import { ReferentielsService } from '@services/referentiels.service';
+import { ReferentielsService } from '@services/http/referentiels.service';
 
 export const resolveFinancialData: ResolveFn<FinancialDataResolverModel> = () => {
 

@@ -1,10 +1,10 @@
 import { Component, ElementRef, OnInit, ViewChild, inject } from '@angular/core';
-import { AuditUpdateData, DataType } from '@models/audit/audit-update-data.models';
-import { AuditHttpService } from '@services/audit.service';
+import { AuditUpdateData, DataType } from 'apps/financial-data/src/app/models/audit/audit-update-data.models';
+import { AuditHttpService } from 'apps/financial-data/src/app/services/http/audit.service';
 import { AlertService, SessionService } from 'apps/common-lib/src/public-api';
 import { BehaviorSubject, catchError, finalize, forkJoin, of, Subscription } from 'rxjs';
 
-import { BudgetDataHttpService } from '@services/budget.service';
+import { BudgetDataHttpService } from 'apps/financial-data/src/app/services/http/budget-lines-http.service';
 import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({

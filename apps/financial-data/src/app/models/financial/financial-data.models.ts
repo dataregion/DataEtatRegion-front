@@ -37,7 +37,7 @@ export interface FinancialDataModel extends ExportableAsJson {
   groupe_marchandise: Optional<GroupeMarchandise>;
   localisation_interministerielle: Optional<LocalisationInterministerielle>;
 
-  annee: number;
+  annee: Optional<number>;
 
   siret: Optional<Siret>;
   date_cp: Optional<string>;
