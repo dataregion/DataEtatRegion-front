@@ -94,11 +94,16 @@ export class ModalGroupingComponent implements OnInit {
   }
 
   public validate(): void {
-    const formArray = this.formGrouping.controls.colonnes;
-    const selectedNames = new Set(
-      formArray.controls.map(group => group.controls.name.value)
-    );
-    this._colonnesService.selectedColonnesGrouping = this.colonnes.filter(c => selectedNames.has(c.name));
+    const colonnes = this.formGrouping.controls.colonnes;
+
+    // build selected in the same order as in the form array
+    const selected = colonnes.controls
+      .map(group => group.controls.name.value)       // ordered list of names
+      .map(name => this.colonnes.find(c => c.name === name)!) // map back to ColonneTableau
+      .filter(Boolean);                              // remove nulls
+      const formArray = this.formGrouping.controls.colonnes;
+
+    this._colonnesService.selectedColonnesGrouping = selected;
   }
 
 }

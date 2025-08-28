@@ -337,8 +337,12 @@ export class SearchDataComponent implements OnInit {
       this._searchDataService.searchParams = {
         ...currentParams,
         colonnes: tableCols.map(c => c.back.map(b => b.code)).flat().filter(c => c !== undefined && c !== null),
-        grouping: groupingCols.map(c => c.grouping?.code).filter(c => c !== undefined && c !== null)
+        grouping: groupingCols.map(c => c.grouping?.code).filter(c => c !== undefined && c !== null) ?? undefined
       };
+      if (this._searchDataService.searchParams.grouping?.length === 0) {
+        this._searchDataService.searchParams.grouping = undefined
+      }
+      console.log(this._searchDataService.searchParams.grouping)
     });
   }
 

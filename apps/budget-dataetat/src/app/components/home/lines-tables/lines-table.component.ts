@@ -26,6 +26,8 @@ export class LinesTableComponent implements OnInit {
       this.currentColonnes = selected
     });
     this._searchDataService.searchResults$.subscribe((selected: SearchResults) => {
+      console.log("BLAA")
+      console.log(selected)
       this.currentLignes = selected as FinancialDataModel[]
     });
   }
