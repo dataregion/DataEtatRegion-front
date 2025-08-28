@@ -7,11 +7,11 @@
         Grouper les lignes par
       </button>
       }
-      @if (!grid_fullscreen) {
-      <button data-fr-opened="false" aria-controls="modalColonnes" type="button" aria-label="Choisir les colonnes"
-        class="fr-btn fr-btn--sm fr-btn--secondary fr-btn--icon-left fr-icon-table-line" data-test-id="chose-columns-btn">
-        Choisir les colonnes
-      </button>
+      @if (!grid_fullscreen && !isGrouped) {
+        <button data-fr-opened="false" aria-controls="modalColonnes" type="button" aria-label="Choisir les colonnes"
+          class="fr-btn fr-btn--sm fr-btn--secondary fr-btn--icon-left fr-icon-table-line" data-test-id="chose-columns-btn">
+          Choisir les colonnes
+        </button>
       }
     </span>
     <span class="right-buttons">

@@ -8,6 +8,7 @@ import { GroupedData, LignesResponse } from 'apps/clients/v3/financial-data';
 // import { TreeAccordionDirective } from './tree-accordion.directive';
 import { nodePathsToArray } from 'storybook/internal/common';
 import { TreeAccordionDirective } from './tree-accordion.directive';
+import { map } from 'rxjs';
 
 export interface Group {
   parent?: Group;
@@ -128,6 +129,31 @@ export class GroupsTableComponent implements OnInit {
    */
   getGroupingColumnByCode(code: string): ColonneTableau<FinancialDataModel> {
     return this._colonnesService.allColonnesGrouping.filter(c => c.grouping?.code === code)[0]
+  }
+
+  /**
+   * Faire une recherche à partir de ce groupe
+   */
+  searchFromGroup(node: Group) {
+    if (this._searchDataService.searchParams) {
+      
+      const grouped: GroupedData[] = this._recGetPathFromNode(node)
+      const newGrouping: ColonneTableau<FinancialDataModel>[] = []
+      const newGrouped: string[] = []
+      console.log("Search from group")
+      grouped.forEach(g => {
+        console.log(">>>")
+        console.log(g)
+        newGrouping.push(this.getGroupingColumnByCode(g.name.toString()))
+        newGrouped.push(g.colonne.toString())
+      })
+      this._searchDataService.searchParams.grouping = newGrouping.map(g => g.grouping?.code).filter(g => g !== undefined && g !== null)
+      this._searchDataService.searchParams.grouped = newGrouped
+      console.log(newGrouping)
+      console.log(newGrouped)
+      this._colonnesService.selectedColonnesGrouping = newGrouping
+      this._colonnesService.selectedColonnesGrouped = newGrouped
+    }
   }
 
 }
