@@ -55,6 +55,10 @@ export class TableToolbarComponent implements OnInit {
     else return 'Rétrécir le tableau';
   }
 
+  isGrouped() {
+    this._colonnesService.grouped
+  }
+
   ngOnInit() {
   }
 

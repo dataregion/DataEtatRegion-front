@@ -22,3 +22,23 @@ tr.opened td {
 .badge-no-icon::before {
   display: none;
 }
+
+.fr-spinner {
+  display: inline-block;
+  border-radius: 50%;
+  border: 0.125rem solid var(--background-action-high-blue-france);
+  border-right-color: transparent;
+  animation: spin 1s linear infinite;
+  vertical-align: middle;
+  width: 1rem;
+  height: 1rem;
+}
+@keyframes spin {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+.fr-spinner-message {
+  font-size: 15px;
+  margin-left:10px;
+}

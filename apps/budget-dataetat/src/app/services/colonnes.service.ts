@@ -10,7 +10,7 @@ export class ColonnesService {
   private groupedSubject = new BehaviorSubject<Boolean>(false);
   grouped$ = this.groupedSubject.asObservable();
   get grouped(): boolean {
-    return this.selectedColonnesGroupingSubject.value.length != 0;
+    return this.selectedColonnesGrouping.length != 0 && this.selectedColonnesGrouping.length != this.selectedColonnesGrouped.length;
   }
 
   /**
@@ -64,12 +64,12 @@ export class ColonnesService {
   /**
    * Colonnes actuellement utilisées pour le grouped
    */
-  private selectedColonnesGroupedSubject = new BehaviorSubject<ColonneTableau<FinancialDataModel>[]>([]);
+  private selectedColonnesGroupedSubject = new BehaviorSubject<string[]>([]);
   selectedColonnesGrouped$ = this.selectedColonnesGroupingSubject.asObservable();
-  get selectedColonnesGrouped(): ColonneTableau<FinancialDataModel>[] {
+  get selectedColonnesGrouped(): string[] {
     return this.selectedColonnesGroupedSubject.value;
   }
-  set selectedColonnesGrouped(cols: ColonneTableau<FinancialDataModel>[]) {
+  set selectedColonnesGrouped(cols: string[]) {
     this.selectedColonnesGroupedSubject.next(cols);
   }
 

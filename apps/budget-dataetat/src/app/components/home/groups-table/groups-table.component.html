@@ -8,16 +8,19 @@
               <thead>
                 <tr>
                   <th>
-                    <span class="fr-cell__title" style="width:40%">Groupes</span>
+                    <span class="fr-cell__title" style="width:40%">
+                      Groupe
+                      <a id="link-1" href="#" target="_self" class="fr-link fr-link--sm" style="margin-left: 30px;">Revenir à l'affichage non-groupé</a>
+                    </span>
                   </th>
                   <th>
-                    <div class="fr-cell__title">Montant engagé</div>
+                    <div class="fr-cell__title" style="text-align: center;">Montant engagé</div>
                   </th>
                   <th>
-                    <div class="fr-cell__title">Montant payé</div>
+                    <div class="fr-cell__title" style="text-align: center;">Montant payé</div>
                   </th>
                   <th>
-                    <div class="fr-cell__title"> </div>
+                    <div class="fr-cell__title"></div>
                   </th>
                 </tr>
               </thead>
@@ -67,7 +70,7 @@
                         </p>
                       </td>
                       <td style="text-align: center;">
-                        <button type="button" class="fr-btn fr-btn--secondary fr-icon-search-line fr-btn--icon-left">
+                        <button (click)="searchFromGroup(node); $event.stopPropagation()" type="button" class="fr-btn fr-btn--secondary fr-icon-search-line fr-btn--icon-left">
                           Faire une recherche à partir de ce groupe
                         </button>
                       </td>
@@ -78,7 +81,10 @@
                         <ng-container *ngTemplateOutlet="renderNode; context: { $implicit: node.children, level: lvl + 1 }"></ng-container>
                       } @else {
                         <tr>
-                          <td colspan="4" [style.margin-left.px]="lvl * 50">Chargement ...</td>
+                          <td colspan="4" [style.margin-left.px]="lvl * 50">
+                            <span class="fr-spinner fr-spinner--sm" aria-label="Chargement…" role="status"></span>
+                            <span class="fr-spinner-message">Chargement en cours ...</span>
+                          </td>
                         </tr>
                       }
                     }
