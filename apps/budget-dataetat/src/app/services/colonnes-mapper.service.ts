@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { LocalisationInterministerielle } from '@models/financial/common.models';
 import { FinancialDataModel } from '@models/financial/financial-data.models';
+import { Tag } from '@models/refs/tag.model';
 import { Colonne, EnrichedFlattenFinancialLines } from 'apps/clients/v3/financial-data';
 import { JSONObject } from 'apps/common-lib/src/lib/models/jsonobject';
 import { Optional } from 'apps/common-lib/src/lib/utilities/optional.type';
@@ -19,8 +20,7 @@ export interface ColonneTableau<T> {
   back: Colonne[];
   grouping?: Colonne;
   style?: JSONObject;
-  format?: Format;
-  render?: (row: T) => string;
+  render: (row: T) => string;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -110,6 +110,7 @@ export class ColonnesMapperService {
           colonnesTable.filter(c => c.code == this.colNameOfEnriched('beneficiaire_denomination'))[0]
         ],
         grouping: colonnesGrouping.filter(c => c.code == this.colNameOfEnriched('beneficiaire_denomination'))[0],
+
         render: (row: FinancialDataModel) => row.siret?.nom_beneficiaire ?? this.NON_RENSEIGNE
       },
       {
@@ -127,6 +128,7 @@ export class ColonnesMapperService {
         label: this._colonnesTableau.ANNEE_ENGAGEMENT.label,
         back: [colonnesTable.filter(c => c.code == this.colNameOfEnriched('annee'))[0]],
         grouping: colonnesGrouping.filter(c => c.code == this.colNameOfEnriched('annee'))[0],
+        render: (row: FinancialDataModel) => row.annee?.toString() ?? "",
         style: { 'min-width': '22ex', 'flex-grow': '0' }
       },
       {
@@ -222,12 +224,21 @@ export class ColonnesMapperService {
         label: this._colonnesTableau.N_EJ.label,
         back: [colonnesTable.filter(c => c.code == this.colNameOfEnriched('n_ej'))[0]],
         grouping: colonnesGrouping.filter(c => c.code == this.colNameOfEnriched('n_ej'))[0],
+        render: (row: FinancialDataModel) => row.n_ej ?? "",
       },
       {
         name: this._colonnesTableau.TAGS.code,
         label: this._colonnesTableau.TAGS.label,
         back: [colonnesTable.filter(c => c.code == this.colNameOfEnriched('tags'))[0]],
         grouping: colonnesGrouping.filter(c => c.code == this.colNameOfEnriched('tags'))[0],
+        render: (row: FinancialDataModel) => {
+          const tags: Tag[] = row[this._colonnesTableau.TAGS.code] || [];
+          const key = tags
+            .filter((tag) => tag != null)
+            .map((tag) => `${tag.type} ${tag.value}`)
+            .reduceRight((p, s) => `${p} ; ${s}`, '');
+          return key;
+        },
       },
       {
         name: this._colonnesTableau.THEME.code,
@@ -341,6 +352,7 @@ export class ColonnesMapperService {
         label: this._colonnesTableau.DATA_SOURCE.label,
         back: [colonnesTable.filter(c => c.code == this.colNameOfEnriched('data_source'))[0]],
         grouping: colonnesGrouping.filter(c => c.code == this.colNameOfEnriched('data_source'))[0],
+        render: (row: FinancialDataModel) => row.data_source ?? ""
       },
     ];
   }

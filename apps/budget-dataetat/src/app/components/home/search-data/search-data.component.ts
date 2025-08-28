@@ -297,7 +297,7 @@ export class SearchDataComponent implements OnInit {
           this._searchDataService.searchInProgress = true;
         }),
         switchMap(params => 
-          this._searchDataService.search(params).pipe(
+          this._searchDataService.search(undefined, params).pipe(
             finalize(() => {
               this._searchDataService.searchFinish = true;
               this._searchDataService.searchInProgress = false;

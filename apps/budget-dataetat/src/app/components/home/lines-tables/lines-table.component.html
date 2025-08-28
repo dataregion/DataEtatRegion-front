@@ -7,47 +7,19 @@
             <table id="table-10">
               <thead>
                 <tr>
-                  <th style="width:500px;">
-                    <span class="fr-cell__title">Bénéficiaire</span>
-                  </th>
-                  <th>
-                    <div class="fr-cell__title">Montant engagé</div>
-                  </th>
-                  <th>
-                    <div class="fr-cell__title">Montant payé</div>
-                  </th>
-                  <th>
-                    <div class="fr-cell__title">Année exercice comptable</div>
-                  </th>
-                  <th>
-                    <div class="fr-cell__title">Domaine fonctionnel</div>
-                  </th>
-                  <th>
-                    <div class="fr-cell__title">Commune du SIRET</div>
-                  </th>
+                  @for (col of currentColonnes; track col.name) {
+                    <th>
+                      <div class="fr-cell__title">col.label</div>
+                    </th>
+                  }
                 </tr>
               </thead>
               <tbody>
-                <tr id="table-10-row-key-0" data-row-key="0">
-                  <td style="text-align: right;"><b>TOTAL : </b><span class="fr-badge fr-badge--info">2</span></td>
-                  <td style="text-align: center;">
-                    <p class="fr-mr-2v fr-badge fr-badge--success">200€</p>
-                  </td>
-                  <td style="text-align: center;">
-                    <p class="fr-mr-2v fr-badge fr-badge--success">200€</p>
-                  </td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                </tr>
-                @for (item of data; track item.id) {
+                @for (line of currentLignes; track line.id) {
                   <tr id="table-10-row-key-1" data-row-key="1">
-                    <td>{{item.benef}}</td>
-                    <td>{{item.ae}}</td>
-                    <td>{{item.dp}}</td>
-                    <td>{{item.annee}}</td>
-                    <td>{{item.domaine}}</td>
-                    <td>{{item.commune}}</td>
+                  @for (col of currentColonnes; track col.name) {
+                    <td>col.render(line)</td>
+                  }
                   </tr>
                 }
               </tbody>

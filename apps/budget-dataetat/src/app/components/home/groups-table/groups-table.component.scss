@@ -1,0 +1,17 @@
+.accordion-header:hover {
+  cursor: pointer;
+  background-color: #eee;
+}
+
+td.td-group {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.accordion-header:hover > td {
+  background-color: #eee;
+}
+tr.opened > td {
+  background-color: #eee;
+}
