@@ -7,19 +7,19 @@
             <table id="table-10">
               <thead>
                 <tr>
-                  @for (col of currentColonnes; track col.name) {
-                    <th>
-                      <div class="fr-cell__title">col.label</div>
+                  @for (col of currentColonnes; track col.name; let isFirst = $first) {
+                    <th [class.fr-cell--fixed@md]="isFirst" role="columnheader">
+                      <div class="fr-cell__title">{{col.label}}</div>
                     </th>
                   }
                 </tr>
               </thead>
               <tbody>
-                @for (line of currentLignes; track line.id) {
-                  <tr id="table-10-row-key-1" data-row-key="1">
-                  @for (col of currentColonnes; track col.name) {
-                    <td>col.render(line)</td>
-                  }
+                @for (line of currentLignes; track line.id; let isFirst = $first) {
+                  <tr id="table-10-row-key-{{line.id}}"  [attr.data-row-key]="line.id" [class.fr-cell--fixed@md]="isFirst" scope="row">
+                    @for (col of currentColonnes; track col.name) {
+                      <td>{{col.render(line)}}</td>
+                    }
                   </tr>
                 }
               </tbody>

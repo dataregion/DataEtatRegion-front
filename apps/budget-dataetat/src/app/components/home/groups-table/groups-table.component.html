@@ -1,6 +1,6 @@
 <div class="fr-grid-row">
   <div class="fr-col-12">
-    <div class="fr-table fr-table--bordered fr-table--lg">
+    <div class="fr-table fr-table--lg">
       <div class="fr-table__wrapper">
         <div class="fr-table__container">
           <div class="fr-table__content">
@@ -23,75 +23,67 @@
               </thead>
               <tbody>
                 <tr id="table-10-row-key-0" data-row-key="0">
-                  <td style="text-align: right; width: 40%;"><b>TOTAL : </b><span class="fr-badge fr-badge--info">1000 lignes</span></td>
+                  <td style="text-align: right; width: 40%;">
+                    <b style="font-size: 16px;">TOTAL</b>
+                    <span class="fr-badge fr-badge--info badge-no-icon" style="margin-left: 30px;">{{getTotalOfRoots()}} lignes</span></td>
                   <td style="text-align: center;">
-                    <p class="fr-mr-2v fr-badge fr-badge--success">200€</p>
+                    <p class="fr-mr-2v fr-badge fr-badge--success badge-no-icon">{{getTotalMontantsEngagesOfRoots() | currency:'EUR':'symbol':'1.0-2'}}</p>
                   </td>
                   <td style="text-align: center;">
-                    <p class="fr-mr-2v fr-badge fr-badge--success">200€</p>
+                    <p class="fr-mr-2v fr-badge fr-badge--success badge-no-icon">{{getTotalMontantsPayesOfRoots() | currency:'EUR':'symbol':'1.0-2'}}</p>
                   </td>
                   <td>
                   </td>
                 </tr>
 
-                <!-- <ng-container *budgetTreeAccordion="roots; level: 0; let node; let lvl = level"> -->
-                  <!-- <tr class="accordion-header" (click)="toggle(node)" [class.opened]="node.opened">
-                    <td class="td-group" [style.margin-left.px]="lvl * 40">
-                      <span [ngClass]="'fr-icon-arrow-' + (node.opened ? 'down' : 'right') + '-s-line'"></span>
-                      <div style="margin-left:30px;">
-                        <p>{{getGroupingColumnByCode(node.groupedData.name).label}}</p>
-                        <b>{{node.groupedData.colonne}}</b>
-                      </div>
-                    </td>
-                    <td style="text-align: center;">
-                      <p class="fr-mr-2v fr-badge fr-badge--success">
-                        {{node.groupedData.total_montant_engage | currency:'EUR':'symbol':'1.0-2'}}
-                      </p>
-                    </td>
-                    <td style="text-align: center;">
-                      <p class="fr-mr-2v fr-badge fr-badge--success">
-                        {{node.groupedData.total_montant_paye | currency:'EUR':'symbol':'1.0-2'}}
-                      </p>
-                    </td>
-                    <td style="text-align: center;">
-                      <button type="button" class="fr-btn fr-btn--secondary fr-icon-search-line fr-btn--icon-left">
-                        Faire une recherche à partir de ce groupe
-                      </button>
-                    </td> -->
-                  <!-- </tr> -->
+                <ng-container *ngTemplateOutlet="renderNode; context: { $implicit: roots, level: 0 }"></ng-container>
 
-                  <!-- @if (node.opened) {
-                    <ng-container *budgetTreeAccordion="node.children; level: lvl + 1; let child; let clvl = level">
-                      <tr class="accordion-header" (click)="toggle(node)" [class.opened]="node.opened">
-                        <td class="td-group" [style.margin-left.px]="lvl * 40">
-                          @if (node.parent) {
-                            <span>⬤</span>
-                          }
-                          <span [ngClass]="'fr-icon-arrow-' + (node.opened ? 'down' : 'right') + '-s-line'"></span>
+                <ng-template #renderNode let-nodes let-level="level">
+                  <ng-container *budgetTreeAccordion="nodes; level: level; let node; let lvl = level">
+                    <tr class="accordion-header" (click)="toggle(node, lvl)" [class.opened]="node.opened" [class.clickable]="!isLastLevel(lvl)">
+                      <td class="td-group" [style.margin-left.px]="lvl * 50">
+                        <span [ngClass]="!isLastLevel(lvl) ? 'fr-icon-arrow-' + (node.opened ? 'down' : 'right') + '-s-line': ''"></span>
+                        <div style="display: flex; flex-direction: row; align-items: center; flex: 1;">
                           <div style="margin-left:30px;">
                             <p>{{getGroupingColumnByCode(node.groupedData.name).label}}</p>
                             <b>{{node.groupedData.colonne}}</b>
                           </div>
-                        </td>
-                        <td style="text-align: center;">
-                          <p class="fr-mr-2v fr-badge fr-badge--success">
-                            {{node.groupedData.total_montant_engage | currency:'EUR':'symbol':'1.0-2'}}
-                          </p>
-                        </td>
-                        <td style="text-align: center;">
-                          <p class="fr-mr-2v fr-badge fr-badge--success">
-                            {{node.groupedData.total_montant_paye | currency:'EUR':'symbol':'1.0-2'}}
-                          </p>
-                        </td>
-                        <td style="text-align: center;">
-                          <button type="button" class="fr-btn fr-btn--secondary fr-icon-search-line fr-btn--icon-left">
-                            Faire une recherche à partir de ce groupe
-                          </button>
-                        </td>
-                      </tr>
-                    </ng-container>
-                  } -->
-                <!-- </ng-container> -->
+                          <div style="display:flex; justify-content: right; flex: 1;">
+                            <span class="fr-badge fr-badge--info badge-no-icon" style="margin-left: 30px;">{{node.groupedData.total}}</span>
+                          </div>
+                        </div>
+                        <div>
+
+                        </div>
+                      </td>
+                      <td style="text-align: center;">
+                        <p class="fr-mr-2v fr-badge fr-badge--success badge-no-icon">
+                          {{node.groupedData.total_montant_engage | currency:'EUR':'symbol':'1.0-2'}}
+                        </p>
+                      </td>
+                      <td style="text-align: center;">
+                        <p class="fr-mr-2v fr-badge fr-badge--success badge-no-icon">
+                          {{node.groupedData.total_montant_paye | currency:'EUR':'symbol':'1.0-2'}}
+                        </p>
+                      </td>
+                      <td style="text-align: center;">
+                        <button type="button" class="fr-btn fr-btn--secondary fr-icon-search-line fr-btn--icon-left">
+                          Faire une recherche à partir de ce groupe
+                        </button>
+                      </td>
+                    </tr>
+
+                    @if (node.opened) {
+                      @if (node.loaded) {
+                        <ng-container *ngTemplateOutlet="renderNode; context: { $implicit: node.children, level: lvl + 1 }"></ng-container>
+                      } @else {
+                        <tr>
+                          <td colspan="4" [style.margin-left.px]="lvl * 50">Chargement ...</td>
+                        </tr>
+                      }
+                    }
+                  </ng-container>
+                </ng-template>
 
               </tbody>
             </table>
