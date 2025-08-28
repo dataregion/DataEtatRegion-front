@@ -60,5 +60,17 @@ export class ColonnesService {
   set selectedColonnesGrouping(cols: ColonneTableau<FinancialDataModel>[]) {
     this.selectedColonnesGroupingSubject.next(cols);
   }
+  
+  /**
+   * Colonnes actuellement utilisées pour le grouped
+   */
+  private selectedColonnesGroupedSubject = new BehaviorSubject<ColonneTableau<FinancialDataModel>[]>([]);
+  selectedColonnesGrouped$ = this.selectedColonnesGroupingSubject.asObservable();
+  get selectedColonnesGrouped(): ColonneTableau<FinancialDataModel>[] {
+    return this.selectedColonnesGroupedSubject.value;
+  }
+  set selectedColonnesGrouped(cols: ColonneTableau<FinancialDataModel>[]) {
+    this.selectedColonnesGroupedSubject.next(cols);
+  }
 
 }

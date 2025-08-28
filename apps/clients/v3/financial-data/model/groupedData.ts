@@ -11,6 +11,7 @@ import { Colonne1 } from './colonne1';
 
 
 export interface GroupedData { 
+    name: string;
     colonne: Colonne1;
     total: number;
     total_montant_engage?: number;

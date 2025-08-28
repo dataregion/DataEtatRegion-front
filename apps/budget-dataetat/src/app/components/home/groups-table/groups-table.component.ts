@@ -1,14 +1,23 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Component, inject, OnInit, ViewEncapsulation } from '@angular/core';
+import { FinancialDataModel } from '@models/financial/financial-data.models';
+import { ColonneTableau } from '@services/colonnes-mapper.service';
+import { ColonnesService } from '@services/colonnes.service';
+import { SearchDataService } from '@services/search-data.service';
+import { GroupedData, LignesResponse } from 'apps/clients/v3/financial-data';
+// import { TreeAccordionDirective } from './tree-accordion.directive';
+import { nodePathsToArray } from 'storybook/internal/common';
 
-import { GridInFullscreenStateService } from 'apps/common-lib/src/lib/services/grid-in-fullscreen-state.service';
-import {
-  TableData,
-  VirtualGroup
-} from 'apps/grouping-table/src/lib/components/grouping-table/group-utils';
+export interface Group {
+  parent?: Group;
+  children: Group[];
+  groupedData : GroupedData;
+  opened: boolean;
+  loaded: boolean;
+}
 
 @Component({
-  selector: 'budget-groups-table',
+  selector: 'budget-groups-table]',
   templateUrl: './groups-table.component.html',
   imports: [CommonModule],
   styleUrls: ['./groups-table.component.scss'],
@@ -16,38 +25,78 @@ import {
 })
 export class GroupsTableComponent implements OnInit {
   
-  private _gridFullscreen = inject(GridInFullscreenStateService);
+  private _searchDataService = inject(SearchDataService);
+  private _colonnesService = inject(ColonnesService);
 
+  roots: Group[] = []
+  groupedData: GroupedData[] = []
 
-  tableData?: TableData;
-  virtualGroupFn?: (_: TableData) => VirtualGroup;
+  currentlyGrouped: Group | null = null
 
-  get grid_fullscreen() {
-    return this._gridFullscreen.fullscreen;
-  }
-
-  toggleGridFullscreen() {
-    this._gridFullscreen.fullscreen = !this.grid_fullscreen;
-  }
-
-  get fullscreen_label() {
-    if (!this.grid_fullscreen) return 'Agrandir le tableau';
-    else return 'Rétrécir le tableau';
-  }
+  opened: boolean = false
 
   ngOnInit() {
+    this.groupedData = this._searchDataService.searchResults as GroupedData[]
+    this.groupedData.forEach(gd => {
+      this.roots.push({
+        groupedData: gd,
+        opened: false,
+        loaded: false,
+        children: []
+      } as Group)
+    })
   }
 
-  openGroupConfigDialog() {
+  private _recGetPathFromNode(node: Group): GroupedData[] {
+    if (!node.parent) {
+      return [node.groupedData];
+    }
+    // Récursion : concaténation du nom from root to node 
+    return [
+      ...this._recGetPathFromNode(node.parent),
+      node.groupedData
+    ];
+  }
 
+  /**
+   * Click sur un 'accordion' : on change le current 
+   * @param node 
+   */
+  toggle(node: Group) {
+    console.log("==> Toggle row")
+    console.log(node.groupedData.name + " : " + node.groupedData.colonne)
+    node.opened = !node.opened
+    if (!node.loaded) {
+      if (this._searchDataService.searchParams) {
+        const grouped: string[] = this._recGetPathFromNode(node).map(gd => gd.colonne.toString())
+        this._searchDataService.search(grouped).subscribe((response: LignesResponse) => {
+          console.log(response)
+          node.loaded = true
+          response.data?.groupings.forEach(gd => {
+            node.children.push({
+              groupedData: gd,
+              children: [],
+              opened: false,
+              loaded: false,
+            } as Group)
+            console.log("pushin")
+            console.log(node.children)
+          })
+          console.log("Loaded node")
+          console.log(node.children)
+          console.log(this.roots)
+        })
+      }
+    }
   }
-  openSortColumnsDialog() {
-    
+  
+  /**
+   * Récupération des info
+   * @param code 
+   * @returns 
+   */
+  getGroupingColumnByCode(code: string): ColonneTableau<FinancialDataModel> {
+    return this._colonnesService.allColonnesGrouping.filter(c => c.grouping?.code === code)[0]
   }
-  openSaveFilterDialog() {
-
-  }
-  public searchFinish: boolean = true
-  public searchInProgress: boolean = false
 
 }

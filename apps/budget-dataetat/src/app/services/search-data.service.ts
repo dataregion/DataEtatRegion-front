@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { SearchParameters } from '@services/search-params.service';
 import { FinancialDataModel } from '@models/financial/financial-data.models';
@@ -23,6 +23,8 @@ export class SearchDataService {
   private _searchParamsService: SearchParamsService = inject(SearchParamsService);
   private _lignesFinanciereService: LignesFinancieresService = inject(LignesFinancieresService);
   private _preferenceService: PreferenceService = inject(PreferenceService);
+
+  private _grouped = signal<string[]>([])
 
   /**
    * Paramètres de la recherche
@@ -84,19 +86,23 @@ export class SearchDataService {
   set searchResults(results: SearchResults) {
     this.searchResultsSubject.next(results);
   }
-  
+
   /**
    * Avant de lancer la recherche on set colonnes, grouping et grouped
    * @param searchParams 
    * @param grouped 
    * @returns 
    */
-  public search(searchParams: SearchParameters | undefined = undefined, grouped: string[] | undefined = undefined): Observable<LignesResponse> {
-    // Si la recherche est lancée sasn paramètres fournis, on prend les sauvegardés
-    if (searchParams === undefined)
+  public search(grouped: string[] | undefined = undefined, searchParams: SearchParameters | undefined = undefined): Observable<LignesResponse> {
+    // Si la recherche est lancée sans paramètres fournis, on prend les sauvegardés
+    if (searchParams === undefined) {
       searchParams = this.searchParams
       if (searchParams === undefined)
         return of()
+    } else if (grouped !== undefined) {
+      this._grouped.set(grouped)
+    }
+    console.log("==> Search begins ...")
     // Récupération des colonnes et grouping
     const colonnesTable = this._colonnesService.selectedColonnesTable;
     const colonnesGrouping = this._colonnesService.selectedColonnesGrouping;
@@ -110,6 +116,9 @@ export class SearchDataService {
       const fieldsGrouping = colonnesGrouping.map(c => c.grouping?.code).filter((v): v is string => v != null);
       searchParams.grouping = fieldsGrouping.slice(0, Math.min(fieldsGrouping.length, grouped ? grouped.length + 1 : 1))
       searchParams.grouped = grouped ?? undefined
+      console.log("Grouping && Grouped")
+      console.log(searchParams.grouping)
+      console.log(searchParams.grouped)
     }
     return this._search(searchParams)
   }
