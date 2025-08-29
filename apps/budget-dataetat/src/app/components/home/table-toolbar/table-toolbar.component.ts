@@ -13,6 +13,7 @@ import { BudgetDataHttpService } from '@services/http/budget.service';
 import { ExportDataService } from 'apps/appcommon/src/lib/export-data.service';
 import { FinancialDataModel } from '@models/financial/financial-data.models';
 import { ColonnesService } from '@services/colonnes.service';
+import { ColonneTableau } from '@services/colonnes-mapper.service';
 
 
 @Component({
@@ -56,10 +57,14 @@ export class TableToolbarComponent implements OnInit {
   }
 
   isGrouped() {
-    this._colonnesService.grouped
+    return this._colonnesService.grouped
   }
 
   ngOnInit() {
+  }
+
+  get selectedGrouping(): ColonneTableau<FinancialDataModel>[] {
+    return this._colonnesService.selectedColonnesGrouping
   }
 
   // public downloadData(extension: string, allColumns: boolean): void {

@@ -318,6 +318,7 @@ export class SearchDataComponent implements OnInit {
           } else if (response.data?.type === 'lignes_financieres') {
             this._searchDataService.searchResults = response.data?.lignes.map(r => this._searchDataService.unflatten(r)) ?? [];
           }
+          this._searchDataService.pagination = response.pagination;
         },
         error: (err: unknown) => {
           console.error("Erreur lors de la recherche :", err);

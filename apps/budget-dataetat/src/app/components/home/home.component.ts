@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Component, ElementRef, inject, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 
 import { GridInFullscreenStateService } from 'apps/common-lib/src/lib/services/grid-in-fullscreen-state.service';
 import {
@@ -24,7 +24,7 @@ import { FinancialDataModel } from '@models/financial/financial-data.models';
 import { AuditHttpService } from '@services/http/audit.service';
 import { MarqueBlancheParsedParamsResolverModel } from '../../resolvers/marqueblanche-parsed-params.resolver';
 import { PreferenceService } from '@services/preference.service';
-import { Colonne } from 'apps/clients/v3/financial-data';
+import { Colonne, LignesResponse } from 'apps/clients/v3/financial-data';
 import { ColonneFromPreference, ColonnesMapperService, ColonneTableau } from '@services/colonnes-mapper.service';
 import { SearchResults, SearchDataService } from '@services/search-data.service';
 import { PrefilterMapperService } from './search-data/prefilter-mapper.services';
@@ -50,6 +50,8 @@ export class HomeComponent implements OnInit {
   private _prefilterMapperService = inject(PrefilterMapperService);
   private _gridFullscreen = inject(GridInFullscreenStateService);
   private _searchDataService = inject(SearchDataService);
+
+  @ViewChild('spinner') spinner!: ElementRef;
 
   lastImportDate: string | null = null;
 
@@ -117,8 +119,6 @@ export class HomeComponent implements OnInit {
           this._prefilterMapperService.initService(themes, programmes, referentiels, annees)
           this._searchDataService.searchParams = this._prefilterMapperService.mapToSearchParams(preference.filters as PreFilters)
         });
-      // } else {
-          // this._preferenceService.currentPreference = null
       }
     });
 
@@ -130,4 +130,42 @@ export class HomeComponent implements OnInit {
     });
   }
 
+  ngAfterViewInit() {
+    const observer = new IntersectionObserver(entries => {
+      if (entries[0].isIntersecting && this.hasNext() && !this._searchDataService.searchInProgress) {
+        this.loadNextPage();
+      }
+    });
+    observer.observe(this.spinner.nativeElement);
+  }
+
+  hasNext() {
+    return this._searchDataService.pagination?.has_next
+  }
+
+  loadNextPage() {
+    console.log("==> LOAD NEXT PAGE");
+    if (this._searchDataService.searchParams) {
+      this._searchDataService.searchParams.page += 1 
+      this._searchDataService.search().subscribe({
+        next: (response: LignesResponse) => {
+          console.log("==> Résultat de la recherche");
+          console.log(response);
+          if (response.code == 204 && !response.data) {
+            this._searchDataService.searchResults = []
+            return
+          }
+          if (response.data?.type === 'groupings') {
+            this._searchDataService.searchResults = response.data?.groupings;
+          } else if (response.data?.type === 'lignes_financieres') {
+            this._searchDataService.searchResults = response.data?.lignes.map(r => this._searchDataService.unflatten(r)) ?? [];
+          }
+          this._searchDataService.pagination = response.pagination;
+        },
+        error: (err: unknown) => {
+          console.error("Erreur lors de la recherche :", err);
+        }
+      });
+    }
+  }
 }

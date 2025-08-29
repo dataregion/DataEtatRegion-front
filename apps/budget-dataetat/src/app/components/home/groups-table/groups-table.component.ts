@@ -3,7 +3,7 @@ import { Component, inject, OnInit, ViewEncapsulation } from '@angular/core';
 import { FinancialDataModel } from '@models/financial/financial-data.models';
 import { ColonneTableau } from '@services/colonnes-mapper.service';
 import { ColonnesService } from '@services/colonnes.service';
-import { SearchDataService } from '@services/search-data.service';
+import { SearchDataService, SearchResults } from '@services/search-data.service';
 import { GroupedData, LignesResponse } from 'apps/clients/v3/financial-data';
 // import { TreeAccordionDirective } from './tree-accordion.directive';
 import { nodePathsToArray } from 'storybook/internal/common';
@@ -31,12 +31,11 @@ export class GroupsTableComponent implements OnInit {
   private _colonnesService = inject(ColonnesService);
 
   roots: Group[] = []
-  groupedData: GroupedData[] = []
 
   ngOnInit() {
     // Init des racines
-    this.groupedData = this._searchDataService.searchResults as GroupedData[]
-    this.groupedData.forEach(gd => {
+    const groupedData: GroupedData[] = this._searchDataService.searchResults as GroupedData[]
+    groupedData.forEach(gd => {
       this.roots.push({
         groupedData: gd,
         opened: false,
@@ -45,18 +44,28 @@ export class GroupsTableComponent implements OnInit {
       } as Group)
     })
     // Si update selectedGrouping, on reset
-    this._searchDataService.searchResults$.subscribe((response) => {
+    this._searchDataService.searchResults$.subscribe((response: SearchResults) => {
+      console.log("==> RESET des roots")
       this.roots = []
-      this.groupedData = response as GroupedData[]
-      this.groupedData.forEach(gd => {
-        this.roots.push({
-          groupedData: gd,
-          opened: false,
-          loaded: false,
-          children: []
-        } as Group)
-      })
+      if (this._isGroupedDataArray(response)) {
+        const groupedData = response as GroupedData[]
+        groupedData.forEach(gd => {
+          this.roots.push({
+            groupedData: gd,
+            opened: false,
+            loaded: false,
+            children: []
+          } as Group)
+        })
+      }
+      console.log(this.roots)
     })
+  }
+
+  private _isGroupedDataArray(results: SearchResults): results is GroupedData[] {
+    return Array.isArray(results) &&
+          results.length > 0 &&
+          'colonne' in results[0];
   }
 
   getTotalOfRoots(): number {
@@ -97,7 +106,7 @@ export class GroupsTableComponent implements OnInit {
       node.opened = !node.opened
     if (!node.loaded) {
       if (this._searchDataService.searchParams) {
-        const grouped: string[] = this._recGetPathFromNode(node).map(gd => gd.colonne.toString())
+        const grouped: (string | undefined)[] = this._recGetPathFromNode(node).map(gd => gd.colonne?.toString())
         console.log('Grouped values :')
         console.log(grouped)
         this._searchDataService.search(grouped).subscribe((response: LignesResponse) => {
@@ -136,23 +145,29 @@ export class GroupsTableComponent implements OnInit {
    */
   searchFromGroup(node: Group) {
     if (this._searchDataService.searchParams) {
+      // TODO : mécanique à changer :
       
-      const grouped: GroupedData[] = this._recGetPathFromNode(node)
-      const newGrouping: ColonneTableau<FinancialDataModel>[] = []
-      const newGrouped: string[] = []
-      console.log("Search from group")
-      grouped.forEach(g => {
-        console.log(">>>")
-        console.log(g)
-        newGrouping.push(this.getGroupingColumnByCode(g.name.toString()))
-        newGrouped.push(g.colonne.toString())
-      })
-      this._searchDataService.searchParams.grouping = newGrouping.map(g => g.grouping?.code).filter(g => g !== undefined && g !== null)
-      this._searchDataService.searchParams.grouped = newGrouped
-      console.log(newGrouping)
-      console.log(newGrouped)
-      this._colonnesService.selectedColonnesGrouping = newGrouping
-      this._colonnesService.selectedColonnesGrouped = newGrouped
+      // this._colonnesService.selectedColonnesGrouping = newGrouping
+      // this._colonnesService.selectedColonnesGrouped = newGrouped
+      
+      // Il vaut mieux mettre ces champs dans formSearch.searchParams et vider les selectedColonnes
+      
+      // const grouped: GroupedData[] = this._recGetPathFromNode(node)
+      // const newGrouping: ColonneTableau<FinancialDataModel>[] = []
+      // const newGrouped: (string | undefined)[] = []
+      // console.log("Search from group")
+      // grouped.forEach(g => {
+      //   console.log(">>>")
+      //   console.log(g)
+      //   newGrouping.push(this.getGroupingColumnByCode(g.name.toString()))
+      //   newGrouped.push(g.colonne?.toString())
+      // })
+      // this._searchDataService.searchParams.grouping = newGrouping.map(g => g.grouping?.code).filter(g => g !== undefined && g !== null)
+      // this._searchDataService.searchParams.grouped = newGrouped
+      // console.log(newGrouping)
+      // console.log(newGrouped)
+      // this._colonnesService.selectedColonnesGrouping = newGrouping
+      // this._colonnesService.selectedColonnesGrouped = newGrouped
     }
   }
 

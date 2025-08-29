@@ -101,9 +101,9 @@ export class ModalGroupingComponent implements OnInit {
       .map(group => group.controls.name.value)       // ordered list of names
       .map(name => this.colonnes.find(c => c.name === name)!) // map back to ColonneTableau
       .filter(Boolean);                              // remove nulls
-      const formArray = this.formGrouping.controls.colonnes;
 
     this._colonnesService.selectedColonnesGrouping = selected;
+    this._colonnesService.selectedColonnesGrouped = [];
   }
 
 }

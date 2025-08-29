@@ -11,8 +11,8 @@ import { Colonne1 } from './colonne1';
 
 
 export interface GroupedData { 
-    name: string;
-    colonne: Colonne1;
+    name?: string;
+    colonne: Colonne1 | null;
     total: number;
     total_montant_engage?: number;
     total_montant_paye?: number;
