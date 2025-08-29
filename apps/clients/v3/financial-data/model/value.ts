@@ -9,6 +9,6 @@
  */
 
 
-export interface Colonne1 { 
+export interface Value { 
 }
 

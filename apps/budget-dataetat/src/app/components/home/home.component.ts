@@ -51,7 +51,7 @@ export class HomeComponent implements OnInit {
   private _gridFullscreen = inject(GridInFullscreenStateService);
   private _searchDataService = inject(SearchDataService);
 
-  @ViewChild('spinner') spinner!: ElementRef;
+  @ViewChild('spinner', { static: false }) spinner!: ElementRef;
 
   lastImportDate: string | null = null;
 
@@ -130,13 +130,7 @@ export class HomeComponent implements OnInit {
     });
   }
 
-  ngAfterViewInit() {
-    const observer = new IntersectionObserver(entries => {
-      if (entries[0].isIntersecting && this.hasNext() && !this._searchDataService.searchInProgress) {
-        this.loadNextPage();
-      }
-    });
-    observer.observe(this.spinner.nativeElement);
+  ngAfterViewChecked() {
   }
 
   hasNext() {

@@ -19,7 +19,6 @@ model/aPISuccessAnnotatedEnrichedFlattenFinancialLinesPydanticFromMarshmallowSch
 model/aPISuccessListColonne.ts
 model/aPISuccessListInt.ts
 model/colonne.ts
-model/colonne1.ts
 model/data.ts
 model/enrichedFlattenFinancialLines.ts
 model/enrichedFlattenFinancialLines1.ts
@@ -31,6 +30,7 @@ model/lignesResponse.ts
 model/models.ts
 model/paginationMeta.ts
 model/tags.ts
+model/value.ts
 ng-package.json
 package.json
 param.ts

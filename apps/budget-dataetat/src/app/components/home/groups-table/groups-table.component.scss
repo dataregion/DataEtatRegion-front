@@ -10,15 +10,34 @@ td.td-group {
   align-items: center;
 }
 
-td {
-  border-top: 1px solid #aaa;
-  border-left: 2px solid #aaa;
-  border-right: None;
-  border-bottom: 1px solid #aaa;
+// td {
+//   border-top: 1px solid #aaa;
+//   border-left: 2px solid #aaa;
+//   border-bottom: 1px solid #aaa;
+// }
+// td:not(::last-child) {
+//     border-right: 1px solid #aaa !important;
+
+// }
+.collapse-arrow::before {
+  width: 30px;
+}
+.collapse-arrow.opened::before {
+  background-color: #eee;
+}
+// tr:not(:first-child) {
+//     border-top: 1px solid #aaa !important;
+// }
+
+tr.opened {
+  background-color: #eee !important;
 }
 tr.opened td {
   background-color: #eee !important;
 }
 .badge-no-icon::before {
   display: none;
+}
+td:first-child {
+  margin-left: 30px;
 }

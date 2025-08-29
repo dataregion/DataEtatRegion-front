@@ -3,7 +3,6 @@ export * from './aPISuccessAnnotatedEnrichedFlattenFinancialLinesPydanticFromMar
 export * from './aPISuccessListColonne';
 export * from './aPISuccessListInt';
 export * from './colonne';
-export * from './colonne1';
 export * from './data';
 export * from './enrichedFlattenFinancialLines';
 export * from './enrichedFlattenFinancialLines1';
@@ -14,3 +13,4 @@ export * from './lignesFinancieres';
 export * from './lignesResponse';
 export * from './paginationMeta';
 export * from './tags';
+export * from './value';

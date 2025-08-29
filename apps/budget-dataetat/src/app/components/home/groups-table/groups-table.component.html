@@ -1,6 +1,6 @@
 <div class="fr-grid-row">
   <div class="fr-col-12">
-    <div class="fr-table fr-table--lg">
+    <div class="fr-table fr-table--lg fr-table--bordered">
       <div class="fr-table__wrapper">
         <div class="fr-table__container">
           <div class="fr-table__content">
@@ -43,13 +43,13 @@
 
                 <ng-template #renderNode let-nodes let-level="level">
                   <ng-container *budgetTreeAccordion="nodes; level: level; let node; let lvl = level">
-                    <tr class="accordion-header" (click)="toggle(node, lvl)" [class.opened]="node.opened" [class.clickable]="!isLastLevel(lvl)">
-                      <td class="td-group" [style.margin-left.px]="lvl * 50">
-                        <span [ngClass]="!isLastLevel(lvl) ? 'fr-icon-arrow-' + (node.opened ? 'down' : 'right') + '-s-line': ''"></span>
+                    <tr class="accordion-header" (click)="toggle(node, lvl)" [attr.data-lvl]="lvl" [class.opened]="node.opened" [class.clickable]="!isLastLevel(lvl)">
+                      <td class="td-group" [style.padding-left.px]="lvl * 50">
+                        <span class="collapse-arrow" [ngClass]="!isLastLevel(lvl) ? 'fr-icon-arrow-' + (node.opened ? 'down' : 'right') + '-s-line': ''"></span>
                         <div style="display: flex; flex-direction: row; align-items: center; flex: 1;">
                           <div style="margin-left:30px;">
-                            <p>{{getGroupingColumnByCode(node.groupedData.name).label}}</p>
-                            <b>{{node.groupedData.colonne ?? "N/A"}}</b>
+                            <p>{{getGroupingLabel(node.groupedData.colonne)}}</p>
+                            <b>{{node.groupedData.label ?? "N/A"}}</b>
                           </div>
                           <div style="display:flex; justify-content: right; flex: 1;">
                             <span class="fr-badge fr-badge--info badge-no-icon" style="margin-left: 30px;">{{node.groupedData.total}}</span>
@@ -81,7 +81,7 @@
                         <ng-container *ngTemplateOutlet="renderNode; context: { $implicit: node.children, level: lvl + 1 }"></ng-container>
                       } @else {
                         <tr>
-                          <td colspan="4" [style.margin-left.px]="lvl * 50">
+                          <td colspan="4" class="td-group" [style.padding-left.px]="((lvl + 1) * 50) + 30">
                             <div class="spinner-wrapper fr-spinner--sm">
                                 <span class="fr-spinner" aria-label="Chargement…" role="status"></span>
                                 <span class="fr-spinner-message">Chargement en cours ...</span>
