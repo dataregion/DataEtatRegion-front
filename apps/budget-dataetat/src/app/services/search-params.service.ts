@@ -45,7 +45,7 @@ export interface SearchParameters {
   centres_couts: string[] | undefined;
   domaines_fonctionnels: string[] | undefined;
   grouping: string[] | undefined;
-  grouped: string[] | undefined;
+  grouped: (string | undefined)[] | undefined;
 }
 
 @Injectable({

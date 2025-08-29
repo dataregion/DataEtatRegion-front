@@ -24,10 +24,10 @@ export class LinesTableComponent implements OnInit {
   ngOnInit(): void {
     this._colonnesService.selectedColonnesTable$.subscribe((selected) => {
       this.currentColonnes = selected
-    });
-    this._searchDataService.searchResults$.subscribe((selected: SearchResults) => {
       console.log("BLAA")
       console.log(selected)
+    });
+    this._searchDataService.searchResults$.subscribe((selected: SearchResults) => {
       this.currentLignes = selected as FinancialDataModel[]
     });
   }

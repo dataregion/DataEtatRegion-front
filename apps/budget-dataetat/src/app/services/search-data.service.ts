@@ -3,7 +3,7 @@ import { BehaviorSubject, Observable, of } from 'rxjs';
 import { SearchParameters } from '@services/search-params.service';
 import { FinancialDataModel } from '@models/financial/financial-data.models';
 import { SearchDataMapper } from './search-data-mapper.service';
-import { EnrichedFlattenFinancialLines2, GroupedData, LignesFinancieresService, LignesResponse } from 'apps/clients/v3/financial-data';
+import { EnrichedFlattenFinancialLines2, GroupedData, LignesFinancieresService, LignesResponse, PaginationMeta } from 'apps/clients/v3/financial-data';
 import { ColonnesService } from '@services/colonnes.service';
 import { SearchParamsService } from './search-params.service';
 import { Preference } from 'apps/preference-users/src/lib/models/preference.models';
@@ -24,7 +24,7 @@ export class SearchDataService {
   private _lignesFinanciereService: LignesFinancieresService = inject(LignesFinancieresService);
   private _preferenceService: PreferenceService = inject(PreferenceService);
 
-  private _grouped = signal<string[]>([])
+  private _grouped = signal<(string | undefined)[]>([])
 
   /**
    * Paramètres de la recherche
@@ -86,6 +86,18 @@ export class SearchDataService {
   set searchResults(results: SearchResults) {
     this.searchResultsSubject.next(results);
   }
+  
+  /**
+   * Résultats de la recherche
+   */
+  private paginationSubject = new BehaviorSubject<PaginationMeta | null>(null);
+  pagination$ = this.paginationSubject.asObservable();
+  get pagination(): PaginationMeta | null {
+    return this.paginationSubject.value;
+  }
+  set pagination(data: PaginationMeta | null) {
+    this.paginationSubject.next(data);
+  }
 
   /**
    * Avant de lancer la recherche on set colonnes, grouping et grouped
@@ -93,7 +105,7 @@ export class SearchDataService {
    * @param grouped 
    * @returns 
    */
-  public search(grouped: string[] | undefined = undefined, searchParams: SearchParameters | undefined = undefined): Observable<LignesResponse> {
+  public search(grouped: (string | undefined)[] | undefined = undefined, searchParams: SearchParameters | undefined = undefined): Observable<LignesResponse> {
     // Si la recherche est lancée sans paramètres fournis, on prend les sauvegardés
     if (searchParams === undefined) {
       searchParams = this.searchParams
@@ -115,7 +127,7 @@ export class SearchDataService {
     if (colonnesGrouping.length) {
       const fieldsGrouping = colonnesGrouping.map(c => c.grouping?.code).filter((v): v is string => v != null);
       searchParams.grouping = fieldsGrouping.slice(0, Math.min(fieldsGrouping.length, grouped ? grouped.length + 1 : 1))
-      searchParams.grouped = grouped ?? undefined
+      searchParams.grouped = grouped?.map(v => v ?? "None") ?? undefined
       console.log("Grouping && Grouped")
       console.log(searchParams.grouping)
       console.log(searchParams.grouped)
