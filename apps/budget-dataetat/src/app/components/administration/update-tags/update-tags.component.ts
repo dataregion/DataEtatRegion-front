@@ -51,7 +51,7 @@ export class UpdateTagsComponent {
           const headers: string[] = contentFile.split('\n')[0].split(',');
           const newHeaders: string[] = [];
           headers.forEach((header) => {
-            const code = this._colonnesService.allColonnesTable.filter(c => c.label == header)[0].name;
+            const code = this._colonnesService.allColonnesTable.filter(c => c.label == header)[0].colonne;
             if (code) newHeaders.push(code);
           });
           // Création du fichier avec les nouveaux headers

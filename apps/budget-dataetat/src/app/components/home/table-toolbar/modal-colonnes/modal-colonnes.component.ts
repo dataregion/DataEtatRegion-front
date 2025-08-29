@@ -43,10 +43,10 @@ export class ModalColonnesComponent implements OnInit {
     this.selectedColonnes = this._colonnesService.selectedColonnesTable
     
     // On ordonne les colonnes pour mettre les selected en haut
-    const namesSelected = new Set(this.selectedColonnes.map(c => c.name));
+    const namesSelected = new Set(this.selectedColonnes.map(c => c.colonne));
     const orderedColonnes = [...this.colonnes].sort((a, b) => {
-      const aSelected = namesSelected.has(a.name);
-      const bSelected = namesSelected.has(b.name);
+      const aSelected = namesSelected.has(a.colonne);
+      const bSelected = namesSelected.has(b.colonne);
       if (aSelected && !bSelected) return -1;
       if (!aSelected && bSelected) return 1;
       return 0;
@@ -56,9 +56,9 @@ export class ModalColonnesComponent implements OnInit {
     this.formColonnes = this._formBuilder.group({
       colonnes: this._formBuilder.array(
         orderedColonnes.map(col => {
-          const isSelected = this.selectedColonnes.some(sc => sc.name === col.name);
+          const isSelected = this.selectedColonnes.some(sc => sc.colonne === col.colonne);
           return this._formBuilder.group({
-            name: this._formBuilder.control(col.name, { nonNullable: true }),
+            name: this._formBuilder.control(col.colonne, { nonNullable: true }),
             label: this._formBuilder.control(col.label, { nonNullable: true }),
             selected: this._formBuilder.control(isSelected, { nonNullable: true }),
           })
@@ -97,7 +97,7 @@ export class ModalColonnesComponent implements OnInit {
     const selectedNames = new Set(
       formArray.controls.filter(group => group.controls.selected.value).map(group => group.controls.name.value)
     );
-    this._colonnesService.selectedColonnesTable = this.colonnes.filter(c => selectedNames.has(c.name));
+    this._colonnesService.selectedColonnesTable = this.colonnes.filter(c => selectedNames.has(c.colonne));
   }
 
 }

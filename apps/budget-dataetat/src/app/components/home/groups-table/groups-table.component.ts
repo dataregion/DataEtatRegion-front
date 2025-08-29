@@ -31,6 +31,7 @@ export class GroupsTableComponent implements OnInit {
   private _colonnesService = inject(ColonnesService);
 
   roots: Group[] = []
+  private _groups: { [k: string]: ColonneTableau<FinancialDataModel>; } = {}
 
   ngOnInit() {
     // Init des racines
@@ -60,6 +61,10 @@ export class GroupsTableComponent implements OnInit {
       }
       console.log(this.roots)
     })
+    // Sauvegarde des colonnes
+    this._groups = Object.fromEntries(
+      this._colonnesService.allColonnesGrouping.map(c => [c.grouping?.code ?? '', c])
+    );
   }
 
   private _isGroupedDataArray(results: SearchResults): results is GroupedData[] {
@@ -101,12 +106,12 @@ export class GroupsTableComponent implements OnInit {
    */
   toggle(node: Group, lvl: number) {
     console.log("==> Toggle row")
-    console.log(node.groupedData.name + " : " + node.groupedData.colonne)
+    console.log(node.groupedData.colonne + " : " + node.groupedData.value)
     if (!this.isLastLevel(lvl))
       node.opened = !node.opened
     if (!node.loaded) {
       if (this._searchDataService.searchParams) {
-        const grouped: (string | undefined)[] = this._recGetPathFromNode(node).map(gd => gd.colonne?.toString())
+        const grouped: (string | undefined)[] = this._recGetPathFromNode(node).map(gd => gd.value?.toString())
         console.log('Grouped values :')
         console.log(grouped)
         this._searchDataService.search(grouped).subscribe((response: LignesResponse) => {
@@ -136,8 +141,14 @@ export class GroupsTableComponent implements OnInit {
    * @param code 
    * @returns 
    */
-  getGroupingColumnByCode(code: string): ColonneTableau<FinancialDataModel> {
-    return this._colonnesService.allColonnesGrouping.filter(c => c.grouping?.code === code)[0]
+  // getGroupingColumnByCode(code: string): ColonneTableau<FinancialDataModel> {
+  //   console.log("--> " + code)
+  //   console.log(this._colonnesService.allColonnesGrouping.filter(c => c.grouping?.code === code)[0])
+  //   return this._colonnesService.allColonnesGrouping.filter(c => c.grouping?.code === code)[0] as ColonneTableau<FinancialDataModel>
+  // }
+
+  getGroupingLabel(code: string): string {
+    return this._groups[code]?.label ?? code;
   }
 
   /**

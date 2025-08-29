@@ -45,7 +45,7 @@
                   name="selectColonne" (change)="addGroup($event)" [disabled]="formGrouping.controls.colonnes.length >= 4">
                   <option value="">Sélectionner un groupement</option>
                   @for (column of remainingColonnes; track column) {
-                    <option [value]="column.name">{{ column.label }}</option>
+                    <option [value]="column.colonne">{{ column.label }}</option>
                   }
                 </select>
               </div>

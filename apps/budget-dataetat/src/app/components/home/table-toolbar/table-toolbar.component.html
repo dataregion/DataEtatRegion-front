@@ -3,10 +3,10 @@
     <span class="left-buttons">
       @if (!grid_fullscreen) {
       <button data-fr-opened="false" aria-controls="modalGrouping" type="button" aria-label="Grouper les lignes par"
-        class="fr-btn fr-btn--sm fr-btn--secondary fr-btn--icon-left fr-icon-menu-2-fill" data-test-id="group-by-btn"
+        class="fr-btn fr-btn--sm fr-btn--secondary fr-btn--icon-left" data-test-id="group-by-btn"
         [ngClass]="{
           'fr-btn--primary': selectedGrouping !== null && selectedGrouping.length !== 0,
-          'fr-btn--secondary': selectedGrouping === null || selectedGrouping.length === 0
+          'fr-icon-menu-2-fill fr-btn--secondary': selectedGrouping === null || selectedGrouping.length === 0
         }">
         @if (selectedGrouping !== null && selectedGrouping.length !== 0) {
           <p  class="fr-tag fr-tag--sm" style="margin-right: 10px;">{{selectedGrouping.length}}</p>

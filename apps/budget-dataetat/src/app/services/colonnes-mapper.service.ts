@@ -15,7 +15,7 @@ export interface ColonneFromPreference {
 
 export type Format = Intl.NumberFormat | Intl.DateTimeFormat;
 export interface ColonneTableau<T> {
-  name: string;
+  colonne: string;
   label: string;
   back: Colonne[];
   grouping?: Colonne;
@@ -104,7 +104,7 @@ export class ColonnesMapperService {
   initService(colonnesTable: Colonne[], colonnesGrouping: Colonne[]): void {
     this.colonnes = [
       {
-        name: this._colonnesTableau.BENEFICIAIRE.code,
+        colonne: this._colonnesTableau.BENEFICIAIRE.code,
         label: this._colonnesTableau.BENEFICIAIRE.label,
         back: [
           colonnesTable.filter(c => c.code == this.colNameOfEnriched('beneficiaire_denomination'))[0]
@@ -114,7 +114,7 @@ export class ColonnesMapperService {
         render: (row: FinancialDataModel) => row.siret?.nom_beneficiaire ?? this.NON_RENSEIGNE
       },
       {
-        name: this._colonnesTableau.MONTANT_AE.code,
+        colonne: this._colonnesTableau.MONTANT_AE.code,
         label: this._colonnesTableau.MONTANT_AE.label,
         back: [
           colonnesTable.filter(c => c.code == this.colNameOfEnriched('montant_ae'))[0]
@@ -124,7 +124,7 @@ export class ColonnesMapperService {
         style: { 'min-width': '16ex', 'flex-grow': '0' }
       },
       {
-        name: this._colonnesTableau.ANNEE_ENGAGEMENT.code,
+        colonne: this._colonnesTableau.ANNEE_ENGAGEMENT.code,
         label: this._colonnesTableau.ANNEE_ENGAGEMENT.label,
         back: [colonnesTable.filter(c => c.code == this.colNameOfEnriched('annee'))[0]],
         grouping: colonnesGrouping.filter(c => c.code == this.colNameOfEnriched('annee'))[0],
@@ -132,7 +132,7 @@ export class ColonnesMapperService {
         style: { 'min-width': '22ex', 'flex-grow': '0' }
       },
       {
-        name: this._colonnesTableau.MONTANT_CP.code,
+        colonne: this._colonnesTableau.MONTANT_CP.code,
         label: this._colonnesTableau.MONTANT_CP.label,
         back: [colonnesTable.filter(c => c.code == this.colNameOfEnriched('montant_cp'))[0]],
         grouping: colonnesGrouping.filter(c => c.code == this.colNameOfEnriched('montant_cp'))[0],
@@ -140,7 +140,7 @@ export class ColonnesMapperService {
         style: { 'min-width': '16ex', 'flex-grow': '0' }
       },
       {
-        name: this._colonnesTableau.DOMAINE.code,
+        colonne: this._colonnesTableau.DOMAINE.code,
         label: this._colonnesTableau.DOMAINE.label,
         back: [
           colonnesTable.filter(c => c.code == this.colNameOfEnriched('domaineFonctionnel_code'))[0],
@@ -150,7 +150,7 @@ export class ColonnesMapperService {
         render: (row: FinancialDataModel) => row.domaine_fonctionnel ? this._print_code_label(row.domaine_fonctionnel.code, row.domaine_fonctionnel.label) : ""
       },
       {
-        name: this._colonnesTableau.COMMUNE.code,
+        colonne: this._colonnesTableau.COMMUNE.code,
         label: this._colonnesTableau.COMMUNE.label,
         back: [
           colonnesTable.filter(c => c.code == this.colNameOfEnriched('beneficiaire_commune_code'))[0],
@@ -160,7 +160,7 @@ export class ColonnesMapperService {
         render: (row: FinancialDataModel) => row.commune?.label ?? this.NON_RENSEIGNE
       },
       {
-        name: this._colonnesTableau.CRTE.code,
+        colonne: this._colonnesTableau.CRTE.code,
         label: this._colonnesTableau.CRTE.label,
         back: [
           colonnesTable.filter(c => c.code == this.colNameOfEnriched('beneficiaire_commune_codeCrte'))[0],
@@ -170,7 +170,7 @@ export class ColonnesMapperService {
         render: (row: FinancialDataModel) => row.commune?.label_crte ?? this.NON_RENSEIGNE
       },
       {
-        name: this._colonnesTableau.EPCI.code,
+        colonne: this._colonnesTableau.EPCI.code,
         label: this._colonnesTableau.EPCI.label,
         back: [
           colonnesTable.filter(c => c.code == this.colNameOfEnriched('beneficiaire_commune_codeEpci'))[0],
@@ -180,7 +180,7 @@ export class ColonnesMapperService {
         render: (row: FinancialDataModel) => row.commune?.label_epci ?? this.NON_RENSEIGNE
       },
       {
-        name: this._colonnesTableau.ARRONDISSEMENT.code,
+        colonne: this._colonnesTableau.ARRONDISSEMENT.code,
         label: this._colonnesTableau.ARRONDISSEMENT.label,
         back: [
           colonnesTable.filter(c => c.code == this.colNameOfEnriched('beneficiaire_commune_arrondissement_code'))[0],
@@ -190,7 +190,7 @@ export class ColonnesMapperService {
         render: (row: FinancialDataModel) => row.commune?.arrondissement?.label ?? this.NON_RENSEIGNE
       },
       {
-        name: this._colonnesTableau.DEPARTEMENT.code,
+        colonne: this._colonnesTableau.DEPARTEMENT.code,
         label: this._colonnesTableau.DEPARTEMENT.label,
         back: [
           colonnesTable.filter(c => c.code == this.colNameOfEnriched('beneficiaire_commune_codeDepartement'))[0],
@@ -200,7 +200,7 @@ export class ColonnesMapperService {
         render: (row: FinancialDataModel) => row.commune?.label_departement ?? this.NON_RENSEIGNE
       },
       {
-        name: this._colonnesTableau.REGION.code,
+        colonne: this._colonnesTableau.REGION.code,
         label: this._colonnesTableau.REGION.label,
         back: [
           colonnesTable.filter(c => c.code == this.colNameOfEnriched('beneficiaire_commune_codeRegion'))[0],
@@ -210,7 +210,7 @@ export class ColonnesMapperService {
         render: (row: FinancialDataModel) => row.commune?.label_region ?? this.NON_RENSEIGNE
       },
       {
-        name: this._colonnesTableau.LOC_INTER.code,
+        colonne: this._colonnesTableau.LOC_INTER.code,
         label: this._colonnesTableau.LOC_INTER.label,
         back: [
           colonnesTable.filter(c => c.code == this.colNameOfEnriched('localisationInterministerielle_code'))[0],
@@ -220,14 +220,14 @@ export class ColonnesMapperService {
         render: (row: FinancialDataModel) => this._print_localisation_interministerielle(row.localisation_interministerielle)
       },
       {
-        name: this._colonnesTableau.N_EJ.code,
+        colonne: this._colonnesTableau.N_EJ.code,
         label: this._colonnesTableau.N_EJ.label,
         back: [colonnesTable.filter(c => c.code == this.colNameOfEnriched('n_ej'))[0]],
         grouping: colonnesGrouping.filter(c => c.code == this.colNameOfEnriched('n_ej'))[0],
         render: (row: FinancialDataModel) => row.n_ej ?? "",
       },
       {
-        name: this._colonnesTableau.TAGS.code,
+        colonne: this._colonnesTableau.TAGS.code,
         label: this._colonnesTableau.TAGS.label,
         back: [colonnesTable.filter(c => c.code == this.colNameOfEnriched('tags'))[0]],
         grouping: colonnesGrouping.filter(c => c.code == this.colNameOfEnriched('tags'))[0],
@@ -241,14 +241,14 @@ export class ColonnesMapperService {
         },
       },
       {
-        name: this._colonnesTableau.THEME.code,
+        colonne: this._colonnesTableau.THEME.code,
         label: this._colonnesTableau.THEME.label,
         back: [colonnesTable.filter(c => c.code == this.colNameOfEnriched('programme_theme'))[0]],
         grouping: colonnesGrouping.filter(c => c.code == this.colNameOfEnriched('programme_theme'))[0],
         render: (row: FinancialDataModel) => row.programme?.theme ?? ''
       },
       {
-        name: this._colonnesTableau.PROGRAMME.code,
+        colonne: this._colonnesTableau.PROGRAMME.code,
         label: this._colonnesTableau.PROGRAMME.label,
         back: [
           colonnesTable.filter(c => c.code == this.colNameOfEnriched('programme_code'))[0],
@@ -258,7 +258,7 @@ export class ColonnesMapperService {
         render: (row: FinancialDataModel) => this._print_code_label(row.programme?.code, row.programme?.label)
       },
       {
-        name: this._colonnesTableau.REF_PROGRAMMATION.code,
+        colonne: this._colonnesTableau.REF_PROGRAMMATION.code,
         label: this._colonnesTableau.REF_PROGRAMMATION.label,
         back: [
           colonnesTable.filter(c => c.code == this.colNameOfEnriched('referentielProgrammation_code'))[0],
@@ -268,7 +268,7 @@ export class ColonnesMapperService {
         render: (row: FinancialDataModel) => this._print_code_label(row.referentiel_programmation?.code, row.referentiel_programmation?.label)
       },
       {
-        name: this._colonnesTableau.CENTRE_COUTS.code,
+        colonne: this._colonnesTableau.CENTRE_COUTS.code,
         label: this._colonnesTableau.CENTRE_COUTS.label,
         back: [
           colonnesTable.filter(c => c.code == this.colNameOfEnriched('centreCouts_code'))[0],
@@ -278,7 +278,7 @@ export class ColonnesMapperService {
         render: (row: FinancialDataModel) => this._print_code_label(row.centre_couts?.code, row.centre_couts?.description)
       },
       {
-        name: this._colonnesTableau.SIRET.code,
+        colonne: this._colonnesTableau.SIRET.code,
         label: this._colonnesTableau.SIRET.label,
         back: [colonnesTable.filter(c => c.code == this.colNameOfEnriched('beneficiaire_code'))[0]],
         grouping: colonnesGrouping.filter(c => c.code == this.colNameOfEnriched('beneficiaire_code'))[0],
@@ -286,7 +286,7 @@ export class ColonnesMapperService {
         style: { 'min-width': '16ex', 'flex-grow': '0' },
       },
       {
-        name: this._colonnesTableau.QPV.code,
+        colonne: this._colonnesTableau.QPV.code,
         label: this._colonnesTableau.QPV.label,
         back: [
           colonnesTable.filter(c => c.code == this.colNameOfEnriched('beneficiaire_qpv_code'))[0],
@@ -296,28 +296,28 @@ export class ColonnesMapperService {
         render: (row: FinancialDataModel) => this._print_code_label(row.siret?.code_qpv, row.siret?.label_qpv)
       },
       {
-        name: this._colonnesTableau.TYPE_ETABLISSEMENT.code,
+        colonne: this._colonnesTableau.TYPE_ETABLISSEMENT.code,
         label: this._colonnesTableau.TYPE_ETABLISSEMENT.label,
         back: [colonnesTable.filter(c => c.code == this.colNameOfEnriched('beneficiaire_categorieJuridique_type'))[0]],
         grouping: colonnesGrouping.filter(c => c.code == this.colNameOfEnriched('beneficiaire_categorieJuridique_type'))[0],
         render: (row: FinancialDataModel) =>  row.siret?.categorie_juridique ?? this.NON_RENSEIGNE
       },
       {
-        name: this._colonnesTableau.COMPTE_BUDGETAIRE.code,
+        colonne: this._colonnesTableau.COMPTE_BUDGETAIRE.code,
         label: this._colonnesTableau.COMPTE_BUDGETAIRE.label,
         back: [colonnesTable.filter(c => c.code == this.colNameOfEnriched('compte_budgetaire'))[0]],
         grouping: colonnesGrouping.filter(c => c.code == this.colNameOfEnriched('compte_budgetaire'))[0],
         render: (row: FinancialDataModel) => row.compte_budgetaire ?? this.NON_RENSEIGNE
       },
       {
-        name: this._colonnesTableau.CPER.code,
+        colonne: this._colonnesTableau.CPER.code,
         label: this._colonnesTableau.CPER.label,
         back: [colonnesTable.filter(c => c.code == this.colNameOfEnriched('contrat_etat_region'))[0]],
         grouping: colonnesGrouping.filter(c => c.code == this.colNameOfEnriched('contrat_etat_region'))[0],
         render: (row: FinancialDataModel) => row.contrat_etat_region ?? this.NON_RENSEIGNE
       },
       {
-        name: this._colonnesTableau.GROUPE_MARCHANDISE.code,
+        colonne: this._colonnesTableau.GROUPE_MARCHANDISE.code,
         label: this._colonnesTableau.GROUPE_MARCHANDISE.label,
         back: [
           colonnesTable.filter(c => c.code == this.colNameOfEnriched('groupeMarchandise_code'))[0],
@@ -327,28 +327,28 @@ export class ColonnesMapperService {
         render: (row: FinancialDataModel) => this._print_code_label(row.groupe_marchandise?.code, row.groupe_marchandise?.label)
       },
       {
-        name: this._colonnesTableau.DATE_DERNIER_PAIEMENT.code,
+        colonne: this._colonnesTableau.DATE_DERNIER_PAIEMENT.code,
         label: this._colonnesTableau.DATE_DERNIER_PAIEMENT.label,
         back: [colonnesTable.filter(c => c.code == this.colNameOfEnriched('dateDeDernierPaiement'))[0]],
         grouping: colonnesGrouping.filter(c => c.code == this.colNameOfEnriched('dateDeDernierPaiement'))[0],
         render: (row: FinancialDataModel) => row.date_cp ? this._dateFormat.format(new Date(row.date_cp)) : this.EMPTY
       },
       {
-        name: this._colonnesTableau.DATE_CREATION_EJ.code,
+        colonne: this._colonnesTableau.DATE_CREATION_EJ.code,
         label: this._colonnesTableau.DATE_CREATION_EJ.label,
         back: [colonnesTable.filter(c => c.code == this.colNameOfEnriched('dateDeCreation'))[0]],
         grouping: colonnesGrouping.filter(c => c.code == this.colNameOfEnriched('dateDeCreation'))[0],
         render: (row: FinancialDataModel) => row.date_replication ? this._dateFormat.format(new Date(row.date_replication)) : this.EMPTY
       },
       {
-        name: this._colonnesTableau.DATE_MODIFICATION.code,
+        colonne: this._colonnesTableau.DATE_MODIFICATION.code,
         label: this._colonnesTableau.DATE_MODIFICATION.label,
         back: [colonnesTable.filter(c => c.code == this.colNameOfEnriched('date_modification'))[0]],
         grouping: colonnesGrouping.filter(c => c.code == this.colNameOfEnriched('date_modification'))[0],
         render: (row: FinancialDataModel) => row.date_modification ? this._dateFormat.format(new Date(row.date_modification)) : this.EMPTY
       },
       {
-        name: this._colonnesTableau.DATA_SOURCE.code,
+        colonne: this._colonnesTableau.DATA_SOURCE.code,
         label: this._colonnesTableau.DATA_SOURCE.label,
         back: [colonnesTable.filter(c => c.code == this.colNameOfEnriched('data_source'))[0]],
         grouping: colonnesGrouping.filter(c => c.code == this.colNameOfEnriched('data_source'))[0],
@@ -360,7 +360,7 @@ export class ColonnesMapperService {
   public mapNamesFromPreferences(preferences: ColonneFromPreference[]): ColonneTableau<FinancialDataModel>[] {
     const filteredPrefs = preferences.filter(p => p.displayed !== false);
     return filteredPrefs
-      .map(pref => this.colonnes.find(c => c.name === pref.columnName))
+      .map(pref => this.colonnes.find(c => c.colonne === pref.columnName))
       .filter((c): c is ColonneTableau<FinancialDataModel> => !!c); 
   }
 

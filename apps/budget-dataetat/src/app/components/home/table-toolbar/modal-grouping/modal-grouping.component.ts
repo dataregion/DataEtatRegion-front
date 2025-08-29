@@ -47,7 +47,7 @@ export class ModalGroupingComponent implements OnInit {
       colonnes: this._formBuilder.array(
         this.selectedColonnes.map(col => {
           return this._formBuilder.group({
-            name: this._formBuilder.control(col.name, { nonNullable: true }),
+            name: this._formBuilder.control(col.colonne, { nonNullable: true }),
             label: this._formBuilder.control(col.label, { nonNullable: true }),
           })
         })
@@ -61,7 +61,7 @@ export class ModalGroupingComponent implements OnInit {
   private calculateRemainingColumns() {
     const formArray = this.formGrouping.controls.colonnes;
     const usedNames = new Set(formArray.controls.map(group => group.controls.name.value));
-    return this.colonnes.filter(col => !usedNames.has(col.name));
+    return this.colonnes.filter(col => !usedNames.has(col.colonne));
   }
 
   moveGroup(event: CdkDragDrop<FormGroup<ColonneFormValues>[]>) {
@@ -75,12 +75,12 @@ export class ModalGroupingComponent implements OnInit {
     const target = event.target as HTMLSelectElement;
     const selectedName = target.selectedOptions[0].value;
     
-    const col = this.colonnes.find(c => c.name === selectedName);
+    const col = this.colonnes.find(c => c.colonne === selectedName);
     if (!col) return;
     
     this.formGrouping.controls.colonnes.push(
       this._formBuilder.group({
-        name: this._formBuilder.control(col.name, { nonNullable: true }),
+        name: this._formBuilder.control(col.colonne, { nonNullable: true }),
         label: this._formBuilder.control(col.label, { nonNullable: true }),
       })
     );
@@ -99,7 +99,7 @@ export class ModalGroupingComponent implements OnInit {
     // build selected in the same order as in the form array
     const selected = colonnes.controls
       .map(group => group.controls.name.value)       // ordered list of names
-      .map(name => this.colonnes.find(c => c.name === name)!) // map back to ColonneTableau
+      .map(name => this.colonnes.find(c => c.colonne === name)!) // map back to ColonneTableau
       .filter(Boolean);                              // remove nulls
 
     this._colonnesService.selectedColonnesGrouping = selected;

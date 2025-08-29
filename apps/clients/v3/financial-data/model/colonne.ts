@@ -13,5 +13,6 @@ export interface Colonne {
     code?: string | null;
     label?: string | null;
     'default'?: boolean;
+    concatenate?: string | null;
 }
 
