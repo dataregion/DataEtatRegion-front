@@ -59,10 +59,9 @@ export class InfosLigneComponent implements OnInit {
   affichage_dossier$: Observable<AffichageDossier> | undefined;
 
   ngOnInit() {
-    // const data: FinancialDataModel = this._route.snapshot.data['infos_supplementaires'];
-    // console.log(data)
-    if (this._searchDataService.selectedLine)
-      this._initFromResolverModel(this._searchDataService.selectedLine);
+    const data: FinancialDataModel = this._route.snapshot.data['infos_supplementaires'];
+    this._searchDataService.selectedLine = data
+    this._initFromResolverModel(this._searchDataService.selectedLine);
   }
 
   get vService(): InformationSupplementairesViewService {

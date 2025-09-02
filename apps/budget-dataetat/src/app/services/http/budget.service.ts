@@ -72,7 +72,7 @@ export class BudgetDataHttpService {
   }
   
   public getById(id: number, source:string): Observable<APISuccessAnnotatedEnrichedFlattenFinancialLinesPydanticFromMarshmallowSchemaAnnotationTSchema> {
-    return this._lignesFinancieresApi.getLignesFinancieresBySourceLignesIdGet(id, undefined, source);
+    return this._lignesFinancieresApi.getLignesFinancieresBySourceLignesIdGet(id, undefined, undefined, source)
   }
 
   public allTags$(): Observable<Tag[]> {
