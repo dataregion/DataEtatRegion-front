@@ -8,7 +8,7 @@ import { LoggerService, LogLevel } from 'apps/common-lib/src/lib/services/logger
 import { providerMatomoDynamic } from './app/matomo.config';
 
 async function loadApp(): Promise<{ settings: SettingsBudgetService, logger: LoggerService }> {
-  const response = await fetch('/assets/settings.json');
+  const response = await fetch('/config/settings.json');
   const json = await response.json();
 
   const settingsService = new SettingsBudgetService();
