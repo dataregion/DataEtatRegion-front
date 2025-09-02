@@ -23,7 +23,7 @@
     - |
       npm run lint
       echo >&2 "🔨 Building budget-dataetat"
-      npm run build:budget-dataetat
+      npm run build:budget
       echo >&2 "🔨 Building financial-data"
       npm run build:financial-data
       echo >&2 "🔨 Building france-relance"
