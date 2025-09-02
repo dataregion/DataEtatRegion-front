@@ -35,6 +35,18 @@ include:
       do-push: true
       # enable-debug: true
 
+  - component: $CI_SERVER_FQDN/csm/gitlab-components/docker-build@4.0.4
+    inputs:
+      image-name: ${REGISTRY}nocode/budget-dataetat
+      image-tag: ${FRONTS_VER}
+      build-context: ./
+      dockerfile-name: ./apps/budget-dataetat/Dockerfile
+      do-login: true
+      registry: ${REGISTRY}
+      registry-login: ${REGISTRY_USER}
+      do-push: true
+      # enable-debug: true
+
 .default-dockerize: &default-dockerize
   rules:
     - if: '$DO_DOCKERIZE == "✅"'
