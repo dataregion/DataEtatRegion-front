@@ -67,9 +67,15 @@
 </div>
 }
 
-<div class="site-main">
+<div #siteMain class="site-main">
   <router-outlet class="page-content-outlet" />
 </div>
+
+@if (showBackToTop) {
+  <button type="button" class="fr-btn fr-btn--primary fr-icon-arrow-up-fill fr-btn--icon-left back-to-top" (click)="scrollToTop()">
+    Retour au haut de page
+  </button>
+}
 
 @if(isAuthenticated) {
 <lib-footer [logo]="'DataEtat.svg'" [ngClass]="{'hidden': grid_fullscreen }">

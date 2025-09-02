@@ -5,7 +5,7 @@ import { AlertService } from "apps/common-lib/src/public-api";
 import { debounceTime, distinctUntilChanged, finalize, map, Observable, of, Subject, switchMap, takeUntil } from 'rxjs';
 import { PreferenceUsersHttpService } from 'apps/preference-users/src/lib/services/preference-users-http.service';
 import { Preference } from 'apps/preference-users/src/lib/models/preference.models';
-import { COMMA, ENTER, S } from '@angular/cdk/keycodes';
+import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { DsfrAutocompleteComponent, DsfrCompleteEvent } from '@edugouvfr/ngx-dsfr-ext'
 import { ReactiveFormsModule, FormGroup, FormBuilder, FormControl, FormArray } from '@angular/forms';
 import { PreferenceService } from '@services/preference.service';
@@ -39,7 +39,7 @@ export class ModalSauvegardeComponent implements OnInit, OnDestroy {
 
   public shareSearch: boolean = false;
   public search: string = '';
-  public filterUser: any[] = [];
+  public filterUser: string[] = [];
   
   public separatorKeysCodes: number[] = [ENTER, COMMA];
 

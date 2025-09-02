@@ -10,7 +10,7 @@
                   <th>
                     <span class="fr-cell__title" style="width:40%">
                       Groupe
-                      <a id="link-1" href="#" target="_self" class="fr-link fr-link--sm" style="margin-left: 30px;">Revenir à l'affichage non-groupé</a>
+                      <button type="button" (click)="removeGrouping()" class="fr-btn fr-btn--tertiary fr-btn--sm" style="margin-left: 30px;">Revenir à l'affichage non-groupé</button>
                     </span>
                   </th>
                   <th>
@@ -28,18 +28,18 @@
                 <tr id="table-10-row-key-0" data-row-key="0">
                   <td style="text-align: right; width: 40%;">
                     <b style="font-size: 16px;">TOTAL</b>
-                    <span class="fr-badge fr-badge--info badge-no-icon" style="margin-left: 30px;">{{getTotalOfRoots()}} lignes</span></td>
+                    <span class="fr-badge fr-badge--info badge-no-icon" style="margin-left: 30px;">{{getTotal()?.total | numberFormat}} lignes</span></td>
                   <td style="text-align: center;">
-                    <p class="fr-mr-2v fr-badge fr-badge--success badge-no-icon">{{getTotalMontantsEngagesOfRoots() | currency:'EUR':'symbol':'1.0-2'}}</p>
+                    <p class="fr-mr-2v fr-badge fr-badge--success badge-no-icon">{{getTotal()?.total_montant_engage | currency:'EUR':'symbol':'1.0-2'}}</p>
                   </td>
                   <td style="text-align: center;">
-                    <p class="fr-mr-2v fr-badge fr-badge--success badge-no-icon">{{getTotalMontantsPayesOfRoots() | currency:'EUR':'symbol':'1.0-2'}}</p>
+                    <p class="fr-mr-2v fr-badge fr-badge--success badge-no-icon">{{getTotal()?.total_montant_paye | currency:'EUR':'symbol':'1.0-2'}}</p>
                   </td>
                   <td>
                   </td>
                 </tr>
 
-                <ng-container *ngTemplateOutlet="renderNode; context: { $implicit: roots, level: 0 }"></ng-container>
+                <ng-container *ngTemplateOutlet="renderNode; context: { $implicit: roots, level: 0 }"/>
 
                 <ng-template #renderNode let-nodes let-level="level">
                   <ng-container *budgetTreeAccordion="nodes; level: level; let node; let lvl = level">
@@ -78,7 +78,7 @@
 
                     @if (node.opened) {
                       @if (node.loaded) {
-                        <ng-container *ngTemplateOutlet="renderNode; context: { $implicit: node.children, level: lvl + 1 }"></ng-container>
+                        <ng-container *ngTemplateOutlet="renderNode; context: { $implicit: node.children, level: lvl + 1 }" />
                       } @else {
                         <tr>
                           <td colspan="4" class="td-group" [style.padding-left.px]="((lvl + 1) * 50) + 30">

@@ -1,0 +1,32 @@
+@if (affichageDossier) {
+  <div class="contenu">
+    <ng-container *ngTemplateOutlet="contenu" />
+  </div>
+  <hr>
+  <ng-template #contenu>
+    @if (affichageDossier) {
+      <div class="ligne">
+        <div class="colonne">
+          <img alt="Logo API démarches simplifiées" class="logo-api-demarche" src="assets/img/logo-ds.png">
+        </div>
+        <div style="flex-grow: 2;">
+          <h4>{{affichageDossier.nomDemarche}}</h4>
+        </div>
+      </div>
+      <h5>Dossier n°<a href="{{ url_dossier_ds }}{{ affichageDossier.numeroDossier}}">{{ affichageDossier.numeroDossier }}</a></h5>
+      <div>
+        <strong>Nom du projet: </strong> {{ affichageDossier.nomProjet | ouNonRenseigne }} <br>
+        <strong>Description du projet: </strong> {{ affichageDossier.descriptionProjet | ouNonRenseigne }} <br>
+        <strong>Catégorie du projet : </strong> {{ affichageDossier.categorieProjet | ouNonRenseigne }} <br>
+        <strong>Cout prévisionnel total du projet: </strong> {{ getMontant(affichageDossier.coutProjet) }} <br>
+        <strong>Montant demandé :</strong> {{ getMontant(affichageDossier.montantDemande) }} <br>
+        <strong>Montant accordé :</strong> {{ getMontant(affichageDossier.montantAccorde) }} <br>
+        <strong>Date de fin de projet :</strong> {{ affichageDossier.dateFinProjet | ouNonRenseigne }} <br>
+        <strong>Contact : </strong> {{ affichageDossier.contact | ouNonRenseigne }}
+      </div>
+    }
+  </ng-template>
+} @else {
+  <budget-informations-supplementaires-chargement-ou-erreur [erreur]="vService.api_demarche_error"
+  nom_service_distant="Api demarches simplifiées" />
+}

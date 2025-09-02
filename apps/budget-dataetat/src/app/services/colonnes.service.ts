@@ -7,7 +7,7 @@ import { ColonneTableau } from '@services/colonnes-mapper.service';
 @Injectable({ providedIn: 'root' })
 export class ColonnesService {
 
-  private groupedSubject = new BehaviorSubject<Boolean>(false);
+  private groupedSubject = new BehaviorSubject<boolean>(false);
   grouped$ = this.groupedSubject.asObservable();
   get grouped(): boolean {
     return this.selectedColonnesGrouping.length != 0 && this.selectedColonnesGrouping.length != this.selectedColonnesGrouped.length;

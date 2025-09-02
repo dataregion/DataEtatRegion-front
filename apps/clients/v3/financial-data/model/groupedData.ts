@@ -7,13 +7,14 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { Label } from './label';
 import { Value } from './value';
 
 
 export interface GroupedData { 
     colonne?: string;
+    label: Label | null;
     value: Value | null;
-    label: string;
     total: number;
     total_montant_engage?: number;
     total_montant_paye?: number;

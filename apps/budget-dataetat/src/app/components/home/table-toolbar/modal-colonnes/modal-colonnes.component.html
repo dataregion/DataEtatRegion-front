@@ -23,7 +23,7 @@
             <p style="margin-top: 15px; font-weight: bold;">Sélectionner et ordonner les colonnes :</p>
             <div>
               <div formArrayName="colonnes" cdkDropList class="column-list" [cdkDropListData]="formColonnes.controls.colonnes.controls" (cdkDropListDropped)="moveGroup($event)">
-                @for (group of formColonnes.controls.colonnes.controls; let i = $index; track $index) {
+                @for (group of formColonnes.controls.colonnes.controls; let i = $index; track group.controls.name.value) {
                   <div [formGroupName]="i" cdkDrag class="column-box">
                     <span class="fr-icon-drag-move-2-line" aria-hidden="true"></span>
                     <div>{{ group.controls.label.value }}</div>

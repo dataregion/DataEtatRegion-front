@@ -16,6 +16,11 @@ import { Tags } from './tags';
 export interface EnrichedFlattenFinancialLines1 { 
     source?: EnrichedFlattenFinancialLines1.SourceEnum | null;
     tags?: Array<Tags> | null;
+    dateDeDernierPaiement?: string | null;
+    dateDeCreation?: string | null;
+    updated_at?: string | null;
+    created_at?: string | null;
+    date_modification?: string | null;
     id: number;
     n_ej?: string | null;
     n_poste_ej?: number | null;
@@ -24,8 +29,6 @@ export interface EnrichedFlattenFinancialLines1 {
     compte_budgetaire?: string | null;
     montant_ae?: number | null;
     montant_cp?: number | null;
-    dateDeDernierPaiement?: string | null;
-    dateDeCreation?: string | null;
     domaineFonctionnel_code?: string | null;
     domaineFonctionnel_label?: string | null;
     referentielProgrammation_code?: string | null;
@@ -70,15 +73,12 @@ export interface EnrichedFlattenFinancialLines1 {
     localisationInterministerielle_commune_arrondissement_code?: string | null;
     localisationInterministerielle_commune_arrondissement_label?: string | null;
     source_region?: string | null;
-    updated_at?: string | null;
-    created_at?: string | null;
     centreCouts_code?: string | null;
     centreCouts_label?: string | null;
     centreCouts_description?: string | null;
     data_source?: string | null;
     lieu_action_code_qpv?: string | null;
     lieu_action_label_qpv?: string | null;
-    date_modification?: string | null;
 }
 export namespace EnrichedFlattenFinancialLines1 {
     export type SourceEnum = 'FINANCIAL_DATA_AE' | 'FINANCIAL_DATA_CP' | 'FRANCE_RELANCE' | 'FRANCE_2030' | 'ADEME' | 'REFERENTIEL';

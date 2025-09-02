@@ -32,6 +32,7 @@ export class SearchDataMapper {
    * @returns 
    */
   map(object: EnrichedFlattenFinancialLines2): FinancialDataModel {
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
     const that = this
     return {
       id: object.id!,

@@ -1,17 +1,12 @@
 import { Component, ElementRef, inject, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 
 import { GridInFullscreenStateService } from 'apps/common-lib/src/lib/services/grid-in-fullscreen-state.service';
-import {
-  TableData,
-  VirtualGroup
-} from 'apps/grouping-table/src/lib/components/grouping-table/group-utils';
 import { TableToolbarComponent } from './table-toolbar/table-toolbar.component';
 import { DisplayDateComponent } from 'apps/common-lib/src/lib/components/display-date/display-date.component';
 import { GroupsTableComponent } from './groups-table/groups-table.component';
 import { LinesTableComponent } from './lines-tables/lines-table.component';
 import { ActivatedRoute } from '@angular/router';
-import { FinancialData, FinancialDataResolverModel } from '../../models/financial/financial-data-resolvers.models';
-import { Preference } from 'apps/preference-users/src/lib/models/preference.models';
+import { FinancialDataResolverModel } from '../../models/financial/financial-data-resolvers.models';
 import { PreFilters } from '../../models/search/prefilters.model';
 import { CommonModule } from '@angular/common';
 import { SearchDataComponent } from './search-data/search-data.component';
@@ -23,18 +18,18 @@ import { AlertService } from 'apps/common-lib/src/public-api';
 import { FinancialDataModel } from '@models/financial/financial-data.models';
 import { AuditHttpService } from '@services/http/audit.service';
 import { MarqueBlancheParsedParamsResolverModel } from '../../resolvers/marqueblanche-parsed-params.resolver';
-import { PreferenceService } from '@services/preference.service';
-import { Colonne, LignesResponse } from 'apps/clients/v3/financial-data';
+import { LignesResponse } from 'apps/clients/v3/financial-data';
 import { ColonneFromPreference, ColonnesMapperService, ColonneTableau } from '@services/colonnes-mapper.service';
 import { SearchResults, SearchDataService } from '@services/search-data.service';
 import { PrefilterMapperService } from './search-data/prefilter-mapper.services';
 import { ReferentielProgrammation } from '@models/refs/referentiel_programmation.model';
 import { Bop } from '@models/search/bop.model';
+import { InfosLigneComponent } from "../infos-ligne/infos-ligne.component";
 
 @Component({
   selector: 'budget-home',
   templateUrl: './home.component.html',
-  imports: [CommonModule, SearchDataComponent, TableToolbarComponent, GroupsTableComponent, LinesTableComponent, DisplayDateComponent],
+  imports: [CommonModule, SearchDataComponent, TableToolbarComponent, GroupsTableComponent, LinesTableComponent, DisplayDateComponent, InfosLigneComponent],
   styleUrls: ['./home.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
@@ -46,7 +41,6 @@ export class HomeComponent implements OnInit {
   private _colonnesService = inject(ColonnesService);
   private _colonnesMapperService = inject(ColonnesMapperService);
   private _httpPreferenceService = inject(PreferenceUsersHttpService);
-  private _preferenceService = inject(PreferenceService);
   private _prefilterMapperService = inject(PrefilterMapperService);
   private _gridFullscreen = inject(GridInFullscreenStateService);
   private _searchDataService = inject(SearchDataService);
@@ -65,8 +59,14 @@ export class HomeComponent implements OnInit {
   get searchInProgress() {
     return this._searchDataService.searchInProgress
   }
+  get searchInProgress$() {
+    return this._searchDataService.searchInProgress$
+  }
   get searchResults(): SearchResults {
     return this._searchDataService.searchResults;
+  }
+  get searchResults$() {
+    return this._searchDataService.searchResults$;
   }
 
   ngOnInit() {
@@ -96,6 +96,8 @@ export class HomeComponent implements OnInit {
 
     // Aplication d'une préférence
     this._route.queryParams.subscribe((param) => {
+      // On set les colonnes par défaut
+      this._colonnesService.selectedColonnesTable = this._colonnesMapperService.getDefaults();
       // Si une recherche doit être appliquée
       if (param[QueryParam.Uuid]) {
         this._httpPreferenceService.getPreference(param[QueryParam.Uuid]).subscribe((preference) => {
@@ -130,13 +132,6 @@ export class HomeComponent implements OnInit {
     });
   }
 
-  ngAfterViewChecked() {
-  }
-
-  hasNext() {
-    return this._searchDataService.pagination?.has_next
-  }
-
   loadNextPage() {
     console.log("==> LOAD NEXT PAGE");
     if (this._searchDataService.searchParams) {
@@ -161,5 +156,9 @@ export class HomeComponent implements OnInit {
         }
       });
     }
+  }
+
+  hasSelectedLine() {
+    return this._searchDataService.selectedLine !== undefined
   }
 }

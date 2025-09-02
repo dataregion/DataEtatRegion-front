@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, Input, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Component, inject, Input, ViewEncapsulation } from '@angular/core';
 
 import { GridInFullscreenStateService } from 'apps/common-lib/src/lib/services/grid-in-fullscreen-state.service';
 import {
@@ -9,8 +9,6 @@ import {
 import { ModalGroupingComponent } from './modal-grouping/modal-grouping.component';
 import { ModalColonnesComponent } from "./modal-colonnes/modal-colonnes.component";
 import { ModalSauvegardeComponent } from "./modal-sauvegarde/modal-sauvegarde.component";
-import { BudgetDataHttpService } from '@services/http/budget.service';
-import { ExportDataService } from 'apps/appcommon/src/lib/export-data.service';
 import { FinancialDataModel } from '@models/financial/financial-data.models';
 import { ColonnesService } from '@services/colonnes.service';
 import { ColonneTableau } from '@services/colonnes-mapper.service';
@@ -23,11 +21,9 @@ import { ColonneTableau } from '@services/colonnes-mapper.service';
   styleUrls: ['./table-toolbar.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
-export class TableToolbarComponent implements OnInit {
+export class TableToolbarComponent {
   
   private _gridFullscreen = inject(GridInFullscreenStateService);
-  private _budgetService = inject(BudgetDataHttpService);
-  private _exportDataService = inject(ExportDataService);
   private _colonnesService = inject(ColonnesService);
 
   @Input()
@@ -58,9 +54,6 @@ export class TableToolbarComponent implements OnInit {
 
   isGrouped() {
     return this._colonnesService.grouped
-  }
-
-  ngOnInit() {
   }
 
   get selectedGrouping(): ColonneTableau<FinancialDataModel>[] {

@@ -3,47 +3,40 @@
 <div class="fr-container--fluid">
   <div class="fr-grid-row">
     <div class="fr-col-12">
-      @if (!grid_fullscreen) {
+      @if (!grid_fullscreen && !hasSelectedLine()) {
         <budget-search-data />
       }
 
-      <div class="main-content overlay-container" [class.no-content]="!searchInProgress && searchResults.length === 0">
-        @if (searchResults.length === 0) {
-          <div><i>Aucune donnée ne correspond à vos critères de recherche.</i></div>
-        }
-        @else if (searchInProgress) {
-          <div><i>Recherche en cours ...</i></div>
-        }
-        @else {
-          <budget-table-toolbar [grouped]="grouped"></budget-table-toolbar>
-
-          @if (grouped) {
-            <budget-groups-table></budget-groups-table>
+      <div class="main-content overlay-container" [class.no-content]="(searchResults$ | async)?.length === 0">
+        @if (hasSelectedLine()) {
+          <budget-infos-ligne />
+        } @else {
+          @if (searchResults.length === 0) {
+            <div><i>Aucune donnée ne correspond à vos critères de recherche.</i></div>
           }
           @else {
-            <budget-lines-table></budget-lines-table>
+            <budget-table-toolbar [grouped]="grouped" />
+            @if (grouped) {
+              <budget-groups-table />
+            }
+            @else {
+              <budget-lines-table />
+            }
           }
-          @if (hasNext()) {
-            <div #spinner class="spinner-wrapper fr-spinner--lg" style="text-align: center; margin-bottom: 30px;">
-                <span class="fr-spinner" aria-label="Chargement…" role="status"></span>
-                <span class="fr-spinner-message">Chargement en cours ...</span>
+        
+          @if(lastImportDate) {
+            <div class="last-import">
+              <span aria-hidden="false" aria-label="Example home icon" class="info-icon" fontIcon="info"></span>
+              <div>
+                Le dernier chargement complet des données financières date du
+                <lib-display-date [date]="lastImportDate" />
+                . <br>
+                Les données prennent donc en compte la situation au dernier jour du mois précédent.
+              </div>
             </div>
           }
-
         }
       </div>
-
-      @if(lastImportDate) {
-        <div class="last-import">
-          <span aria-hidden="false" aria-label="Example home icon" class="info-icon" fontIcon="info"></span>
-          <div>
-            Le dernier chargement complet des données financières date du
-            <lib-display-date [date]="lastImportDate" />
-            . <br>
-            Les données prennent donc en compte la situation au dernier jour du mois précédent.
-          </div>
-        </div>
-      }
     </div>
   </div>
 </div>

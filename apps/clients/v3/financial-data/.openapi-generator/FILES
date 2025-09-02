@@ -25,11 +25,13 @@ model/enrichedFlattenFinancialLines1.ts
 model/enrichedFlattenFinancialLines2.ts
 model/groupedData.ts
 model/groupings.ts
+model/label.ts
 model/lignesFinancieres.ts
 model/lignesResponse.ts
 model/models.ts
 model/paginationMeta.ts
 model/tags.ts
+model/total.ts
 model/value.ts
 ng-package.json
 package.json

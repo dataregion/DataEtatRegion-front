@@ -1,0 +1,94 @@
+@if (info) {
+  <div class="contenu">
+    <ng-container *ngTemplateOutlet="contenu" />
+  </div>
+  <hr>
+  <div class="footer">
+    <i>
+      Autres informations sur l'organisme sur « annuaire-entreprises.data.gouv.fr » (ex: fiche d'immatriculation
+      RNCS)
+      <a [href]="lienAnnuaireEntreprise(info.donnees_etablissement.siret)"
+         rel="noopener" target="_blank" title="Etablissement sur « annuaire-entreprises.data.gouv.fr »">
+      </a>
+    </i>
+  </div>
+
+} @else {
+  <budget-informations-supplementaires-chargement-ou-erreur
+    [erreur]="vService.api_entreprise_full_error"
+    nom_service_distant="API entreprise" />
+}
+
+<ng-template #contenu>
+  @if (info) {
+
+    <div class="ligne">
+      <div class="colonne">
+        <img alt="Logo API entreprise" class="logo-api-entreprise" src="assets/img/api-entreprise.custom.png">
+      </div>
+    </div>
+
+    <div class="ligne">
+
+      <div class="colonne">
+
+        <strong>Dénomination :</strong> {{ info.quick.personne_morale.raison_sociale | ouNonRenseigne }} <br>
+        <strong>N° SIRET :</strong> {{ info.donnees_etablissement.siret | ouNonRenseigne }} <br>
+        <strong>Forme juridique :</strong> {{
+          info.donnees_etablissement.unite_legale.forme_juridique.libelle |
+            ouNonRenseigne
+        }} <br>
+        <strong>Libellé NAF :</strong> {{ info.quick.activite_principale.libelle | ouNonRenseigne }} <br>
+        <strong>Code NAF :</strong> {{ info.quick.activite_principale.code | ouNonRenseigne }} <br>
+
+        <strong>Date de création :</strong>
+        {{ info.donnees_etablissement.date_creation * 1000 | date: 'dd MMMM yyyy' | ouNonRenseigne }}
+        <br>
+
+        <strong>Effectif de l'organisation (INSEE) :</strong> {{
+          info.quick.tranche_effectif.intitule |
+            ouNonRenseigne
+        }} <br>
+        <strong>Numéro de TVA intracommunautaire : </strong>
+        @if (tva_disponible) {
+          {{ info.tva?.tva_number | ouNonRenseigne }}
+          <br>
+        } @else {
+          <ng-container #indisponibiliteInline />
+        }
+      </div>
+
+      <div class="colonne">
+
+        <strong>Adresse</strong><br>
+        @for (ligne of lignes_adresse; track ligne) {
+          {{ ligne }}<br>
+        }
+        <br>
+
+        <strong>ESS (Économie Sociale et Solidaire) :</strong> {{ label_ess }}<br>
+
+        <strong>Certification RGE : </strong>
+        @if (rge_disponible) {
+          {{ label_rge }}
+        } @else {
+          <ng-container #indisponibiliteInline />
+        }
+        <br>
+
+        <strong>Certification Qualibat : </strong>
+        @if (qualibat_disponible) {
+          {{ label_qualibat }}
+        } @else {
+          <ng-container #indisponibiliteInline />
+        }
+        <br>
+      </div>
+
+    </div>
+  }
+</ng-template>
+
+<ng-template #indisponibleInline>
+  <i>Donnée indisponible</i>
+</ng-template>

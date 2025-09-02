@@ -72,10 +72,8 @@ export class ModalColonnesComponent implements OnInit {
    * @param event 
    */
   moveGroup(event: CdkDragDrop<FormGroup<ColonneFormValues>[]>) {
-    const colonnes = this.formColonnes.controls.colonnes;
-    const control = colonnes.at(event.previousIndex);
-    colonnes.removeAt(event.previousIndex);
-    colonnes.insert(event.currentIndex, control);
+    moveItemInArray(this.formColonnes.controls.colonnes.controls, event.previousIndex, event.currentIndex);
+    this.formColonnes.controls.colonnes.updateValueAndValidity()
   }
 
   allSelected() {
@@ -94,10 +92,20 @@ export class ModalColonnesComponent implements OnInit {
    */
   public validate(): void {
     const formArray = this.formColonnes.controls.colonnes;
-    const selectedNames = new Set(
-      formArray.controls.filter(group => group.controls.selected.value).map(group => group.controls.name.value)
-    );
-    this._colonnesService.selectedColonnesTable = this.colonnes.filter(c => selectedNames.has(c.colonne));
+
+    // preserve order as it appears in the form array
+    const selectedInOrder = formArray.controls
+      .filter(group => group.controls.selected.value)
+      .map(group => group.controls.name.value);
+
+    // map back to ColonneTableau objects in the right order
+    const selectedColonnes = selectedInOrder
+      .map(name => this.colonnes.find(c => c.colonne === name)!)
+      .filter(Boolean);
+
+    console.log("SELECTED (in order)", selectedColonnes);
+
+    this._colonnesService.selectedColonnesTable = selectedColonnes;
   }
 
 }

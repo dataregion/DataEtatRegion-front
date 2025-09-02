@@ -1,0 +1,168 @@
+<div class="fr-container">
+  <div class="fr-grid-row">
+    <div class="fr-col-12">
+
+      <button class="fr-btn fr-btn--secondary" (click)="backToTable()">Revenir au tableau</button>
+
+      <!-- Templates always declared before usage -->
+      <ng-template #titre let-libelle="libelle">
+        <div class="ligne ligne-titre">
+          <div class="colonne">
+            <h2>{{ libelle }}</h2>
+          </div>
+          <div class="colonne" style="flex-grow: 3;"></div>
+          @if (view !== 'full') {
+            <div class="colonne">
+              <button (click)="openInNewtab()" class="newtab fr-btn fr-btn--tertiary-no-outline fr-icon-external-link-line">
+              </button>
+            </div>
+          }
+        </div>
+      </ng-template>
+
+      <ng-template #entrepriseLight let-info="info">
+        @if (info) {
+          <div class="ligne">
+            <div class="colonne" style="flex-grow: 2;">
+              <strong class="titre">Sur l'établissement</strong> <br>
+              <span>
+                <strong>Siret: </strong>
+                {{ info?.siret | ouNonRenseigne }}
+              </span> <br>
+              <span>
+                <strong>Nom: </strong>
+                {{ info?.nom | ouNonRenseigne }}
+              </span> <br>
+            </div>
+
+            <div class="colonne colonne-logo">
+              <span class="ligne"><i>Source: API entreprise</i></span>
+              <div class="ligne">
+                <img alt="Logo API entreprise" class="logo-api-entreprise" src="assets/img/api-entreprise.custom.png">
+              </div>
+            </div>
+
+            <div class="colonne colonne-plus-info">
+              <button (click)="onClickFullApiEntreprise()" class="fr-btn">
+                Information disponible
+                <span aria-hidden="true" class="fr-icon-arrow-right-s-line"></span>
+              </button>
+            </div>
+          </div>
+        } @else {
+          <budget-informations-supplementaires-chargement-ou-erreur nom_service_distant="entreprise.api.gouv.fr" />
+        }
+      </ng-template>
+
+      <ng-template #subventionLight let-info="info">
+        @if (info) {
+          <div class="ligne">
+            <div class="colonne" style="flex-grow: 2;">
+              <strong class="titre">Sur la subvention associative</strong> <br>
+              <span>
+                <strong>Objectif de la subvention:</strong>
+                {{ info?.objectifs | ouNonRenseigne }}
+              </span> <br>
+            </div>
+            <div class="colonne colonne-logo">
+              <span class="ligne"><i>Source: Data Subvention</i></span>
+              <div class="ligne">
+                <img alt="Logo data subvention" class="logo-data-subvention" src="assets/img/data-subvention.custom.png">
+              </div>
+            </div>
+            <div class="colonne colonne-plus-info">
+              <button (click)="onClickFullApiDataSubventions()" [disabled]="!info.has_more_info" class="fr-btn">
+                {{ info.has_more_info ? 'Information disponible' : 'Information indisponible' }}
+                <span aria-hidden="true" class="fr-icon-arrow-right-s-line"></span>
+              </button>
+            </div>
+          </div>
+        } @else {
+          <budget-informations-supplementaires-chargement-ou-erreur [erreur]="vService.api_subvention_light_error" nom_service_distant="datasubvention.beta.gouv.fr" />
+        }
+      </ng-template>
+
+      <ng-template #demarcheSimplifie let-info="info">
+        @if (info) {
+          <div class="ligne">
+            <div class="colonne" style="flex-grow: 2;">
+              <strong class="titre">Sur le dossier de la démarche</strong> <br>
+              @if (info?.nomDemarche) {
+                <strong>Nom de la démarche:</strong> {{ info.nomDemarche }}
+              } @else {
+                <strong>Pas de dossier réconcilié</strong>
+              }
+              <br>
+            </div>
+            <div class="colonne colonne-logo">
+              <span class="ligne"><i>Source: Démarches Simplifiées</i></span>
+              <div class="ligne">
+                <img alt="Logo démarches simplifiées" class="logo-demarche-simpligie" src="assets/img/logo-ds.png">
+              </div>
+            </div>
+            <div class="colonne colonne-plus-info">
+              <button (click)="onClickDemarcheSimplifie()" [disabled]="!info?.nomDemarche" class="fr-btn">
+                {{ info?.nomDemarche ? 'Information disponible' : 'Information indisponible' }}
+                <span aria-hidden="true" class="fr-icon-arrow-right-s-line"></span>
+              </button>
+            </div>
+          </div>
+        } @else {
+          <budget-informations-supplementaires-chargement-ou-erreur nom_service_distant="demarches-simplifiees.fr" />
+        }
+      </ng-template>
+
+      <!-- Switch on view -->
+      @switch (view) {
+        @case ('light') {
+          <ng-container *ngTemplateOutlet="titre; context:{ libelle: 'Informations supplémentaires' }" />
+
+          <div class="fr-grid-row">
+            <div class="fr-col-4">
+              <ng-container *ngTemplateOutlet="entrepriseLight; context:{ info: entreprise_light }" />
+            </div>
+            <div class="fr-col-4">
+              <ng-container *ngTemplateOutlet="subventionLight; context:{ info: api_subvention_light$ | async }" />
+            </div>
+            <div class="fr-col-4">
+              <ng-container *ngTemplateOutlet="demarcheSimplifie; context:{ info: affichage_dossier$ | async }" />
+            </div>
+            <div class="fr-col-12">
+              <hr>
+              <budget-informations-supplementaires-detail-cp [financial]="financial" />
+            </div>
+          </div>
+        }
+        @case ('full_api_entreprise') {
+          <ng-container *ngTemplateOutlet="titre; context:{ libelle: 'Informations supplémentaires sur l\'établissement' }" />
+          <budget-informations-supplementaires-detail-entreprise />
+        }
+        @case ('full_api_data_subventions') {
+          <ng-container *ngTemplateOutlet="titre; context:{ libelle: 'Informations supplémentaires sur la subvention' }" />
+          <budget-informations-supplementaires-detail-subventions />
+        }
+        @case ('full_api_demarche') {
+          <ng-container *ngTemplateOutlet="titre; context:{ libelle: 'Informations sur le dossier de la démarche' }" />
+          <budget-informations-demarche-simplifie />
+        }
+        @case ('full') {
+          <ng-container *ngTemplateOutlet="titre; context:{ libelle: '' }" />
+          <div class="conteneur-full">
+            <div class="conteneur-section">
+              <ng-container *ngTemplateOutlet="titre; context:{ libelle: 'Informations supplémentaires sur l\'établissement' }" />
+              <budget-informations-supplementaires-detail-entreprise />
+            </div>
+            <div class="conteneur-section">
+              <ng-container *ngTemplateOutlet="titre; context:{ libelle: 'Informations supplémentaires sur la subvention' }" />
+              <budget-informations-supplementaires-detail-subventions />
+            </div>
+            <div class="conteneur-section">
+              <ng-container *ngTemplateOutlet="titre; context:{ libelle: 'Informations sur le dossier de la démarche' }" />
+              <budget-informations-demarche-simplifie />
+            </div>
+          </div>
+        }
+      }
+    </div>
+  </div>
+</div>
