@@ -10,30 +10,18 @@ td.td-group {
   align-items: center;
 }
 
-// td {
-//   border-top: 1px solid #aaa;
-//   border-left: 2px solid #aaa;
-//   border-bottom: 1px solid #aaa;
-// }
-// td:not(::last-child) {
-//     border-right: 1px solid #aaa !important;
-
-// }
 .collapse-arrow::before {
   width: 30px;
 }
 .collapse-arrow.opened::before {
-  background-color: #eee;
+  background-color: #f6f6f6;
 }
-// tr:not(:first-child) {
-//     border-top: 1px solid #aaa !important;
-// }
 
 tr.opened {
-  background-color: #eee !important;
+  background-color: #f6f6f6 !important;
 }
 tr.opened td {
-  background-color: #eee !important;
+  background-color: #f6f6f6 !important;
 }
 .badge-no-icon::before {
   display: none;

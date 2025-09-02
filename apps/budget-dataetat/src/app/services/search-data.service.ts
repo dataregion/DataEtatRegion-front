@@ -1,9 +1,9 @@
-import { inject, Injectable, signal } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { SearchParameters } from '@services/search-params.service';
 import { FinancialDataModel } from '@models/financial/financial-data.models';
 import { SearchDataMapper } from './search-data-mapper.service';
-import { EnrichedFlattenFinancialLines2, GroupedData, LignesFinancieresService, LignesResponse, PaginationMeta } from 'apps/clients/v3/financial-data';
+import { EnrichedFlattenFinancialLines2, GroupedData, LignesFinancieresService, LignesResponse, PaginationMeta, Total } from 'apps/clients/v3/financial-data';
 import { ColonnesService } from '@services/colonnes.service';
 import { SearchParamsService } from './search-params.service';
 import { Preference } from 'apps/preference-users/src/lib/models/preference.models';
@@ -23,8 +23,6 @@ export class SearchDataService {
   private _searchParamsService: SearchParamsService = inject(SearchParamsService);
   private _lignesFinanciereService: LignesFinancieresService = inject(LignesFinancieresService);
   private _preferenceService: PreferenceService = inject(PreferenceService);
-
-  private _grouped = signal<(string | undefined)[]>([])
 
   /**
    * Paramètres de la recherche
@@ -49,6 +47,30 @@ export class SearchDataService {
       }
     });
     this._preferenceService.currentPreference = preference
+  }
+
+  /**
+   * Total
+   */
+  private totalSubject = new BehaviorSubject<Total | undefined>(undefined);
+  total$ = this.totalSubject.asObservable();
+  get total(): Total | undefined {
+    return this.totalSubject.value;
+  }
+  set total(total: Total | undefined) {
+    this.totalSubject.next(total);
+  }
+
+  /**
+   * Ligne consultée
+   */
+  private selectedLineSubject = new BehaviorSubject<FinancialDataModel | undefined>(undefined);
+  selectedLine$ = this.selectedLineSubject.asObservable();
+  get selectedLine(): FinancialDataModel | undefined {
+    return this.selectedLineSubject.value;
+  }
+  set selectedLine(line: FinancialDataModel | undefined) {
+    this.selectedLineSubject.next(line);
   }
 
   /**
@@ -105,14 +127,13 @@ export class SearchDataService {
    * @param grouped 
    * @returns 
    */
-  public search(grouped: (string | undefined)[] | undefined = undefined, searchParams: SearchParameters | undefined = undefined): Observable<LignesResponse> {
+  // TODO grouped est pas correctement set
+  public search(searchParams: SearchParameters | undefined = undefined): Observable<LignesResponse> {
     // Si la recherche est lancée sans paramètres fournis, on prend les sauvegardés
     if (searchParams === undefined) {
       searchParams = this.searchParams
       if (searchParams === undefined)
         return of()
-    } else if (grouped !== undefined) {
-      this._grouped.set(grouped)
     }
     console.log("==> Search begins ...")
     // Récupération des colonnes et grouping
@@ -125,9 +146,10 @@ export class SearchDataService {
     }
     // Set du grouping et grouped
     if (colonnesGrouping.length) {
+      const grouped: string[] = this._colonnesService.selectedColonnesGrouped;
       const fieldsGrouping = colonnesGrouping.map(c => c.grouping?.code).filter((v): v is string => v != null);
       searchParams.grouping = fieldsGrouping.slice(0, Math.min(fieldsGrouping.length, grouped ? grouped.length + 1 : 1))
-      searchParams.grouped = grouped?.map(v => v ?? "None") ?? undefined
+      searchParams.grouped = this._colonnesService.selectedColonnesGrouped?.map(v => v ?? "None") ?? undefined
       console.log("Grouping && Grouped")
       console.log(searchParams.grouping)
       console.log(searchParams.grouped)

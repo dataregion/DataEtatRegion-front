@@ -25,7 +25,6 @@ import { BopModel } from '../../../models/refs/bop.models';
 import { ReferentielProgrammation } from '../../../models/refs/referentiel_programmation.model';
 import { OtherTypeCategorieJuridique, SearchParameters, SearchParamsService, SearchTypeCategorieJuridique } from '../../../services/search-params.service';
 import { TypeCategorieJuridique } from '../../../models/financial/common.models';
-import { PreFilters } from '../../../models/search/prefilters.model';
 import { Beneficiaire } from '../../../models/search/beneficiaire.model';
 import { Bop } from '../../../models/search/bop.model';
 import { MatIconModule } from '@angular/material/icon';
@@ -33,14 +32,15 @@ import { CommonModule } from '@angular/common';
 import { SelectMultipleComponent } from 'apps/common-lib/src/lib/components/select-multiple/select-multiple.component';
 import { LocalisationComponent } from 'apps/common-lib/src/lib/components/localisation/localisation.component';
 import { BopsReferentielsComponent } from 'apps/common-lib/src/lib/components/bops-referentiels/bops-referentiels.component';
-import { FinancialData, FinancialDataResolverModel } from '../../../models/financial/financial-data-resolvers.models';
+import { FinancialDataResolverModel } from '../../../models/financial/financial-data-resolvers.models';
 import { MatButtonModule } from '@angular/material/button';
 import { tag_fullname } from '@models/refs/tag.model';
 import { PrefilterMapperService } from './prefilter-mapper.services';
 import { PreferenceService } from '@services/preference.service';
 import { SearchDataService } from '@services/search-data.service';
-import { LignesFinancieres, LignesResponse } from 'apps/clients/v3/financial-data';
+import { GroupedData, LignesResponse } from 'apps/clients/v3/financial-data';
 import { ColonnesService } from '@services/colonnes.service';
+import { FinancialDataModel } from '@models/financial/financial-data.models';
 
 /**
  * Interface du formulaire de recherche
@@ -297,7 +297,7 @@ export class SearchDataComponent implements OnInit {
           this._searchDataService.searchInProgress = true;
         }),
         switchMap(params => 
-          this._searchDataService.search(undefined, params).pipe(
+          this._searchDataService.search(params).pipe(
             finalize(() => {
               this._searchDataService.searchFinish = true;
               this._searchDataService.searchInProgress = false;
@@ -314,10 +314,19 @@ export class SearchDataComponent implements OnInit {
             return
           }
           if (response.data?.type === 'groupings') {
-            this._searchDataService.searchResults = response.data?.groupings;
+            const newData = response.data?.groupings as GroupedData[]
+            // Si page = 1, on reset, sinon on concat
+            this._searchDataService.searchResults = response.pagination?.current_page == 1
+              ? newData
+              : (this._searchDataService.searchResults as GroupedData[]).concat(newData);
           } else if (response.data?.type === 'lignes_financieres') {
-            this._searchDataService.searchResults = response.data?.lignes.map(r => this._searchDataService.unflatten(r)) ?? [];
+            const newData = response.data?.lignes.map(r => this._searchDataService.unflatten(r)) ?? []
+            // Si page = 1, on reset, sinon on concat
+            this._searchDataService.searchResults = response.pagination?.current_page == 1
+              ? newData
+              : (this._searchDataService.searchResults as FinancialDataModel[]).concat(newData);
           }
+          this._searchDataService.total = response.data?.total;
           this._searchDataService.pagination = response.pagination;
         },
         error: (err: unknown) => {
@@ -329,7 +338,7 @@ export class SearchDataComponent implements OnInit {
     // On subscribe également le changement des colonnes de tableau ou de grouping sélectionnées
     combineLatest([
       this._colonnesService.selectedColonnesTable$,
-      this._colonnesService.selectedColonnesGrouping$
+      this._colonnesService.selectedColonnesGrouping$,
     ])
     .subscribe(([tableCols, groupingCols]) => {
       const currentParams = this._searchDataService.searchParams
@@ -338,7 +347,8 @@ export class SearchDataComponent implements OnInit {
       this._searchDataService.searchParams = {
         ...currentParams,
         colonnes: tableCols.map(c => c.back.map(b => b.code)).flat().filter(c => c !== undefined && c !== null),
-        grouping: groupingCols.map(c => c.grouping?.code).filter(c => c !== undefined && c !== null) ?? undefined
+        grouping: groupingCols.map(c => c.grouping?.code).filter(c => c !== undefined && c !== null) ?? undefined,
+        grouped: this._colonnesService.selectedColonnesGrouped
       };
       if (this._searchDataService.searchParams.grouping?.length === 0) {
         this._searchDataService.searchParams.grouping = undefined
@@ -371,7 +381,9 @@ export class SearchDataComponent implements OnInit {
       types_beneficiaires: formValue.types_beneficiaires || undefined,
       tags: formValue.tags?.map((tag) => tag_fullname(tag)) ?? undefined,
       domaines_fonctionnels: formValue.domaines_fonctionnels || undefined,
-      source_region: formValue.sources_region || undefined
+      source_region: formValue.sources_region || undefined,
+      grouping: this._colonnesService.selectedColonnesGrouping.map(c => c.label),
+      grouped: this._colonnesService.selectedColonnesGrouped
     };
     // Set des paramètres qui trigger la recherche
     this._searchDataService.searchParams = search_parameters

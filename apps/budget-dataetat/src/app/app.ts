@@ -1,5 +1,5 @@
 import { RouterLink, RouterOutlet } from '@angular/router';
-import { Component, computed, effect, inject, signal } from '@angular/core';
+import { Component, computed, effect, HostListener, inject, signal } from '@angular/core';
 import { GridInFullscreenStateService } from 'apps/common-lib/src/lib/services/grid-in-fullscreen-state.service';
 import { LoaderService, Ressources, SessionService } from 'apps/common-lib/src/public-api';
 import { SettingsBudgetService } from './environments/settings-budget.service';
@@ -91,5 +91,17 @@ export class App {
         return undefined;
     }
   }
+  
+  // Bouton back to top
+  showBackToTop = false;
+  @HostListener('window:scroll', [])
+  onWindowScroll() {
+    const scrollY = window.scrollY || document.documentElement.scrollTop;
+    this.showBackToTop = scrollY > 300;
+  }
+  scrollToTop() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
 }
 

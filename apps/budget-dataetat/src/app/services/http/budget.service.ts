@@ -2,9 +2,12 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { BudgetService } from 'apps/clients/budget';
-import { map, Observable, of } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { SettingsBudgetService } from '../../environments/settings-budget.service';
 import { Tag } from '../../models/refs/tag.model';
+import { FinancialCp } from '@models/financial/financial-data.models';
+import { APISuccessAnnotatedEnrichedFlattenFinancialLinesPydanticFromMarshmallowSchemaAnnotationTSchema, LignesFinancieresService } from 'apps/clients/v3/financial-data';
+import { SearchDataMapper } from '@services/search-data-mapper.service';
 
 @Injectable({
   providedIn: 'root'
@@ -12,12 +15,14 @@ import { Tag } from '../../models/refs/tag.model';
 export class BudgetDataHttpService {
   private http = inject(HttpClient);
   readonly settings: SettingsBudgetService = inject(SettingsBudgetService);
+  private _mapper: SearchDataMapper = inject(SearchDataMapper);
 
   private _apiRef!: string;
   private _apiAdministration!: string;
   private _financialApiUrl!: string;
   private _laureatsApiUrl!: string;
   private _budgetApi: BudgetService = inject(BudgetService);
+  private _lignesFinancieresApi: LignesFinancieresService = inject(LignesFinancieresService);
 
   constructor() {
     const settings = this.settings;
@@ -59,6 +64,15 @@ export class BudgetDataHttpService {
 
   public getAnnees(): Observable<number[]> {
     return this._budgetApi.getGetPlageAnnees();
+  }
+  
+  public getCp(id: number): Observable<FinancialCp[]> {
+    // XXX: ici, on requête forcement un CP rattaché à une AE.
+    return this.http.get<FinancialCp[]>(`${this._financialApiUrl}/ae/${id}/cp`);
+  }
+  
+  public getById(id: number, source:string): Observable<APISuccessAnnotatedEnrichedFlattenFinancialLinesPydanticFromMarshmallowSchemaAnnotationTSchema> {
+    return this._lignesFinancieresApi.getLignesFinancieresBySourceLignesIdGet(id, undefined, source);
   }
 
   public allTags$(): Observable<Tag[]> {

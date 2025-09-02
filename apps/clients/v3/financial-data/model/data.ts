@@ -9,12 +9,14 @@
  */
 import { GroupedData } from './groupedData';
 import { Groupings } from './groupings';
+import { Total } from './total';
 import { EnrichedFlattenFinancialLines2 } from './enrichedFlattenFinancialLines2';
 import { LignesFinancieres } from './lignesFinancieres';
 
 
 export interface Data { 
     type?: Data.TypeEnum;
+    total: Total;
     lignes: Array<EnrichedFlattenFinancialLines2>;
     groupings: Array<GroupedData>;
 }

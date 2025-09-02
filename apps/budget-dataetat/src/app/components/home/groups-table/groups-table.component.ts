@@ -5,10 +5,8 @@ import { ColonneTableau } from '@services/colonnes-mapper.service';
 import { ColonnesService } from '@services/colonnes.service';
 import { SearchDataService, SearchResults } from '@services/search-data.service';
 import { GroupedData, LignesResponse } from 'apps/clients/v3/financial-data';
-// import { TreeAccordionDirective } from './tree-accordion.directive';
-import { nodePathsToArray } from 'storybook/internal/common';
 import { TreeAccordionDirective } from './tree-accordion.directive';
-import { map } from 'rxjs';
+import { NumberFormatPipe } from '../lines-tables/number-format.pipe';
 
 export interface Group {
   parent?: Group;
@@ -21,7 +19,7 @@ export interface Group {
 @Component({
   selector: 'budget-groups-table]',
   templateUrl: './groups-table.component.html',
-  imports: [CommonModule, TreeAccordionDirective],
+  imports: [CommonModule, TreeAccordionDirective, NumberFormatPipe],
   styleUrls: ['./groups-table.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
@@ -47,6 +45,7 @@ export class GroupsTableComponent implements OnInit {
     // Si update selectedGrouping, on reset
     this._searchDataService.searchResults$.subscribe((response: SearchResults) => {
       console.log("==> RESET des roots")
+      console.log(response)
       this.roots = []
       if (this._isGroupedDataArray(response)) {
         const groupedData = response as GroupedData[]
@@ -67,26 +66,26 @@ export class GroupsTableComponent implements OnInit {
     );
   }
 
-  private _isGroupedDataArray(results: SearchResults): results is GroupedData[] {
-    return Array.isArray(results) &&
-          results.length > 0 &&
-          'colonne' in results[0];
+  private _isGroupedDataArray(results: SearchResults): boolean {
+    console.log(results.some(item => 'id' in item))
+    return Array.isArray(results) && !results.some(item => 'id' in item);
   }
 
-  getTotalOfRoots(): number {
-    return this.roots.map(r => r.groupedData.total).reduce((sum, current) => sum + current, 0);
-  }
-
-  getTotalMontantsEngagesOfRoots(): number {
-    return this.roots.map(r => r.groupedData.total_montant_engage ?? 0).reduce((sum, current) => sum + current, 0);
-  }
-
-  getTotalMontantsPayesOfRoots(): number {
-    return this.roots.map(r => r.groupedData.total_montant_paye ?? 0).reduce((sum, current) => sum + current, 0);
+  getTotal() {
+    return this._searchDataService.total
   }
 
   isLastLevel(level: number): boolean {
     return this._colonnesService.selectedColonnesGrouping.length === level + 1
+  }
+
+  removeGrouping() {
+    if (this._searchDataService.searchParams) {
+      this._searchDataService.searchParams.grouping = []
+      this._searchDataService.searchParams.grouped = []
+    }
+    this._colonnesService.selectedColonnesGrouping = []
+    this._colonnesService.selectedColonnesGrouped = []
   }
 
   private _recGetPathFromNode(node: Group): GroupedData[] {
@@ -112,9 +111,11 @@ export class GroupsTableComponent implements OnInit {
     if (!node.loaded) {
       if (this._searchDataService.searchParams) {
         const grouped: (string | undefined)[] = this._recGetPathFromNode(node).map(gd => gd.value?.toString())
+        console.log('================')
         console.log('Grouped values :')
         console.log(grouped)
-        this._searchDataService.search(grouped).subscribe((response: LignesResponse) => {
+        this._colonnesService.selectedColonnesGrouped = grouped.filter(g => g !== undefined)
+        this._searchDataService.search().subscribe((response: LignesResponse) => {
           console.log(response)
           node.loaded = true
           response.data?.groupings.forEach(gd => {
@@ -141,11 +142,11 @@ export class GroupsTableComponent implements OnInit {
    * @param code 
    * @returns 
    */
-  // getGroupingColumnByCode(code: string): ColonneTableau<FinancialDataModel> {
-  //   console.log("--> " + code)
-  //   console.log(this._colonnesService.allColonnesGrouping.filter(c => c.grouping?.code === code)[0])
-  //   return this._colonnesService.allColonnesGrouping.filter(c => c.grouping?.code === code)[0] as ColonneTableau<FinancialDataModel>
-  // }
+  getGroupingColumnByCode(code: string): ColonneTableau<FinancialDataModel> {
+    console.log("--> " + code)
+    console.log(this._colonnesService.allColonnesGrouping.filter(c => c.grouping?.code === code)[0])
+    return this._colonnesService.allColonnesGrouping.filter(c => c.grouping?.code === code)[0] as ColonneTableau<FinancialDataModel>
+  }
 
   getGroupingLabel(code: string): string {
     return this._groups[code]?.label ?? code;
@@ -155,30 +156,54 @@ export class GroupsTableComponent implements OnInit {
    * Faire une recherche à partir de ce groupe
    */
   searchFromGroup(node: Group) {
+    
     if (this._searchDataService.searchParams) {
-      // TODO : mécanique à changer :
+      const gd: GroupedData[] = this._recGetPathFromNode(node)
+      const newGrouping: ColonneTableau<FinancialDataModel>[] = []
+      const newGrouped: string[] = []
+      gd.forEach((g) => {
+        if (g.colonne)
+          newGrouping.push(this.getGroupingColumnByCode(g.colonne.toString()))
+        if (g.value)
+          newGrouped.push(g.value.toString())
+      })
+      this._searchDataService.searchParams = {
+        ...this._searchDataService.searchParams,
+        grouping: newGrouping.map(g => g.grouping?.code).filter(g => g !== undefined && g !== null),
+        grouped: newGrouped
+      }
+      console.log(newGrouping)
+      console.log(newGrouped)
+      this._colonnesService.selectedColonnesGrouped = newGrouped
+      this._colonnesService.selectedColonnesGrouping = newGrouping
+      // 
+        // TODO : mécanique à changer :
       
+      // Option 1:
       // this._colonnesService.selectedColonnesGrouping = newGrouping
       // this._colonnesService.selectedColonnesGrouped = newGrouped
       
       // Il vaut mieux mettre ces champs dans formSearch.searchParams et vider les selectedColonnes
-      
+
+      // Bind dans searchParams OK mais bind dans les form controls ???
+      /**
+       * Coté front : pourquoi le mapping vers les champs du formulaire marchent pas ? Revenir à l'option 1 sinon
+       * Coté back : pour le total, voire chatgpt, select func.count subquery
+       */
+
       // const grouped: GroupedData[] = this._recGetPathFromNode(node)
-      // const newGrouping: ColonneTableau<FinancialDataModel>[] = []
-      // const newGrouped: (string | undefined)[] = []
-      // console.log("Search from group")
-      // grouped.forEach(g => {
-      //   console.log(">>>")
-      //   console.log(g)
-      //   newGrouping.push(this.getGroupingColumnByCode(g.name.toString()))
-      //   newGrouped.push(g.colonne?.toString())
-      // })
-      // this._searchDataService.searchParams.grouping = newGrouping.map(g => g.grouping?.code).filter(g => g !== undefined && g !== null)
-      // this._searchDataService.searchParams.grouped = newGrouped
-      // console.log(newGrouping)
-      // console.log(newGrouped)
-      // this._colonnesService.selectedColonnesGrouping = newGrouping
-      // this._colonnesService.selectedColonnesGrouped = newGrouped
+      // let searchParams = this._searchDataService.searchParams
+      // searchParams.grouping = undefined
+      // searchParams.grouped = undefined
+      // this._colonnesService.selectedColonnesGrouping = []
+      // this._colonnesService.selectedColonnesGrouped = []
+      // searchParams.grouped = []
+      // grouped.forEach(gd => {
+      //   searchParams = this._mapGroupingToSearchParams(searchParams, gd)
+      // });
+      // this._searchDataService.searchParams = searchParams
+      // console.log("=> NEW searchParams")
+      // console.log(searchParams)
     }
   }
 

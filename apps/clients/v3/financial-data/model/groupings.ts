@@ -8,10 +8,12 @@
  * Do not edit the class manually.
  */
 import { GroupedData } from './groupedData';
+import { Total } from './total';
 
 
 export interface Groupings { 
     type?: Groupings.TypeEnum;
+    total: Total;
     groupings: Array<GroupedData>;
 }
 export namespace Groupings {

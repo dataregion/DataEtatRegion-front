@@ -7,11 +7,13 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { Total } from './total';
 import { EnrichedFlattenFinancialLines2 } from './enrichedFlattenFinancialLines2';
 
 
 export interface LignesFinancieres { 
     type?: LignesFinancieres.TypeEnum;
+    total: Total;
     lignes: Array<EnrichedFlattenFinancialLines2>;
 }
 export namespace LignesFinancieres {

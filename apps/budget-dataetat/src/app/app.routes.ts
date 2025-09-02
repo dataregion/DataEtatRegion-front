@@ -4,6 +4,7 @@ import { resolveColonnes } from './resolvers/colonnes.resolver';
 import { resolveFinancialData } from './resolvers/financial-data.resolver';
 import { resolveMarqueBlancheParsedParams } from './resolvers/marqueblanche-parsed-params.resolver';
 import { Profil } from 'apps/common-lib/src/lib/models/profil.enum.model';
+import { router_template_path_full as info_supplementaires_path } from './modules/informations-supplementaires/routes';
 import { inject } from '@angular/core';
 import Keycloak from 'keycloak-js';
 
@@ -77,6 +78,17 @@ export const routes: Routes = [
                 runGuardsAndResolvers: 'always',
                 loadChildren: () =>
                     import('./modules/compagnon-ds/compagnon-ds.module').then((m) => m.CompagnonDSModule)
+            },
+            {
+                path: info_supplementaires_path(),
+                title: "Détails d'une ligne financière",
+                canActivate: [canAccess],
+                data: {
+                    roles: profiles_required_for_demarches
+                },
+                runGuardsAndResolvers: 'always',
+                loadChildren: () =>
+                    import('./modules/informations-supplementaires/informations-supplementaires.module').then((m) => m.InformationsSupplementairesModule)
             }
         ]
     },

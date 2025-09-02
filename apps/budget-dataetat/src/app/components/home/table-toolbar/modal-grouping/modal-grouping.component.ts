@@ -65,10 +65,8 @@ export class ModalGroupingComponent implements OnInit {
   }
 
   moveGroup(event: CdkDragDrop<FormGroup<ColonneFormValues>[]>) {
-    const colonnes = this.formGrouping.controls.colonnes;
-    const control = colonnes.at(event.previousIndex);
-    colonnes.removeAt(event.previousIndex);
-    colonnes.insert(event.currentIndex, control);
+    moveItemInArray(this.formGrouping.controls.colonnes.controls, event.previousIndex, event.currentIndex);
+    this.formGrouping.controls.colonnes.updateValueAndValidity()
   }
 
   addGroup(event: Event) {
