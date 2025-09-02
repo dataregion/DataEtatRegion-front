@@ -54,6 +54,13 @@ include:
       when: manual
     - when: never
 
+"🐳 dockerizing budget-dataetat":
+  <<: *default-dockerize
+  extends: ".dockerize-${REGISTRY}nocode/budget-dataetat"
+  stage: 🐳 dockerize
+  needs:
+    - job: "🔨 build angular apps"
+
 
 "🐳 dockerizing financial-data":
   <<: *default-dockerize
