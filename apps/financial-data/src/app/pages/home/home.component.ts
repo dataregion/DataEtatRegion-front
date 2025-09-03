@@ -5,7 +5,7 @@ import {
   PreferenceUsersHttpService,
   SavePreferenceDialogComponent
 } from 'apps/preference-users/src/public-api';
-import { Preference, PreferenceOptions } from 'apps/preference-users/src/lib/models/preference.models';
+import { Preference } from 'apps/preference-users/src/lib/models/preference.models';
 import { ActivatedRoute, Data } from '@angular/router';
 import { AlertService, GeoModel } from 'apps/common-lib/src/public-api';
 import { GridInFullscreenStateService } from 'apps/common-lib/src/lib/services/grid-in-fullscreen-state.service';
@@ -38,7 +38,7 @@ import { DatePipe } from '@angular/common';
 import { ExportDataService } from 'apps/appcommon/src/lib/export-data.service';
 import { MatomoTracker } from 'ngx-matomo-client';
 import { LoggerService } from '@edugouvfr/ngx-dsfr';
-import { Colonne } from 'apps/clients/v3/financial-data';
+
 
 @Component({
   selector: 'financial-home',
@@ -218,9 +218,9 @@ export class HomeComponent implements OnInit {
 
   public openSaveFilterDialog(): void {
     if (this.newFilter) {
-      this.newFilter.options = { grouping: this.groupingColumns as unknown as Colonne[] } as PreferenceOptions;
+      this.newFilter.options = { grouping: this.groupingColumns };
       if (this.displayedOrderedColumns.length) {
-        this.newFilter.options['displayOrder'] = this.displayedOrderedColumns as unknown as Colonne[];
+        this.newFilter.options['displayOrder'] = this.displayedOrderedColumns;
       }
       this.newFilter.name = '';
     }
