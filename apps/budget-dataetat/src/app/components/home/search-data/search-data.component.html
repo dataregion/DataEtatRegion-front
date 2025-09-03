@@ -1,12 +1,3 @@
-<!-- @if(displayError && error?.name) {
-  <div class="box" data-test-id="search-cmp-error-msg">
-    <div class="fr-alert fr-alert--error">
-      <p>{{ error?.message }}</p>
-    </div>
-  </div>
-} @else{
- -->
-
 <h6 style="margin: 10px 0px">Rechercher des données financières</h6>
 <form [formGroup]="formSearch" autocomplete="off">
 
@@ -72,7 +63,6 @@
   </div>
 
 </form>
-<!-- } -->
 
 @if (formSearch.controls.domaines_fonctionnels.value && formSearch.controls.domaines_fonctionnels.value.length > 0) {
   <div data-test-id="notif-additionnal-search-on-domaines-fonctionnels">

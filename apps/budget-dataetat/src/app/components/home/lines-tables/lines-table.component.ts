@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, ElementRef, EventEmitter, inject, OnDestroy, OnInit, Output, ViewChild, ViewEncapsulation } from '@angular/core';
+import { AfterViewChecked, AfterViewInit, Component, ElementRef, EventEmitter, inject, OnDestroy, OnInit, Output, ViewChild, ViewEncapsulation } from '@angular/core';
 import { FinancialDataModel } from '@models/financial/financial-data.models';
 import { ColonneTableau } from '@services/colonnes-mapper.service';
 import { ColonnesService } from '@services/colonnes.service';
@@ -15,7 +15,7 @@ import { SearchParameters } from '@services/search-params.service';
   styleUrls: ['./lines-table.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
-export class LinesTableComponent implements OnInit, AfterViewInit, OnDestroy {
+export class LinesTableComponent implements OnInit, AfterViewInit, AfterViewChecked, OnDestroy {
 
   private _colonnesService: ColonnesService = inject(ColonnesService)
   private _searchDataService: SearchDataService = inject(SearchDataService)
@@ -44,6 +44,14 @@ export class LinesTableComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit() {
+    this.observeSpinner();
+  }
+
+  ngAfterViewChecked() {
+    this.observeSpinner();
+  }
+  
+  private observeSpinner() {
     // observe loader visibility
     this.observer = new IntersectionObserver(entries => {
       entries.forEach(entry => {
@@ -57,8 +65,7 @@ export class LinesTableComponent implements OnInit, AfterViewInit, OnDestroy {
         }
       });
     });
-
-    if (this.spinner) {
+    if (this.spinner && this.observer) {
       this.observer.observe(this.spinner.nativeElement);
     }
   }

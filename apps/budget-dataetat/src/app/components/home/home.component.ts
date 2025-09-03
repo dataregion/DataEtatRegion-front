@@ -18,13 +18,13 @@ import { AlertService } from 'apps/common-lib/src/public-api';
 import { FinancialDataModel } from '@models/financial/financial-data.models';
 import { AuditHttpService } from '@services/http/audit.service';
 import { MarqueBlancheParsedParamsResolverModel } from '../../resolvers/marqueblanche-parsed-params.resolver';
-import { LignesResponse } from 'apps/clients/v3/financial-data';
 import { ColonneFromPreference, ColonnesMapperService, ColonneTableau } from '@services/colonnes-mapper.service';
 import { SearchResults, SearchDataService } from '@services/search-data.service';
 import { PrefilterMapperService } from './search-data/prefilter-mapper.services';
 import { ReferentielProgrammation } from '@models/refs/referentiel_programmation.model';
 import { Bop } from '@models/search/bop.model';
 import { InfosLigneComponent } from "../infos-ligne/infos-ligne.component";
+import { PreferenceService } from '@services/preference.service';
 
 @Component({
   selector: 'budget-home',
@@ -44,6 +44,7 @@ export class HomeComponent implements OnInit {
   private _prefilterMapperService = inject(PrefilterMapperService);
   private _gridFullscreen = inject(GridInFullscreenStateService);
   private _searchDataService = inject(SearchDataService);
+  private _preferenceService = inject(PreferenceService);
 
   @ViewChild('spinner', { static: false }) spinner!: ElementRef;
 
@@ -68,11 +69,31 @@ export class HomeComponent implements OnInit {
   get searchResults$() {
     return this._searchDataService.searchResults$;
   }
+  
+  /**
+   * Resolve erreur
+   */
+  public displayError = false;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  public error: Error | any | null = null;
+
 
   ngOnInit() {
-    // Resolve des colonnes (grouping et tableau)
+    // Resolvers
     const resolvedFinancial = this._route.snapshot.data['financial'] as FinancialDataResolverModel;
     const resolvedColonnes = this._route.snapshot.data['colonnes'] as ColonnesResolvedModel;
+    const resolvedMarqueBlanche = this._route.snapshot.data['mb_parsed_params'] as MarqueBlancheParsedParamsResolverModel;
+
+    // Erreur lors du resolve ?
+    const error = resolvedFinancial.error
+      || resolvedMarqueBlanche.error
+      || resolvedColonnes.error;
+    if (error) {
+      this.displayError = true;
+      this.error = error;
+      return;
+    }
+    
     // On init le service de mapper après avoir resolve et set
     this._colonnesMapperService.initService(
       resolvedColonnes?.data?.colonnesTable ?? [],
@@ -83,7 +104,6 @@ export class HomeComponent implements OnInit {
     this._colonnesService.allColonnesGrouping = this._colonnesMapperService.colonnes.filter(c => c.grouping !== undefined)
 
     // Resolve des paramètres de marque blanche
-    const resolvedMarqueBlanche = this._route.snapshot.data['mb_parsed_params'] as MarqueBlancheParsedParamsResolverModel;
     const mb_group_by = resolvedMarqueBlanche.data?.group_by;
     const mb_fullscreen = resolvedMarqueBlanche.data?.fullscreen;
 
@@ -101,6 +121,8 @@ export class HomeComponent implements OnInit {
       // Si une recherche doit être appliquée
       if (param[QueryParam.Uuid]) {
         this._httpPreferenceService.getPreference(param[QueryParam.Uuid]).subscribe((preference) => {
+          // Sauvegarde de la preference
+          this._preferenceService.currentPreference = preference
           // Application des préférences de grouping des colonnes
           if (preference.options && preference.options['grouping']) {
             const mapped: ColonneTableau<FinancialDataModel>[] = this._colonnesMapperService.mapNamesFromPreferences(preference.options['grouping'] as ColonneFromPreference[])
@@ -119,7 +141,8 @@ export class HomeComponent implements OnInit {
           const referentiels: ReferentielProgrammation[] = resolvedFinancial.data?.referentiels_programmation ?? [];
           const annees: number[] = resolvedFinancial.data?.annees ?? [];
           this._prefilterMapperService.initService(themes, programmes, referentiels, annees)
-          this._searchDataService.searchParams = this._prefilterMapperService.mapToSearchParams(preference.filters as PreFilters)
+          this._searchDataService.searchParams = this._prefilterMapperService.mapPrefilterToSearchParams(preference.filters as PreFilters)
+          console.log(this._searchDataService.searchParams)
         });
       }
     });
@@ -130,32 +153,6 @@ export class HomeComponent implements OnInit {
         this.lastImportDate = response.date;
       }
     });
-  }
-
-  loadNextPage() {
-    console.log("==> LOAD NEXT PAGE");
-    if (this._searchDataService.searchParams) {
-      this._searchDataService.searchParams.page += 1 
-      this._searchDataService.search().subscribe({
-        next: (response: LignesResponse) => {
-          console.log("==> Résultat de la recherche");
-          console.log(response);
-          if (response.code == 204 && !response.data) {
-            this._searchDataService.searchResults = []
-            return
-          }
-          if (response.data?.type === 'groupings') {
-            this._searchDataService.searchResults = response.data?.groupings;
-          } else if (response.data?.type === 'lignes_financieres') {
-            this._searchDataService.searchResults = response.data?.lignes.map(r => this._searchDataService.unflatten(r)) ?? [];
-          }
-          this._searchDataService.pagination = response.pagination;
-        },
-        error: (err: unknown) => {
-          console.error("Erreur lors de la recherche :", err);
-        }
-      });
-    }
   }
 
   hasSelectedLine() {

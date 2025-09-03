@@ -12,6 +12,8 @@ import { ModalSauvegardeComponent } from "./modal-sauvegarde/modal-sauvegarde.co
 import { FinancialDataModel } from '@models/financial/financial-data.models';
 import { ColonnesService } from '@services/colonnes.service';
 import { ColonneTableau } from '@services/colonnes-mapper.service';
+import { PreferenceService } from '@services/preference.service';
+import { Preference } from 'apps/preference-users/src/lib/models/preference.models';
 
 
 @Component({
@@ -25,6 +27,7 @@ export class TableToolbarComponent {
   
   private _gridFullscreen = inject(GridInFullscreenStateService);
   private _colonnesService = inject(ColonnesService);
+  private _preferenceService = inject(PreferenceService);
 
   @Input()
   public grouped: boolean = false;
@@ -58,6 +61,10 @@ export class TableToolbarComponent {
 
   get selectedGrouping(): ColonneTableau<FinancialDataModel>[] {
     return this._colonnesService.selectedColonnesGrouping
+  }
+
+  get currentPreference(): Preference | null {
+    return this._preferenceService.currentPreference
   }
 
   // public downloadData(extension: string, allColumns: boolean): void {

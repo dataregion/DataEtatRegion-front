@@ -181,49 +181,49 @@ export class SearchDataComponent implements OnInit {
   /**
    * Beneficiaires
    */
-     get selectedBeneficiaires(): BeneficiaireFieldData[] {
-       return this.formSearch.get('beneficiaires')?.value as BeneficiaireFieldData[];
-     }
-   
-     set selectedBeneficiaires(data: SelectedData[]) {
-       this.formSearch.get('beneficiaires')?.setValue(data as BeneficiaireFieldData[]);
-     }
-   
-     public filteredBeneficiaire$: Observable<BeneficiaireFieldData[]> = of([]);
-   
-     public get beneficiaireFieldOptions$(): Observable<BeneficiaireFieldData[]> {
-       return this.filteredBeneficiaire$;
-     }
-   
-     public beneficiaireInputChange$ = new BehaviorSubject<string>('');
-   
-     public onBeneficiaireInputChange(v: string) {
-       this.beneficiaireInputChange$.next(v);
-     }
+  get selectedBeneficiaires(): BeneficiaireFieldData[] {
+    return this.formSearch.get('beneficiaires')?.value as BeneficiaireFieldData[];
+  }
+
+  set selectedBeneficiaires(data: SelectedData[]) {
+    this.formSearch.get('beneficiaires')?.setValue(data as BeneficiaireFieldData[]);
+  }
+
+  public filteredBeneficiaire$: Observable<BeneficiaireFieldData[]> = of([]);
+
+  public get beneficiaireFieldOptions$(): Observable<BeneficiaireFieldData[]> {
+    return this.filteredBeneficiaire$;
+  }
+
+  public beneficiaireInputChange$ = new BehaviorSubject<string>('');
+
+  public onBeneficiaireInputChange(v: string) {
+    this.beneficiaireInputChange$.next(v);
+  }
 
 
   /**
    * Tags
    */
-     public get selectedTags(): TagFieldData[] {
-       return this.formSearch.get('tags')?.value as TagFieldData[];
-     }
-   
-     public set selectedTags(value: SelectedData[]) {
-       this.formSearch.get('tags')?.setValue(value as TagFieldData[]);
-     }
-   
-     public _filteredTags$: Observable<TagFieldData[]> = of([]);
-   
-     public get tagsFieldOptions$(): Observable<TagFieldData[]> {
-       return this._filteredTags$;
-     }
-   
-     public tagsInputChange$ = new BehaviorSubject<string>('');
-   
-     public onTagInputChange(v: string) {
-       this.tagsInputChange$.next(v);
-     }
+  public get selectedTags(): TagFieldData[] {
+    return this.formSearch.get('tags')?.value as TagFieldData[];
+  }
+
+  public set selectedTags(value: SelectedData[]) {
+    this.formSearch.get('tags')?.setValue(value as TagFieldData[]);
+  }
+
+  public _filteredTags$: Observable<TagFieldData[]> = of([]);
+
+  public get tagsFieldOptions$(): Observable<TagFieldData[]> {
+    return this._filteredTags$;
+  }
+
+  public tagsInputChange$ = new BehaviorSubject<string>('');
+
+  public onTagInputChange(v: string) {
+    this.tagsInputChange$.next(v);
+  }
 
 
   get searchFinish() {
@@ -257,14 +257,6 @@ export class SearchDataComponent implements OnInit {
     const resolvedFinancial = this._route.snapshot.data['financial'] as FinancialDataResolverModel;
     const resolvedMarqueBlanche = this._route.snapshot.data['mb_parsed_params'] as MarqueBlancheParsedParamsResolverModel;
     
-    // Erreur lors du resolve ?
-    const error = resolvedFinancial.error || resolvedMarqueBlanche.error;
-    if (error) {
-      // this.displayError = true;
-      // this.error = error;
-      return;
-    }
-    
     // Sauvegarde des référentiels dans les listes
     this.themes = resolvedFinancial.data?.themes ?? [];
     this.bops = resolvedFinancial.data?.bop ?? [];
@@ -284,7 +276,7 @@ export class SearchDataComponent implements OnInit {
         this._preferenceService.currentPrefilter = mb_prefilter;
         // Mapping du prefilter vers le formulaire
         this._prefilterMapperService.initService(this.themes, this.filteredBops, this.filteredReferentiels, this.annees)
-        this._searchDataService.searchParams = this._prefilterMapperService.mapToSearchParams(mb_prefilter)
+        this._searchDataService.searchParams = this._prefilterMapperService.mapPrefilterToSearchParams(mb_prefilter)
       }
     }
 

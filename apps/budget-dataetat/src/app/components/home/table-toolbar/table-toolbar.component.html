@@ -23,15 +23,20 @@
     </span>
     <span class="right-buttons">
         @if (!grid_fullscreen) {
-        <button data-fr-opened="false" aria-controls="modalSauvegarde" type="button" aria-label="Sauvegarder la recherche"
-          class="fr-btn fr-btn--sm fr-btn--secondary fr-btn--icon-left fr-icon-save-fill">
-          Sauvegarder la recherche
-        </button>
+          <button data-fr-opened="false" aria-controls="modalSauvegarde" type="button" aria-label="Sauvegarder la recherche"
+            class="fr-btn fr-btn--icon-left"
+            [ngClass]="{
+              'fr-btn--primary fr-icon-checkbox-line': currentPreference,
+              'fr-btn--secondary fr-icon-save-fill': !currentPreference
+            }">
+            Sauvegarder la recherche
+          </button>
         }
         @if(!grid_fullscreen && searchFinish === true) {
-        <button [disabled]="searchInProgress === true" aria-label="Bouton de téléchargement de données."
-          class="fr-btn fr-btn--sm fr-btn--secondary fr-btn--icon-left fr-icon-download-fill">
-          Télécharger les données
+          <!-- <button [disabled]="searchInProgress === true" aria-label="Bouton de téléchargement de données." -->
+          <button disabled aria-label="Bouton de téléchargement de données."
+            class="fr-btn fr-btn--sm fr-btn--secondary fr-btn--icon-left fr-icon-download-fill">
+            Télécharger les données
         </button>
         }
 

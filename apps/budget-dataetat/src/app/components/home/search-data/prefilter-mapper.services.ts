@@ -11,6 +11,7 @@ import { BeneficiaireFieldData } from './autocomplete/autocomplete-beneficiaire.
 import { Beneficiaire } from '@models/search/beneficiaire.model';
 import { BudgetDataHttpService } from '@services/http/budget.service';
 import { Tag } from '@models/refs/tag.model';
+import { SearchDataService } from '@services/search-data.service';
 
 @Injectable({
   providedIn: 'root'
@@ -19,6 +20,7 @@ export class PrefilterMapperService {
 
   private _formBuilder: FormBuilder = inject(FormBuilder)
   private _referentielsService: BudgetDataHttpService = inject(BudgetDataHttpService)
+  private _searchDataService: SearchDataService = inject(SearchDataService)
   private _searchParamsService: SearchParamsService = inject(SearchParamsService)
 
   public init: boolean = false
@@ -39,8 +41,10 @@ export class PrefilterMapperService {
     })
   }
 
-  mapToSearchParams(prefilter: PreFilters): SearchParameters {
-    const searchParams = this._searchParamsService.getEmpty()
+  mapPrefilterToSearchParams(prefilter: PreFilters): SearchParameters | undefined {
+    const searchParams = this._searchDataService.searchParams ?? this._searchParamsService.getEmpty()
+    searchParams.page = 1
+    searchParams.page_size = 100
     searchParams.themes = this._mapThemes(prefilter)
     searchParams.bops = this._mapProgrammes(prefilter)
     searchParams.referentiels_programmation = this._mapReferentielsProgrammation(prefilter)
@@ -52,7 +56,8 @@ export class PrefilterMapperService {
     searchParams.tags = this._mapTags(prefilter)?.map(t => t.item)
     searchParams.domaines_fonctionnels = this._mapDomainesFonctionnels(prefilter)
     searchParams.source_region = this._mapSourcesRegion(prefilter)
-    console.log("==> Map to SearchParameters")
+    console.log("==> MAP : PreFilters => SearchParameters")
+    console.log(prefilter)
     console.log(searchParams)
     return searchParams
   }

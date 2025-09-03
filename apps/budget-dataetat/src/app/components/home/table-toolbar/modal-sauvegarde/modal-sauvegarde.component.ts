@@ -7,14 +7,17 @@ import { PreferenceUsersHttpService } from 'apps/preference-users/src/lib/servic
 import { Preference } from 'apps/preference-users/src/lib/models/preference.models';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { DsfrAutocompleteComponent, DsfrCompleteEvent } from '@edugouvfr/ngx-dsfr-ext'
-import { ReactiveFormsModule, FormGroup, FormBuilder, FormControl, FormArray } from '@angular/forms';
+import { ReactiveFormsModule, FormGroup, FormBuilder, FormControl } from '@angular/forms';
 import { PreferenceService } from '@services/preference.service';
+import { ColonnesService } from '@services/colonnes.service';
+import { SearchDataService } from '@services/search-data.service';
+import { JSONObject } from 'apps/common-lib/src/lib/models/jsonobject';
 
 
 export interface FormPreference {
   name: FormControl<string>;
   shared: FormControl<boolean>;
-  users: FormArray<FormControl<string>>;
+  users: FormControl<string[]>;
 }
 
 @Component({
@@ -30,11 +33,13 @@ export class ModalSauvegardeComponent implements OnInit, OnDestroy {
   private _preferenceService = inject(PreferenceService);
   private _alertService = inject(AlertService);
   private _formBuilder = inject(FormBuilder);
+  private _colonnesService = inject(ColonnesService);
+  private _searchDataService = inject(SearchDataService);
   
   public formPreference: FormGroup<FormPreference> = new FormGroup({
     name: new FormControl<string>("", { nonNullable: true }),
     shared: new FormControl<boolean>(false, { nonNullable: true }),
-    users: new FormArray<FormControl<string>>([]),
+    users: new FormControl<string[]>([], { nonNullable: true }),
   });
 
   public shareSearch: boolean = false;
@@ -53,17 +58,21 @@ export class ModalSauvegardeComponent implements OnInit, OnDestroy {
   public delay: number = 500
 
   ngOnInit() {
-    this.preference = this._preferenceService.currentPreference
-    if (this.preference) {
-      this.formPreference = this._formBuilder.group({
-        name: this._formBuilder.control<string>(this.preference.name ?? "", { nonNullable: true }),
-        shared: this._formBuilder.control<boolean>(this.preference.shares?.length !== 0, { nonNullable: true }),
-        users: this._formBuilder.array((this.preference.shares ?? []).map(s =>
-          this._formBuilder.control(s.shared_username_email, { nonNullable: true })
-        ))
-      });
-    }
+    // Si une préférence à l'init, on set le formulaire
+    this._preferenceService.currentPreference$.subscribe(newPreference => {
+      this.preference = newPreference
+      if (this.preference) {
+        this.formPreference = this._formBuilder.group<FormPreference>({
+          name: this._formBuilder.control<string>(this.preference.name ?? "", { nonNullable: true }),
+          shared: this._formBuilder.control<boolean>(this.preference.shares?.length !== 0, { nonNullable: true }),
+          users: this._formBuilder.control<string[]>((this.preference.shares ?? []).map(s =>
+            s.shared_username_email), { nonNullable: true }
+          )
+        });
+      }
+    });
 
+    // Recherche des suggestions d'users
     this.suggestions$ = this.searchUserChanged.pipe(
       debounceTime(400),
       distinctUntilChanged(),
@@ -93,26 +102,54 @@ export class ModalSauvegardeComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
   
-  public onSearchAsync(event: DsfrCompleteEvent) {
+  onSearchAsync(event: DsfrCompleteEvent) {
     const value = event?.query?.toLowerCase() ?? '';
     this.searchUserChanged.next(value);
   }
-
   
   public validate(): void {
-    
-    const { name, shared, users } = this.formPreference.getRawValue();
-    this.preference = {
-      uuid: this.preference?.uuid,
-      name,
-      filters: this.preference?.filters ?? {},
-      options: {
-        grouping: [],
-        displayOrder: []
-      },
-      shares: shared ? users.map(u => ({ shared_username_email: u })) : []
+    // Options de colonnes et grouping
+    const options: JSONObject = {} as JSONObject
+    if (this._colonnesService.selectedColonnesTable.length) {
+      options['displayOrder'] = this._colonnesService.selectedColonnesTable.map(c => {
+        return { "columnLabel": c.label }
+      })
     }
-
+    if (this._colonnesService.selectedColonnesGrouping.length) {
+      options['grouping'] = this._colonnesService.selectedColonnesGrouping.map(c => {
+        return { "columnName": c.colonne }
+      })
+    }
+    
+    // Récupération du formulaire de préférence
+    const { name, shared, users } = this.formPreference.getRawValue();
+    const preference = {
+      uuid: this.preference?.uuid,
+      name: name,
+      filters: {},
+      options: options,
+      shares: shared ? users.map(u => ({ shared_username_email: u })) : []
+    } as Preference;
+    
+    // Récupération des critères de recherche
+    const object = this._searchDataService.searchParams as unknown as JSONObject
+    const ignore = new Set(['colonnes', 'page', 'page_size', 'grouping', 'grouped']);
+    Object.keys(object).forEach((key) => {
+      if (!ignore.has(key)) {
+        let newKey: string = key
+        if (key === 'years')
+          newKey = 'year'
+        if (object[key] !== null && object[key] !== undefined && object[key] !== '') {
+          console.log(object[key])
+          preference.filters[newKey] = object[key];
+        }
+      }
+    });
+    
+    this.preference = preference
+    console.log("==> SAVE Preference")
+    console.log(this.preference)
+    this._preferenceService.currentPreference = this.preference
     this._preferenceHttpService.savePreference(this.preference).subscribe((_response) => {
       this._alertService.openAlertSuccess('Filtre enregistré avec succès');
     });

@@ -6,9 +6,7 @@ import { SearchDataMapper } from './search-data-mapper.service';
 import { EnrichedFlattenFinancialLines2, GroupedData, LignesFinancieresService, LignesResponse, PaginationMeta, Total } from 'apps/clients/v3/financial-data';
 import { ColonnesService } from '@services/colonnes.service';
 import { SearchParamsService } from './search-params.service';
-import { Preference } from 'apps/preference-users/src/lib/models/preference.models';
 import { PreferenceService } from '@services/preference.service';
-import { JSONObject } from 'apps/common-lib/src/lib/models/jsonobject';
 
 
 export type SearchResults = GroupedData[] | FinancialDataModel[]
@@ -34,19 +32,6 @@ export class SearchDataService {
   }
   set searchParams(searchParams: SearchParameters | undefined) {
     this.searchParamsSubject.next(searchParams);
-    // Build de la préférence avec les infos de la recherche
-    if (searchParams === undefined) {
-      this._preferenceService.currentPreference = null
-      return
-    }
-    const object = searchParams as unknown as JSONObject
-    const preference: Preference = { filters: {} };
-    Object.keys(object).forEach((key) => {
-      if (object[key] !== null && object[key] !== undefined && object[key] !== '') {
-        preference.filters[key] = object[key];
-      }
-    });
-    this._preferenceService.currentPreference = preference
   }
 
   /**
@@ -166,7 +151,7 @@ export class SearchDataService {
     if (searchParams === undefined || this._searchParamsService.isEmpty(searchParams))
       return of();
     const req$ = this._lignesFinanciereService.getLignesFinancieresLignesGet(
-        ...this._searchParamsService.getSanitizedParams(searchParams),
+        ...this._searchParamsService.getSanitizedParams(searchParams, ),
         'body'
     )
     return req$;

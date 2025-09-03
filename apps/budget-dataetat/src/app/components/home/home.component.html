@@ -1,42 +1,54 @@
 
-
-<div class="fr-container--fluid">
-  <div class="fr-grid-row">
-    <div class="fr-col-12">
-      @if (!grid_fullscreen && !hasSelectedLine()) {
-        <budget-search-data />
-      }
-
-      <div class="main-content overlay-container" [class.no-content]="(searchResults$ | async)?.length === 0">
-        @if (hasSelectedLine()) {
-          <budget-infos-ligne />
-        } @else {
-          @if (searchResults.length === 0) {
-            <div><i>Aucune donnée ne correspond à vos critères de recherche.</i></div>
-          }
-          @else {
-            <budget-table-toolbar [grouped]="grouped" />
-            @if (grouped) {
-              <budget-groups-table />
-            }
-            @else {
-              <budget-lines-table />
-            }
-          }
-        
-          @if(lastImportDate) {
-            <div class="last-import">
-              <span aria-hidden="false" aria-label="Example home icon" class="info-icon" fontIcon="info"></span>
-              <div>
-                Le dernier chargement complet des données financières date du
-                <lib-display-date [date]="lastImportDate" />
-                . <br>
-                Les données prennent donc en compte la situation au dernier jour du mois précédent.
-              </div>
-            </div>
-          }
-        }
+@if(displayError && error.name) {
+  <div class="fr-container">
+    <div class="fr-grid-row">
+      <div class="fr-col-12">
+        <div class="fr-alert fr-alert--error" style="margin-top:50px;">
+          <h3 class="fr-alert__title">Erreur</h3>
+          <p>{{error.name}}</p>
+        </div>
       </div>
     </div>
   </div>
-</div>
+} @else {
+  <div class="fr-container--fluid">
+    <div class="fr-grid-row">
+      <div class="fr-col-12">
+        @if (!grid_fullscreen && !hasSelectedLine()) {
+          <budget-search-data />
+        }
+
+        <div class="main-content overlay-container" [class.no-content]="(searchResults$ | async)?.length === 0">
+          @if (hasSelectedLine()) {
+            <budget-infos-ligne />
+          } @else {
+            @if (searchResults.length === 0) {
+              <div><i>Aucune donnée ne correspond à vos critères de recherche.</i></div>
+            }
+            @else {
+              <budget-table-toolbar [grouped]="grouped" />
+              @if (grouped) {
+                <budget-groups-table />
+              }
+              @else {
+                <budget-lines-table />
+              }
+            }
+          
+            @if(lastImportDate) {
+              <div class="last-import">
+                <span aria-hidden="false" aria-label="Example home icon" class="info-icon" fontIcon="info"></span>
+                <div>
+                  Le dernier chargement complet des données financières date du
+                  <lib-display-date [date]="lastImportDate" />
+                  . <br>
+                  Les données prennent donc en compte la situation au dernier jour du mois précédent.
+                </div>
+              </div>
+            }
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+}

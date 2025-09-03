@@ -1,4 +1,3 @@
-import { Colonne } from 'apps/clients/v3/financial-data';
 import { JSONValue, JSONObject } from 'apps/common-lib/src/lib/models/jsonobject';
 
  
@@ -6,25 +5,11 @@ export interface Shared {
   shared_username_email: string;
 }
 
-export interface OldPreference {
-  uuid?: string;
-  name?: string;
-  filters: JSONObject;
-  options?: JSONObject;
-  shares?: Shared[];
-}
-
-export interface PreferenceOptions {
-  grouping: Colonne[];
-  displayOrder: Colonne[];
-}
-
-
 export interface Preference {
   uuid?: string;
   name?: string;
   filters: JSONObject;
-  options?: PreferenceOptions;
+  options?: JSONObject;
   shares?: Shared[];
 }
 
