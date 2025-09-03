@@ -59,6 +59,7 @@ export class GroupsTableComponent implements OnInit {
       this._colonnesService.selectedColonnesGrouping$,
       this._searchDataService.searchResults$
     ])
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     .subscribe(([colonnes, response]) => {
       if (!this.root)
         return
