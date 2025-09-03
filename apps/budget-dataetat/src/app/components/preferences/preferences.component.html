@@ -1,0 +1,183 @@
+<div class="fr-container--fluid">
+  <div class="fr-grid-row">
+    <div class="fr-col-12">
+      
+      @if (dataSource().create_by_user.length > 0) {
+        <div class="fr-table fr-table--bordered" id="table-mes-filtres">
+          <div class="fr-table__wrapper">
+            <div class="fr-table__container">
+              <div class="fr-table__content">
+                <table id="mes-filtres">
+                  <caption>Liste des recherches sauvegardées</caption>
+                  <thead>
+                    <tr>
+                      <th>Nom</th>
+                      <th>Critères</th>
+                      <th>Partages</th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    @for (element of dataSource().create_by_user; track element.uuid; let index = $index) {
+                      <tr [attr.id]="'table-mes-filtre-row-key-' + index" [attr.data-row-key]="index">
+                        <td>
+                          <b>{{element.name}}</b>
+                        </td>
+                        <td>
+                          @if (objectKeys(element.filters).length !== 0) {
+                            <ul class="fr-badge-group">
+                              @for (field of objectKeys(element.filters); track field) {
+                                <li class="fr-mr-3v">
+                                  @if (mappingMetadata[field]) {
+                                    <p class="fr-mr-1v fr-badge fr-badge--blue-ecume">
+                                      {{ mappingMetadata[field].label }}
+                                    </p>
+                                    <ng-container
+                                      [ngTemplateOutletContext]="{value: element.filters[field], metadata: mappingMetadata[field]}"
+                                      [ngTemplateOutlet]="getTypeField(element.filters[field]) === 'array' ? badgeArray : badgeSimple" />
+                                  }
+                                </li>
+                              }
+                            </ul>
+
+                            <ng-template #badgeArray let-metadata="metadata" let-value="value">
+                              <ul class="fr-badge-group">
+                                @for (field of objectKeys(value); track field) {
+                                  <li>
+                                    <p class="fr-tag fr-mr-2v">
+                                      {{ metadata && metadata.renderFn ? metadata.renderFn(value[field]) : json.stringify(value[field]) }}
+                                    </p>
+                                  </li>
+                                }
+                              </ul>
+                            </ng-template>
+
+                            <ng-template #badgeSimple let-metadata="metadata" let-value="value">
+                              <p class="fr-tag fr-mr-2v">
+                                {{ metadata && metadata.renderFn ? metadata.renderFn(value) : json.stringify(value) }}
+                              </p>
+                            </ng-template>
+
+                          } @else {
+                            Aucun critère renseigné
+                          }
+                        </td>
+                        <td>
+                          @if (element.shares && element.shares.length > 0) {
+                            <ul class="fr-badge-group">
+                              @for (share of element.shares; track share.shared_username_email) {
+                                <li class="fr-mr-3v">
+                                  <p class="fr-mr-1v fr-tag "> {{ share.shared_username_email }}</p>
+                                </li>
+                              }
+                            </ul>
+                          } @else {
+                            Aucun utilisateur renseigné
+                          }
+                        </td>
+                        <td>
+                          @if (element) {
+                            <button type="button" [attr.aria-describedby]="'tooltip-' + index + '-1'" aria-controls="modal-confirm" data-fr-opened="false" (click)="setSelected(element)" class="fr-btn fr-icon-delete-line">infobulle</button>
+                            <span class="fr-tooltip fr-placement" [attr.id]="'tooltip-' + index + '-1'" role="tooltip">Supprimer la recherche</span>
+
+                            <!-- TODO : Bouton disable : bind avec la modal pas en place -->
+                            <button disabled type="button" [attr.aria-describedby]="'tooltip-' + index + '-2'" aria-controls="modalSauvegarde" data-fr-opened="false" (click)="setSelected(element)" class="fr-btn fr-icon-pencil-line">infobulle</button>
+                            <span class="fr-tooltip fr-placement" [attr.id]="'tooltip-' + index + '-2'" role="tooltip">Editer la recherche</span>
+                            
+                            <button type="button" [attr.aria-describedby]="'tooltip-' + index + '-3'" (click)="applyPreference(element.uuid ?? '', element)" class="fr-btn fr-icon-refresh-line">infobulle</button>
+                            <span class="fr-tooltip fr-placement" [attr.id]="'tooltip-' + index + '-3'" role="tooltip">Appliquer la recherche</span>
+                          }
+                        </td>
+                      </tr>
+                    }
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      }
+
+      @if (dataSource().shared_with_user.length > 0) {
+        <div class="fr-table fr-table--bordered" id="table-mes-filtres">
+          <div class="fr-table__wrapper">
+            <div class="fr-table__container">
+              <div class="fr-table__content">
+                <table id="mes-filtres">
+                  <caption>Recherches partagées par les autres utilisateurs</caption>
+                  <thead>
+                    <tr>
+                      <th>Nom</th>
+                      <th>Critères</th>
+                      <th>Partagé par</th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    @for (element of dataSource().shared_with_user; track element.uuid) {
+                      <tr>
+                        <td>
+                          <b>{{element.name}}</b>
+                        </td>
+                        <td>
+                          @if (objectKeys(element.filters).length !== 0) {
+                            <ul class="fr-badge-group">
+                              @for (field of objectKeys(element.filters); track field) {
+                                <li class="fr-mr-3v">
+                                  @if (mappingMetadata[field]) {
+                                    <p class="fr-mr-1v fr-badge fr-badge--blue-ecume">
+                                      {{ mappingMetadata[field].label }}
+                                    </p>
+                                    <ng-container
+                                      [ngTemplateOutletContext]="{value: element.filters[field], metadata: mappingMetadata[field]}"
+                                      [ngTemplateOutlet]="getTypeField(element.filters[field]) === 'array' ? badgeArray : badgeSimple" />
+                                  }
+                                </li>
+                              }
+                            </ul>
+
+                            <ng-template #badgeArray let-metadata="metadata" let-value="value">
+                              <ul class="fr-badge-group">
+                                @for (field of objectKeys(value); track field) {
+                                  <li>
+                                    <p class="fr-tag fr-mr-2v">
+                                      {{ metadata && metadata.renderFn ? metadata.renderFn(value[field]) : json.stringify(value[field]) }}
+                                    </p>
+                                  </li>
+                                }
+                              </ul>
+                            </ng-template>
+
+                            <ng-template #badgeSimple let-metadata="metadata" let-value="value">
+                              <p class="fr-tag fr-mr-2v">
+                                {{ metadata && metadata.renderFn ? metadata.renderFn(value) : json.stringify(value) }}
+                              </p>
+                            </ng-template>
+
+                          } @else{
+                            Aucun critère renseigné
+                          }
+                        </td>
+                        <td>
+                          <p class="fr-mr-1v fr-tag "> {{ element.shares }}</p>
+                        </td>
+                        <td>
+                          <button type="button" aria-describedby="tooltip-3" (click)="applyPreference(element.uuid ?? '', element)" class="fr-btn fr-icon-refresh-line">infobulle</button>
+                          <span class="fr-tooltip fr-placement" id="tooltip-3" role="tooltip">Appliquer la recherche</span>
+                        </td>
+                      </tr>
+                    }
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      }
+
+      <budget-modal-confirm [confirmAction]="confirmDelete" [preference]="selectedPreference"/>
+      <budget-modal-sauvegarde [preference]="selectedPreference" />
+
+    </div>
+  </div>
+</div>

@@ -39,12 +39,14 @@
               <div><i>Aucune donnée ne correspond à vos critères de recherche.</i></div>
             }
             @else {
-              <budget-table-toolbar [grouped]="grouped" />
-              @if (grouped) {
-                <budget-groups-table />
-              }
-              @else {
-                <budget-lines-table />
+              @if (!searchInProgress) {
+                <budget-table-toolbar [grouped]="grouped" />
+                @if (grouped) {
+                  <budget-groups-table />
+                }
+                @else {
+                  <budget-lines-table />
+                }
               }
             }
           }

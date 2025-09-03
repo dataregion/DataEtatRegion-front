@@ -76,12 +76,7 @@ export class InfosLigneComponent implements OnInit {
     this.api_subvention_light$ = this.vService.apiSubventionLight$();
     this.affichage_dossier$ = this.vService.dossierDemarche$();
   }
-/**
- * TODO : 
- * - fix grouping
- * - tags
- * - Affichage details ligne
- */
+  
   _initFromResolverModel(data: FinancialDataModel) {
     if (data === undefined)
       return;

@@ -40,7 +40,7 @@ export const routes: Routes = [
                 path: 'preference',
                 title: "Mes Recherches",
                 loadComponent: () =>
-                    import('./components/preference/preference.component').then(m => m.PreferenceComponent)
+                    import('./components/preferences/preferences.component').then(m => m.PreferencesComponent)
             },
             {
                 path: 'cgu',

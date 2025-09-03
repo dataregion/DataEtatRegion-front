@@ -54,7 +54,7 @@ export class GroupsTableComponent implements OnInit {
         currentPage: 1,
       } as Group)
     })
-    // Si update selectedGrouping, on reset
+    // Si update selectedGrouping ou les résultats, on reset
     combineLatest([
       this._colonnesService.selectedColonnesGrouping$,
       this._searchDataService.searchResults$
@@ -214,7 +214,7 @@ export class GroupsTableComponent implements OnInit {
    * Faire une recherche à partir de ce groupe
    */
   searchFromGroup(node: Group) {
-    
+    console.log("==> SEARCH FROM GROUP :", node)
     if (this._searchDataService.searchParams) {
       const gd: GroupedData[] = this._recGetPathFromNode(node)
       const newGrouping: ColonneTableau<FinancialDataModel>[] = []
@@ -225,13 +225,18 @@ export class GroupsTableComponent implements OnInit {
         if (g.value)
           newGrouped.push(g.value.toString())
       })
+      
+      this._colonnesService.selectedColonnesGrouping = newGrouping
+      this._colonnesService.selectedColonnesGrouped = newGrouped
+      console.log(newGrouping)
+      console.log(newGrouped)
+
       this._searchDataService.searchParams = {
         ...this._searchDataService.searchParams,
+        page: 1,
         grouping: newGrouping.map(g => g.grouping?.code).filter(g => g !== undefined && g !== null),
         grouped: newGrouped
       }
-      this._colonnesService.selectedColonnesGrouped = newGrouped
-      this._colonnesService.selectedColonnesGrouping = newGrouping
     }
   }
 

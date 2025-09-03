@@ -1,5 +1,5 @@
 import { AsyncPipe } from '@angular/common';
-import { Component, inject, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, inject, Input, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 
 import { AlertService } from "apps/common-lib/src/public-api";
 import { debounceTime, distinctUntilChanged, finalize, map, Observable, of, Subject, switchMap, takeUntil } from 'rxjs';
@@ -48,7 +48,8 @@ export class ModalSauvegardeComponent implements OnInit, OnDestroy {
   
   public separatorKeysCodes: number[] = [ENTER, COMMA];
 
-  public preference: Preference | null = null;
+  @Input()
+  public preference?: Preference | null = null;
 
   public searchUserChanged = new Subject<string>();
   private destroy$ = new Subject<void>();

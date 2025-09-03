@@ -42,17 +42,24 @@ export class ModalGroupingComponent implements OnInit {
     this.selectedColonnes = this._colonnesService.selectedColonnesGrouping
     this.remainingColonnes = this.calculateRemainingColumns();
 
-    // Build du formulaire
-    this.formGrouping = this._formBuilder.group({
-      colonnes: this._formBuilder.array(
-        this.selectedColonnes.map(col => {
-          return this._formBuilder.group({
-            name: this._formBuilder.control(col.colonne, { nonNullable: true }),
-            label: this._formBuilder.control(col.label, { nonNullable: true }),
+    this._colonnesService.selectedColonnesGrouping$.subscribe(response => {
+      console.log("==> UPDATE modal selected colonnes")
+      this.selectedColonnes = response
+      this.remainingColonnes = this.calculateRemainingColumns();
+      console.log(response)
+      // Build du formulaire
+      this.formGrouping = this._formBuilder.group({
+        colonnes: this._formBuilder.array(
+          this.selectedColonnes.map(col => {
+            return this._formBuilder.group({
+              name: this._formBuilder.control(col.colonne, { nonNullable: true }),
+              label: this._formBuilder.control(col.label, { nonNullable: true }),
+            })
           })
-        })
-      )
-    });
+        )
+      });
+    })
+
   }
 
   /**
