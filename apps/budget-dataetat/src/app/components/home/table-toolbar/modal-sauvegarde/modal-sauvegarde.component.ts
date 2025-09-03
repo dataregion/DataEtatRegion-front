@@ -140,7 +140,6 @@ export class ModalSauvegardeComponent implements OnInit, OnDestroy {
         if (key === 'years')
           newKey = 'year'
         if (object[key] !== null && object[key] !== undefined && object[key] !== '') {
-          console.log(object[key])
           preference.filters[newKey] = object[key];
         }
       }

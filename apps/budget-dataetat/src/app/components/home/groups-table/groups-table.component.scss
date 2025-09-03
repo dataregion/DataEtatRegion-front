@@ -5,6 +5,11 @@
 }
 
 td.td-group {
+  display: table-cell;   /* restore default */
+}
+
+td.td-group > div,
+td.td-group > span:first-child {
   display: flex;
   flex-direction: row;
   align-items: center;

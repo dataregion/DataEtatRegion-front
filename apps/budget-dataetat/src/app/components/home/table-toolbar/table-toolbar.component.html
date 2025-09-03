@@ -32,7 +32,7 @@
             Sauvegarder la recherche
           </button>
         }
-        @if(!grid_fullscreen && searchFinish === true) {
+        @if(!grid_fullscreen && searchFinish === true && !isGrouped()) {
           <!-- <button [disabled]="searchInProgress === true" aria-label="Bouton de téléchargement de données." -->
           <button disabled aria-label="Bouton de téléchargement de données."
             class="fr-btn fr-btn--sm fr-btn--secondary fr-btn--icon-left fr-icon-download-fill">

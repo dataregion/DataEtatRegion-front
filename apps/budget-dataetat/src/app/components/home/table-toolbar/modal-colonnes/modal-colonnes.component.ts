@@ -103,8 +103,6 @@ export class ModalColonnesComponent implements OnInit {
       .map(name => this.colonnes.find(c => c.colonne === name)!)
       .filter(Boolean);
 
-    console.log("SELECTED (in order)", selectedColonnes);
-
     this._colonnesService.selectedColonnesTable = selectedColonnes;
   }
 

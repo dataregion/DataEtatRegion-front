@@ -127,6 +127,7 @@ export class HomeComponent implements OnInit {
           if (preference.options && preference.options['grouping']) {
             const mapped: ColonneTableau<FinancialDataModel>[] = this._colonnesMapperService.mapNamesFromPreferences(preference.options['grouping'] as ColonneFromPreference[])
             this._colonnesService.selectedColonnesGrouping = mapped;
+            this._colonnesService.selectedColonnesGrouped = [];
           }
           // Application des préférences d'ordre et d'affichage des colonnes
           if (preference.options && preference.options['displayOrder']) {
@@ -142,7 +143,6 @@ export class HomeComponent implements OnInit {
           const annees: number[] = resolvedFinancial.data?.annees ?? [];
           this._prefilterMapperService.initService(themes, programmes, referentiels, annees)
           this._searchDataService.searchParams = this._prefilterMapperService.mapPrefilterToSearchParams(preference.filters as PreFilters)
-          console.log(this._searchDataService.searchParams)
         });
       }
     });

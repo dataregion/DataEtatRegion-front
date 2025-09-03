@@ -56,7 +56,6 @@ export class LinesTableComponent implements OnInit, AfterViewInit, AfterViewChec
     this.observer = new IntersectionObserver(entries => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
-          console.log('Spinner is visible!');
           const newPage = (this._searchDataService.pagination?.current_page ?? 0) + 1
           this._searchDataService.searchParams = {
             ...this._searchDataService.searchParams,

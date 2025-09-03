@@ -286,7 +286,6 @@ export class SearchDataComponent implements OnInit {
         filter((params): params is SearchParameters => !!params),
         tap(params => {
           this.formSearch = this._prefilterMapperService.mapSearchParamsToForm(params);
-          this._searchDataService.searchInProgress = true;
         }),
         switchMap(params => 
           this._searchDataService.search(params).pipe(
@@ -340,12 +339,11 @@ export class SearchDataComponent implements OnInit {
         ...currentParams,
         colonnes: tableCols.map(c => c.back.map(b => b.code)).flat().filter(c => c !== undefined && c !== null),
         grouping: groupingCols.map(c => c.grouping?.code).filter(c => c !== undefined && c !== null) ?? undefined,
-        grouped: this._colonnesService.selectedColonnesGrouped
+        grouped: []
       };
       if (this._searchDataService.searchParams.grouping?.length === 0) {
         this._searchDataService.searchParams.grouping = undefined
       }
-      console.log(this._searchDataService.searchParams.grouping)
     });
   }
 
@@ -359,8 +357,6 @@ export class SearchDataComponent implements OnInit {
   public doSearch(): void {
     // Récupération des infos du formulaire
     const formValue = this.formSearch.value;
-    console.log("==> New SearchParameters")
-    console.log(formValue)
     const search_parameters: SearchParameters = {
       ...this._searchParamsService.getEmpty(),
       themes: formValue.themes || undefined,

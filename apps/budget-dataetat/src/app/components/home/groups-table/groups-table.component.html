@@ -26,7 +26,7 @@
               </thead>
               <tbody>
                 <tr id="table-10-row-key-0" data-row-key="0">
-                  <td style="text-align: right; width: 40%;">
+                  <td style="text-align: right;">
                     <b style="font-size: 16px;">TOTAL</b>
                     <span class="fr-badge fr-badge--info badge-no-icon" style="margin-left: 30px;">{{getTotal()?.total | numberFormat}} lignes</span></td>
                   <td style="text-align: center;">
@@ -39,24 +39,33 @@
                   </td>
                 </tr>
 
-                <ng-container *ngTemplateOutlet="renderNode; context: { $implicit: roots, level: 0 }"/>
+                <ng-container *ngTemplateOutlet="renderNode; context: { $implicit: root?.children, level: 0 }"/>
+
+                @if (root && pageSize && root.children.length % pageSize === 0) {
+                  <tr>
+                    <td class="td-group" colspan="4">
+                      <button class="fr-btn fr-btn--secondary fr-icon-add-circle-fill fr-btn--icon-left" (click)="loadMore(root); $event.stopPropagation()" style="margin-left:50px;">
+                        Charger plus
+                      </button>
+                    </td>
+                  </tr>
+                }
 
                 <ng-template #renderNode let-nodes let-level="level">
                   <ng-container *budgetTreeAccordion="nodes; level: level; let node; let lvl = level">
                     <tr class="accordion-header" (click)="toggle(node, lvl)" [attr.data-lvl]="lvl" [class.opened]="node.opened" [class.clickable]="!isLastLevel(lvl)">
-                      <td class="td-group" [style.padding-left.px]="lvl * 50">
-                        <span class="collapse-arrow" [ngClass]="!isLastLevel(lvl) ? 'fr-icon-arrow-' + (node.opened ? 'down' : 'right') + '-s-line': ''"></span>
-                        <div style="display: flex; flex-direction: row; align-items: center; flex: 1;">
-                          <div style="margin-left:30px;">
-                            <p>{{getGroupingLabel(node.groupedData.colonne)}}</p>
-                            <b>{{node.groupedData.label ?? "N/A"}}</b>
+                      <td class="td-group">
+                        <div [style.padding-left.px]="lvl * 50">
+                          <span class="collapse-arrow" [ngClass]="!isLastLevel(lvl) ? 'fr-icon-arrow-' + (node.opened ? 'down' : 'right') + '-s-line': ''"></span>
+                          <div style="display: flex; flex-direction: row; align-items: center; flex: 1;">
+                            <div [class.fr-ml-5v]="!isLastLevel(lvl)">
+                              <p>{{getGroupingLabel(node.groupedData.colonne)}}</p>
+                              <b>{{node.groupedData.label ?? "N/A"}}</b>
+                            </div>
+                            <div style="display:flex; justify-content: right; flex: 1;">
+                              <span class="fr-badge fr-badge--info badge-no-icon">{{node.groupedData.total}}</span>
+                            </div>
                           </div>
-                          <div style="display:flex; justify-content: right; flex: 1;">
-                            <span class="fr-badge fr-badge--info badge-no-icon" style="margin-left: 30px;">{{node.groupedData.total}}</span>
-                          </div>
-                        </div>
-                        <div>
-
                         </div>
                       </td>
                       <td style="text-align: center;">
@@ -79,7 +88,29 @@
                     @if (node.opened) {
                       @if (node.loaded) {
                         <ng-container *ngTemplateOutlet="renderNode; context: { $implicit: node.children, level: lvl + 1 }" />
+                        
+                        @if (node && pageSize && node.children.length % pageSize === 0 && !node.loadingMore) {
+                          <tr>
+                            <td class="td-group" colspan="4" [style.padding-left.px]="((lvl + 1) * 50) + 30">
+                              <button class="fr-btn fr-btn--secondary fr-icon-add-circle-fill fr-btn--icon-left"
+                                (click)="loadMore(node); $event.stopPropagation()"
+                                [class.fr-ml-5v]="isLastLevel(lvl)">
+                                Charger plus
+                              </button>
+                            </td>
+                          </tr>
+                        }
                       } @else {
+                        <tr>
+                          <td colspan="4" class="td-group" [style.padding-left.px]="((lvl + 1) * 50) + 30">
+                            <div class="spinner-wrapper fr-spinner--sm">
+                                <span class="fr-spinner" aria-label="Chargement…" role="status"></span>
+                                <span class="fr-spinner-message">Chargement en cours ...</span>
+                            </div>
+                          </td>
+                        </tr>
+                      }
+                      @if (node.loadingMore) {
                         <tr>
                           <td colspan="4" class="td-group" [style.padding-left.px]="((lvl + 1) * 50) + 30">
                             <div class="spinner-wrapper fr-spinner--sm">

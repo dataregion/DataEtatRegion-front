@@ -112,7 +112,6 @@ export class SearchDataService {
    * @param grouped 
    * @returns 
    */
-  // TODO grouped est pas correctement set
   public search(searchParams: SearchParameters | undefined = undefined): Observable<LignesResponse> {
     // Si la recherche est lancée sans paramètres fournis, on prend les sauvegardés
     if (searchParams === undefined) {
@@ -120,7 +119,6 @@ export class SearchDataService {
       if (searchParams === undefined)
         return of()
     }
-    console.log("==> Search begins ...")
     // Récupération des colonnes et grouping
     const colonnesTable = this._colonnesService.selectedColonnesTable;
     const colonnesGrouping = this._colonnesService.selectedColonnesGrouping;
@@ -135,7 +133,7 @@ export class SearchDataService {
       const fieldsGrouping = colonnesGrouping.map(c => c.grouping?.code).filter((v): v is string => v != null);
       searchParams.grouping = fieldsGrouping.slice(0, Math.min(fieldsGrouping.length, grouped ? grouped.length + 1 : 1))
       searchParams.grouped = this._colonnesService.selectedColonnesGrouped?.map(v => v ?? "None") ?? undefined
-      console.log("Grouping && Grouped")
+      console.log("==> Grouping && Grouped")
       console.log(searchParams.grouping)
       console.log(searchParams.grouped)
     }
@@ -150,6 +148,7 @@ export class SearchDataService {
   private _search(searchParams: SearchParameters): Observable<LignesResponse> {
     if (searchParams === undefined || this._searchParamsService.isEmpty(searchParams))
       return of();
+    this.searchInProgress = true;
     const req$ = this._lignesFinanciereService.getLignesFinancieresLignesGet(
         ...this._searchParamsService.getSanitizedParams(searchParams, ),
         'body'
