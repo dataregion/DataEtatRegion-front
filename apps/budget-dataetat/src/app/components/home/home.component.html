@@ -14,6 +14,19 @@
   <div class="fr-container--fluid">
     <div class="fr-grid-row">
       <div class="fr-col-12">
+        
+        <div class="title-wrapper">
+          <h6>Rechercher des données financières</h6>
+          @if(lastImportDate) {
+            <div class="last-import">
+                Le dernier chargement complet des données financières date du
+                <lib-display-date [date]="lastImportDate" />
+                . <br>
+                Les données prennent donc en compte la situation au dernier jour du mois précédent.
+            </div>
+          }
+        </div>
+        
         @if (!grid_fullscreen && !hasSelectedLine()) {
           <budget-search-data />
         }
@@ -33,18 +46,6 @@
               @else {
                 <budget-lines-table />
               }
-            }
-          
-            @if(lastImportDate) {
-              <div class="last-import">
-                <span aria-hidden="false" aria-label="Example home icon" class="info-icon" fontIcon="info"></span>
-                <div>
-                  Le dernier chargement complet des données financières date du
-                  <lib-display-date [date]="lastImportDate" />
-                  . <br>
-                  Les données prennent donc en compte la situation au dernier jour du mois précédent.
-                </div>
-              </div>
             }
           }
         </div>

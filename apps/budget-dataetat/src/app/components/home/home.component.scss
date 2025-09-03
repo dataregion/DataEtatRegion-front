@@ -66,11 +66,12 @@ form .mat-fab {
   width: 35em;
 }
 .no-content {
-  display: flex;
   justify-content: center;
   align-items: center;
 }
 .main-content {
+  display: flex;
+  flex-direction: column;
   margin-top: 15px;
 }
 
@@ -117,4 +118,19 @@ form .mat-fab {
   100% {
     transform: rotate(360deg);
   }
+}
+
+.title-wrapper {
+  display: flex;
+  align-items: center;
+}
+.title-wrapper > h6 {
+  margin: 20px 0px;
+}
+.last-import {
+  color: var(--text-mention-grey);
+  font-size: .75rem;
+  line-height: 1.25rem;
+  font-style: italic;
+  margin-left: 30px;
 }
