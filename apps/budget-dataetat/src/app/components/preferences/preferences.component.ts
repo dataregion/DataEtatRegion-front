@@ -1,19 +1,17 @@
-import { Component, Input, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, inject, signal } from '@angular/core';
 import {
   Preference,
   MapPreferenceFilterMetadata,
   PreferenceWithShared
 } from 'apps/preference-users/src/lib/models/preference.models';
 import { JSONObject, JSONValue } from 'apps/common-lib/src/lib/models/jsonobject';
-import { MatDialog } from '@angular/material/dialog';
 import { PreferenceUsersHttpService } from 'apps/preference-users/src/lib/services/preference-users-http.service';
-// import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
 import { AlertService } from 'apps/common-lib/src/public-api';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { ModalConfirmComponent } from './modal-confirm/modal-confirm.component';
 import { ModalSauvegardeComponent } from "../home/table-toolbar/modal-sauvegarde/modal-sauvegarde.component";
-// import { SavePreferenceDialogComponent } from './save-filter/save-preference-dialog.component';
+
 
 @Component({
   selector: 'budget-preferences',
