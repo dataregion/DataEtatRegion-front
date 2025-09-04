@@ -114,6 +114,13 @@ export class HomeComponent implements OnInit {
       this._colonnesService.selectedColonnesGrouping = mapped;
     }
 
+    // Mapping des filtres de la préférences dans searchParams
+    const themes: string[] = resolvedFinancial.data?.themes ?? [];
+    const programmes: Bop[] = resolvedFinancial.data?.bop ?? [];
+    const referentiels: ReferentielProgrammation[] = resolvedFinancial.data?.referentiels_programmation ?? [];
+    const annees: number[] = resolvedFinancial.data?.annees ?? [];
+    this._prefilterMapperService.initService(themes, programmes, referentiels, annees)
+
     // Aplication d'une préférence
     this._route.queryParams.subscribe((param) => {
       // On set les colonnes par défaut
@@ -134,15 +141,8 @@ export class HomeComponent implements OnInit {
             const mapped: ColonneTableau<FinancialDataModel>[] = this._colonnesMapperService.mapLabelsFromPreferences(preference.options['displayOrder'] as ColonneFromPreference[])
             this._colonnesService.selectedColonnesTable = mapped;
           }
-
-          // Mapping des filtres de la préférences dans searchParams
-          this._alertService.openInfo(`Application du filtre ${preference.name}`);
-          const themes: string[] = resolvedFinancial.data?.themes ?? [];
-          const programmes: Bop[] = resolvedFinancial.data?.bop ?? [];
-          const referentiels: ReferentielProgrammation[] = resolvedFinancial.data?.referentiels_programmation ?? [];
-          const annees: number[] = resolvedFinancial.data?.annees ?? [];
-          this._prefilterMapperService.initService(themes, programmes, referentiels, annees)
           this._searchDataService.searchParams = this._prefilterMapperService.mapPrefilterToSearchParams(preference.filters as PreFilters)
+          this._alertService.openInfo(`Application du filtre ${preference.name}`);
         });
       }
     });

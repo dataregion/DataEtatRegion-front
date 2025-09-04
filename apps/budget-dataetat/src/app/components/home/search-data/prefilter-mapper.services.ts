@@ -28,7 +28,7 @@ export class PrefilterMapperService {
   public programmes: Bop[] = []
   public referentiels_programmation: ReferentielProgrammation[] = []
   public annees: number[] = []
-  public tags: Tag[] = []
+  public allTags: Tag[] = []
 
   initService(themes: string[], programmes: Bop[], referentiels_programmation : ReferentielProgrammation[], annees: number[]) {
     this.themes = themes;
@@ -37,7 +37,7 @@ export class PrefilterMapperService {
     this.annees = annees;
     this.init = true
     this._referentielsService.allTags$().subscribe((tags: Tag[]) => {
-      this.tags = tags
+      this.allTags = tags
     })
   }
 
@@ -53,7 +53,7 @@ export class PrefilterMapperService {
     searchParams.years = this._mapAnnees(prefilter)
     searchParams.beneficiaires = this._mapBeneficiaires(prefilter)
     searchParams.types_beneficiaires = this._mapTypesBeneficiaires(prefilter)
-    searchParams.tags = this._mapTags(prefilter)?.map(t => t.item)
+    searchParams.tags = this._mapTags(prefilter)?.map(t => t.value ? t.type + ':' + t.value : t.type)
     searchParams.domaines_fonctionnels = this._mapDomainesFonctionnels(prefilter)
     searchParams.source_region = this._mapSourcesRegion(prefilter)
     console.log("==> MAP : PreFilters => SearchParameters")
@@ -142,15 +142,19 @@ export class PrefilterMapperService {
   }
 
   private _mapTags(pf: PreFilters): TagFieldData[] | undefined {
-    if (!pf.tags)
+    if (!pf.tags || pf.tags.length === 0)
       return undefined;
-    return pf.tags as unknown as TagFieldData[];
+    return this.allTags.filter(t => {
+      return pf.tags?.map(t => t.toString()).includes(t.value ? t.type + ':' + t.value : t.type)
+    }).map(t => { return { ...t, item: t.display_name }})
   }
   
   private _mapTagsFromSearchParam(tags: string[] | undefined): TagFieldData[] | undefined {
-    if (!tags)
+    if (!tags || tags.length === 0)
       return undefined;
-    return tags.length !== this.tags.length ? this.tags.map(t => { return { ...t, item: t.display_name }}) : []
+    return this.allTags.filter(t => {
+      return tags.includes(t.value ? t.type + ':' + t.value : t.type)
+    }).map(t => { return { ...t, item: t.display_name }})
   }
 
 

@@ -39,7 +39,7 @@
                   }
                 </tr>
                 @for (line of currentLignes; track line.id) {
-                  <!-- TODO : onRowClick bug -->
+                  <!-- #TODO : On row click -->
                   <tr id="table-10-row-key-{{line.id}}" (click)="onRowClick(line)" class="clickable" [attr.data-row-key]="line.id" scope="row">
                     @for (col of currentColonnes; track col.colonne; let isFirst = $first) {
                       <td [class.fr-cell--fixed]="isFirst" [ngStyle]="col.style" [innerHTML]="col.render(line)"></td>
@@ -48,7 +48,7 @@
                 }
               </tbody>
             </table>
-            @if (!searchInProgress || hasNext()) {
+            @if (hasNext()) {
               <div #spinner class="spinner-wrapper fr-spinner--lg" style="text-align: center; margin: 30px 0px;">
                 <span class="fr-spinner" aria-label="Chargement…" role="status"></span>
                 <span class="fr-spinner-message">Chargement en cours ...</span>

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewChecked, AfterViewInit, Component, ElementRef, EventEmitter, inject, OnDestroy, OnInit, Output, ViewChild, ViewEncapsulation } from '@angular/core';
+import { AfterViewChecked, AfterViewInit, Component, ElementRef, inject, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { FinancialDataModel } from '@models/financial/financial-data.models';
 import { ColonneTableau } from '@services/colonnes-mapper.service';
 import { ColonnesService } from '@services/colonnes.service';
@@ -8,6 +8,7 @@ import { NumberFormatPipe } from "./number-format.pipe";
 import { SearchParameters } from '@services/search-params.service';
 
 
+// TODO : Search bar
 @Component({
   selector: 'budget-lines-table',
   templateUrl: './lines-table.component.html',
@@ -74,8 +75,6 @@ export class LinesTableComponent implements OnInit, AfterViewInit, AfterViewChec
       this.observer.disconnect();
     }
   }
-
-  @Output() rowClick = new EventEmitter<FinancialDataModel>();
 
   onRowClick(line: FinancialDataModel) {
     this._searchDataService.selectedLine = line

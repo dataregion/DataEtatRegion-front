@@ -275,7 +275,6 @@ export class SearchDataComponent implements OnInit {
         this._logger.debug(`Application des filtres`);
         this._preferenceService.currentPrefilter = mb_prefilter;
         // Mapping du prefilter vers le formulaire
-        this._prefilterMapperService.initService(this.themes, this.filteredBops, this.filteredReferentiels, this.annees)
         this._searchDataService.searchParams = this._prefilterMapperService.mapPrefilterToSearchParams(mb_prefilter)
       }
     }
@@ -285,6 +284,7 @@ export class SearchDataComponent implements OnInit {
       .pipe(
         filter((params): params is SearchParameters => !!params),
         tap(params => {
+          this._searchDataService.searchResults = []
           this.formSearch = this._prefilterMapperService.mapSearchParamsToForm(params);
         }),
         switchMap(params => 
@@ -354,6 +354,7 @@ export class SearchDataComponent implements OnInit {
     return this.formSearch.errors != null ? this.formSearch.errors['benefOrBopRequired'] : null;
   }
 
+  // TODO : Accent thème
   public doSearch(): void {
     // Récupération des infos du formulaire
     const formValue = this.formSearch.value;

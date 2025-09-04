@@ -82,7 +82,7 @@ export class PreferencesComponent implements OnInit {
   }
 
   private _ppTags(json: JSONObject) {
-    return `${json['item']}`;
+    return `${json}`;
   }
 
 
@@ -132,18 +132,6 @@ export class PreferencesComponent implements OnInit {
       }
     });
   }
-
-  /**
-   * Ouvre la pop-up de partage de filtre
-   * @param uuid
-   */
-  // public shareFilter(preference: Preference) {
-  //   this.dialog.open(SavePreferenceDialogComponent, {
-  //     data: preference,
-  //     width: '40rem',
-  //     autoFocus: 'input'
-  //   });
-  // }
 
   /**
    * Redirige vers la page d'accueil avec l'identifiant du filtre

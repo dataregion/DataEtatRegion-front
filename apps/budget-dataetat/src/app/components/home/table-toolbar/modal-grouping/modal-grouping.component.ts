@@ -43,7 +43,7 @@ export class ModalGroupingComponent implements OnInit {
     this.remainingColonnes = this.calculateRemainingColumns();
 
     this._colonnesService.selectedColonnesGrouping$.subscribe(response => {
-      console.log("==> UPDATE modal selected colonnes")
+      console.log("==> UPDATE modal selected grouping")
       this.selectedColonnes = response
       this.remainingColonnes = this.calculateRemainingColumns();
       console.log(response)

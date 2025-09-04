@@ -63,6 +63,10 @@ export class GroupsTableComponent implements OnInit {
     .subscribe(([colonnes, response]) => {
       if (!this.root)
         return
+      if (!colonnes)
+        return
+      if (!response)
+        return
       this.root.children = []
       if (this._isGroupedDataArray(response)) {
         const groupedData = response as GroupedData[]
@@ -150,6 +154,7 @@ export class GroupsTableComponent implements OnInit {
               currentPage: 1,
             } as Group)
           })
+          this._searchDataService.searchInProgress = false
           console.log("Loaded children : ", node.children.length)
         })
       }
@@ -179,7 +184,7 @@ export class GroupsTableComponent implements OnInit {
         const newChildren: Group[] = [
           ...parent.children,
           ...response.data.groupings.map(gd => ({
-            parent,
+            parent: parent,
             children: [],
             groupedData: gd,
             opened: false,
@@ -191,6 +196,7 @@ export class GroupsTableComponent implements OnInit {
         parent.currentPage = newPage
         parent.children = newChildren;
         parent.loadingMore = false
+        this._searchDataService.searchInProgress = false
         console.log("Parent state : ", parent)
       })
     }
@@ -202,7 +208,6 @@ export class GroupsTableComponent implements OnInit {
    * @returns 
    */
   getGroupingColumnByCode(code: string): ColonneTableau<FinancialDataModel> {
-    console.log(this._colonnesService.allColonnesGrouping.filter(c => c.grouping?.code === code)[0])
     return this._colonnesService.allColonnesGrouping.filter(c => c.grouping?.code === code)[0] as ColonneTableau<FinancialDataModel>
   }
 

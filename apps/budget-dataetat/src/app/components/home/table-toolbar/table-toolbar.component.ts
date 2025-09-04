@@ -63,6 +63,10 @@ export class TableToolbarComponent {
     return this._colonnesService.selectedColonnesGrouping
   }
 
+  get selectedGrouped(): string[] {
+    return this._colonnesService.selectedColonnesGrouped
+  }
+
   get currentPreference(): Preference | null {
     return this._preferenceService.currentPreference
   }
