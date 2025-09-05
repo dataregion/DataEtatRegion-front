@@ -44,9 +44,8 @@ export class ModalGroupingComponent implements OnInit {
 
     this._colonnesService.selectedColonnesGrouping$.subscribe(response => {
       console.log("==> UPDATE modal selected grouping")
-      this.selectedColonnes = response
-      this.remainingColonnes = this.calculateRemainingColumns();
       console.log(response)
+      this.selectedColonnes = response
       // Build du formulaire
       this.formGrouping = this._formBuilder.group({
         colonnes: this._formBuilder.array(
@@ -58,6 +57,7 @@ export class ModalGroupingComponent implements OnInit {
           })
         )
       });
+      this.remainingColonnes = this.calculateRemainingColumns();
     })
 
   }

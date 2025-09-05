@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewChecked, AfterViewInit, Component, ElementRef, inject, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Component, ElementRef, inject, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { FinancialDataModel } from '@models/financial/financial-data.models';
 import { ColonneTableau } from '@services/colonnes-mapper.service';
 import { ColonnesService } from '@services/colonnes.service';
@@ -16,7 +16,7 @@ import { SearchParameters } from '@services/search-params.service';
   styleUrls: ['./lines-table.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
-export class LinesTableComponent implements OnInit, AfterViewInit, AfterViewChecked, OnDestroy {
+export class LinesTableComponent implements OnInit, OnDestroy {
 
   private _colonnesService: ColonnesService = inject(ColonnesService)
   private _searchDataService: SearchDataService = inject(SearchDataService)
@@ -24,9 +24,16 @@ export class LinesTableComponent implements OnInit, AfterViewInit, AfterViewChec
   currentColonnes: ColonneTableau<FinancialDataModel>[] = []
   currentLignes: FinancialDataModel[] = []
 
-  @ViewChild('spinner', { static: false }) spinner!: ElementRef;
+  @ViewChild('spinner')
+  set spinnerRef(el: ElementRef<HTMLDivElement> | undefined) {
+    if (el) {
+      this.observeSpinner(el);
+    }
+  }
 
   private observer!: IntersectionObserver;
+  private loading = false;
+
   get searchInProgress() {
     return this._searchDataService.searchInProgress
   }
@@ -44,20 +51,19 @@ export class LinesTableComponent implements OnInit, AfterViewInit, AfterViewChec
     });
   }
 
-  ngAfterViewInit() {
-    this.observeSpinner();
-  }
+  private observeSpinner(el: ElementRef<HTMLDivElement>) {
+    if (this.observer) {
+      this.observer.disconnect(); // cleanup old one if any
+    }
 
-  ngAfterViewChecked() {
-    this.observeSpinner();
-  }
-  
-  private observeSpinner() {
-    // observe loader visibility
     this.observer = new IntersectionObserver(entries => {
       entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          const newPage = (this._searchDataService.pagination?.current_page ?? 0) + 1
+        if (entry.isIntersecting && !this.loading) {
+          this.loading = true;
+
+          const newPage = (this._searchDataService.pagination?.current_page ?? 0) + 1;
+          console.log("spinner visible, new page", newPage);
+
           this._searchDataService.searchParams = {
             ...this._searchDataService.searchParams,
             page: newPage
@@ -65,9 +71,12 @@ export class LinesTableComponent implements OnInit, AfterViewInit, AfterViewChec
         }
       });
     });
-    if (this.spinner && this.observer) {
-      this.observer.observe(this.spinner.nativeElement);
-    }
+
+    this.observer.observe(el.nativeElement);
+
+    this._searchDataService.searchResults$.subscribe(() => {
+      this.loading = false;
+    });
   }
 
   ngOnDestroy() {

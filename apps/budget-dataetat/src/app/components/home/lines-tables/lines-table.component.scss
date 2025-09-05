@@ -9,8 +9,8 @@
   min-width: 100%; /* or something larger to allow scroll */
   border-collapse: separate; /* not collapse */
 }
-th.fr-cell--fixed,
-td.fr-cell--fixed {
+th.fr-cell--fixed.not-index,
+td.fr-cell--fixed.not-index {
   box-shadow: 3px 0 5px rgba(0,0,0,0.3);
   min-width: 600px;
   max-width: 600px;

@@ -7,8 +7,9 @@
             <table id="table-10">
               <thead>
                 <tr>
+                  <th class="fr-cell--fixed" role="columnheader"></th>
                   @for (col of currentColonnes; track col.colonne; let isFirst = $first) {
-                    <th [class.fr-cell--fixed]="isFirst" role="columnheader" [ngStyle]="col.style">
+                    <th [class.fr-cell--fixed]="isFirst" class="not-index" role="columnheader" [ngStyle]="col.style">
                       <div class="fr-cell__title">{{col.label}}</div>
                     </th>
                   }
@@ -16,9 +17,10 @@
               </thead>
               <tbody>
                 <tr id="table-10-row-key-0" data-row-key="0">
+                  <th class="fr-cell--fixed" scope="row"></th>
                   @for (col of currentColonnes; track col.colonne; let isFirst = $first) {
                     @if (isFirst) {
-                      <td class="fr-cell--fixed" role="columnheader" style="text-align:right;" [ngStyle]="col.style">
+                      <td class="fr-cell--fixed not-index" role="columnheader" style="text-align:right;" [ngStyle]="col.style">
                         <b style="font-size: 16px;">TOTAL</b>
                         <span class="fr-badge fr-badge--info badge-no-icon" style="margin-left: 30px;">{{getTotal()?.total | numberFormat}} lignes</span>
                       </td>
@@ -38,11 +40,12 @@
                     }
                   }
                 </tr>
-                @for (line of currentLignes; track line.id) {
+                @for (line of currentLignes; track line.id; let i = $index) {
                   <!-- #TODO : On row click -->
                   <tr id="table-10-row-key-{{line.id}}" (click)="onRowClick(line)" class="clickable" [attr.data-row-key]="line.id" scope="row">
+                    <th class="fr-cell--fixed" scope="row">{{i + 1}}</th>
                     @for (col of currentColonnes; track col.colonne; let isFirst = $first) {
-                      <td [class.fr-cell--fixed]="isFirst" [ngStyle]="col.style" [innerHTML]="col.render(line)"></td>
+                      <td [class.fr-cell--fixed]="isFirst" class="not-index" [ngStyle]="col.style" [innerHTML]="col.render(line)"></td>
                     }
                   </tr>
                 }

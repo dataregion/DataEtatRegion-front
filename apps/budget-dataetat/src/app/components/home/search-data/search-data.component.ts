@@ -284,7 +284,6 @@ export class SearchDataComponent implements OnInit {
       .pipe(
         filter((params): params is SearchParameters => !!params),
         tap(params => {
-          this._searchDataService.searchResults = []
           this.formSearch = this._prefilterMapperService.mapSearchParamsToForm(params);
         }),
         switchMap(params => 
