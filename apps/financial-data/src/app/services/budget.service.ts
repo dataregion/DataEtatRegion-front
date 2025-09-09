@@ -1,17 +1,17 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { Injectable, InjectionToken, inject } from '@angular/core';
-import { FinancialDataModel } from '@models/financial/financial-data.models';
-import { BopModel, ThemeModel } from '@models/refs/bop.models';
+import { FinancialDataModel } from '../models/financial/financial-data.models';
+import { BopModel, ThemeModel } from '../models/refs/bop.models';
 import { map, Observable } from 'rxjs';
 import { SettingsService } from '../../environments/settings.service';
 import { SETTINGS } from 'apps/common-lib/src/lib/environments/settings.http.service';
 import { HttpClient } from '@angular/common/http';
 import { DataPagination } from 'apps/common-lib/src/lib/models/pagination/pagination.models';
-import { SourceFinancialData } from '@models/financial/common.models';
+import { SourceFinancialData } from '../models/financial/common.models';
 import { BudgetToGristService, GristDataModel } from 'apps/clients/budget';
-import { Tag } from '@models/refs/tag.model';
-import { ReferentielProgrammation } from '@models/refs/referentiel_programmation.model';
+import { Tag } from '../models/refs/tag.model';
+import { ReferentielProgrammation } from '../models/refs/referentiel_programmation.model';
 
 import { RefSiret } from 'apps/common-lib/src/lib/models/refs/RefSiret';
 import { DataHttpService, SearchParameters } from './interface-data.service';

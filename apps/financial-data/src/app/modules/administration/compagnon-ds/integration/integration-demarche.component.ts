@@ -4,7 +4,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AlertService, LoaderService } from 'apps/common-lib/src/public-api';
 import { combineLatest, forkJoin } from 'rxjs';
 import { CompagnonDSService } from '../compagnon-ds.service';
-import { Demarche, Token } from '@models/demarche_simplifie/demarche.model';
+import { Demarche, Token } from '../../../../models/demarche_simplifie/demarche.model';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 

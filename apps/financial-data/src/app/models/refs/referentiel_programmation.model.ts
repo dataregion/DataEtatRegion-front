@@ -1,3 +1,3 @@
-import { CodeLabel } from '@models/financial/common.models';
+import { CodeLabel } from '../financial/common.models';
 
 export type ReferentielProgrammation = CodeLabel;

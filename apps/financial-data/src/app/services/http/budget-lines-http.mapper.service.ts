@@ -8,10 +8,10 @@ import {
   Siret,
   SourceFinancialData,
   TypeCategorieJuridique
-} from '@models/financial/common.models';
-import { FinancialDataModel } from '@models/financial/financial-data.models';
-import { ReferentielProgrammation } from '@models/refs/referentiel_programmation.model';
-import { Tag, tag_fullname } from '@models/refs/tag.model';
+} from '../../models/financial/common.models';
+import { FinancialDataModel } from '../../models/financial/financial-data.models';
+import { ReferentielProgrammation } from '../../models/refs/referentiel_programmation.model';
+import { Tag, tag_fullname } from '../../models/refs/tag.model';
 import { ColonneLibelles } from '../colonnes.service';
 import { EnrichedFlattenFinancialLinesSchema, TagsSchema } from 'apps/clients/budget';
 import { Optional } from 'apps/common-lib/src/lib/utilities/optional.type';

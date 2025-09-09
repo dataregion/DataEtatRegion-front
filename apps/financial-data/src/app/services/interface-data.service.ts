@@ -1,6 +1,6 @@
 import { Observable } from 'rxjs';
 import { DataIncrementalPagination } from '../../../../common-lib/src/lib/models/pagination/pagination.models';
-import { BopModel } from '@models/refs/bop.models';
+import { BopModel } from '../models/refs/bop.models';
 import { GeoModel, TypeLocalisation } from '../../../../common-lib/src/lib/models/geo.models';
 import { SourceFinancialData, TypeCategorieJuridique } from '../models/financial/common.models';
 import { ReferentielProgrammation } from '../models/refs/referentiel_programmation.model';

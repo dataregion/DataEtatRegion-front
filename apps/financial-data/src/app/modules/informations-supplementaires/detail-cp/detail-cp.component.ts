@@ -1,6 +1,6 @@
 import { CurrencyPipe, NgFor, NgIf } from '@angular/common';
 import { Component, Input } from '@angular/core';
-import { FinancialDataModel } from '@models/financial/financial-data.models';
+import { FinancialDataModel } from '../../../models/financial/financial-data.models';
 
 @Component({
     selector: 'financial-informations-supplementaires-detail-cp',

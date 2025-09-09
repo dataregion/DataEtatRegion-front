@@ -9,7 +9,7 @@ import {
   SourceFinancialData
 } from './common.models';
 import { Tag } from '../refs/tag.model';
-import { ReferentielProgrammation } from '@models/refs/referentiel_programmation.model';
+import { ReferentielProgrammation } from '../refs/referentiel_programmation.model';
 import { Optional } from 'apps/common-lib/src/lib/utilities/optional.type';
 import { ExportableAsJson } from 'apps/common-lib/src/lib/models/exportable-as-json.model';
 

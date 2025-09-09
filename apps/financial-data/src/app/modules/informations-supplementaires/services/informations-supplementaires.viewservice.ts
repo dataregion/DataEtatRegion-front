@@ -1,4 +1,4 @@
-import { FinancialDataModel } from '@models/financial/financial-data.models';
+import { FinancialDataModel } from '../../../models/financial/financial-data.models';
 import {
   ExternalAPIsService,
   InfoApiEntreprise,
@@ -16,9 +16,9 @@ import { EtablissementLight } from '../models/EtablissementLight';
 import { SubventionLight } from '../models/SubventionLight';
 import { HttpContext, HttpErrorResponse } from '@angular/common/http';
 import { BYPASS_ALERT_INTERCEPTOR } from 'apps/common-lib/src/public-api';
-import { SourceFinancialData } from '@models/financial/common.models';
+import { SourceFinancialData } from '../../../models/financial/common.models';
 import { fromInfoApiEntreprise } from './informations-supplementaires.service';
-import { AffichageDossier } from '@models/demarche_simplifie/demarche.model';
+import { AffichageDossier } from '../../../models/demarche_simplifie/demarche.model';
 import { CompagnonDSService } from '../../administration/compagnon-ds/compagnon-ds.service';
 
 export class InformationSupplementairesViewService {

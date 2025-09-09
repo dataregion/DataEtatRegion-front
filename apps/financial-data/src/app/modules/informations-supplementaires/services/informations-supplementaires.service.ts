@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { FinancialDataModel } from '@models/financial/financial-data.models';
+import { FinancialDataModel } from '../../../models/financial/financial-data.models';
 import { ExternalAPIsService, InfoApiEntreprise } from 'apps/clients/apis-externes';
 import { EntrepriseFull } from '../models/EntrepriseFull';
 import { PersonneMoraleAttributsCorrige } from '../models/correction-api-externes/PersonneMoraleAttributsCorrige';

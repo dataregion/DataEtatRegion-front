@@ -2,7 +2,7 @@ import { ActivatedRouteSnapshot, ResolveFn } from '@angular/router';
 import { inject } from '@angular/core';
 import { BudgetService } from '../services/budget.service';
 import { catchError, of } from 'rxjs';
-import { FinancialDataModel } from '@models/financial/financial-data.models';
+import { FinancialDataModel } from '../models/financial/financial-data.models';
 
 export const resolveInformationsSupplementaires: ResolveFn<FinancialDataModel | Error> = (
   route: ActivatedRouteSnapshot

@@ -3,7 +3,7 @@ import { BudgetService } from '../../services/budget.service';
 import { TagFieldData } from './tags-field-data.model';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { Tag, tag_fullname } from '@models/refs/tag.model';
+import { Tag, tag_fullname } from '../../models/refs/tag.model';
 
 @Injectable()
 export class AutocompleteTagsService {

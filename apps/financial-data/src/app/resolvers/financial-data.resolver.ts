@@ -3,7 +3,7 @@ import { ResolveFn } from '@angular/router';
 import {
   FinancialData,
   FinancialDataResolverModel
-} from '@models/financial/financial-data-resolvers.models';
+} from '../models/financial/financial-data-resolvers.models';
 import { BudgetService } from '../services/budget.service';
 import { BudgetDataHttpService } from '../services/http/budget-lines-http.service';
 import { forkJoin } from 'rxjs';

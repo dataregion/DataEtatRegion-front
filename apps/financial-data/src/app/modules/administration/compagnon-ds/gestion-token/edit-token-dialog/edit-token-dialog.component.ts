@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { Token } from '@models/demarche_simplifie/demarche.model';
 import { CompagnonDSService } from '../../compagnon-ds.service';
+import { Token } from '../../../../../models/demarche_simplifie/demarche.model';
 
 export type EditTokenDialogType = 'CREATE' | 'UPDATE';
 

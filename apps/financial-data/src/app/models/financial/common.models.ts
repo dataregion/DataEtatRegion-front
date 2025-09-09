@@ -1,6 +1,6 @@
  
 
-import { DataType } from '@models/audit/audit-update-data.models';
+import { DataType } from '../audit/audit-update-data.models';
 import { Optional } from 'apps/common-lib/src/lib/utilities/optional.type';
 
 export enum TypeCategorieJuridique {

@@ -1,6 +1,6 @@
 import { inject } from '@angular/core';
 import { ActivatedRouteSnapshot, ResolveFn } from '@angular/router';
-import { PreFilters } from '@models/search/prefilters.model';
+import { PreFilters } from '../models/search/prefilters.model';
 import { GeoHttpService } from 'apps/common-lib/src/lib/services/geo-http.service';
 import { ReferentielsHttpService } from 'apps/common-lib/src/lib/services/referentiels.service';
 import { GeoModel } from 'apps/common-lib/src/public-api';
@@ -12,7 +12,7 @@ import {
   MarqueBlancheParsedParams as Params,
   MarqueBlancheParsedParamsResolverModel as ResolverModel
 } from 'apps/common-lib/src/lib/models/marqueblanche/marqueblanche-parsed-params.model';
-import { FinancialQueryParam } from '@models/marqueblanche/query-params.enum';
+import { FinancialQueryParam } from '../models/marqueblanche/query-params.enum';
 import { QueryParam } from 'apps/common-lib/src/lib/models/marqueblanche/query-params.enum';
 import {
   fullscreen,
@@ -24,12 +24,12 @@ import {
 } from 'apps/common-lib/src/lib/resolvers/marqueblanche/common-handlers';
 import { HandlerContext } from 'apps/common-lib/src/lib/models/marqueblanche/handler-context.model';
 import { passing_errors } from 'apps/common-lib/src/lib/resolvers/marqueblanche/utils';
-import { assert_is_a_GroupByFieldname } from '@models/marqueblanche/groupby-fieldname.enum';
+import { assert_is_a_GroupByFieldname } from '../models/marqueblanche/groupby-fieldname.enum';
 import { GroupingColumn } from 'apps/grouping-table/src/lib/components/grouping-table/group-utils';
-import { groupby_mapping } from '@models/marqueblanche/groupby-mapping.model';
-import { Beneficiaire } from '@models/search/beneficiaire.model';
+import { groupby_mapping } from '../models/marqueblanche/groupby-mapping.model';
+import { Beneficiaire } from '../models/search/beneficiaire.model';
 import { to_types_categories_juridiques } from 'apps/common-lib/src/lib/resolvers/marqueblanche/type-etablissement.model';
-import { ReferentielProgrammation } from '@models/refs/referentiel_programmation.model';
+import { ReferentielProgrammation } from '../models/refs/referentiel_programmation.model';
 import { _HandlerContext} from 'apps/common-lib/src/lib/resolvers/marqueblanche/common-handlers'
 import { LoggerService } from 'apps/common-lib/src/lib/services/logger.service';
 

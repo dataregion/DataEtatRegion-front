@@ -11,7 +11,7 @@ import {
   Reconciliation,
   Token,
   ValeurDonnee
-} from '@models/demarche_simplifie/demarche.model';
+} from '../../../models/demarche_simplifie/demarche.model';
 import { SettingsService } from 'apps/financial-data/src/environments/settings.service';
 
 @Injectable({

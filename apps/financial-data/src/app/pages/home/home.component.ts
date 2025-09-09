@@ -31,7 +31,7 @@ import {
   groupingOrder
 } from '../../models/tableau/colonnes.model';
 import { QueryParam } from 'apps/common-lib/src/lib/models/marqueblanche/query-params.enum';
-import { Tag } from '@models/refs/tag.model';
+import { Tag } from '../../models/refs/tag.model';
 import { SearchDataComponent } from 'apps/financial-data/src/app/components/search-data/search-data.component';
 import { BudgetService } from '../../services/budget.service';
 import { DatePipe } from '@angular/common';
