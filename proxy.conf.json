@@ -7,6 +7,14 @@
       "^/api": "/"
     }
   },
+  "/newapi": {
+    "target": "http://localhost:8050",
+    "secure": false,
+    "logLevel": "debug",
+    "pathRewrite": {
+      "^/newapi": ""
+    }
+  },
   "/integ-api": {
     "target": "https://api.nocode.csm.ovh/nocodb/CHORUS-DATA",
     "secure": false,
