@@ -42,7 +42,7 @@ export class PrefilterMapperService {
   }
 
   mapPrefilterToSearchParams(prefilter: PreFilters): SearchParameters | undefined {
-    const searchParams = this._searchDataService.searchParams ?? this._searchParamsService.getEmpty()
+    const searchParams = this._searchDataService.searchParams() ?? this._searchParamsService.getEmpty()
     searchParams.page = 1
     searchParams.page_size = 100
     searchParams.themes = this._mapThemes(prefilter)

@@ -41,7 +41,7 @@ export class InfosLigneComponent implements OnInit {
 
   
   backToTable() {
-    this._searchDataService.selectedLine = undefined
+    this._searchDataService.selectedLine.set(undefined);
   }
 
   view: View = View.light;
@@ -60,8 +60,8 @@ export class InfosLigneComponent implements OnInit {
 
   ngOnInit() {
     const data: FinancialDataModel = this._route.snapshot.data['infos_supplementaires'];
-    this._searchDataService.selectedLine = data
-    this._initFromResolverModel(this._searchDataService.selectedLine);
+    this._searchDataService.selectedLine.set(data);
+    this._initFromResolverModel(this._searchDataService.selectedLine());
   }
 
   get vService(): InformationSupplementairesViewService {
@@ -77,7 +77,7 @@ export class InfosLigneComponent implements OnInit {
     this.affichage_dossier$ = this.vService.dossierDemarche$();
   }
   
-  _initFromResolverModel(data: FinancialDataModel) {
+  _initFromResolverModel(data: FinancialDataModel | undefined) {
     if (data === undefined)
       return;
     this._financial = data;

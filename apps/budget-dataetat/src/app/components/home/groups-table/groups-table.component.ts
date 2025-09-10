@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, inject, OnInit, ViewEncapsulation, WritableSignal } from '@angular/core';
 import { FinancialDataModel } from '@models/financial/financial-data.models';
 import { ColonneTableau } from '@services/colonnes-mapper.service';
 import { ColonnesService } from '@services/colonnes.service';
@@ -8,6 +8,8 @@ import { GroupedData, LignesResponse } from 'apps/clients/v3/financial-data';
 import { TreeAccordionDirective } from './tree-accordion.directive';
 import { NumberFormatPipe } from '../lines-tables/number-format.pipe';
 import { combineLatest } from 'rxjs';
+import { SearchParameters } from '@services/search-params.service';
+import { toObservable } from '@angular/core/rxjs-interop';
 
 export interface Group {
   parent?: Group;
@@ -35,6 +37,7 @@ export class GroupsTableComponent implements OnInit {
   private _groups: { [k: string]: ColonneTableau<FinancialDataModel>; } = {}
 
   ngOnInit() {
+    // TODO use effect
     this.root = {
       opened: false,
       loaded: false,
@@ -43,7 +46,7 @@ export class GroupsTableComponent implements OnInit {
       currentPage: 1,
     } as Group
     // Init des racines
-    const groupedData: GroupedData[] = this._searchDataService.searchResults as GroupedData[]
+    const groupedData: GroupedData[] = this._searchDataService.searchResults() as GroupedData[]
     groupedData.forEach(gd => {
       this.root?.children.push({
         groupedData: gd,
@@ -57,7 +60,7 @@ export class GroupsTableComponent implements OnInit {
     // Si update selectedGrouping ou les résultats, on reset
     combineLatest([
       this._colonnesService.selectedColonnesGrouping$,
-      this._searchDataService.searchResults$
+      toObservable(this._searchDataService.searchResults)
     ])
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     .subscribe(([colonnes, response]) => {
@@ -77,7 +80,7 @@ export class GroupsTableComponent implements OnInit {
             loaded: false,
             children: [],
             loadingMore: false,
-            currentPage: this._searchDataService.searchParams?.page,
+            currentPage: this._searchDataService.searchParams()?.page,
           } as Group)
         })
       }
@@ -97,18 +100,18 @@ export class GroupsTableComponent implements OnInit {
     return this._searchDataService.total
   }
 
-  get pageSize() {
-    return this._searchDataService.searchParams?.page_size
-  }
-
   isLastLevel(level: number): boolean {
     return this._colonnesService.selectedColonnesGrouping.length === level + 1
   }
 
   removeGrouping() {
-    if (this._searchDataService.searchParams) {
-      this._searchDataService.searchParams.grouping = []
-      this._searchDataService.searchParams.grouped = []
+    if (this._searchDataService.searchParams()) {
+       this._searchDataService.searchParams.set({
+        ...this._searchDataService.searchParams(),
+        page: 1, 
+        grouping: [],
+        grouped: []
+      } as SearchParameters);   
     }
     this._colonnesService.selectedColonnesGrouping = []
     this._colonnesService.selectedColonnesGrouped = []
@@ -138,8 +141,14 @@ export class GroupsTableComponent implements OnInit {
     if (!node.loaded) {
       if (this._searchDataService.searchParams) {
         const grouped: (string | undefined)[] = this._recGetPathFromNode(node).map(gd => gd.value?.toString())
-        this._searchDataService.searchParams.page = node.currentPage
+        
+        this._searchDataService.searchParams.set({
+          ...this._searchDataService.searchParams(),
+          page: node.currentPage,
+        } as SearchParameters);
+        
         this._colonnesService.selectedColonnesGrouped = grouped.filter(g => g !== undefined)
+        
         this._searchDataService.search().subscribe((response: LignesResponse) => {
           console.log(response)
           node.loaded = true
@@ -154,7 +163,7 @@ export class GroupsTableComponent implements OnInit {
               currentPage: 1,
             } as Group)
           })
-          this._searchDataService.searchInProgress = false
+          this._searchDataService.searchInProgress.set(false);
           console.log("Loaded children : ", node.children.length)
         })
       }
@@ -166,18 +175,27 @@ export class GroupsTableComponent implements OnInit {
       return;
 
     console.log("==> LOAD MORE")
-    console.log(parent.groupedData?.colonne + " : " + parent.groupedData?.value)
-    const grouped: GroupedData[] = this._recGetPathFromNode(parent)
-    this._searchDataService.searchParams.grouping = grouped.map(g => g.colonne).filter(c => c !== undefined);
-    this._searchDataService.searchParams.grouped = grouped.map(g => g.value?.toString()).filter(c => c !== undefined);
+    console.log(parent.groupedData?.colonne + " : " + parent.groupedData?.value);
+    const grouped: GroupedData[] = this._recGetPathFromNode(parent);
+    
+    const searchGrouping = grouped.map(g => g.colonne).filter(c => c !== undefined);
+    const searchGrouped = grouped.map(g => g.value?.toString()).filter(c => c !== undefined);
 
-    if (this._searchDataService.searchParams) {
+    if (this._searchDataService.searchParams()) {
       // S'il y a un parent pour les nodes, on remet le loadingMore à true
       parent.loadingMore = true
 
-      const newPage: number = parent.currentPage + 1
-      this._searchDataService.searchParams.page = newPage
+      const newPage: number = parent.currentPage + 1;
+
+      this._searchDataService.searchParams.set({
+        ...this._searchDataService.searchParams(),
+        page: newPage,
+        grouping: searchGrouping,
+        grouped: searchGrouped
+      } as SearchParameters);
+
       this._colonnesService.selectedColonnesGrouped = grouped.map(gd => gd.value?.toString()).filter(g => g !== undefined)
+          
       this._searchDataService.search().subscribe((response: LignesResponse) => {
         if (!response.data?.groupings)
           return;
@@ -193,10 +211,10 @@ export class GroupsTableComponent implements OnInit {
             currentPage: 1,
           } as Group))
         ];
-        parent.currentPage = newPage
+        parent.currentPage = newPage;
         parent.children = newChildren;
         parent.loadingMore = false
-        this._searchDataService.searchInProgress = false
+        this._searchDataService.searchInProgress.set(false);
         console.log("Parent state : ", parent)
       })
     }
@@ -236,12 +254,13 @@ export class GroupsTableComponent implements OnInit {
       console.log(newGrouping)
       console.log(newGrouped)
 
-      this._searchDataService.searchParams = {
-        ...this._searchDataService.searchParams,
+
+      this._searchDataService.searchParams.set({
+        ...this._searchDataService.searchParams(),
         page: 1,
         grouping: newGrouping.map(g => g.grouping?.code).filter(g => g !== undefined && g !== null),
         grouped: newGrouped
-      }
+      } as SearchParameters);
     }
   }
 

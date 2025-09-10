@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, inject, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Component, effect, ElementRef, inject, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { FinancialDataModel } from '@models/financial/financial-data.models';
 import { ColonneTableau } from '@services/colonnes-mapper.service';
 import { ColonnesService } from '@services/colonnes.service';
@@ -32,22 +32,26 @@ export class LinesTableComponent implements OnInit, OnDestroy {
   }
 
   private observer!: IntersectionObserver;
-  private loading = false;
 
   get searchInProgress() {
     return this._searchDataService.searchInProgress
   }
 
-  getTotal() {
-    return this._searchDataService.total
+  constructor() {
+    effect(() => {
+      this.currentLignes = this._searchDataService.searchResults() as FinancialDataModel[]
+    });
   }
 
+  getTotal() {
+    return this._searchDataService.total();
+  }
+
+
   ngOnInit(): void {
+    //TODO supprimer par signals
     this._colonnesService.selectedColonnesTable$.subscribe((selected) => {
       this.currentColonnes = selected.length !== 0 ? selected : this._colonnesService.allColonnesTable
-    });
-    this._searchDataService.searchResults$.subscribe((selected: SearchResults) => {
-      this.currentLignes = selected as FinancialDataModel[]
     });
   }
 
@@ -58,25 +62,19 @@ export class LinesTableComponent implements OnInit, OnDestroy {
 
     this.observer = new IntersectionObserver(entries => {
       entries.forEach(entry => {
-        if (entry.isIntersecting && !this.loading) {
-          this.loading = true;
-
-          const newPage = (this._searchDataService.pagination?.current_page ?? 0) + 1;
+        if (entry.isIntersecting && !this._searchDataService.searchInProgress()) {
+          const newPage = (this._searchDataService.pagination()?.current_page ?? 0) + 1;
           console.log("spinner visible, new page", newPage);
 
-          this._searchDataService.searchParams = {
-            ...this._searchDataService.searchParams,
+          this._searchDataService.searchParams.set({
+            ...this._searchDataService.searchParams(),
             page: newPage
-          } as SearchParameters;
+          } as SearchParameters);
         }
       });
     });
 
     this.observer.observe(el.nativeElement);
-
-    this._searchDataService.searchResults$.subscribe(() => {
-      this.loading = false;
-    });
   }
 
   ngOnDestroy() {
@@ -86,11 +84,11 @@ export class LinesTableComponent implements OnInit, OnDestroy {
   }
 
   onRowClick(line: FinancialDataModel) {
-    this._searchDataService.selectedLine = line
+    this._searchDataService.selectedLine.set(line);
   }
 
   hasNext() {
-    return this._searchDataService.pagination?.has_next
+    return this._searchDataService.pagination()?.has_next;
   }
 
 }

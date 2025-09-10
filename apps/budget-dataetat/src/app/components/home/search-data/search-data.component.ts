@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, effect, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import {
@@ -71,12 +71,15 @@ export class SearchDataComponent implements OnInit {
   private _route = inject(ActivatedRoute);
   private _preferenceService = inject(PreferenceService)
   private _prefilterMapperService = inject(PrefilterMapperService);
-  private _searchDataService = inject(SearchDataService);
   private _searchParamsService = inject(SearchParamsService);
   private _logger = inject(LoggerService);
   private _autocompleteBeneficiaires = inject(AutocompleteBeneficiaireService);
   private _autocompleteTags = inject(AutocompleteTagsService);
   private _colonnesService = inject(ColonnesService)
+
+
+  public searchDataService = inject(SearchDataService);
+
 
   /**
    * Formulaire de recherche
@@ -102,6 +105,7 @@ export class SearchDataComponent implements OnInit {
   public annees: number[] = [];
   public filteredBops: BopModel[] = [];
   public filteredReferentiels: ReferentielProgrammation[] = [];
+  public searchFinish: boolean = false;
 
   /**
    * Thèmes, Programmes, Référentiels programmation
@@ -225,10 +229,7 @@ export class SearchDataComponent implements OnInit {
     this.tagsInputChange$.next(v);
   }
 
-
-  get searchFinish() {
-    return this._searchDataService.searchFinish
-  }
+  
 
   ngOnInit(): void {
     // Subscribe pour l'autocomplete des beneficiaires
@@ -275,54 +276,58 @@ export class SearchDataComponent implements OnInit {
         this._logger.debug(`Application des filtres`);
         this._preferenceService.currentPrefilter = mb_prefilter;
         // Mapping du prefilter vers le formulaire
-        this._searchDataService.searchParams = this._prefilterMapperService.mapPrefilterToSearchParams(mb_prefilter)
+        this.searchDataService.searchParams.set(this._prefilterMapperService.mapPrefilterToSearchParams(mb_prefilter));
       }
     }
 
     // Subscribe sur les paramètres de la recherche pour lancer la recherche
-    this._searchDataService.searchParams$
-      .pipe(
-        filter((params): params is SearchParameters => !!params),
-        tap(params => {
-          this.formSearch = this._prefilterMapperService.mapSearchParamsToForm(params);
-        }),
-        switchMap(params => 
-          this._searchDataService.search(params).pipe(
-            finalize(() => {
-              this._searchDataService.searchFinish = true;
-              this._searchDataService.searchInProgress = false;
-            })
-          )
-        ),
-      )
-      .subscribe({
-        next: (response: LignesResponse) => {
-          console.log("==> Résultat de la recherche");
-          console.log(response);
-          if (response.code == 204 && !response.data) {
-            this._searchDataService.searchResults = []
-            return
-          }
-          if (response.data?.type === 'groupings') {
-            const newData = response.data?.groupings as GroupedData[]
-            // Si page = 1, on reset, sinon on concat
-            this._searchDataService.searchResults = response.pagination?.current_page == 1
-              ? newData
-              : (this._searchDataService.searchResults as GroupedData[]).concat(newData);
-          } else if (response.data?.type === 'lignes_financieres') {
-            const newData = response.data?.lignes.map(r => this._searchDataService.unflatten(r)) ?? []
-            // Si page = 1, on reset, sinon on concat
-            this._searchDataService.searchResults = response.pagination?.current_page == 1
-              ? newData
-              : (this._searchDataService.searchResults as FinancialDataModel[]).concat(newData);
-          }
-          this._searchDataService.total = response.data?.total;
-          this._searchDataService.pagination = response.pagination;
-        },
-        error: (err: unknown) => {
-          console.error("Erreur lors de la recherche :", err);
-        }
-      });
+    // this._searchDataService.searchParams$
+    //   .pipe(
+    //     filter((params): params is SearchParameters => !!params),
+    //     tap(params => {
+    //       this.formSearch = this._prefilterMapperService.mapSearchParamsToForm(params);
+    //     }),
+    //     switchMap(params => 
+    //       this.searchDataService.search(params).pipe(
+    //         finalize(() => {
+    //           this.searchDataService.searchFinish.set(true);
+    //           this.searchDataService.searchInProgress.set(false);
+    //         })
+    //       )
+    //     ),
+    //   )
+    //   .subscribe({
+    //     next: (response: LignesResponse) => {
+    //       console.log("==> Résultat de la recherche");
+    //       console.log(response);
+    //       if (response.code == 204 && !response.data) {
+    //         this.searchDataService.searchResults.set([]);
+    //         return
+    //       }
+    //       if (response.data?.type === 'groupings') {
+
+    //         const newData = response.data?.groupings as GroupedData[]
+    //         // Si page = 1, on reset, sinon on concat
+    //         const newSearch = response.pagination?.current_page == 1
+    //           ? newData
+    //           : (this.searchDataService.searchResults() as GroupedData[]).concat(newData);
+
+    //         this.searchDataService.searchResults.set(newSearch);
+    //       } else if (response.data?.type === 'lignes_financieres') {
+    //         const newData = response.data?.lignes.map(r => this.searchDataService.unflatten(r)) ?? []
+    //         // Si page = 1, on reset, sinon on concat
+    //         const newSearch = response.pagination?.current_page == 1
+    //           ? newData
+    //           : (this.searchDataService.searchResults() as FinancialDataModel[]).concat(newData);
+    //         this.searchDataService.searchResults.set(newSearch);
+    //       }
+    //       this.searchDataService.total.set(response.data?.total);
+    //       this.searchDataService.pagination.set(response.pagination);
+    //     },
+    //     error: (err: unknown) => {
+    //       console.error("Erreur lors de la recherche :", err);
+    //     }
+    //   });
       
 
     // On subscribe également le changement des colonnes de tableau ou de grouping sélectionnées
@@ -331,18 +336,23 @@ export class SearchDataComponent implements OnInit {
       this._colonnesService.selectedColonnesGrouping$,
     ])
     .subscribe(([tableCols, groupingCols]) => {
-      const currentParams = this._searchDataService.searchParams
+      const currentParams = this.searchDataService.searchParams();
       if (!currentParams)
         return;
-      this._searchDataService.searchParams = {
+      
+      const search = {
         ...currentParams,
         colonnes: tableCols.map(c => c.back.map(b => b.code)).flat().filter(c => c !== undefined && c !== null),
         grouping: groupingCols.map(c => c.grouping?.code).filter(c => c !== undefined && c !== null) ?? undefined,
         grouped: []
       };
-      if (this._searchDataService.searchParams.grouping?.length === 0) {
-        this._searchDataService.searchParams.grouping = undefined
+
+
+      if (search.grouping?.length === 0) {
+        search.grouping = [];
       }
+
+      this.searchDataService.searchParams.set(search);
     });
   }
 
@@ -374,14 +384,14 @@ export class SearchDataComponent implements OnInit {
       grouped: this._colonnesService.selectedColonnesGrouped
     };
     // Set des paramètres qui trigger la recherche
-    this._searchDataService.searchParams = search_parameters
+    this.searchDataService.searchParams.set(search_parameters);
   }
 
   /**
    * Reset du formulaire
    */
   public reset(): void {
-    this._searchDataService.searchInProgress = false;
+    this.searchDataService.searchInProgress.set(false);
     this.formSearch.reset();
   }
 

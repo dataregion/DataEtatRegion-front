@@ -52,7 +52,7 @@
       <mat-icon fontIcon="search" />
     </button>
 
-    @if (searchFinish === true) {
+    @if (searchDataService.searchFinish() === true) {
       <button (click)="reset()" 
         aria-label="Bouton de réinitialisation des critères de recherche" color="warn" mat-fab
         matTooltip="Effacer la recherche">

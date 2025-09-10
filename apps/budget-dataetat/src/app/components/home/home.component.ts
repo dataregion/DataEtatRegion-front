@@ -57,18 +57,10 @@ export class HomeComponent implements OnInit {
   get grouped(): boolean {
     return this._colonnesService.grouped
   }
-  get searchInProgress() {
-    return this._searchDataService.searchInProgress
-  }
-  get searchInProgress$() {
-    return this._searchDataService.searchInProgress$
-  }
-  get searchResults(): SearchResults {
-    return this._searchDataService.searchResults;
-  }
-  get searchResults$() {
-    return this._searchDataService.searchResults$;
-  }
+  
+  // Signals du service de recherche
+  public readonly searchInProgress = this._searchDataService.searchInProgress;
+  public readonly searchResults = this._searchDataService.searchResults;
   
   /**
    * Resolve erreur
@@ -141,7 +133,7 @@ export class HomeComponent implements OnInit {
             const mapped: ColonneTableau<FinancialDataModel>[] = this._colonnesMapperService.mapLabelsFromPreferences(preference.options['displayOrder'] as ColonneFromPreference[])
             this._colonnesService.selectedColonnesTable = mapped;
           }
-          this._searchDataService.searchParams = this._prefilterMapperService.mapPrefilterToSearchParams(preference.filters as PreFilters)
+          this._searchDataService.searchParams.set(this._prefilterMapperService.mapPrefilterToSearchParams(preference.filters as PreFilters))
           this._alertService.openInfo(`Application du filtre ${preference.name}`);
         });
       }
@@ -156,6 +148,6 @@ export class HomeComponent implements OnInit {
   }
 
   hasSelectedLine() {
-    return this._searchDataService.selectedLine !== undefined
+    return this._searchDataService.selectedLine() !== undefined
   }
 }

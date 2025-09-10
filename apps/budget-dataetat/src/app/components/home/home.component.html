@@ -31,7 +31,7 @@
           <budget-search-data />
         }
 
-        <div class="main-content overlay-container" [class.no-content]="(searchResults$ | async)?.length === 0">
+        <div class="main-content overlay-container" [class.no-content]="(searchResults())?.length === 0">
           @if (hasSelectedLine()) {
             <budget-infos-ligne />
           } @else {

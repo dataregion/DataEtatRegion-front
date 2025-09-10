@@ -1,5 +1,9 @@
-import { inject, Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, of } from 'rxjs';
+/**
+ * Service centralisé pour la gestion de la recherche et des résultats financiers.
+ * Expose l'état via des BehaviorSubject/Observable et propose des méthodes utilitaires pour la transformation des données.
+ */
+import { inject, Injectable, signal } from '@angular/core';
+import { Observable, of } from 'rxjs';
 import { SearchParameters } from '@services/search-params.service';
 import { FinancialDataModel } from '@models/financial/financial-data.models';
 import { SearchDataMapper } from './search-data-mapper.service';
@@ -16,153 +20,105 @@ export type SearchResults = GroupedData[] | FinancialDataModel[]
 })
 export class SearchDataService {
 
+  // --- Services dépendants ---
   private _mapper: SearchDataMapper = inject(SearchDataMapper);
   private _colonnesService: ColonnesService = inject(ColonnesService);
   private _searchParamsService: SearchParamsService = inject(SearchParamsService);
   private _lignesFinanciereService: LignesFinancieresService = inject(LignesFinancieresService);
-  private _preferenceService: PreferenceService = inject(PreferenceService);
 
   /**
-   * Paramètres de la recherche
+   * Paramètres courants de la recherche.
    */
-  private searchParamsSubject = new BehaviorSubject<SearchParameters | undefined>(undefined);
-  searchParams$ = this.searchParamsSubject.asObservable();
-  get searchParams(): SearchParameters | undefined {
-    return this.searchParamsSubject.value;
-  }
-  set searchParams(searchParams: SearchParameters | undefined) {
-    this.searchParamsSubject.next(searchParams);
-  }
+  public readonly searchParams = signal<SearchParameters | undefined>(undefined);
 
   /**
-   * Total
+   * Total des résultats de la recherche.
    */
-  private totalSubject = new BehaviorSubject<Total | undefined>(undefined);
-  total$ = this.totalSubject.asObservable();
-  get total(): Total | undefined {
-    return this.totalSubject.value;
-  }
-  set total(total: Total | undefined) {
-    this.totalSubject.next(total);
-  }
+  public readonly total = signal<Total | undefined>(undefined);
+
 
   /**
-   * Ligne consultée
+   * Ligne sélectionnée (détail consulté par l'utilisateur).
    */
-  private selectedLineSubject = new BehaviorSubject<FinancialDataModel | undefined>(undefined);
-  selectedLine$ = this.selectedLineSubject.asObservable();
-  get selectedLine(): FinancialDataModel | undefined {
-    return this.selectedLineSubject.value;
-  }
-  set selectedLine(line: FinancialDataModel | undefined) {
-    this.selectedLineSubject.next(line);
-  }
+  public readonly selectedLine = signal<FinancialDataModel | undefined>(undefined);
 
   /**
-   * Recherche finie ?
+   * Indique si la recherche est terminée.
    */
-  private searchFinishSubject = new BehaviorSubject<boolean>(false);
-  searchFinish$ = this.searchFinishSubject.asObservable();
-  get searchFinish(): boolean {
-    return this.searchFinishSubject.value;
-  }
-  set searchFinish(searchFinish: boolean) {
-    this.searchFinishSubject.next(searchFinish);
-  }
+  public readonly searchFinish = signal<boolean>(false);
   
   /**
-   * Recherche en cours ?
+   * Indique si une recherche est en cours.
    */
-  private searchInProgressSubject = new BehaviorSubject<boolean>(false);
-  searchInProgress$ = this.searchInProgressSubject.asObservable();
-  get searchInProgress(): boolean {
-    return this.searchInProgressSubject.value;
-  }
-  set searchInProgress(searchInProgress: boolean) {
-    this.searchInProgressSubject.next(searchInProgress);
-  }
+  public readonly searchInProgress = signal<boolean>(false);
   
   /**
-   * Résultats de la recherche
+   * Résultats de la recherche (tableau de lignes ou de groupes).
    */
-  private searchResultsSubject = new BehaviorSubject<SearchResults>([]);
-  searchResults$ = this.searchResultsSubject.asObservable();
-  get searchResults(): SearchResults {
-    return this.searchResultsSubject.value;
-  }
-  set searchResults(results: SearchResults) {
-    this.searchResultsSubject.next(results);
-  }
+  public readonly searchResults = signal<SearchResults>([]);
   
   /**
-   * Résultats de la recherche
+   * Métadonnées de pagination des résultats.
    */
-  private paginationSubject = new BehaviorSubject<PaginationMeta | null>(null);
-  pagination$ = this.paginationSubject.asObservable();
-  get pagination(): PaginationMeta | null {
-    return this.paginationSubject.value;
-  }
-  set pagination(data: PaginationMeta | null) {
-    this.paginationSubject.next(data);
-  }
+  public readonly pagination = signal<PaginationMeta | null>(null);
 
   /**
-   * Avant de lancer la recherche on set colonnes, grouping et grouped
-   * @param searchParams 
-   * @param grouped 
-   * @returns 
+   * Lance une recherche financière avec les paramètres courants ou fournis.
+   * Met à jour les colonnes et le grouping avant d'appeler l'API.
+   * @param searchParams Paramètres de recherche à utiliser (optionnel, sinon ceux du service)
+   * @returns Observable du résultat de l'API
    */
   public search(searchParams: SearchParameters | undefined = undefined): Observable<LignesResponse> {
-    // Si la recherche est lancée sans paramètres fournis, on prend les sauvegardés
     if (searchParams === undefined) {
-      searchParams = this.searchParams
-      if (searchParams === undefined)
-        return of()
+      searchParams = this.searchParams();
+      if (searchParams === undefined) return of();
     }
-    // Récupération des colonnes et grouping
+    // Préparation des colonnes à retourner
     const colonnesTable = this._colonnesService.selectedColonnesTable;
     const colonnesGrouping = this._colonnesService.selectedColonnesGrouping;
-    // Set des colonnes
     if (colonnesTable.length) {
-      const fieldsBack = colonnesTable.map(c => c.back.map(b => b.code)).flat()
+      const fieldsBack = colonnesTable.map(c => c.back.map(b => b.code)).flat();
       searchParams.colonnes = fieldsBack.filter((v): v is string => v != null);
     }
-    // Set du grouping et grouped
+    // Préparation du grouping
     if (colonnesGrouping.length) {
       const grouped: string[] = this._colonnesService.selectedColonnesGrouped;
       const fieldsGrouping = colonnesGrouping.map(c => c.grouping?.code).filter((v): v is string => v != null);
-      searchParams.grouping = fieldsGrouping.slice(0, Math.min(fieldsGrouping.length, grouped ? grouped.length + 1 : 1))
-      searchParams.grouped = this._colonnesService.selectedColonnesGrouped?.map(v => v ?? "None") ?? undefined
-      console.log("==> Grouping && Grouped")
-      console.log(searchParams.grouping)
-      console.log(searchParams.grouped)
+      searchParams.grouping = fieldsGrouping.slice(0, Math.min(fieldsGrouping.length, grouped ? grouped.length + 1 : 1));
+      searchParams.grouped = this._colonnesService.selectedColonnesGrouped?.map(v => v ?? "None") ?? undefined;
+      // Debug console
+      console.log("==> Grouping && Grouped");
+      console.log(searchParams.grouping);
+      console.log(searchParams.grouped);
     }
-    return this._search(searchParams)
+    return this._search(searchParams);
   }
 
+  // --- Méthodes privées ---
+
   /**
-   * Requête via le client généré
-   * @param searchParams 
-   * @returns 
+   * Appelle le client API pour récupérer les lignes financières selon les paramètres.
+   * @param searchParams Paramètres de recherche à utiliser
+   * @returns Observable du résultat brut de l'API
    */
   private _search(searchParams: SearchParameters): Observable<LignesResponse> {
     if (searchParams === undefined || this._searchParamsService.isEmpty(searchParams))
       return of();
-    this.searchInProgress = true;
+    this.searchInProgress.set(true);
     const req$ = this._lignesFinanciereService.getLignesFinancieresLignesGet(
-        ...this._searchParamsService.getSanitizedParams(searchParams, ),
-        'body'
-    )
+      ...this._searchParamsService.getSanitizedParams(searchParams),
+      'body'
+    );
     return req$;
   }
 
   /**
-   * Map les résultats à plat en objets structurés
-   * @param object
-   * @returns 
+   * Transforme une ligne "aplatie" (issue de l'API) en objet métier structuré.
+   * @param object Ligne à transformer
+   * @returns FinancialDataModel
    */
-  unflatten(object: EnrichedFlattenFinancialLines2): FinancialDataModel {
-      return this._mapper.map(object)
+  public unflatten(object: EnrichedFlattenFinancialLines2): FinancialDataModel {
+    return this._mapper.map(object);
   }
 
 }
