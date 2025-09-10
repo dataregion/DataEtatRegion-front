@@ -1,3 +1,18 @@
+
+> ⚠️ **Ce front est déprécié.** Privilégier l'usage de `budget-dataetat` pour les nouveaux développements.
+
+# Démarrage du front financial-data en mode développement
+
+Pour lancer l'application `financial-data` en mode développement :
+
+```bash
+npm run start:financial-dev
+```
+
+L'application sera accessible par défaut sur http://localhost:4200
+
+> **Note** : Assurez-vous d'avoir installé les dépendances (`npm install`) à la racine du monorepo avant de lancer la commande.
+
 # Description
 
 Front permettant de faire des recherches sur les données Financière de l'état en bretagne.  

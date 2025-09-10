@@ -19,8 +19,34 @@
 
 # Liste des fronts
 
-* [Financial data](./apps/financial-data/README.md)
+* [Financial data](./apps/financial-data/README.md) _(déprécié)_
+## Démarrer le front financial-data en mode développement _(déprécié)_
+
+> ⚠️ Ce front est déprécié. Privilégier l'usage de `budget-dataetat` pour les nouveaux développements.
+
+Pour lancer l'application financial-data en mode développement :
+
+```bash
+npm run start:financial-dev
+```
+
+L'application sera accessible sur http://localhost:4200
+
 * [France relance](./apps/france-relance/README.md)
+
+* [Budget DataEtat](./apps/budget-dataetat/README.md)
+
+## Démarrer le front budget-dataetat en mode développement
+
+Pour lancer l'application budget-dataetat en mode développement :
+
+```bash
+npm run start:budget-dev
+```
+
+L'application sera accessible sur http://localhost:4200
+
+> **Note** : Assurez-vous d'avoir fait `npm install` à la racine du monorepo.
 
 ## 
 

@@ -16,7 +16,11 @@
 ## 🛠️ Workflows & Commandes critiques
 
 - **Démarrage local** :  
-  - `npm run start:budget-dev` (ou `start:financial-dev`, etc.)
+  - `npm run start:budget-dev` pour lancer le front `budget-dataetat` en mode développement
+    - Accès : http://localhost:4200
+  - `npm run start:financial-dev` pour lancer le front `financial-data` en mode développement _(déprécié)_
+    - Accès : http://localhost:4200
+    - ⚠️ Ce front est déprécié. Privilégier l'usage de `budget-dataetat` pour les nouveaux développements.
 - **Build** :  
   - `npm run build:budget` (ou `build:all` pour tout builder)
 - **Tests unitaires** :  
