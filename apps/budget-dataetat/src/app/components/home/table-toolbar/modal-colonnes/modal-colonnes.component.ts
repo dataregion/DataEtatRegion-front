@@ -39,8 +39,8 @@ export class ModalColonnesComponent implements OnInit {
 
   ngOnInit() {
     // Récupération des colonnes du tableau, les sélectionnées mappées sur les colonnes du back
-    this.colonnes = this._colonnesService.allColonnesTable
-    this.selectedColonnes = this._colonnesService.selectedColonnesTable
+    this.colonnes = this._colonnesService.allColonnesTable()
+    this.selectedColonnes = this._colonnesService.selectedColonnesTable()
     
     // On ordonne les colonnes pour mettre les selected en haut
     const namesSelected = new Set(this.selectedColonnes.map(c => c.colonne));
@@ -103,7 +103,7 @@ export class ModalColonnesComponent implements OnInit {
       .map(name => this.colonnes.find(c => c.colonne === name)!)
       .filter(Boolean);
 
-    this._colonnesService.selectedColonnesTable = selectedColonnes;
+    this._colonnesService.selectedColonnesTable.set(selectedColonnes);
   }
 
 }

@@ -83,13 +83,13 @@ export class LinesTableComponent implements OnInit, OnDestroy {
   /**
    * Initialisation du composant.
    * Configure l'écoute des changements de colonnes sélectionnées.
-   * 
-   * @todo Remplacer l'Observable par un effect utilisant des signals
+   * Utilise un effect pour réagir aux changements des signals de colonnes.
    */
   ngOnInit(): void {
-    // TODO: Remplacer par un effect() utilisant les signals
-    this._colonnesService.selectedColonnesTable$.subscribe((selected) => {
-      this.currentColonnes = selected.length !== 0 ? selected : this._colonnesService.allColonnesTable;
+    // Effect pour réagir aux changements des colonnes sélectionnées
+    effect(() => {
+      const selected = this._colonnesService.selectedColonnesTable();
+      this.currentColonnes = selected.length !== 0 ? selected : this._colonnesService.allColonnesTable();
     });
   }
 

@@ -104,7 +104,7 @@ export class HomeComponent implements OnInit {
    * @returns true si les colonnes de grouping sont sélectionnées
    */
   get grouped(): boolean {
-    return this._colonnesService.grouped;
+    return this._colonnesService.grouped();
   }
   
   // --- Signals du service de recherche ---
@@ -211,8 +211,8 @@ export class HomeComponent implements OnInit {
     );
     
     // Sauvegarde des colonnes disponibles dans le service de colonnes
-    this._colonnesService.allColonnesTable = this._colonnesMapperService.colonnes;
-    this._colonnesService.allColonnesGrouping = this._colonnesMapperService.colonnes.filter(c => c.grouping !== undefined);
+    this._colonnesService.allColonnesTable.set(this._colonnesMapperService.colonnes);
+    this._colonnesService.allColonnesGrouping.set(this._colonnesMapperService.colonnes.filter(c => c.grouping !== undefined));
 
     // --- 4. Application des paramètres de marque blanche ---
     
@@ -227,7 +227,7 @@ export class HomeComponent implements OnInit {
     // Application du grouping par défaut si spécifié par la marque blanche
     if (mb_group_by && mb_group_by?.length > 0) {
       const mapped: ColonneTableau<FinancialDataModel>[] = this._colonnesMapperService.mapNamesFromPreferences(mb_group_by as ColonneFromPreference[]);
-      this._colonnesService.selectedColonnesGrouping = mapped;
+      this._colonnesService.selectedColonnesGrouping.set(mapped);
     }
 
     // --- 5. Initialisation du service de mapping des préfiltres ---
@@ -242,7 +242,7 @@ export class HomeComponent implements OnInit {
     
     this._route.queryParams.subscribe((param) => {
       // Configuration des colonnes par défaut
-      this._colonnesService.selectedColonnesTable = this._colonnesMapperService.getDefaults();
+      this._colonnesService.selectedColonnesTable.set(this._colonnesMapperService.getDefaults());
       
       // Si une préférence doit être appliquée (UUID fourni dans l'URL)
       if (param[QueryParam.Uuid]) {
@@ -253,14 +253,14 @@ export class HomeComponent implements OnInit {
           // Application des préférences de grouping des colonnes
           if (preference.options && preference.options['grouping']) {
             const mapped: ColonneTableau<FinancialDataModel>[] = this._colonnesMapperService.mapNamesFromPreferences(preference.options['grouping'] as ColonneFromPreference[]);
-            this._colonnesService.selectedColonnesGrouping = mapped;
-            this._colonnesService.selectedColonnesGrouped = [];
+            this._colonnesService.selectedColonnesGrouping.set(mapped);
+            this._colonnesService.selectedColonnesGrouped.set([]);
           }
           
           // Application des préférences d'ordre et d'affichage des colonnes
           if (preference.options && preference.options['displayOrder']) {
             const mapped: ColonneTableau<FinancialDataModel>[] = this._colonnesMapperService.mapLabelsFromPreferences(preference.options['displayOrder'] as ColonneFromPreference[]);
-            this._colonnesService.selectedColonnesTable = mapped;
+            this._colonnesService.selectedColonnesTable.set(mapped);
           }
           
           // Application des filtres de la préférence

@@ -3,7 +3,6 @@ import { FormControl, FormGroup, ReactiveFormsModule, ValidationErrors, Validato
 import { ActivatedRoute } from '@angular/router';
 import {
   BehaviorSubject,
-  combineLatest,
   debounceTime,
   Observable,
   of,
@@ -295,12 +294,11 @@ export class SearchDataComponent implements OnInit {
 
 
 
-    // On subscribe également le changement des colonnes de tableau ou de grouping sélectionnées
-    combineLatest([
-      this._colonnesService.selectedColonnesTable$,
-      this._colonnesService.selectedColonnesGrouping$,
-    ])
-    .subscribe(([tableCols, groupingCols]) => {
+    // Effect pour réagir aux changements des colonnes de tableau ou de grouping sélectionnées
+    effect(() => {
+      const tableCols = this._colonnesService.selectedColonnesTable();
+      const groupingCols = this._colonnesService.selectedColonnesGrouping();
+      
       const currentParams = this.searchDataService.searchParams();
       if (!currentParams)
         return;
@@ -311,7 +309,6 @@ export class SearchDataComponent implements OnInit {
         grouping: groupingCols.map(c => c.grouping?.code).filter(c => c !== undefined && c !== null) ?? undefined,
         grouped: []
       };
-
 
       if (search.grouping?.length === 0) {
         search.grouping = [];
@@ -345,8 +342,8 @@ export class SearchDataComponent implements OnInit {
       tags: formValue.tags?.map((tag) => tag_fullname(tag)) ?? undefined,
       domaines_fonctionnels: formValue.domaines_fonctionnels || undefined,
       source_region: formValue.sources_region || undefined,
-      grouping: this._colonnesService.selectedColonnesGrouping.map(c => c.label),
-      grouped: this._colonnesService.selectedColonnesGrouped
+      grouping: this._colonnesService.selectedColonnesGrouping().map(c => c.label),
+      grouped: this._colonnesService.selectedColonnesGrouped()
     };
     // Lancement de la recherche - le service traite automatiquement la réponse
     this.searchDataService.search(search_parameters);

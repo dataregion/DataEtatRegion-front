@@ -112,12 +112,12 @@ export class ModalSauvegardeComponent implements OnInit, OnDestroy {
     // Options de colonnes et grouping
     const options: JSONObject = {} as JSONObject
     if (this._colonnesService.selectedColonnesTable.length) {
-      options['displayOrder'] = this._colonnesService.selectedColonnesTable.map(c => {
+      options['displayOrder'] = this._colonnesService.selectedColonnesTable().map(c => {
         return { "columnLabel": c.label }
       })
     }
     if (this._colonnesService.selectedColonnesGrouping.length) {
-      options['grouping'] = this._colonnesService.selectedColonnesGrouping.map(c => {
+      options['grouping'] = this._colonnesService.selectedColonnesGrouping().map(c => {
         return { "columnName": c.colonne }
       })
     }

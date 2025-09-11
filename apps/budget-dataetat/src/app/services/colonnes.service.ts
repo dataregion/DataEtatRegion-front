@@ -1,76 +1,75 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal, computed } from '@angular/core';
 import { FinancialDataModel } from '@models/financial/financial-data.models';
-import { BehaviorSubject } from 'rxjs';
 import { ColonneTableau } from '@services/colonnes-mapper.service';
 
-
+/**
+ * Service de gestion des colonnes pour les tableaux de données financières.
+ * 
+ * Ce service centralise la gestion des colonnes pour :
+ * - L'affichage dans les tableaux (sélection et configuration des colonnes visibles)
+ * - Le groupement des données (colonnes utilisées pour regrouper les lignes)
+ * - L'état de groupement (actif/inactif selon les colonnes sélectionnées)
+ * 
+ * Utilise des signals Angular pour maintenir un état réactif et permettre
+ * aux composants de réagir automatiquement aux changements de configuration.
+ * Le signal computed 'grouped' se met à jour automatiquement selon l'état
+ * des colonnes de groupement sélectionnées.
+ */
 @Injectable({ providedIn: 'root' })
 export class ColonnesService {
 
-  private groupedSubject = new BehaviorSubject<boolean>(false);
-  grouped$ = this.groupedSubject.asObservable();
-  get grouped(): boolean {
-    return this.selectedColonnesGrouping.length != 0 && this.selectedColonnesGrouping.length != this.selectedColonnesGrouped.length;
-  }
+  // ========================================
+  // GESTION DE L'ÉTAT DE GROUPEMENT
+  // ========================================
 
   /**
-   * Toutes les colonnes possibles pour le tableau
+   * Signal calculé qui détermine si le mode groupement est actuellement actif.
+   * Le groupement est actif quand :
+   * - Au moins une colonne de groupement est sélectionnée
+   * - Le nombre de colonnes groupées diffère du nombre de colonnes de groupement
+   * 
+   * @returns true si le mode groupement est actif
    */
-  private colonnesTableSubject = new BehaviorSubject<ColonneTableau<FinancialDataModel>[]>([]);
-  colonnesTable$ = this.colonnesTableSubject.asObservable();
-  get allColonnesTable(): ColonneTableau<FinancialDataModel>[] {
-    return this.colonnesTableSubject.value;
-  }
-  set allColonnesTable(cols: ColonneTableau<FinancialDataModel>[]) {
-    this.colonnesTableSubject.next(cols);
-  }
+  public readonly grouped = computed(() => {
+    return this.selectedColonnesGrouping().length != 0 && 
+           this.selectedColonnesGrouping().length != this.selectedColonnesGrouped().length;
+  });
+
+  // ========================================
+  // GESTION DES COLONNES DE TABLEAU
+  // ========================================
 
   /**
-   * Colonnes actuellement affichées dans le tableau
+   * Signal contenant toutes les colonnes disponibles pour le tableau
    */
-  private selectedColonnesTableSubject = new BehaviorSubject<ColonneTableau<FinancialDataModel>[]>([]);
-  selectedColonnesTable$ = this.selectedColonnesTableSubject.asObservable();
-  get selectedColonnesTable(): ColonneTableau<FinancialDataModel>[] {
-    return this.selectedColonnesTableSubject.value;
-  }
-  set selectedColonnesTable(cols: ColonneTableau<FinancialDataModel>[]) {
-    this.selectedColonnesTableSubject.next(cols);
-  }
+  public readonly allColonnesTable = signal<ColonneTableau<FinancialDataModel>[]>([]);
 
   /**
-   * Toutes les colonnes possibles pour le grouping
+   * Signal contenant les colonnes actuellement affichées dans le tableau
    */
-  private colonnesGroupingSubject = new BehaviorSubject<ColonneTableau<FinancialDataModel>[]>([]);
-  colonnesGrouping$ = this.colonnesGroupingSubject.asObservable();
-  get allColonnesGrouping(): ColonneTableau<FinancialDataModel>[] {
-    return this.colonnesGroupingSubject.value;
-  }
-  set allColonnesGrouping(cols: ColonneTableau<FinancialDataModel>[]) {
-    this.colonnesGroupingSubject.next(cols);
-  }
+  public readonly selectedColonnesTable = signal<ColonneTableau<FinancialDataModel>[]>([]);
+
+  // ========================================
+  // GESTION DES COLONNES DE GROUPEMENT
+  // ========================================
+
+  /**
+   * Signal contenant toutes les colonnes disponibles pour le groupement
+   */
+  public readonly allColonnesGrouping = signal<ColonneTableau<FinancialDataModel>[]>([]);
   
   /**
-   * Colonnes actuellement utilisées pour le grouping
+   * Signal contenant les colonnes actuellement utilisées pour le groupement
    */
-  private selectedColonnesGroupingSubject = new BehaviorSubject<ColonneTableau<FinancialDataModel>[]>([]);
-  selectedColonnesGrouping$ = this.selectedColonnesGroupingSubject.asObservable();
-  get selectedColonnesGrouping(): ColonneTableau<FinancialDataModel>[] {
-    return this.selectedColonnesGroupingSubject.value;
-  }
-  set selectedColonnesGrouping(cols: ColonneTableau<FinancialDataModel>[]) {
-    this.selectedColonnesGroupingSubject.next(cols);
-  }
+  public readonly selectedColonnesGrouping = signal<ColonneTableau<FinancialDataModel>[]>([]);
   
+  // ========================================
+  // GESTION DES COLONNES GROUPÉES (RÉSULTAT)
+  // ========================================
+
   /**
-   * Colonnes actuellement utilisées pour le grouped
+   * Signal contenant les identifiants des colonnes présentes dans les groupes créés
    */
-  private selectedColonnesGroupedSubject = new BehaviorSubject<string[]>([]);
-  selectedColonnesGrouped$ = this.selectedColonnesGroupingSubject.asObservable();
-  get selectedColonnesGrouped(): string[] {
-    return this.selectedColonnesGroupedSubject.value;
-  }
-  set selectedColonnesGrouped(cols: string[]) {
-    this.selectedColonnesGroupedSubject.next(cols);
-  }
+  public readonly selectedColonnesGrouped = signal<string[]>([]);
 
 }

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, inject, OnInit, ViewEncapsulation, effect } from '@angular/core';
 import { FinancialDataModel } from '@models/financial/financial-data.models';
 import { ColonneTableau } from '@services/colonnes-mapper.service';
 import { ColonnesService } from '@services/colonnes.service';
@@ -7,9 +7,7 @@ import { SearchDataService, SearchResults } from '@services/search-data.service'
 import { GroupedData } from 'apps/clients/v3/financial-data';
 import { TreeAccordionDirective } from './tree-accordion.directive';
 import { NumberFormatPipe } from '../lines-tables/number-format.pipe';
-import { combineLatest } from 'rxjs';
 import { SearchParameters } from '@services/search-params.service';
-import { toObservable } from '@angular/core/rxjs-interop';
 
 export interface Group {
   parent?: Group;
@@ -57,13 +55,11 @@ export class GroupsTableComponent implements OnInit {
         currentPage: 1,
       } as Group)
     })
-    // Si update selectedGrouping ou les résultats, on reset
-    combineLatest([
-      this._colonnesService.selectedColonnesGrouping$,
-      toObservable(this._searchDataService.searchResults)
-    ])
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    .subscribe(([colonnes, response]) => {
+    // Effect pour réagir aux changements du grouping ou des résultats, on reset
+    effect(() => {
+      const colonnes = this._colonnesService.selectedColonnesGrouping();
+      const response = this._searchDataService.searchResults();
+      
       if (!this.root)
         return
       if (!colonnes)
@@ -88,7 +84,7 @@ export class GroupsTableComponent implements OnInit {
     })
     // Sauvegarde des colonnes
     this._groups = Object.fromEntries(
-      this._colonnesService.allColonnesGrouping.map(c => [c.grouping?.code ?? '', c])
+      this._colonnesService.allColonnesGrouping().map(c => [c.grouping?.code ?? '', c])
     );
   }
 
@@ -117,8 +113,8 @@ export class GroupsTableComponent implements OnInit {
         grouped: []
       } as SearchParameters);   
     }
-    this._colonnesService.selectedColonnesGrouping = []
-    this._colonnesService.selectedColonnesGrouped = []
+    this._colonnesService.selectedColonnesGrouping.set([]);
+    this._colonnesService.selectedColonnesGrouped.set([]);
   }
 
   private _recGetPathFromNode(node: Group): GroupedData[] {
@@ -151,7 +147,7 @@ export class GroupsTableComponent implements OnInit {
           page: node.currentPage,
         } as SearchParameters);
         
-        this._colonnesService.selectedColonnesGrouped = grouped.filter(g => g !== undefined)
+        this._colonnesService.selectedColonnesGrouped.set(grouped.filter(g => g !== undefined));
         // TODO
         // this._searchDataService.search().subscribe((response: LignesResponse) => {
         //   console.log(response)
@@ -198,7 +194,7 @@ export class GroupsTableComponent implements OnInit {
         grouped: searchGrouped
       } as SearchParameters);
 
-      this._colonnesService.selectedColonnesGrouped = grouped.map(gd => gd.value?.toString()).filter(g => g !== undefined)
+      this._colonnesService.selectedColonnesGrouped.set(grouped.map(gd => gd.value?.toString()).filter(g => g !== undefined));
       // TODO
       // this._searchDataService.search().subscribe((response: LignesResponse) => {
       //   if (!response.data?.groupings)
@@ -230,7 +226,7 @@ export class GroupsTableComponent implements OnInit {
    * @returns 
    */
   getGroupingColumnByCode(code: string): ColonneTableau<FinancialDataModel> {
-    return this._colonnesService.allColonnesGrouping.filter(c => c.grouping?.code === code)[0] as ColonneTableau<FinancialDataModel>
+    return this._colonnesService.allColonnesGrouping().filter(c => c.grouping?.code === code)[0] as ColonneTableau<FinancialDataModel>
   }
 
   getGroupingLabel(code: string): string {
@@ -253,8 +249,8 @@ export class GroupsTableComponent implements OnInit {
           newGrouped.push(g.value.toString())
       })
       
-      this._colonnesService.selectedColonnesGrouping = newGrouping
-      this._colonnesService.selectedColonnesGrouped = newGrouped
+      this._colonnesService.selectedColonnesGrouping.set(newGrouping);
+      this._colonnesService.selectedColonnesGrouped.set(newGrouped);
       console.log(newGrouping)
       console.log(newGrouped)
 

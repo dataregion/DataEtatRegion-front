@@ -1,4 +1,24 @@
-# Copilot Instructions – Plateforme Data État en Bretagne (Frontend)
+# Copilot Instr## 🛠️ Workflows & Commandes critiques
+
+- **Démarrage local** :  
+  - `npm run start:budget-dev` pour lancer le front `budget-dataetat` en mode développement
+    - Accès : http://localhost:4200
+  - `npm run start:financial-dev` pour lancer le front `financial-data` en mode développement _(déprécié)_
+    - Accès : http://localhost:4200
+    - ⚠️ Ce front est déprécié. Privilégier l'usage de `budget-dataetat` pour les nouveaux développements.
+- **Build** :  
+  - `npm run build:budget` (ou `build:all` pour tout builder)
+- **Tests unitaires** :  
+  - `ng test [app]`
+- **Tests E2E** :  
+  - `npx playwright test` (config dans `e2e/`)
+- **Lint** :  
+  - `npm run lint` (max 170 warnings)
+  - ⚠️ **OBLIGATOIRE : Toujours exécuter `npm run lint` après toute modification de code pour vérifier la conformité aux règles de style et détecter les erreurs potentielles.**
+- **Storybook** :  
+  - `npm run storybook:common-lib`
+- **Génération clients API** :  
+  - `./generate_openapi_client.sh -p [prefix] -s [swagger-url] -t [target-dir] -n [name]` Data État en Bretagne (Frontend)
 
 ## 🏗️ Architecture & Big Picture
 

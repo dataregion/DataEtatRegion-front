@@ -79,8 +79,8 @@ export class SearchDataService {
     this._logger.debug("==> Signal searchParams mis à jour", { searchParams });
     
     // Préparation des colonnes à retourner
-    const colonnesTable = this._colonnesService.selectedColonnesTable;
-    const colonnesGrouping = this._colonnesService.selectedColonnesGrouping;
+    const colonnesTable = this._colonnesService.selectedColonnesTable();
+    const colonnesGrouping = this._colonnesService.selectedColonnesGrouping();
     
     this._logger.debug("==> Colonnes récupérées", { 
       colonnesTableLength: colonnesTable.length,
@@ -96,10 +96,10 @@ export class SearchDataService {
     // Préparation du grouping
     if (colonnesGrouping.length) {
       this._logger.debug("==> Préparation du grouping");
-      const grouped: string[] = this._colonnesService.selectedColonnesGrouped;
+      const grouped: string[] = this._colonnesService.selectedColonnesGrouped();
       const fieldsGrouping = colonnesGrouping.map(c => c.grouping?.code).filter((v): v is string => v != null);
       searchParams.grouping = fieldsGrouping.slice(0, Math.min(fieldsGrouping.length, grouped ? grouped.length + 1 : 1));
-      searchParams.grouped = this._colonnesService.selectedColonnesGrouped?.map(v => v ?? "None") ?? undefined;
+      searchParams.grouped = this._colonnesService.selectedColonnesGrouped()?.map(v => v ?? "None") ?? undefined;
       // Debug logs
       this._logger.debug("==> Grouping && Grouped", {
         grouping: searchParams.grouping,
