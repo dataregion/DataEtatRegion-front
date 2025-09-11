@@ -38,9 +38,9 @@ import { tag_fullname } from '@models/refs/tag.model';
 import { PrefilterMapperService } from './prefilter-mapper.services';
 import { PreferenceService } from '@services/preference.service';
 import { SearchDataService } from '@services/search-data.service';
-import { GroupedData, LignesResponse } from 'apps/clients/v3/financial-data';
+
 import { ColonnesService } from '@services/colonnes.service';
-import { FinancialDataModel } from '@models/financial/financial-data.models';
+
 
 /**
  * Interface du formulaire de recherche
@@ -229,6 +229,22 @@ export class SearchDataComponent implements OnInit {
     this.tagsInputChange$.next(v);
   }
 
+  constructor() {
+    effect(() => {
+      this._logger.debug("==> Effect déclenché dans SearchDataComponent");
+      const params = this.searchDataService.searchParams();
+      if (!params) {
+        this._logger.debug("==> Aucun paramètre trouvé, sortie de l'effect");
+        return;
+      }
+
+      this._logger.debug("==> Paramètres reçus dans l'effect", params);
+
+      // Mapping des paramètres vers le formulaire
+      this._logger.debug("==> Mapping des paramètres vers le formulaire");
+      this.formSearch = this._prefilterMapperService.mapSearchParamsToForm(params);
+    });
+  }
   
 
   ngOnInit(): void {
@@ -280,55 +296,7 @@ export class SearchDataComponent implements OnInit {
       }
     }
 
-    // Subscribe sur les paramètres de la recherche pour lancer la recherche
-    // this._searchDataService.searchParams$
-    //   .pipe(
-    //     filter((params): params is SearchParameters => !!params),
-    //     tap(params => {
-    //       this.formSearch = this._prefilterMapperService.mapSearchParamsToForm(params);
-    //     }),
-    //     switchMap(params => 
-    //       this.searchDataService.search(params).pipe(
-    //         finalize(() => {
-    //           this.searchDataService.searchFinish.set(true);
-    //           this.searchDataService.searchInProgress.set(false);
-    //         })
-    //       )
-    //     ),
-    //   )
-    //   .subscribe({
-    //     next: (response: LignesResponse) => {
-    //       console.log("==> Résultat de la recherche");
-    //       console.log(response);
-    //       if (response.code == 204 && !response.data) {
-    //         this.searchDataService.searchResults.set([]);
-    //         return
-    //       }
-    //       if (response.data?.type === 'groupings') {
 
-    //         const newData = response.data?.groupings as GroupedData[]
-    //         // Si page = 1, on reset, sinon on concat
-    //         const newSearch = response.pagination?.current_page == 1
-    //           ? newData
-    //           : (this.searchDataService.searchResults() as GroupedData[]).concat(newData);
-
-    //         this.searchDataService.searchResults.set(newSearch);
-    //       } else if (response.data?.type === 'lignes_financieres') {
-    //         const newData = response.data?.lignes.map(r => this.searchDataService.unflatten(r)) ?? []
-    //         // Si page = 1, on reset, sinon on concat
-    //         const newSearch = response.pagination?.current_page == 1
-    //           ? newData
-    //           : (this.searchDataService.searchResults() as FinancialDataModel[]).concat(newData);
-    //         this.searchDataService.searchResults.set(newSearch);
-    //       }
-    //       this.searchDataService.total.set(response.data?.total);
-    //       this.searchDataService.pagination.set(response.pagination);
-    //     },
-    //     error: (err: unknown) => {
-    //       console.error("Erreur lors de la recherche :", err);
-    //     }
-    //   });
-      
 
     // On subscribe également le changement des colonnes de tableau ou de grouping sélectionnées
     combineLatest([
@@ -383,8 +351,8 @@ export class SearchDataComponent implements OnInit {
       grouping: this._colonnesService.selectedColonnesGrouping.map(c => c.label),
       grouped: this._colonnesService.selectedColonnesGrouped
     };
-    // Set des paramètres qui trigger la recherche
-    this.searchDataService.searchParams.set(search_parameters);
+    // Lancement de la recherche - le service traite automatiquement la réponse
+    this.searchDataService.search(search_parameters);
   }
 
   /**

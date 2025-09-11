@@ -97,7 +97,11 @@ export class GroupsTableComponent implements OnInit {
   }
 
   getTotal() {
-    return this._searchDataService.total
+    return this._searchDataService.total()
+  }
+
+  get pageSize() {
+    return this._searchDataService.searchParams()?.page_size || 25;
   }
 
   isLastLevel(level: number): boolean {
@@ -148,24 +152,24 @@ export class GroupsTableComponent implements OnInit {
         } as SearchParameters);
         
         this._colonnesService.selectedColonnesGrouped = grouped.filter(g => g !== undefined)
-        
-        this._searchDataService.search().subscribe((response: LignesResponse) => {
-          console.log(response)
-          node.loaded = true
-          response.data?.groupings.forEach(gd => {
-            node.children.push({
-              parent: node,
-              children: [],
-              groupedData: gd,
-              opened: false,
-              loaded: false,
-              loadingMore: false,
-              currentPage: 1,
-            } as Group)
-          })
-          this._searchDataService.searchInProgress.set(false);
-          console.log("Loaded children : ", node.children.length)
-        })
+        // TODO
+        // this._searchDataService.search().subscribe((response: LignesResponse) => {
+        //   console.log(response)
+        //   node.loaded = true
+        //   response.data?.groupings.forEach(gd => {
+        //     node.children.push({
+        //       parent: node,
+        //       children: [],
+        //       groupedData: gd,
+        //       opened: false,
+        //       loaded: false,
+        //       loadingMore: false,
+        //       currentPage: 1,
+        //     } as Group)
+        //   })
+        //   this._searchDataService.searchInProgress.set(false);
+        //   console.log("Loaded children : ", node.children.length)
+        // })
       }
     }
   }
@@ -195,28 +199,28 @@ export class GroupsTableComponent implements OnInit {
       } as SearchParameters);
 
       this._colonnesService.selectedColonnesGrouped = grouped.map(gd => gd.value?.toString()).filter(g => g !== undefined)
-          
-      this._searchDataService.search().subscribe((response: LignesResponse) => {
-        if (!response.data?.groupings)
-          return;
-        const newChildren: Group[] = [
-          ...parent.children,
-          ...response.data.groupings.map(gd => ({
-            parent: parent,
-            children: [],
-            groupedData: gd,
-            opened: false,
-            loaded: false,
-            loadingMore: false,
-            currentPage: 1,
-          } as Group))
-        ];
-        parent.currentPage = newPage;
-        parent.children = newChildren;
-        parent.loadingMore = false
-        this._searchDataService.searchInProgress.set(false);
-        console.log("Parent state : ", parent)
-      })
+      // TODO
+      // this._searchDataService.search().subscribe((response: LignesResponse) => {
+      //   if (!response.data?.groupings)
+      //     return;
+      //   const newChildren: Group[] = [
+      //     ...parent.children,
+      //     ...response.data.groupings.map(gd => ({
+      //       parent: parent,
+      //       children: [],
+      //       groupedData: gd,
+      //       opened: false,
+      //       loaded: false,
+      //       loadingMore: false,
+      //       currentPage: 1,
+      //     } as Group))
+      //   ];
+      //   parent.currentPage = newPage;
+      //   parent.children = newChildren;
+      //   parent.loadingMore = false
+      //   this._searchDataService.searchInProgress.set(false);
+      //   console.log("Parent state : ", parent)
+      // })
     }
   }
   

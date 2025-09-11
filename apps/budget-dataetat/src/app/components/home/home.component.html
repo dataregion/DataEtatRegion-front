@@ -27,18 +27,21 @@
           }
         </div>
         
-        @if (!grid_fullscreen && !hasSelectedLine()) {
+        @if (showSearchForm()) {
           <budget-search-data />
         }
 
-        <div class="main-content overlay-container" [class.no-content]="(searchResults())?.length === 0">
+        <div class="main-content overlay-container" [class.no-content]="!shouldShowContent()">
           @if (hasSelectedLine()) {
             <budget-infos-ligne />
           } @else {
-            @if (searchResults.length === 0) {
-              <div><i>Aucune donnée ne correspond à vos critères de recherche.</i></div>
+            @if (shouldShowEmptyMessage()) {
+              <div class="fr-alert fr-alert--info">
+                <h4 class="fr-alert__title">Aucun résultat</h4>
+                <p>Aucune donnée ne correspond à vos critères de recherche. Essayez de modifier vos filtres ou d'élargir votre recherche.</p>
+              </div>
             }
-            @else {
+            @else if (searchResults() && searchResults().length > 0) {
               <budget-table-toolbar [grouped]="grouped" />
               @if (grouped) {
                 <budget-groups-table />
@@ -46,6 +49,18 @@
               @else {
                 <budget-lines-table />
               }
+            }
+            @else if (searchInProgress()) {
+              <div class="fr-alert fr-alert--info">
+                <h4 class="fr-alert__title">Recherche en cours</h4>
+                <p>Recherche des données financières en cours, veuillez patienter...</p>
+              </div>
+            }
+            @else {
+              <div class="fr-alert fr-alert--info">
+                <h4 class="fr-alert__title">Prêt pour la recherche</h4>
+                <p>Utilisez les filtres ci-dessus pour rechercher des données financières.</p>
+              </div>
             }
           }
         </div>
