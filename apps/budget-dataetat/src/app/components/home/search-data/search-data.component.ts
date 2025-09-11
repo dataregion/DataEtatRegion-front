@@ -5,13 +5,10 @@ import {
   BehaviorSubject,
   combineLatest,
   debounceTime,
-  filter,
-  finalize,
   Observable,
   of,
   startWith,
-  switchMap,
-  tap
+  switchMap
 } from 'rxjs';
 import { GeoModel, TypeLocalisation } from 'apps/common-lib/src/public-api';
 import { MarqueBlancheParsedParamsResolverModel } from '../../../resolvers/marqueblanche-parsed-params.resolver';

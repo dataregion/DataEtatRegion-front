@@ -3,9 +3,9 @@ import { Component, effect, ElementRef, inject, OnDestroy, OnInit, ViewChild, Vi
 import { FinancialDataModel } from '@models/financial/financial-data.models';
 import { ColonneTableau } from '@services/colonnes-mapper.service';
 import { ColonnesService } from '@services/colonnes.service';
-import { SearchDataService, SearchResults } from '@services/search-data.service';
+import { SearchDataService } from '@services/search-data.service';
 import { NumberFormatPipe } from "./number-format.pipe";
-import { SearchParameters } from '@services/search-params.service';
+import { LoggerService } from 'apps/common-lib/src/lib/services/logger.service';
 
 /**
  * Composant d'affichage des lignes financières sous forme de tableau.
@@ -35,9 +35,14 @@ export class LinesTableComponent implements OnInit, OnDestroy {
   /** Service de gestion des colonnes (sélection, configuration) */
   private _colonnesService: ColonnesService = inject(ColonnesService);
   
-  /** Service central de gestion de la recherche de données */
-  private _searchDataService: SearchDataService = inject(SearchDataService);
   
+  /** Service de logging pour le debugging */
+  private _logger: LoggerService = inject(LoggerService);
+
+  // --- Propriétés publiques pour le template ---
+  
+  /** Service central de gestion de la recherche de données */
+  public readonly searchDataService: SearchDataService = inject(SearchDataService);
   // --- Propriétés du composant ---
   
   /** Colonnes actuellement sélectionnées pour l'affichage */
@@ -64,31 +69,13 @@ export class LinesTableComponent implements OnInit, OnDestroy {
 
   // --- Getters pour le template ---
   
-  /** 
-   * Indique si une recherche est actuellement en cours 
-   * @returns Signal booléen de l'état de recherche
-   */
-  get searchInProgress() {
-    return this._searchDataService.searchInProgress;
-  }
-
   // --- Constructeur et effects ---
   
   constructor() {
     // Effect pour synchroniser les résultats de recherche avec les lignes affichées
     effect(() => {
-      this.currentLignes = this._searchDataService.searchResults() as FinancialDataModel[];
+      this.currentLignes = this.searchDataService.searchResults() as FinancialDataModel[];
     });
-  }
-
-  // --- Méthodes publiques ---
-  
-  /**
-   * Récupère le total des résultats de la recherche
-   * @returns Signal contenant les informations de total
-   */
-  getTotal() {
-    return this._searchDataService.total();
   }
 
   // --- Lifecycle hooks ---
@@ -130,7 +117,7 @@ export class LinesTableComponent implements OnInit, OnDestroy {
           console.log("==> Spinner visible, tentative de chargement page suivante");
           
           // Délégation au service pour gérer la logique de pagination
-          const loaded = this._searchDataService.loadNextPage();
+          const loaded = this.searchDataService.loadNextPage();
           
           if (loaded) {
             console.log("==> Chargement de la page suivante déclenché");
@@ -163,17 +150,10 @@ export class LinesTableComponent implements OnInit, OnDestroy {
    * @param line - La ligne financière sélectionnée
    */
   onRowClick(line: FinancialDataModel) {
-    this._searchDataService.selectedLine.set(line);
-  }
-
-  /**
-   * Indique s'il y a encore des pages suivantes à charger.
-   * Utilisé pour conditionnellement afficher le spinner de pagination.
-   * 
-   * @returns true s'il y a encore des données à paginer
-   */
-  hasNext() {
-    return this._searchDataService.pagination()?.has_next;
+    this._logger.debug("==> Clic sur ligne du tableau", line);
+    
+    // Délégation au service pour gérer la sélection de ligne
+    this.searchDataService.selectLine(line);
   }
 
 }

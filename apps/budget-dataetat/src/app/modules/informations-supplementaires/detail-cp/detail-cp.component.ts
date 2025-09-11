@@ -1,5 +1,5 @@
 import { CurrencyPipe } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, input, computed } from '@angular/core';
 import { FinancialDataModel } from '@models/financial/financial-data.models';
 
 @Component({
@@ -9,39 +9,46 @@ import { FinancialDataModel } from '@models/financial/financial-data.models';
     imports: [CurrencyPipe]
 })
 export class DetailCpComponent {
-  private _financial: FinancialDataModel | undefined = undefined;
+  
+  /**
+   * Signal d'entrée contenant les données financières à afficher
+   */
+  financial = input.required<FinancialDataModel>();
 
-  hasCp: boolean = true;
+  /**
+   * Signal calculé qui détermine si des crédits de paiement sont disponibles
+   */
+  hasCp = computed(() => {
+    const financialData = this.financial();
+    return financialData.financial_cp != null && financialData.financial_cp.length > 0;
+  });
 
-  private _messagesErreurs = {
+  private readonly _messagesErreurs = {
     FINANCIAL_DATA_AE: 'Aucun crédit de paiement',
     FINANCIAL_DATA_CP:
       "Détails paiement : cette ligne est un crédit de paiement non rattaché à une ligne d'engagement.",
     ADEME: 'Détails paiement : information indisponible'
-  };
+  } as const;
 
+  /**
+   * Calcule le message d'erreur approprié selon la source des données financières
+   * @returns Le message d'erreur formaté
+   */
   messageErreur(): string {
-    let erreur = "Erreur lors de la récupération de l'engagement";
-    if (this._financial) {
-      erreur =
-        this._financial?.source in this._messagesErreurs
-          ? this._messagesErreurs[this._financial?.source]
-          : 'Détails paiement : information indisponible';
-    }
-    return erreur;
+    const financialData = this.financial();
+    const source = financialData.source as keyof typeof this._messagesErreurs;
+    
+    return source in this._messagesErreurs
+      ? this._messagesErreurs[source]
+      : 'Détails paiement : information indisponible';
   }
 
-  get financial() {
-    return this._financial!;
-  }
-
-  @Input() set financial(financial) {
-    this._financial = financial;
-    this.hasCp =
-      this._financial.financial_cp != null ? this._financial.financial_cp?.length > 0 : false;
-  }
-
-  formatDate(date: string) {
+  /**
+   * Formate une date au format français
+   * @param date - La date à formater (chaîne de caractères)
+   * @returns La date formatée
+   */
+  formatDate(date: string): string {
     return new Date(date).toLocaleString([], { year: 'numeric', month: 'numeric', day: 'numeric' });
   }
 }

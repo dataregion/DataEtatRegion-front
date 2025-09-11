@@ -32,7 +32,7 @@
         }
 
         <div class="main-content overlay-container" [class.no-content]="!shouldShowContent()">
-          @if (hasSelectedLine()) {
+          @if (selectedLine()) {
             <budget-infos-ligne />
           } @else {
             @if (shouldShowEmptyMessage()) {

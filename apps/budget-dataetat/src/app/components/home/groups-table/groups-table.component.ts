@@ -1,10 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit, ViewEncapsulation, WritableSignal } from '@angular/core';
+import { Component, inject, OnInit, ViewEncapsulation } from '@angular/core';
 import { FinancialDataModel } from '@models/financial/financial-data.models';
 import { ColonneTableau } from '@services/colonnes-mapper.service';
 import { ColonnesService } from '@services/colonnes.service';
 import { SearchDataService, SearchResults } from '@services/search-data.service';
-import { GroupedData, LignesResponse } from 'apps/clients/v3/financial-data';
+import { GroupedData } from 'apps/clients/v3/financial-data';
 import { TreeAccordionDirective } from './tree-accordion.directive';
 import { NumberFormatPipe } from '../lines-tables/number-format.pipe';
 import { combineLatest } from 'rxjs';

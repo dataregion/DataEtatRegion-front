@@ -278,14 +278,4 @@ export class HomeComponent implements OnInit {
       }
     });
   }
-
-  // --- Méthodes publiques ---
-
-  /**
-   * Indique si une ligne est actuellement sélectionnée pour affichage détaillé.
-   * @returns true si une ligne est sélectionnée
-   */
-  hasSelectedLine(): boolean {
-    return this.selectedLine() !== undefined;
-  }
 }

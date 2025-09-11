@@ -22,17 +22,17 @@
                     @if (isFirst) {
                       <td class="fr-cell--fixed not-index" role="columnheader" style="text-align:right;" [ngStyle]="col.style">
                         <b style="font-size: 16px;">TOTAL</b>
-                        <span class="fr-badge fr-badge--info badge-no-icon" style="margin-left: 30px;">{{getTotal()?.total | numberFormat}} lignes</span>
+                        <span class="fr-badge fr-badge--info badge-no-icon" style="margin-left: 30px;">{{searchDataService.total()?.total | numberFormat}} lignes</span>
                       </td>
                     }
                     @else if (col.colonne === "montant_ae") {
                       <td style="text-align: center;">
-                        <p class="fr-mr-2v fr-badge fr-badge--success badge-no-icon">{{getTotal()?.total_montant_engage | currency:'EUR':'symbol':'1.0-2'}}</p>
+                        <p class="fr-mr-2v fr-badge fr-badge--success badge-no-icon">{{searchDataService.total()?.total_montant_engage | currency:'EUR':'symbol':'1.0-2'}}</p>
                       </td>
                     }
                     @else if (col.colonne === "montant_cp") {
                       <td style="text-align: center;">
-                        <p class="fr-mr-2v fr-badge fr-badge--success badge-no-icon">{{getTotal()?.total_montant_paye | currency:'EUR':'symbol':'1.0-2'}}</p>
+                        <p class="fr-mr-2v fr-badge fr-badge--success badge-no-icon">{{searchDataService.total()?.total_montant_paye | currency:'EUR':'symbol':'1.0-2'}}</p>
                       </td>
                     }
                     @else {
@@ -41,7 +41,6 @@
                   }
                 </tr>
                 @for (line of currentLignes; track line.id; let i = $index) {
-                  <!-- #TODO : On row click -->
                   <tr id="table-10-row-key-{{line.id}}" (click)="onRowClick(line)" class="clickable" [attr.data-row-key]="line.id" scope="row">
                     <th class="fr-cell--fixed" scope="row">{{i + 1}}</th>
                     @for (col of currentColonnes; track col.colonne; let isFirst = $first) {
@@ -51,7 +50,7 @@
                 }
               </tbody>
             </table>
-            @if (hasNext()) {
+            @if (searchDataService.pagination()?.has_next) {
               <div #spinner class="spinner-wrapper fr-spinner--lg" style="text-align: center; margin: 30px 0px;">
                 <span class="fr-spinner" aria-label="Chargement…" role="status"></span>
                 <span class="fr-spinner-message">Chargement en cours ...</span>

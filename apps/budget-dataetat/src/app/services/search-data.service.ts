@@ -245,6 +245,24 @@ export class SearchDataService {
   }
 
   /**
+   * Sélectionne une ligne financière pour affichage détaillé.
+   * Met à jour le signal selectedLine avec la ligne fournie.
+   * 
+   * @param line - La ligne financière à sélectionner
+   */
+  public selectLine(line: FinancialDataModel): void {
+    this._logger.debug("==> Sélection d'une ligne financière", { 
+      lineId: line.id,
+      programme: line.programme?.label,
+      montant: line.montant_ae
+    });
+    
+    this.selectedLine.set(line);
+    
+    this._logger.debug("==> Ligne sélectionnée mise à jour dans le service");
+  }
+
+  /**
    * Transforme une ligne "aplatie" (issue de l'API) en objet métier structuré.
    * @param object Ligne à transformer
    * @returns FinancialDataModel
