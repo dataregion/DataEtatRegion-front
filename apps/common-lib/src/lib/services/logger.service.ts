@@ -9,35 +9,97 @@ export enum LogLevel {
 }
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-@Injectable({ providedIn: 'root' })
-export class LoggerService {
-  private currentLogLevel: LogLevel = isDevMode() ? LogLevel.DEBUG : LogLevel.WARN;
+export interface LogCapable {
+  debug(message: string, ...args: any[]): void;
 
+  info(message: string, ...args: any[]): void;
+
+  warn(message: string, ...args: any[]): void;
+
+  error(message: string, ...args: any[]): void;
+}
+
+@Injectable({ providedIn: 'root' })
+export class LoggerService implements LogCapable {
+
+  debug(message: string, ...args: any[]): void {
+    this.applicationlogger.debug(message, ...args);
+  }
+  info(message: string, ...args: any[]): void {
+    this.applicationlogger.info(message, ...args);
+  }
+  warn(message: string, ...args: any[]): void {
+    this.applicationlogger.warn(message, ...args);
+  }
+  error(message: string, ...args: any[]): void {
+    this.applicationlogger.error(message, ...args);
+  }
+
+  private currentLogLevel: LogLevel;
+  private applicationlogger;
+  
+  constructor() {
+    this.currentLogLevel = isDevMode() ? LogLevel.DEBUG : LogLevel.WARN;
+    this.applicationlogger = Logger.withName('application');
+    this.applicationlogger.setLogLevel(this.currentLogLevel);
+  }
+  
+  getLogger(name: string): LogCapable {
+    const logger = Logger.withName(name);
+    logger.setLogLevel(this.currentLogLevel);
+    return logger;
+  }
+  
   setLogLevel(level: LogLevel) {
     this.currentLogLevel = level;
+    this.applicationlogger.setLogLevel(level);
+  }
+}
+
+export class Logger implements LogCapable {
+  
+  static withName(name: string) {
+    const logger = new Logger();
+    logger.name = name;
+    return logger
+  }
+
+  private _currentLogLevel: LogLevel = LogLevel.INFO;
+  
+  private _name = '';
+  
+  get name(): string {
+    return this._name ? `[${this._name}]`: '';
+  }
+  set name(value: string) {
+    this._name = value;
+  }
+
+  setLogLevel(level: LogLevel) {
+    this._currentLogLevel = level;
   }
 
   debug(message: string, ...args: any[]): void {
-    if (this.currentLogLevel <= LogLevel.DEBUG) {
-      console.debug(`[DEBUG] ${message}`, ...args);
+    if (this._currentLogLevel <= LogLevel.DEBUG) {
+      console.debug(`${this.name}[DEBUG] ${message}`, ...args);
     }
   }
 
   info(message: string, ...args: any[]): void {
-    if (this.currentLogLevel <= LogLevel.INFO) {
-      console.info(`[INFO] ${message}`, ...args);
+    if (this._currentLogLevel <= LogLevel.INFO) {
+      console.info(`${this.name}[INFO] ${message}`, ...args);
     }
   }
 
   warn(message: string, ...args: any[]): void {
-    if (this.currentLogLevel <= LogLevel.WARN) {
-      console.warn(`[WARN] ${message}`, ...args);
+    if (this._currentLogLevel <= LogLevel.WARN) {
+      console.warn(`${this.name}[WARN] ${message}`, ...args);
     }
   }
 
   error(message: string, ...args: any[]): void {
-    if (this.currentLogLevel <= LogLevel.ERROR) {
-      console.error(`[ERROR] ${message}`, ...args);
+    if (this._currentLogLevel <= LogLevel.ERROR) {
+      console.error(`${this.name}[ERROR] ${message}`, ...args);
     }
   }
 }
