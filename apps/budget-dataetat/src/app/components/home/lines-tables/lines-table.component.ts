@@ -1,7 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, effect, ElementRef, inject, OnDestroy, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Component, computed, ElementRef, inject, OnDestroy, ViewChild, ViewEncapsulation } from '@angular/core';
 import { FinancialDataModel } from '@models/financial/financial-data.models';
-import { ColonneTableau } from '@services/colonnes-mapper.service';
 import { ColonnesService } from '@services/colonnes.service';
 import { SearchDataService } from '@services/search-data.service';
 import { NumberFormatPipe } from "./number-format.pipe";
@@ -37,19 +36,12 @@ export class LinesTableComponent implements OnDestroy {
   
   
   /** Service de logging pour le debugging */
-  private _logger: LoggerService = inject(LoggerService);
+  private _logger = inject(LoggerService).getLogger(LinesTableComponent.name);
 
   // --- Propriétés publiques pour le template ---
   
   /** Service central de gestion de la recherche de données */
   public readonly searchDataService: SearchDataService = inject(SearchDataService);
-  // --- Propriétés du composant ---
-  
-  /** Colonnes actuellement sélectionnées pour l'affichage */
-  currentColonnes: ColonneTableau<FinancialDataModel>[] = [];
-  
-  /** Lignes financières actuellement affichées */
-  currentLignes: FinancialDataModel[] = [];
 
   // --- ViewChild et observateurs ---
   
@@ -71,18 +63,15 @@ export class LinesTableComponent implements OnDestroy {
   
   // --- Constructeur et effects ---
   
-  constructor() {
-    // Effect pour synchroniser les résultats de recherche avec les lignes affichées
-    effect(() => {
-      this.currentLignes = this.searchDataService.searchResults() as FinancialDataModel[];
-    });
-
-    // Effect pour réagir aux changements des colonnes sélectionnées
-    effect(() => {
-      const selected = this._colonnesService.selectedColonnesTable();
-      this.currentColonnes = selected.length !== 0 ? selected : this._colonnesService.allColonnesTable();
-    });
-  }
+  /** Lignes financières actuellement affichées */
+  readonly currentLignes = computed(() => this.searchDataService.searchResults() as FinancialDataModel[]);
+  
+  /** Colonnes actuellement sélectionnées pour l'affichage */
+  readonly currentColonnes = computed(() => { 
+    const selected = this._colonnesService.selectedColonnesTable() 
+    const all = this._colonnesService.allColonnesTable()
+    return selected.length !== 0 ? selected : all;
+  });
 
   // --- Méthodes privées ---
 
@@ -105,7 +94,7 @@ export class LinesTableComponent implements OnDestroy {
       entries.forEach(entry => {
         // Si le spinner est visible, tenter de charger la page suivante
         if (entry.isIntersecting) {
-          console.log("==> Spinner visible, tentative de chargement page suivante");
+          this._logger.debug("==> Spinner visible, tentative de chargement page suivante");
           
           // Délégation au service pour gérer la logique de pagination
           const loaded = this.searchDataService.loadNextPage();

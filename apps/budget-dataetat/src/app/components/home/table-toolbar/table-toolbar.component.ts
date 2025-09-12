@@ -54,7 +54,7 @@ export class TableToolbarComponent {
   }
 
   isGrouped() {
-    return this._colonnesService.grouped
+    return this._colonnesService.grouped();
   }
 
   get selectedGrouping(): ColonneTableau<FinancialDataModel>[] {

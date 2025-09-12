@@ -8,7 +8,7 @@
               <thead>
                 <tr>
                   <th class="fr-cell--fixed" role="columnheader"></th>
-                  @for (col of currentColonnes; track col.colonne; let isFirst = $first) {
+                  @for (col of currentColonnes(); track col.colonne; let isFirst = $first) {
                     <th [class.fr-cell--fixed]="isFirst" class="not-index" role="columnheader" [ngStyle]="col.style">
                       <div class="fr-cell__title">{{col.label}}</div>
                     </th>
@@ -18,7 +18,7 @@
               <tbody>
                 <tr id="table-10-row-key-0" data-row-key="0">
                   <th class="fr-cell--fixed" scope="row"></th>
-                  @for (col of currentColonnes; track col.colonne; let isFirst = $first) {
+                  @for (col of currentColonnes(); track col.colonne; let isFirst = $first) {
                     @if (isFirst) {
                       <td class="fr-cell--fixed not-index" role="columnheader" style="text-align:right;" [ngStyle]="col.style">
                         <b style="font-size: 16px;">TOTAL</b>
@@ -40,10 +40,10 @@
                     }
                   }
                 </tr>
-                @for (line of currentLignes; track line.id; let i = $index) {
+                @for (line of currentLignes(); track line.id; let i = $index) {
                   <tr id="table-10-row-key-{{line.id}}" (click)="onRowClick(line)" class="clickable" [attr.data-row-key]="line.id" scope="row">
                     <th class="fr-cell--fixed" scope="row">{{i + 1}}</th>
-                    @for (col of currentColonnes; track col.colonne; let isFirst = $first) {
+                    @for (col of currentColonnes(); track col.colonne; let isFirst = $first) {
                       <td [class.fr-cell--fixed]="isFirst" class="not-index" [ngStyle]="col.style" [innerHTML]="col.render(line)"></td>
                     }
                   </tr>
