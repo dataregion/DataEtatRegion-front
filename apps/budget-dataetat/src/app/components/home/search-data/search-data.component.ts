@@ -303,13 +303,13 @@ export class SearchDataComponent implements OnInit {
     // Création d'un prefilter avec la marque blanche
     const mb_hasParams = resolvedMarqueBlanche.data?.has_marqueblanche_params;
     const mb_prefilter = resolvedMarqueBlanche.data?.preFilters;
-    this._preferenceService.currentPrefilter = mb_prefilter ?? null
+    this._preferenceService.setCurrentPrefilter(mb_prefilter ?? null);
 
     if (mb_hasParams) {
       this._logger.debug(`Mode marque blanche actif.`);
       if (mb_prefilter) {
         this._logger.debug(`Application des filtres`);
-        this._preferenceService.currentPrefilter = mb_prefilter;
+        this._preferenceService.setCurrentPrefilter(mb_prefilter);
         // Mapping du prefilter vers le formulaire
         this.searchDataService.searchParams.set(this._prefilterMapperService.mapPrefilterToSearchParams(mb_prefilter));
       }

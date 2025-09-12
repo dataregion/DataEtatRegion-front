@@ -1,5 +1,5 @@
 import { AsyncPipe } from '@angular/common';
-import { Component, inject, Input, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, inject, Input, OnDestroy, OnInit, ViewEncapsulation, effect } from '@angular/core';
 
 import { AlertService } from "apps/common-lib/src/public-api";
 import { debounceTime, distinctUntilChanged, finalize, map, Observable, of, Subject, switchMap, takeUntil } from 'rxjs';
@@ -57,11 +57,12 @@ export class ModalSauvegardeComponent implements OnInit, OnDestroy {
   public suggestions$: Observable<string[]> = of([]);
   public loading: boolean = false;
   public delay: number = 500
-
-  ngOnInit() {
+  
+  constructor() {
     // Si une préférence à l'init, on set le formulaire
-    this._preferenceService.currentPreference$.subscribe(newPreference => {
-      this.preference = newPreference
+    effect(() => {
+      const newPreference = this._preferenceService.currentPreference();
+      this.preference = newPreference;
       if (this.preference) {
         this.formPreference = this._formBuilder.group<FormPreference>({
           name: this._formBuilder.control<string>(this.preference.name ?? "", { nonNullable: true }),
@@ -72,6 +73,9 @@ export class ModalSauvegardeComponent implements OnInit, OnDestroy {
         });
       }
     });
+  }
+
+  ngOnInit() {
 
     // Recherche des suggestions d'users
     this.suggestions$ = this.searchUserChanged.pipe(
@@ -149,7 +153,7 @@ export class ModalSauvegardeComponent implements OnInit, OnDestroy {
     this.preference = preference
     console.log("==> SAVE Preference")
     console.log(this.preference)
-    this._preferenceService.currentPreference = this.preference
+    this._preferenceService.setCurrentPreference(this.preference)
     this._preferenceHttpService.savePreference(this.preference).subscribe((_response) => {
       this._alertService.openAlertSuccess('Filtre enregistré avec succès');
     });

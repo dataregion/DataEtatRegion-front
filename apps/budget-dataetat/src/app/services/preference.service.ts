@@ -1,5 +1,4 @@
-import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { Injectable, signal } from '@angular/core';
 import { Preference } from '../../../../preference-users/src/lib/models/preference.models';
 import { PreFilters } from '@models/search/prefilters.model';
 
@@ -12,26 +11,32 @@ export class PreferenceService {
   /**
    * Filtres de la recherche courante
    */
-  private currentPrefilterSubject = new BehaviorSubject<PreFilters | null>(null);
-  currentPrefilter$ = this.currentPrefilterSubject.asObservable();
-  get currentPrefilter(): PreFilters | null {
-    return this.currentPrefilterSubject.value;
-  }
-  set currentPrefilter(pref: PreFilters | null) {
-    this.currentPrefilterSubject.next(pref);
-  }
+  public readonly currentPrefilter = signal<PreFilters | null>(null);
   
   /**
    * Préférences liée à la recherche courante
    */
-  private currentPreferenceSubject = new BehaviorSubject<Preference | null>(null);
-  currentPreference$ = this.currentPreferenceSubject.asObservable();
-  get currentPreference(): Preference | null {
-    return this.currentPreferenceSubject.value;
+  private readonly _currentPreference = signal<Preference | null>(null);
+  
+  /**
+   * Signal read-only pour les préférences courantes
+   */
+  public readonly currentPreference = this._currentPreference.asReadonly();
+
+  /**
+   * Met à jour les préférences courantes
+   * Met automatiquement à jour les filtres associés
+   */
+  public setCurrentPreference(pref: Preference | null): void {
+    this.currentPrefilter.set(pref ? pref.filters as PreFilters : null);
+    this._currentPreference.set(pref);
   }
-  set currentPreference(pref: Preference | null) {
-    this.currentPrefilter = pref ? pref.filters as PreFilters : null
-    this.currentPreferenceSubject.next(pref);
+
+  /**
+   * Met à jour uniquement les filtres
+   */
+  public setCurrentPrefilter(pref: PreFilters | null): void {
+    this.currentPrefilter.set(pref);
   }
 
 }

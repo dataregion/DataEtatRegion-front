@@ -248,7 +248,7 @@ export class HomeComponent implements OnInit {
       if (param[QueryParam.Uuid]) {
         this._httpPreferenceService.getPreference(param[QueryParam.Uuid]).subscribe((preference) => {
           // Sauvegarde de la préférence courante
-          this._preferenceService.currentPreference = preference;
+          this._preferenceService.setCurrentPreference(preference);
           
           // Application des préférences de grouping des colonnes
           if (preference.options && preference.options['grouping']) {
