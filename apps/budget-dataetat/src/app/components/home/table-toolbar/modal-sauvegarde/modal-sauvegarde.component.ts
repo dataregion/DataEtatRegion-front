@@ -59,6 +59,7 @@ export class ModalSauvegardeComponent implements OnInit, OnDestroy {
   public delay: number = 500
   
   constructor() {
+    // TODO: ne pas utiliser d'effects ici
     // Si une préférence à l'init, on set le formulaire
     effect(() => {
       const newPreference = this._preferenceService.currentPreference();

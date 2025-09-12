@@ -39,6 +39,7 @@ export class ModalGroupingComponent implements OnInit {
   public remainingColonnes: ColonneTableau<FinancialDataModel>[] = []
 
   constructor() {
+    // TODO: ne pas utiliser d'effects ici
     // Effect pour réagir aux changements des colonnes de grouping sélectionnées
     effect(() => {
       const response = this._colonnesService.selectedColonnesGrouping();
