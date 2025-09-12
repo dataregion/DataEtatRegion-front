@@ -14,6 +14,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'budget-upload-financial-component',
@@ -103,6 +104,7 @@ export class BudgetFinancialComponent implements OnInit {
       this._budgetService
         .loadReferentielFile(this.fileReferentiel)
         .pipe(
+          takeUntilDestroyed(),
           finalize(() => {
             this.fileReferentiel = null;
             this.uploadInProgress.next(false);

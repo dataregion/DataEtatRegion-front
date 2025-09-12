@@ -2,7 +2,7 @@ import { AsyncPipe } from '@angular/common';
 import { Component, inject, Input, OnDestroy, OnInit, ViewEncapsulation, effect } from '@angular/core';
 
 import { AlertService } from "apps/common-lib/src/public-api";
-import { debounceTime, distinctUntilChanged, finalize, map, Observable, of, Subject, switchMap, takeUntil } from 'rxjs';
+import { debounceTime, distinctUntilChanged, filter, finalize, map, Observable, of, Subject, switchMap, takeUntil } from 'rxjs';
 import { PreferenceUsersHttpService } from 'apps/preference-users/src/lib/services/preference-users-http.service';
 import { Preference } from 'apps/preference-users/src/lib/models/preference.models';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
@@ -12,6 +12,7 @@ import { PreferenceService } from '@services/preference.service';
 import { ColonnesService } from '@services/colonnes.service';
 import { SearchDataService } from '@services/search-data.service';
 import { JSONObject } from 'apps/common-lib/src/lib/models/jsonobject';
+import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 
 
 export interface FormPreference {
@@ -59,20 +60,20 @@ export class ModalSauvegardeComponent implements OnInit, OnDestroy {
   public delay: number = 500
   
   constructor() {
-    // TODO: ne pas utiliser d'effects ici
-    // Si une préférence à l'init, on set le formulaire
-    effect(() => {
-      const newPreference = this._preferenceService.currentPreference();
-      this.preference = newPreference;
-      if (this.preference) {
-        this.formPreference = this._formBuilder.group<FormPreference>({
-          name: this._formBuilder.control<string>(this.preference.name ?? "", { nonNullable: true }),
-          shared: this._formBuilder.control<boolean>(this.preference.shares?.length !== 0, { nonNullable: true }),
-          users: this._formBuilder.control<string[]>((this.preference.shares ?? []).map(s =>
-            s.shared_username_email), { nonNullable: true }
-          )
-        });
-      }
+
+    toObservable(this._preferenceService.currentPreference)
+    .pipe(takeUntilDestroyed())
+    .subscribe((newPreferences) => {
+      this.preference = newPreferences;
+      if (!this.preference)
+        return;
+      this.formPreference = this._formBuilder.group<FormPreference>({
+        name: this._formBuilder.control<string>(this.preference.name ?? "", { nonNullable: true }),
+        shared: this._formBuilder.control<boolean>(this.preference.shares?.length !== 0, { nonNullable: true }),
+        users: this._formBuilder.control<string[]>((this.preference.shares ?? []).map(s =>
+          s.shared_username_email), { nonNullable: true }
+        )
+      });
     });
   }
 

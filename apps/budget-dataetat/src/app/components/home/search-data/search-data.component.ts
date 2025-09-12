@@ -37,7 +37,7 @@ import { PreferenceService } from '@services/preference.service';
 import { SearchDataService } from '@services/search-data.service';
 
 import { ColonnesService } from '@services/colonnes.service';
-import { toObservable } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 
 
 /**
@@ -254,8 +254,10 @@ export class SearchDataComponent implements OnInit {
     // Déclenche la recherche à chaque changement des paramètres de recherche
     toObservable(this.currentSearchParams)
       .pipe(
-        filter(p => p !== undefined && p.colonnes !== undefined && p.colonnes.length > 0)
-      ).subscribe(params => {
+        takeUntilDestroyed(),
+        filter(p => p !== undefined && p.colonnes !== undefined && p.colonnes.length > 0),
+      )
+      .subscribe(params => {
         this._logger.debug("==> On effectue une nouvelle recherche");
         this.searchDataService.search(params!);
         this._logger.debug("==> Mapping des paramètres vers le formulaire");

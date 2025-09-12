@@ -66,6 +66,7 @@ export class UpdateTagsComponent {
           this._budgetService
             .loadMajTagsFile(fileToUpload)
             .pipe(
+              takeUntilDestroyed(this._destroyRef),
               finalize(() => {
                 this.fileMajTag = null;
                 this.uploadInProgress.next(false);

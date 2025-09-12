@@ -6,6 +6,7 @@ import { ColonnesService } from '@services/colonnes.service';
 import { FinancialDataModel } from '@models/financial/financial-data.models';
 import { FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { LoggerService } from 'apps/common-lib/src/lib/services/logger.service';
+import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 
 
 export interface ColonneFormValues {
@@ -25,7 +26,6 @@ export interface FormColonnes {
   imports: [ReactiveFormsModule, MaterialModule, DragDropModule]
 })
 export class ModalGroupingComponent implements OnInit {
-
   private _formBuilder = inject(FormBuilder);
   private _colonnesService = inject(ColonnesService);
   private _logger = inject(LoggerService);
@@ -34,29 +34,30 @@ export class ModalGroupingComponent implements OnInit {
     colonnes: new FormArray<FormGroup<ColonneFormValues>>([])
   });
 
-  public colonnes: ColonneTableau<FinancialDataModel>[] = []
-  public selectedColonnes: ColonneTableau<FinancialDataModel>[] = []
-  public remainingColonnes: ColonneTableau<FinancialDataModel>[] = []
+  public colonnes: ColonneTableau<FinancialDataModel>[] = [];
+  public selectedColonnes: ColonneTableau<FinancialDataModel>[] = [];
+  public remainingColonnes: ColonneTableau<FinancialDataModel>[] = [];
 
   constructor() {
     // TODO: ne pas utiliser d'effects ici
     // Effect pour réagir aux changements des colonnes de grouping sélectionnées
-    effect(() => {
-      const response = this._colonnesService.selectedColonnesGrouping();
-      this._logger.debug("==> UPDATE modal selected grouping", response);
-
-      this.selectedColonnes = response;
+    // Subscription à nettoyer correctement
+    toObservable(this._colonnesService.selectedColonnesGrouping)
+    .pipe(takeUntilDestroyed())
+    .subscribe((selected) => {
+      this._logger.debug('==> UPDATE modal selected grouping', selected);
+      this.selectedColonnes = selected;
 
       // Build du formulaire
       this.formGrouping = this._formBuilder.group({
-        colonnes: this._formBuilder.array(
-          this.selectedColonnes.map(col => {
-            return this._formBuilder.group({
-              name: this._formBuilder.control(col.colonne, { nonNullable: true }),
-              label: this._formBuilder.control(col.label, { nonNullable: true }),
-            });
-          })
-        )
+      colonnes: this._formBuilder.array(
+        this.selectedColonnes.map((col) => {
+        return this._formBuilder.group({
+          name: this._formBuilder.control(col.colonne, { nonNullable: true }),
+          label: this._formBuilder.control(col.label, { nonNullable: true })
+        });
+        })
+      )
       });
 
       this.remainingColonnes = this.calculateRemainingColumns();
@@ -70,23 +71,26 @@ export class ModalGroupingComponent implements OnInit {
     this.remainingColonnes = this.calculateRemainingColumns();
   }
 
-
   moveGroup(event: CdkDragDrop<FormGroup<ColonneFormValues>[]>) {
-    moveItemInArray(this.formGrouping.controls.colonnes.controls, event.previousIndex, event.currentIndex);
-    this.formGrouping.controls.colonnes.updateValueAndValidity()
+    moveItemInArray(
+      this.formGrouping.controls.colonnes.controls,
+      event.previousIndex,
+      event.currentIndex
+    );
+    this.formGrouping.controls.colonnes.updateValueAndValidity();
   }
 
   addGroup(event: Event) {
     const target = event.target as HTMLSelectElement;
     const selectedName = target.selectedOptions[0].value;
 
-    const col = this.colonnes.find(c => c.colonne === selectedName);
+    const col = this.colonnes.find((c) => c.colonne === selectedName);
     if (!col) return;
 
     this.formGrouping.controls.colonnes.push(
       this._formBuilder.group({
         name: this._formBuilder.control(col.colonne, { nonNullable: true }),
-        label: this._formBuilder.control(col.label, { nonNullable: true }),
+        label: this._formBuilder.control(col.label, { nonNullable: true })
       })
     );
     this.remainingColonnes = this.calculateRemainingColumns();
@@ -103,9 +107,9 @@ export class ModalGroupingComponent implements OnInit {
 
     // build selected in the same order as in the form array
     const selected = colonnes.controls
-      .map(group => group.controls.name.value)
-      .map(name => this.colonnes.find(c => c.colonne === name)!)
-      .filter(c => c !== null);
+      .map((group) => group.controls.name.value)
+      .map((name) => this.colonnes.find((c) => c.colonne === name)!)
+      .filter((c) => c !== null);
 
     this._colonnesService.selectedColonnesGrouping.set(selected);
     this._colonnesService.selectedColonnesGrouped.set([]);
@@ -116,9 +120,7 @@ export class ModalGroupingComponent implements OnInit {
    */
   private calculateRemainingColumns() {
     const formArray = this.formGrouping.controls.colonnes;
-    const usedNames = new Set(formArray.controls.map(group => group.controls.name.value));
-    return this.colonnes.filter(col => !usedNames.has(col.colonne));
+    const usedNames = new Set(formArray.controls.map((group) => group.controls.name.value));
+    return this.colonnes.filter((col) => !usedNames.has(col.colonne));
   }
-
-
 }
