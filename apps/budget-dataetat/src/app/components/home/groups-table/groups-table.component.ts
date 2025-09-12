@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit, ViewEncapsulation, effect } from '@angular/core';
+import { Component, inject, ViewEncapsulation, computed } from '@angular/core';
 import { FinancialDataModel } from '@models/financial/financial-data.models';
 import { ColonneTableau } from '@services/colonnes-mapper.service';
 import { ColonnesService } from '@services/colonnes.service';
@@ -8,6 +8,7 @@ import { GroupedData } from 'apps/clients/v3/financial-data';
 import { TreeAccordionDirective } from './tree-accordion.directive';
 import { NumberFormatPipe } from '../lines-tables/number-format.pipe';
 import { SearchParameters } from '@services/search-params.service';
+import { LoggerService } from 'apps/common-lib/src/lib/services/logger.service';
 
 export interface Group {
   parent?: Group;
@@ -26,57 +27,33 @@ export interface Group {
   styleUrls: ['./groups-table.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
-export class GroupsTableComponent implements OnInit {
+export class GroupsTableComponent {
   
+  private logger = inject(LoggerService).getLogger(GroupsTableComponent.name);
   private _searchDataService = inject(SearchDataService);
   private _colonnesService = inject(ColonnesService);
 
-  root?: Group
-  private _groups: { [k: string]: ColonneTableau<FinancialDataModel>; } = {}
-
-  constructor() {
-    // Effect pour réagir aux changements du grouping ou des résultats, on reset
-    effect(() => {
-      const colonnes = this._colonnesService.selectedColonnesGrouping();
-      const response = this._searchDataService.searchResults();
-      
-      if (!this.root)
-        return
-      if (!colonnes)
-        return
-      if (!response)
-        return
-      this.root.children = []
-      if (this._isGroupedDataArray(response)) {
-        const groupedData = response as GroupedData[]
-        groupedData.forEach(gd => {
-          this.root?.children.push({
-            groupedData: gd,
-            opened: false,
-            loaded: false,
-            children: [],
-            loadingMore: false,
-            currentPage: this._searchDataService.searchParams()?.page,
-          } as Group)
-        })
-      }
-      console.log("==> NEW roots", this.root.children)
-    })
-  }
-
-  ngOnInit() {
-    // TODO use effect
-    this.root = {
+  private readonly groupedData = computed(() => { 
+    const searchResults = this._searchDataService.searchResults();
+    const colonnes = this._colonnesService.selectedColonnesGrouping();
+    if (colonnes && this._isGroupedDataArray(searchResults)) {
+      return searchResults as GroupedData[];
+    }
+    return [];
+  });
+  
+  readonly root = computed(() => {
+    const groupedData  = this.groupedData();
+    const root = {
       opened: false,
       loaded: false,
       children: [],
       loadingMore: false,
       currentPage: 1,
-    } as Group
-    // Init des racines
-    const groupedData: GroupedData[] = this._searchDataService.searchResults() as GroupedData[]
+    } as Group;
+    
     groupedData.forEach(gd => {
-      this.root?.children.push({
+      root.children.push({
         groupedData: gd,
         opened: false,
         loaded: false,
@@ -85,11 +62,16 @@ export class GroupsTableComponent implements OnInit {
         currentPage: 1,
       } as Group)
     })
-    // Sauvegarde des colonnes
-    this._groups = Object.fromEntries(
-      this._colonnesService.allColonnesGrouping().map(c => [c.grouping?.code ?? '', c])
+
+    return root;
+  });
+  
+  private readonly _groups = computed(() => {
+    const colonnesGrouping = this._colonnesService.allColonnesGrouping();
+    return Object.fromEntries(
+      colonnesGrouping.map(c => [c.grouping?.code ?? '', c])
     );
-  }
+  });
 
   private _isGroupedDataArray(results: SearchResults): boolean {
     return Array.isArray(results) && !results.some(item => 'id' in item);
@@ -138,8 +120,8 @@ export class GroupsTableComponent implements OnInit {
   toggle(node: Group, lvl: number) {
     if (this.isLastLevel(lvl))
       return
-    console.log("==> TOGGLE ROW")
-    console.log(node.groupedData?.colonne + " : " + node.groupedData?.value)
+    this.logger.debug("==> TOGGLE ROW")
+    this.logger.debug(node.groupedData?.colonne + " : " + node.groupedData?.value)
     node.opened = !node.opened
     if (!node.loaded) {
       if (this._searchDataService.searchParams) {
@@ -177,8 +159,8 @@ export class GroupsTableComponent implements OnInit {
     if (!this._searchDataService.searchParams)
       return;
 
-    console.log("==> LOAD MORE")
-    console.log(parent.groupedData?.colonne + " : " + parent.groupedData?.value);
+    this.logger.debug("==> LOAD MORE")
+    this.logger.debug(parent.groupedData?.colonne + " : " + parent.groupedData?.value);
     const grouped: GroupedData[] = this._recGetPathFromNode(parent);
     
     const searchGrouping = grouped.map(g => g.colonne).filter(c => c !== undefined);
@@ -233,7 +215,7 @@ export class GroupsTableComponent implements OnInit {
   }
 
   getGroupingLabel(code: string): string {
-    return this._groups[code]?.label ?? code;
+    return this._groups()[code]?.label ?? code;
   }
 
   /**
