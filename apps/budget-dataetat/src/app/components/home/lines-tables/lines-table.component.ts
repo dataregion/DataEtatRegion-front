@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, effect, ElementRef, inject, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Component, effect, ElementRef, inject, OnDestroy, ViewChild, ViewEncapsulation } from '@angular/core';
 import { FinancialDataModel } from '@models/financial/financial-data.models';
 import { ColonneTableau } from '@services/colonnes-mapper.service';
 import { ColonnesService } from '@services/colonnes.service';
@@ -28,7 +28,7 @@ import { LoggerService } from 'apps/common-lib/src/lib/services/logger.service';
   styleUrls: ['./lines-table.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
-export class LinesTableComponent implements OnInit, OnDestroy {
+export class LinesTableComponent implements OnDestroy {
 
   // --- Services injectés ---
   
@@ -76,16 +76,7 @@ export class LinesTableComponent implements OnInit, OnDestroy {
     effect(() => {
       this.currentLignes = this.searchDataService.searchResults() as FinancialDataModel[];
     });
-  }
 
-  // --- Lifecycle hooks ---
-
-  /**
-   * Initialisation du composant.
-   * Configure l'écoute des changements de colonnes sélectionnées.
-   * Utilise un effect pour réagir aux changements des signals de colonnes.
-   */
-  ngOnInit(): void {
     // Effect pour réagir aux changements des colonnes sélectionnées
     effect(() => {
       const selected = this._colonnesService.selectedColonnesTable();

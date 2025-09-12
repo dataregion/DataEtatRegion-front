@@ -1,4 +1,4 @@
-import { Component, OnInit, effect, inject } from '@angular/core';
+import { Component, OnInit, effect, inject, untracked } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import {
@@ -226,18 +226,41 @@ export class SearchDataComponent implements OnInit {
   }
 
   constructor() {
+    // Effect pour réagir aux changements des colonnes de tableau ou de grouping sélectionnées
+    effect(() => {
+      const tableCols = this._colonnesService.selectedColonnesTable();
+      const groupingCols = this._colonnesService.selectedColonnesGrouping();
+      const currentParams = untracked(this.searchDataService.searchParams);
+
+      if (!currentParams)
+        return;
+      
+      const search = {
+        ...currentParams,
+        colonnes: tableCols.map(c => c.back.map(b => b.code)).flat().filter(c => c !== undefined && c !== null),
+        grouping: groupingCols.map(c => c.grouping?.code).filter(c => c !== undefined && c !== null) ?? undefined,
+        grouped: []
+      };
+
+      if (search.grouping?.length === 0) {
+        search.grouping = [];
+      }
+
+      this.searchDataService.search(search);
+    });
+
     effect(() => {
       this._logger.debug("==> Effect déclenché dans SearchDataComponent");
       const params = this.searchDataService.searchParams();
       if (!params) {
-        this._logger.debug("==> Aucun paramètre trouvé, sortie de l'effect");
+        this._logger.debug("    ==> Aucun paramètre trouvé, sortie de l'effect");
         return;
       }
 
-      this._logger.debug("==> Paramètres reçus dans l'effect", params);
+      this._logger.debug("    ==> Paramètres reçus dans l'effect", params);
 
       // Mapping des paramètres vers le formulaire
-      this._logger.debug("==> Mapping des paramètres vers le formulaire");
+      this._logger.debug("    ==> Mapping des paramètres vers le formulaire");
       this.formSearch = this._prefilterMapperService.mapSearchParamsToForm(params);
     });
   }
@@ -291,31 +314,6 @@ export class SearchDataComponent implements OnInit {
         this.searchDataService.searchParams.set(this._prefilterMapperService.mapPrefilterToSearchParams(mb_prefilter));
       }
     }
-
-
-
-    // Effect pour réagir aux changements des colonnes de tableau ou de grouping sélectionnées
-    effect(() => {
-      const tableCols = this._colonnesService.selectedColonnesTable();
-      const groupingCols = this._colonnesService.selectedColonnesGrouping();
-      
-      const currentParams = this.searchDataService.searchParams();
-      if (!currentParams)
-        return;
-      
-      const search = {
-        ...currentParams,
-        colonnes: tableCols.map(c => c.back.map(b => b.code)).flat().filter(c => c !== undefined && c !== null),
-        grouping: groupingCols.map(c => c.grouping?.code).filter(c => c !== undefined && c !== null) ?? undefined,
-        grouped: []
-      };
-
-      if (search.grouping?.length === 0) {
-        search.grouping = [];
-      }
-
-      this.searchDataService.searchParams.set(search);
-    });
   }
 
   /**

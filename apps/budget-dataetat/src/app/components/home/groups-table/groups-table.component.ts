@@ -34,27 +34,7 @@ export class GroupsTableComponent implements OnInit {
   root?: Group
   private _groups: { [k: string]: ColonneTableau<FinancialDataModel>; } = {}
 
-  ngOnInit() {
-    // TODO use effect
-    this.root = {
-      opened: false,
-      loaded: false,
-      children: [],
-      loadingMore: false,
-      currentPage: 1,
-    } as Group
-    // Init des racines
-    const groupedData: GroupedData[] = this._searchDataService.searchResults() as GroupedData[]
-    groupedData.forEach(gd => {
-      this.root?.children.push({
-        groupedData: gd,
-        opened: false,
-        loaded: false,
-        children: [],
-        loadingMore: false,
-        currentPage: 1,
-      } as Group)
-    })
+  constructor() {
     // Effect pour réagir aux changements du grouping ou des résultats, on reset
     effect(() => {
       const colonnes = this._colonnesService.selectedColonnesGrouping();
@@ -81,6 +61,29 @@ export class GroupsTableComponent implements OnInit {
         })
       }
       console.log("==> NEW roots", this.root.children)
+    })
+  }
+
+  ngOnInit() {
+    // TODO use effect
+    this.root = {
+      opened: false,
+      loaded: false,
+      children: [],
+      loadingMore: false,
+      currentPage: 1,
+    } as Group
+    // Init des racines
+    const groupedData: GroupedData[] = this._searchDataService.searchResults() as GroupedData[]
+    groupedData.forEach(gd => {
+      this.root?.children.push({
+        groupedData: gd,
+        opened: false,
+        loaded: false,
+        children: [],
+        loadingMore: false,
+        currentPage: 1,
+      } as Group)
     })
     // Sauvegarde des colonnes
     this._groups = Object.fromEntries(

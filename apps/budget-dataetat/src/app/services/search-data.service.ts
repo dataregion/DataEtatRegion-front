@@ -76,40 +76,40 @@ export class SearchDataService {
     
     // Mise à jour du signal avec les paramètres fournis
     this.searchParams.set(searchParams);
-    this._logger.debug("==> Signal searchParams mis à jour", { searchParams });
+    this._logger.debug("    ==> Signal searchParams mis à jour", { searchParams });
     
     // Préparation des colonnes à retourner
     const colonnesTable = this._colonnesService.selectedColonnesTable();
     const colonnesGrouping = this._colonnesService.selectedColonnesGrouping();
     
-    this._logger.debug("==> Colonnes récupérées", { 
+    this._logger.debug("    ==> Colonnes récupérées", { 
       colonnesTableLength: colonnesTable.length,
       colonnesGroupingLength: colonnesGrouping.length 
     });
     if (colonnesTable.length) {
-      this._logger.debug("==> Préparation des colonnes de table");
+      this._logger.debug("    ==> Préparation des colonnes de table");
       const fieldsBack = colonnesTable.map(c => c.back.map(b => b.code)).flat();
       searchParams.colonnes = fieldsBack.filter((v): v is string => v != null);
-      this._logger.debug("==> Colonnes préparées", { colonnes: searchParams.colonnes });
+      this._logger.debug("    ==> Colonnes préparées", { colonnes: searchParams.colonnes });
     }
     
     // Préparation du grouping
     if (colonnesGrouping.length) {
-      this._logger.debug("==> Préparation du grouping");
+      this._logger.debug("    ==> Préparation du grouping");
       const grouped: string[] = this._colonnesService.selectedColonnesGrouped();
       const fieldsGrouping = colonnesGrouping.map(c => c.grouping?.code).filter((v): v is string => v != null);
       searchParams.grouping = fieldsGrouping.slice(0, Math.min(fieldsGrouping.length, grouped ? grouped.length + 1 : 1));
       searchParams.grouped = this._colonnesService.selectedColonnesGrouped()?.map(v => v ?? "None") ?? undefined;
       // Debug logs
-      this._logger.debug("==> Grouping && Grouped", {
+      this._logger.debug("    ==> Grouping && Grouped", {
         grouping: searchParams.grouping,
         grouped: searchParams.grouped
       });
     } else {
-      this._logger.debug("==> Pas de grouping configuré");
+      this._logger.debug("    ==> Pas de grouping configuré");
     }
     
-    this._logger.debug("==> Appel de _search avec paramètres finaux", { searchParams });
+    this._logger.debug("    ==> Appel de _search avec paramètres finaux", { searchParams });
     const searchRequest$ = this._search(searchParams);
     
     // Traitement automatique de la réponse dans le service
