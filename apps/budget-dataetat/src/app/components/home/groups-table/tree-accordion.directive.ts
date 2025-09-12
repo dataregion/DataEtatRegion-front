@@ -1,4 +1,4 @@
-import { Directive, inject, Input, OnChanges, TemplateRef, ViewContainerRef } from "@angular/core";
+import { Directive, inject, OnChanges, TemplateRef, ViewContainerRef, input } from "@angular/core";
 import { Group } from "./groups-table.component";
 
 @Directive({
@@ -11,15 +11,15 @@ export class TreeAccordionDirective implements OnChanges {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private tpl: TemplateRef<any> = inject(TemplateRef<any>)
   
-  @Input('budgetTreeAccordion') nodes: Group[] = [];
-  @Input('budgetTreeAccordionLevel') level = 0;
+  readonly nodes = input<Group[]>([], { alias: "budgetTreeAccordion" });
+  readonly level = input(0, { alias: "budgetTreeAccordionLevel" });
 
   ngOnChanges() {
     this.view.clear();
-    for (const node of this.nodes) {
+    for (const node of this.nodes()) {
       this.view.createEmbeddedView(this.tpl, {
         $implicit: node,
-        level: this.level
+        level: this.level()
       });
     }
   }

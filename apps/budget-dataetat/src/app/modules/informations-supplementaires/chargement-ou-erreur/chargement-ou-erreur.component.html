@@ -4,7 +4,7 @@
       <span class="fr-icon-info-fill info-main-525"></span>
       <span #erreur_projetee><ng-content select="span.message-erreur-api-distante" /></span>
       @if (!erreur_projetee.hasChildNodes()) {
-        Le service distant « {{ nom_service_distant }} » (API) ne répond pas correctement. Veuillez réessayer
+        Le service distant « {{ nom_service_distant() }} » (API) ne répond pas correctement. Veuillez réessayer
         ultérieurement.
       }
     }
@@ -12,7 +12,7 @@
       <span class="fr-icon-warning-fill warning-main-525"></span>
       <span #erreur_projetee><ng-content select="span.message-erreur-api-distante-limit" /></span>
       @if (!erreur_projetee.hasChildNodes()) {
-        Limite d'appel atteinte pour le service distant « {{ nom_service_distant }} » (API). Veuillez réessayer
+        Limite d'appel atteinte pour le service distant « {{ nom_service_distant() }} » (API). Veuillez réessayer
         ultérieurement.
       }
     }
@@ -24,7 +24,7 @@
       <span class="fr-icon-error-fill error-main-525"></span>
       <span #erreur_projetee><ng-content select="span.message-erreur" /></span>
       @if (!erreur_projetee.hasChildNodes()) {
-        Une erreur inconnue s'est produite lors de l'appel à « {{ nom_service_distant }} » (API).
+        Une erreur inconnue s'est produite lors de l'appel à « {{ nom_service_distant() }} » (API).
       }
     }
   }

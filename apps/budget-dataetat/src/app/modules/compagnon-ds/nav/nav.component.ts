@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -7,11 +7,8 @@ import { CommonModule } from '@angular/common';
   imports: [CommonModule]
 })
 export class NavCompagnonDSComponent {
-  @Input()
-  public title: string = '';
-  @Input()
-  public currentStep: number = 1;
-  @Input()
-  public totalStep: number = 3;
+  public readonly title = input<string>('');
+  public readonly currentStep = input<number>(1);
+  public readonly totalStep = input<number>(3);
 
 }

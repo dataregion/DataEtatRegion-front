@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ModelError } from 'apps/clients/apis-externes';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
@@ -15,5 +15,5 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 export class ChargementOuErreurComponent {
   @Input() erreur: ModelError | null = null;
 
-  @Input() nom_service_distant: string = 'Inconnu';
+  readonly nom_service_distant = input<string>('Inconnu');
 }

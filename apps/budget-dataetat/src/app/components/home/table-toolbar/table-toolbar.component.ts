@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, Input, ViewEncapsulation } from '@angular/core';
+import { Component, inject, ViewEncapsulation, input } from '@angular/core';
 
 import { GridInFullscreenStateService } from 'apps/common-lib/src/lib/services/grid-in-fullscreen-state.service';
 import {
@@ -29,11 +29,9 @@ export class TableToolbarComponent {
   private _colonnesService = inject(ColonnesService);
   private _preferenceService = inject(PreferenceService);
 
-  @Input()
-  public grouped: boolean = false;
+  public readonly grouped = input<boolean>(false);
 
-  @Input()
-  public searchData: FinancialDataModel[] = []
+  public readonly searchData = input<FinancialDataModel[]>([]);
   
   public searchFinish: boolean = true
   public searchInProgress: boolean = false
