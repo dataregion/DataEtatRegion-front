@@ -1,13 +1,13 @@
 <lib-header [logo]="'BudgetEtat.svg'" [ngClass]="{'hidden': grid_fullscreen }" [title]="title()">
 
-  @if(showUpdateTagsPage) {
+  @if(showUpdateTagsPage()) {
   <li tags>
     <button class="fr-btn fr-btn--tertiary-no-outline fr-icon-hashtag" matTooltip="Tags" routerLink="update-tags">Tags
     </button>
   </li>
   }
 
-  @if(showIntegrationDemarchePage) {
+  @if(showIntegrationDemarchePage()) {
   <li compagnonDS>
     <button class="fr-btn fr-btn--tertiary-no-outline fr-icon-bank-card-line" matTooltip="Compagnon DS" id="compagnonDS"
       routerLink="demarches">Compagnon DS
@@ -50,7 +50,7 @@
   }
 
 
-  @if(showUploadFinancialDataPage) {
+  @if(showUploadFinancialDataPage()) {
   <li administration>
 
     <button routerLink='upload' class="fr-btn fr-btn--tertiary-no-outline fr-icon-settings-5-fill" id="administration"
@@ -77,7 +77,7 @@
   </button>
 }
 
-@if(isAuthenticated) {
+@if(isAuthenticated()) {
 <lib-footer [logo]="'DataEtat.svg'" [ngClass]="{'hidden': grid_fullscreen }">
   @if(help) {
   <li class="fr-footer__bottom-item">

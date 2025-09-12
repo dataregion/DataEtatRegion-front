@@ -1,5 +1,5 @@
 import { RouterLink, RouterOutlet } from '@angular/router';
-import { Component, computed, effect, HostListener, inject, signal } from '@angular/core';
+import { Component, computed, effect, HostListener, inject } from '@angular/core';
 import { GridInFullscreenStateService } from 'apps/common-lib/src/lib/services/grid-in-fullscreen-state.service';
 import { LoaderService, Ressources, SessionService } from 'apps/common-lib/src/public-api';
 import { SettingsBudgetService } from './environments/settings-budget.service';
@@ -12,6 +12,7 @@ import { HeaderComponent } from 'apps/common-lib/src/lib/components/header/heade
 import { profiles_required_for_demarches, profiles_required_for_tags_page, profiles_required_for_upload_financial_page } from './app.routes';
 import { MultiregionsService } from './services/multiregions.service';
 import { FooterComponent } from 'apps/common-lib/src/lib/components/footer/footer.component';
+import { LoggerService } from 'apps/common-lib/src/lib/services/logger.service';
 
 @Component({
   selector: 'budget-root',
@@ -25,13 +26,9 @@ export class App {
   private _gridFullscreen = inject(GridInFullscreenStateService);
   private _multiregions = inject(MultiregionsService);
   private _resourceService = inject(ResourceService);
+  private logger = inject(LoggerService).getLogger(App.name);
   readonly settings = inject(SettingsBudgetService);
 
-  public isAuthenticated: boolean = false;
-
-  public showUploadFinancialDataPage: boolean = false;
-  public showUpdateTagsPage: boolean = false;
-  public showIntegrationDemarchePage: boolean = false;
   public ressources = toSignal(this._resourceService.getResources(), { initialValue: null });
 
   public user = toSignal(this._sessionService.getUser());
@@ -39,26 +36,53 @@ export class App {
   public isLoading = toSignal(this._loaderService.isLoading(), { initialValue: true })
   public progressBarVisible = computed(() => this.isLoading());
 
-  public title = signal<string>('Budget Data État')
+  readonly isAuthenticated = computed(() => Boolean(this.user()));
+  
+  readonly title = computed(() => {
+    const authenticated = this.isAuthenticated();
+    const codeRegion = this._sessionService.regionCode();
+    if (authenticated && codeRegion) {
+      const region = this._multiregions.getRegionLabel(codeRegion!);
+      return 'Budget Data État ' + region;
+    }
+    return 'Budget Data État';
+  });
+  
+  readonly showUpdateTagsPage = computed(() => {
+    return this.isAuthenticated() && this._sessionService.hasOneRole(profiles_required_for_tags_page);
+  });
+  
+  readonly showIntegrationDemarchePage = computed(() => {
+    return this.isAuthenticated() && 
+           this._sessionService.hasOneRole(profiles_required_for_demarches) &&
+           this.settings.getFeatures().integration_ds;
+  });
+  
+  readonly showUploadFinancialDataPage = computed(() => { 
+    return this.isAuthenticated() && this._sessionService.hasOneRole(
+      profiles_required_for_upload_financial_page
+    ) 
+  });
 
   constructor() {
     effect(() => {
-      if (this.user()) {
-        this.isAuthenticated = true;
-        this.showUploadFinancialDataPage = this._sessionService.hasOneRole(
-          profiles_required_for_upload_financial_page
-        );
-        this.showUpdateTagsPage = this._sessionService.hasOneRole(profiles_required_for_tags_page);
-        this.showIntegrationDemarchePage =
-          this._sessionService.hasOneRole(profiles_required_for_demarches) &&
-          this.settings.getFeatures().integration_ds;
-      }
+      this.logger.debug(
+        "Affichage de la page d'édition des tags: " + this.showUpdateTagsPage()
+      );
+    });
+    
+    effect(() => {
+      this.logger.debug(
+        "Affichage de l'intégration des démarches: " + this.showIntegrationDemarchePage()
+      );
+    });
 
-      const region = this._multiregions.getRegionLabel(this._sessionService.regionCode()!);
-      this.title.set('Budget Data État ' + region);
-    })
+    effect(() => {
+      this.logger.debug(
+        "Affichage de la page d'upload des données financières: " + this.showUploadFinancialDataPage()
+      );
+    });
   }
-
 
   get grid_fullscreen() {
     return this._gridFullscreen.fullscreen;
