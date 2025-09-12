@@ -1,9 +1,10 @@
-import { Component, OnInit, effect, inject, untracked } from '@angular/core';
+import { Component, OnInit, computed, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import {
   BehaviorSubject,
   debounceTime,
+  filter,
   Observable,
   of,
   startWith,
@@ -36,6 +37,7 @@ import { PreferenceService } from '@services/preference.service';
 import { SearchDataService } from '@services/search-data.service';
 
 import { ColonnesService } from '@services/colonnes.service';
+import { toObservable } from '@angular/core/rxjs-interop';
 
 
 /**
@@ -68,7 +70,7 @@ export class SearchDataComponent implements OnInit {
   private _preferenceService = inject(PreferenceService)
   private _prefilterMapperService = inject(PrefilterMapperService);
   private _searchParamsService = inject(SearchParamsService);
-  private _logger = inject(LoggerService);
+  private _logger = inject(LoggerService).getLogger(SearchDataComponent.name);
   private _autocompleteBeneficiaires = inject(AutocompleteBeneficiaireService);
   private _autocompleteTags = inject(AutocompleteTagsService);
   private _colonnesService = inject(ColonnesService)
@@ -224,47 +226,42 @@ export class SearchDataComponent implements OnInit {
   public onTagInputChange(v: string) {
     this.tagsInputChange$.next(v);
   }
+  
+  readonly currentSearchParams = computed(() => { 
+    const tableCols = this._colonnesService.selectedColonnesTable();
+    const groupingCols = this._colonnesService.selectedColonnesGrouping();
+    const currentParams = this.searchDataService.searchParams();
+
+    if (!currentParams)
+      return;
+
+    const search = {
+      ...currentParams,
+      colonnes: tableCols.map(c => c.back.map(b => b.code)).flat().filter(c => c !== undefined && c !== null),
+      grouping: groupingCols.map(c => c.grouping?.code).filter(c => c !== undefined && c !== null) ?? undefined,
+      grouped: []
+    };
+
+    if (search.grouping?.length === 0) {
+      search.grouping = [];
+    }
+    
+    return search
+  });
+  
 
   constructor() {
-    // Effect pour réagir aux changements des colonnes de tableau ou de grouping sélectionnées
-    effect(() => {
-      const tableCols = this._colonnesService.selectedColonnesTable();
-      const groupingCols = this._colonnesService.selectedColonnesGrouping();
-      const currentParams = untracked(this.searchDataService.searchParams);
-
-      if (!currentParams)
-        return;
-      
-      const search = {
-        ...currentParams,
-        colonnes: tableCols.map(c => c.back.map(b => b.code)).flat().filter(c => c !== undefined && c !== null),
-        grouping: groupingCols.map(c => c.grouping?.code).filter(c => c !== undefined && c !== null) ?? undefined,
-        grouped: []
-      };
-
-      if (search.grouping?.length === 0) {
-        search.grouping = [];
-      }
-
-      this.searchDataService.search(search);
-    });
-
-    effect(() => {
-      this._logger.debug("==> Effect déclenché dans SearchDataComponent");
-      const params = this.searchDataService.searchParams();
-      if (!params) {
-        this._logger.debug("    ==> Aucun paramètre trouvé, sortie de l'effect");
-        return;
-      }
-
-      this._logger.debug("    ==> Paramètres reçus dans l'effect", params);
-
-      // Mapping des paramètres vers le formulaire
-      this._logger.debug("    ==> Mapping des paramètres vers le formulaire");
-      this.formSearch = this._prefilterMapperService.mapSearchParamsToForm(params);
-    });
+    // Déclenche la recherche à chaque changement des paramètres de recherche
+    toObservable(this.currentSearchParams)
+      .pipe(
+        filter(p => p !== undefined && p.colonnes !== undefined && p.colonnes.length > 0)
+      ).subscribe(params => {
+        this._logger.debug("==> On effectue une nouvelle recherche");
+        this.searchDataService.search(params!);
+        this._logger.debug("==> Mapping des paramètres vers le formulaire");
+        this.formSearch = this._prefilterMapperService.mapSearchParamsToForm(params!);
+      });
   }
-  
 
   ngOnInit(): void {
     // Subscribe pour l'autocomplete des beneficiaires

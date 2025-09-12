@@ -137,7 +137,7 @@ export class ModalSauvegardeComponent implements OnInit, OnDestroy {
     } as Preference;
     
     // Récupération des critères de recherche
-    const object = this._searchDataService.searchParams as unknown as JSONObject
+    const object = this._searchDataService.searchParams() as unknown as JSONObject
     const ignore = new Set(['colonnes', 'page', 'page_size', 'grouping', 'grouped']);
     Object.keys(object).forEach((key) => {
       if (!ignore.has(key)) {
