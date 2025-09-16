@@ -19,6 +19,7 @@ import { InformationsSupplementairesService } from '../../modules/informations-s
 import { SearchDataService } from '@services/search-data.service';
 
 import { OuNonRenseignePipe } from 'apps/common-lib/src/public-api';
+import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 
 /**
  * Énumération des différents modes d'affichage pour les informations supplémentaires
@@ -81,6 +82,10 @@ export class InfosLigneComponent implements OnInit {
   
   /** Observable des données de dossier de démarche simplifiée */
   affichage_dossier$: Observable<AffichageDossier> | undefined;
+  
+  /** Flag pour représenter si l'information de ligne est liée au tableau ou non
+   * possibilité de revenir au tableau etc. */
+  linkedToTable = true;
 
   // ========================================
   // PROPRIÉTÉS PRIVÉES
@@ -89,10 +94,6 @@ export class InfosLigneComponent implements OnInit {
   /** Données financières actuellement affichées */
   private _financial: FinancialDataModel | undefined = undefined;
 
-  // ========================================
-  // GETTERS PUBLICS
-  // ========================================
-  
   /**
    * Getter pour accéder aux données financières de façon sécurisée
    * @returns Les données financières courantes
@@ -113,14 +114,19 @@ export class InfosLigneComponent implements OnInit {
   // CYCLE DE VIE ANGULAR
   // ========================================
   
-  /**
-   * Initialise le composant avec les données provenant du resolver Angular
-   */
+  constructor() {
+    toObservable(this._searchDataService.selectedLine)
+    .pipe(takeUntilDestroyed())
+    .subscribe((line) => {
+      this._initFromResolverModel(line);
+    })
+  }
+
   ngOnInit(): void {
     const data: FinancialDataModel = this._route.snapshot.data['infos_supplementaires'];
     if (data) {
       this._searchDataService.selectedLine.set(data);
-      this._initFromResolverModel(this._searchDataService.selectedLine());
+      this.linkedToTable = false; // XXX: heuristique, l'info vient de l'url, pas de lien au tableau
     }
   }
 

@@ -2,22 +2,28 @@
   <div class="fr-grid-row">
     <div class="fr-col-12">
 
-      <button class="fr-btn fr-btn--secondary" (click)="backToTable()">Revenir au tableau</button>
+      @if (linkedToTable) {
+        <button class="fr-btn fr-btn--secondary" (click)="backToTable()">Revenir au tableau</button>
+      }
 
       <!-- Templates always declared before usage -->
       <ng-template #titre let-libelle="libelle">
-        <div class="ligne ligne-titre">
-          <div class="colonne">
-            <h2>{{ libelle }}</h2>
-          </div>
-          <div class="colonne" style="flex-grow: 3;"></div>
-          @if (view !== 'full') {
+        @if (linkedToTable) {
+          <div class="ligne ligne-titre">
             <div class="colonne">
-              <button (click)="openInNewtab()" class="newtab fr-btn fr-btn--tertiary-no-outline fr-icon-external-link-line">
-              </button>
+              <h2>{{ libelle }}</h2>
             </div>
-          }
-        </div>
+            <div class="colonne" style="flex-grow: 3;"></div>
+            @if (view !== 'full') {
+              <div class="colonne">
+                <button (click)="openInNewtab()" class="newtab fr-btn fr-btn--tertiary-no-outline fr-icon-external-link-line">
+                </button>
+              </div>
+            }
+          </div>
+        } @else {
+          <br />
+        }
       </ng-template>
 
       <ng-template #entrepriseLight let-info="info">
