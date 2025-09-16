@@ -2,7 +2,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Component, ElementRef, inject, OnInit, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { AlertService, SessionService } from 'apps/common-lib/src/public-api';
-import { BehaviorSubject, catchError, finalize, forkJoin, of, Subscription } from 'rxjs';
+import { BehaviorSubject, catchError, finalize, forkJoin, of } from 'rxjs';
 import { AuditUpdateData, DataType } from '../../../models/audit/audit-update-data.models';
 import { AuditHttpService } from '../../../services/http/audit.service';
 import { BudgetDataHttpService } from '../../../services/http/budget.service';
@@ -31,8 +31,6 @@ export class BudgetFinancialComponent implements OnInit {
 
   public readonly requiredFileType: string = '.csv';
   public DataType = DataType;
-
-  uploadSub: Subscription | null = new Subscription();
 
   @ViewChild('fileUploadAe')
   fileUploadAe!: ElementRef<HTMLInputElement>;
@@ -88,7 +86,7 @@ export class BudgetFinancialComponent implements OnInit {
         autoFocus: 'input'
       });
 
-      dialogRef.afterClosed().subscribe((result: boolean) => {
+      dialogRef.afterClosed().pipe(takeUntilDestroyed()).subscribe((result: boolean) => {
         if (result) {
           this._doLoadFiles();
         }
@@ -135,6 +133,7 @@ export class BudgetFinancialComponent implements OnInit {
           this.yearSelected.toString()
         )
         .pipe(
+          takeUntilDestroyed(),
           finalize(() => {
             this.fileFinancialAe = null;
             this.fileFinancialCp = null;
@@ -169,7 +168,7 @@ export class BudgetFinancialComponent implements OnInit {
     forkJoin({
       ae: financialAe$,
       cp: financialCp$
-    }).subscribe((response) => {
+    }).pipe(takeUntilDestroyed()).subscribe((response) => {
       const tabs = [...response.ae, ...response.cp];
       tabs.sort((a1: AuditUpdateData, a2: AuditUpdateData) => {
         return a1.date <= a2.date ? 1 : -1;

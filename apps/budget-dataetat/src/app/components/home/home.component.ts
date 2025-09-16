@@ -26,6 +26,7 @@ import { Bop } from '@models/search/bop.model';
 import { InfosLigneComponent } from "../infos-ligne/infos-ligne.component";
 import { PreferenceService } from '@services/preference.service';
 import { LoggerService } from 'apps/common-lib/src/lib/services/logger.service';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 /**
  * Composant principal de la page d'accueil de l'application budget-dataetat.
@@ -240,13 +241,13 @@ export class HomeComponent implements OnInit {
 
     // --- 6. Écoute des paramètres de query pour l'application des préférences ---
     
-    this._route.queryParams.subscribe((param) => {
+    this._route.queryParams.pipe(takeUntilDestroyed()).subscribe((param) => {
       // Configuration des colonnes par défaut
       this._colonnesService.selectedColonnesTable.set(this._colonnesMapperService.getDefaults());
       
       // Si une préférence doit être appliquée (UUID fourni dans l'URL)
       if (param[QueryParam.Uuid]) {
-        this._httpPreferenceService.getPreference(param[QueryParam.Uuid]).subscribe((preference) => {
+        this._httpPreferenceService.getPreference(param[QueryParam.Uuid]).pipe(takeUntilDestroyed()).subscribe((preference) => {
           // Sauvegarde de la préférence courante
           this._preferenceService.setCurrentPreference(preference);
           
@@ -272,7 +273,7 @@ export class HomeComponent implements OnInit {
 
     // --- 7. Récupération de la date du dernier import ---
     
-    this._auditService.getLastDateUpdateData().subscribe((response) => {
+    this._auditService.getLastDateUpdateData().pipe(takeUntilDestroyed()).subscribe((response) => {
       if (response.date) {
         this.lastImportDate = response.date;
       }

@@ -4,6 +4,7 @@ import { ChargementOuErreurComponent } from '../chargement-ou-erreur/chargement-
 import { InformationsSupplementairesService } from '../services/informations-supplementaires.service';
 import { OuNonRenseignePipe } from 'apps/common-lib/src/public-api';
 import { EntrepriseFull } from '../models/EntrepriseFull';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
     selector: 'budget-informations-supplementaires-detail-entreprise',
@@ -31,7 +32,7 @@ export class DetailApiEntrepriseComponent {
   constructor() {
     const service = this.service;
 
-    service.viewService.apiEntrepriseFull$().subscribe((info) => (this.info = info));
+    service.viewService.apiEntrepriseFull$().pipe(takeUntilDestroyed()).subscribe((info) => (this.info = info));
   }
 
   stringify(data: unknown) {

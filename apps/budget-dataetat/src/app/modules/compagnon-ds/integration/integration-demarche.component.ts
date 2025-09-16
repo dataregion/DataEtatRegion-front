@@ -39,7 +39,7 @@ export class IntegrationDemarcheComponent implements OnInit {
   public somethingIsLoading: boolean = false;
 
   constructor() {
-    this.integrationForm.get('numeroDemarche')?.valueChanges.subscribe(value => {
+    this.integrationForm.get('numeroDemarche')?.valueChanges.pipe(takeUntilDestroyed(this._destroyRef)).subscribe(value => {
       this.numberDemarche = value ? parseInt(value) : null
       if (this.integrationForm.value.numeroDemarche && this.numberDemarche !== parseInt(this.integrationForm.value.numeroDemarche)) {
         this.nomDemarche = '';
@@ -50,7 +50,7 @@ export class IntegrationDemarcheComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this._loaderService.isLoading().subscribe((loading) => {
+    this._loaderService.isLoading().pipe(takeUntilDestroyed(this._destroyRef)).subscribe((loading) => {
       this.somethingIsLoading = loading;
     });
 

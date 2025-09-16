@@ -4,6 +4,7 @@ import { ChargementOuErreurComponent } from '../chargement-ou-erreur/chargement-
 import { InformationsSupplementairesService } from '../services/informations-supplementaires.service';
 import { SubventionFull } from '../models/SubventionFull';
 import { OuNonRenseignePipe } from 'apps/common-lib/src/public-api';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
     selector: 'budget-informations-supplementaires-detail-subventions',
@@ -31,7 +32,7 @@ export class DetailApiDataSubventionsComponent {
   constructor() {
     const service = this.service;
 
-    service.viewService.apiSubventionFull$().subscribe((subvention) => {
+    service.viewService.apiSubventionFull$().pipe(takeUntilDestroyed()).subscribe((subvention) => {
       this.info = subvention;
     });
   }

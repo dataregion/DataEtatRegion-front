@@ -134,7 +134,7 @@ export class AffichageDemarcheComponent implements OnInit {
                   .map((v) => parseFloat(v.valeur));
               }
 
-              this._compagnonDS.getReconciliations(demarche.number).subscribe({
+              this._compagnonDS.getReconciliations(demarche.number).pipe(takeUntilDestroyed(this._destroyRef)).subscribe({
                 next: (response: Reconciliation[] | Error) => {
                   if (response instanceof Error) {
                     this._alertService.openAlertError(response.message);

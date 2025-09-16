@@ -1,8 +1,8 @@
 import { AsyncPipe } from '@angular/common';
-import { Component, inject, Input, OnDestroy, OnInit, ViewEncapsulation, effect } from '@angular/core';
+import { Component, inject, Input, OnInit, ViewEncapsulation } from '@angular/core';
 
 import { AlertService } from "apps/common-lib/src/public-api";
-import { debounceTime, distinctUntilChanged, filter, finalize, map, Observable, of, Subject, switchMap, takeUntil } from 'rxjs';
+import { debounceTime, distinctUntilChanged, finalize, map, Observable, of, Subject, switchMap } from 'rxjs';
 import { PreferenceUsersHttpService } from 'apps/preference-users/src/lib/services/preference-users-http.service';
 import { Preference } from 'apps/preference-users/src/lib/models/preference.models';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
@@ -28,7 +28,7 @@ export interface FormPreference {
   styleUrls: ['./modal-sauvegarde.component.scss'],
   imports: [DsfrAutocompleteComponent, ReactiveFormsModule, AsyncPipe]
 })
-export class ModalSauvegardeComponent implements OnInit, OnDestroy {
+export class ModalSauvegardeComponent implements OnInit {
 
   private _preferenceHttpService = inject(PreferenceUsersHttpService);
   private _preferenceService = inject(PreferenceService);
@@ -53,7 +53,6 @@ export class ModalSauvegardeComponent implements OnInit, OnDestroy {
   public preference?: Preference | null = null;
 
   public searchUserChanged = new Subject<string>();
-  private destroy$ = new Subject<void>();
 
   public suggestions$: Observable<string[]> = of([]);
   public loading: boolean = false;
@@ -100,13 +99,8 @@ export class ModalSauvegardeComponent implements OnInit, OnDestroy {
           finalize(() => (this.loading = false))
         );
       }),
-      takeUntil(this.destroy$)
+      takeUntilDestroyed()
     );
-  }
-
-  ngOnDestroy() {
-    this.destroy$.next();
-    this.destroy$.complete();
   }
   
   onSearchAsync(event: DsfrCompleteEvent) {
@@ -156,7 +150,7 @@ export class ModalSauvegardeComponent implements OnInit, OnDestroy {
     console.log("==> SAVE Preference")
     console.log(this.preference)
     this._preferenceService.setCurrentPreference(this.preference)
-    this._preferenceHttpService.savePreference(this.preference).subscribe((_response) => {
+    this._preferenceHttpService.savePreference(this.preference).pipe(takeUntilDestroyed()).subscribe((_response) => {
       this._alertService.openAlertSuccess('Filtre enregistré avec succès');
     });
   }

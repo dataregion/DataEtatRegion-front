@@ -6,6 +6,7 @@ import { OuNonRenseignePipe } from 'apps/common-lib/src/public-api';
 import { AffichageDossier } from '@models/demarche_simplifie/demarche.model';
 import { SETTINGS } from 'apps/common-lib/src/lib/environments/settings.http.service';
 import { ISettingsService } from 'apps/common-lib/src/lib/environments/interface-settings.service';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
     selector: 'budget-informations-demarche-simplifie',
@@ -35,6 +36,7 @@ export class DetailApiDemarcheSimplifieComponent {
 
     service.viewService
       .dossierDemarche$()
+      .pipe(takeUntilDestroyed())
       .subscribe((dossier) => (this.affichageDossier = dossier));
     this.url_dossier_ds = settings.getSetting().url_dossier_ds;
   }

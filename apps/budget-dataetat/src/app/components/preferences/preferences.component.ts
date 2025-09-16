@@ -11,6 +11,7 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { ModalConfirmComponent } from './modal-confirm/modal-confirm.component';
 import { ModalSauvegardeComponent } from "../home/table-toolbar/modal-sauvegarde/modal-sauvegarde.component";
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 
 @Component({
@@ -97,7 +98,7 @@ export class PreferencesComponent implements OnInit {
   public readonly json = JSON;
 
   ngOnInit(): void {
-    this._service.getPreferences().subscribe((response) => {
+    this._service.getPreferences().pipe(takeUntilDestroyed()).subscribe((response) => {
       this.dataSource.set(response);
     });
   }
@@ -119,7 +120,7 @@ export class PreferencesComponent implements OnInit {
     if (!preference.uuid)
       return
     const uuid: string = preference.uuid
-    this._service.deletePreference(uuid).subscribe({
+    this._service.deletePreference(uuid).pipe(takeUntilDestroyed()).subscribe({
       next: () => {
         // On update comme ça car dataSource est un signal 
         this.dataSource.update(prev => ({
