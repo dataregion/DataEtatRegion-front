@@ -1,5 +1,5 @@
 import { AsyncPipe } from '@angular/common';
-import { Component, inject, Input, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, DestroyRef, inject, Input, ViewEncapsulation } from '@angular/core';
 
 import { AlertService } from "apps/common-lib/src/public-api";
 import { debounceTime, distinctUntilChanged, finalize, map, Observable, of, Subject, switchMap } from 'rxjs';
@@ -28,7 +28,7 @@ export interface FormPreference {
   styleUrls: ['./modal-sauvegarde.component.scss'],
   imports: [DsfrAutocompleteComponent, ReactiveFormsModule, AsyncPipe]
 })
-export class ModalSauvegardeComponent implements OnInit {
+export class ModalSauvegardeComponent {
 
   private _preferenceHttpService = inject(PreferenceUsersHttpService);
   private _preferenceService = inject(PreferenceService);
@@ -36,6 +36,7 @@ export class ModalSauvegardeComponent implements OnInit {
   private _formBuilder = inject(FormBuilder);
   private _colonnesService = inject(ColonnesService);
   private _searchDataService = inject(SearchDataService);
+  private _destroyRef = inject(DestroyRef);
   
   public formPreference: FormGroup<FormPreference> = new FormGroup({
     name: new FormControl<string>("", { nonNullable: true }),
@@ -59,25 +60,6 @@ export class ModalSauvegardeComponent implements OnInit {
   public delay: number = 500
   
   constructor() {
-
-    toObservable(this._preferenceService.currentPreference)
-    .pipe(takeUntilDestroyed())
-    .subscribe((newPreferences) => {
-      this.preference = newPreferences;
-      if (!this.preference)
-        return;
-      this.formPreference = this._formBuilder.group<FormPreference>({
-        name: this._formBuilder.control<string>(this.preference.name ?? "", { nonNullable: true }),
-        shared: this._formBuilder.control<boolean>(this.preference.shares?.length !== 0, { nonNullable: true }),
-        users: this._formBuilder.control<string[]>((this.preference.shares ?? []).map(s =>
-          s.shared_username_email), { nonNullable: true }
-        )
-      });
-    });
-  }
-
-  ngOnInit() {
-
     // Recherche des suggestions d'users
     this.suggestions$ = this.searchUserChanged.pipe(
       debounceTime(400),
@@ -99,8 +81,23 @@ export class ModalSauvegardeComponent implements OnInit {
           finalize(() => (this.loading = false))
         );
       }),
-      takeUntilDestroyed()
+      takeUntilDestroyed(this._destroyRef)
     );
+
+    toObservable(this._preferenceService.currentPreference)
+      .pipe(takeUntilDestroyed(this._destroyRef))
+      .subscribe((newPreferences) => {
+        this.preference = newPreferences;
+        if (!this.preference)
+          return;
+        this.formPreference = this._formBuilder.group<FormPreference>({
+          name: this._formBuilder.control<string>(this.preference.name ?? "", { nonNullable: true }),
+          shared: this._formBuilder.control<boolean>(this.preference.shares?.length !== 0, { nonNullable: true }),
+          users: this._formBuilder.control<string[]>((this.preference.shares ?? []).map(s =>
+            s.shared_username_email), { nonNullable: true }
+          )
+        });
+      });
   }
   
   onSearchAsync(event: DsfrCompleteEvent) {
@@ -150,9 +147,12 @@ export class ModalSauvegardeComponent implements OnInit {
     console.log("==> SAVE Preference")
     console.log(this.preference)
     this._preferenceService.setCurrentPreference(this.preference)
-    this._preferenceHttpService.savePreference(this.preference).pipe(takeUntilDestroyed()).subscribe((_response) => {
-      this._alertService.openAlertSuccess('Filtre enregistré avec succès');
-    });
+    this._preferenceHttpService
+      .savePreference(this.preference)
+      .pipe(takeUntilDestroyed(this._destroyRef))
+      .subscribe((_response) => {
+        this._alertService.openAlertSuccess('Filtre enregistré avec succès');
+      });
   }
 
   /**

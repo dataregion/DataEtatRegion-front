@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, ElementRef, inject, OnInit, ViewChild } from '@angular/core';
+import { Component, DestroyRef, ElementRef, inject, OnInit, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { AlertService, SessionService } from 'apps/common-lib/src/public-api';
 import { BehaviorSubject, catchError, finalize, forkJoin, of } from 'rxjs';
@@ -28,6 +28,7 @@ export class BudgetFinancialComponent implements OnInit {
   private _session = inject(SessionService);
   private _auditService = inject(AuditHttpService);
   private _alertService = inject(AlertService);
+  private _destroyRef = inject(DestroyRef);
 
   public readonly requiredFileType: string = '.csv';
   public DataType = DataType;
@@ -86,11 +87,14 @@ export class BudgetFinancialComponent implements OnInit {
         autoFocus: 'input'
       });
 
-      dialogRef.afterClosed().pipe(takeUntilDestroyed()).subscribe((result: boolean) => {
-        if (result) {
-          this._doLoadFiles();
-        }
-      });
+      dialogRef
+        .afterClosed()
+        .pipe(takeUntilDestroyed(this._destroyRef))
+        .subscribe((result: boolean) => {
+          if (result) {
+            this._doLoadFiles();
+          }
+        });
     } else {
       this._doLoadFiles();
     }
@@ -102,7 +106,7 @@ export class BudgetFinancialComponent implements OnInit {
       this._budgetService
         .loadReferentielFile(this.fileReferentiel)
         .pipe(
-          takeUntilDestroyed(),
+          takeUntilDestroyed(this._destroyRef),
           finalize(() => {
             this.fileReferentiel = null;
             this.uploadInProgress.next(false);
@@ -133,7 +137,7 @@ export class BudgetFinancialComponent implements OnInit {
           this.yearSelected.toString()
         )
         .pipe(
-          takeUntilDestroyed(),
+          takeUntilDestroyed(this._destroyRef),
           finalize(() => {
             this.fileFinancialAe = null;
             this.fileFinancialCp = null;
@@ -168,12 +172,14 @@ export class BudgetFinancialComponent implements OnInit {
     forkJoin({
       ae: financialAe$,
       cp: financialCp$
-    }).pipe(takeUntilDestroyed()).subscribe((response) => {
-      const tabs = [...response.ae, ...response.cp];
-      tabs.sort((a1: AuditUpdateData, a2: AuditUpdateData) => {
-        return a1.date <= a2.date ? 1 : -1;
+    })
+      .pipe(takeUntilDestroyed(this._destroyRef))
+      .subscribe((response) => {
+        const tabs = [...response.ae, ...response.cp];
+        tabs.sort((a1: AuditUpdateData, a2: AuditUpdateData) => {
+          return a1.date <= a2.date ? 1 : -1;
+        });
+        this.dataSource = tabs;
       });
-      this.dataSource = tabs;
-    });
   }
 }

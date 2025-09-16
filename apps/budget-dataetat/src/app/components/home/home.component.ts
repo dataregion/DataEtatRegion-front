@@ -1,4 +1,4 @@
-import { Component, ElementRef, inject, OnInit, ViewChild, ViewEncapsulation, computed } from '@angular/core';
+import { Component, DestroyRef, ElementRef, inject, OnInit, ViewChild, ViewEncapsulation, computed } from '@angular/core';
 
 import { GridInFullscreenStateService } from 'apps/common-lib/src/lib/services/grid-in-fullscreen-state.service';
 import { TableToolbarComponent } from './table-toolbar/table-toolbar.component';
@@ -81,6 +81,9 @@ export class HomeComponent implements OnInit {
   
   /** Service de logging pour le debugging */
   private _logger = inject(LoggerService);
+  
+  /** Service de destruction pour les subscriptions */
+  private _destroyRef = inject(DestroyRef);
 
   // --- Propriétés du template ---
   
@@ -241,42 +244,57 @@ export class HomeComponent implements OnInit {
 
     // --- 6. Écoute des paramètres de query pour l'application des préférences ---
     
-    this._route.queryParams.pipe(takeUntilDestroyed()).subscribe((param) => {
+    this._route.queryParams.pipe(takeUntilDestroyed(this._destroyRef)).subscribe((param) => {
       // Configuration des colonnes par défaut
       this._colonnesService.selectedColonnesTable.set(this._colonnesMapperService.getDefaults());
-      
+
       // Si une préférence doit être appliquée (UUID fourni dans l'URL)
       if (param[QueryParam.Uuid]) {
-        this._httpPreferenceService.getPreference(param[QueryParam.Uuid]).pipe(takeUntilDestroyed()).subscribe((preference) => {
-          // Sauvegarde de la préférence courante
-          this._preferenceService.setCurrentPreference(preference);
-          
-          // Application des préférences de grouping des colonnes
-          if (preference.options && preference.options['grouping']) {
-            const mapped: ColonneTableau<FinancialDataModel>[] = this._colonnesMapperService.mapNamesFromPreferences(preference.options['grouping'] as ColonneFromPreference[]);
-            this._colonnesService.selectedColonnesGrouping.set(mapped);
-            this._colonnesService.selectedColonnesGrouped.set([]);
-          }
-          
-          // Application des préférences d'ordre et d'affichage des colonnes
-          if (preference.options && preference.options['displayOrder']) {
-            const mapped: ColonneTableau<FinancialDataModel>[] = this._colonnesMapperService.mapLabelsFromPreferences(preference.options['displayOrder'] as ColonneFromPreference[]);
-            this._colonnesService.selectedColonnesTable.set(mapped);
-          }
-          
-          // Application des filtres de la préférence
-          this._searchDataService.searchParams.set(this._prefilterMapperService.mapPrefilterToSearchParams(preference.filters as PreFilters));
-          this._alertService.openInfo(`Application du filtre ${preference.name}`);
-        });
+        this._httpPreferenceService
+          .getPreference(param[QueryParam.Uuid])
+          .pipe(takeUntilDestroyed(this._destroyRef))
+          .subscribe((preference) => {
+            // Sauvegarde de la préférence courante
+            this._preferenceService.setCurrentPreference(preference);
+
+            // Application des préférences de grouping des colonnes
+            if (preference.options && preference.options['grouping']) {
+              const mapped: ColonneTableau<FinancialDataModel>[] =
+                this._colonnesMapperService.mapNamesFromPreferences(
+                  preference.options['grouping'] as ColonneFromPreference[]
+                );
+              this._colonnesService.selectedColonnesGrouping.set(mapped);
+              this._colonnesService.selectedColonnesGrouped.set([]);
+            }
+
+            // Application des préférences d'ordre et d'affichage des colonnes
+            if (preference.options && preference.options['displayOrder']) {
+              const mapped: ColonneTableau<FinancialDataModel>[] =
+                this._colonnesMapperService.mapLabelsFromPreferences(
+                  preference.options['displayOrder'] as ColonneFromPreference[]
+                );
+              this._colonnesService.selectedColonnesTable.set(mapped);
+            }
+
+            // Application des filtres de la préférence
+            this._searchDataService.searchParams.set(
+              this._prefilterMapperService.mapPrefilterToSearchParams(
+                preference.filters as PreFilters
+              )
+            );
+            this._alertService.openInfo(`Application du filtre ${preference.name}`);
+          });
       }
     });
 
     // --- 7. Récupération de la date du dernier import ---
     
-    this._auditService.getLastDateUpdateData().pipe(takeUntilDestroyed()).subscribe((response) => {
-      if (response.date) {
-        this.lastImportDate = response.date;
-      }
-    });
+    this._auditService.getLastDateUpdateData()
+      .pipe(takeUntilDestroyed(this._destroyRef))
+      .subscribe((response) => {
+        if (response.date) {
+          this.lastImportDate = response.date;
+        }
+      });
   }
 }

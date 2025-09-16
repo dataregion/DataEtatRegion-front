@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, DestroyRef, OnInit, inject, signal } from '@angular/core';
 import {
   Preference,
   MapPreferenceFilterMetadata,
@@ -26,6 +26,7 @@ export class PreferencesComponent implements OnInit {
   private _router = inject(Router)
   private _service = inject(PreferenceUsersHttpService);
   private _alertService = inject(AlertService);
+  private _destroyRef = inject(DestroyRef);
 
   /**
    * Object pour mapper le nom du filtre avec une String affichable.
@@ -98,7 +99,7 @@ export class PreferencesComponent implements OnInit {
   public readonly json = JSON;
 
   ngOnInit(): void {
-    this._service.getPreferences().pipe(takeUntilDestroyed()).subscribe((response) => {
+    this._service.getPreferences().pipe(takeUntilDestroyed(this._destroyRef)).subscribe((response) => {
       this.dataSource.set(response);
     });
   }
@@ -120,18 +121,19 @@ export class PreferencesComponent implements OnInit {
     if (!preference.uuid)
       return
     const uuid: string = preference.uuid
-    this._service.deletePreference(uuid).pipe(takeUntilDestroyed()).subscribe({
-      next: () => {
-        // On update comme ça car dataSource est un signal 
-        this.dataSource.update(prev => ({
-          ...prev,
-          create_by_user: prev.create_by_user.filter(
-            data => data.uuid && data.uuid !== uuid
-          )
-        }));
-        this._alertService.openAlertSuccess('Suppression du filtre');
-      }
-    });
+    this._service
+      .deletePreference(uuid)
+      .pipe(takeUntilDestroyed(this._destroyRef))
+      .subscribe({
+        next: () => {
+          // On update comme ça car dataSource est un signal
+          this.dataSource.update((prev) => ({
+            ...prev,
+            create_by_user: prev.create_by_user.filter((data) => data.uuid && data.uuid !== uuid)
+          }));
+          this._alertService.openAlertSuccess('Suppression du filtre');
+        }
+      });
   }
 
   /**
