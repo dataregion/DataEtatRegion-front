@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { LocalisationInterministerielle } from '@models/financial/common.models';
 import { FinancialDataModel } from '@models/financial/financial-data.models';
-import { Tag } from '@models/refs/tag.model';
 import { Colonne, EnrichedFlattenFinancialLines } from 'apps/clients/v3/financial-data';
 import { JSONObject } from 'apps/common-lib/src/lib/models/jsonobject';
 import { Optional } from 'apps/common-lib/src/lib/utilities/optional.type';
@@ -234,12 +233,17 @@ export class ColonnesMapperService {
         back: [colonnesTable.filter(c => c.code == this.colNameOfEnriched('tags'))[0]],
         grouping: colonnesGrouping.filter(c => c.code == this.colNameOfEnriched('tags'))[0],
         render: (row: FinancialDataModel) => {
-          const tags: Tag[] = row[this._colonnesTableau.TAGS.code] || [];
-          const key = tags
-            .filter((tag) => tag != null)
-            .map((tag) => `${tag.type} ${tag.value}`)
-            .reduceRight((p, s) => `${p} ; ${s}`, '');
-          return key;
+          let html = '<ul class="fr-tags-group">';
+          for (const tag of row.tags || []) {
+            if (tag) {
+              html += '<li>';
+                html += `<p class="fr-tag" style="margin-right: 0.5rem;" title="${tag.description}">${tag.display_name}`;
+                html += `</p> `;
+              html += '</li>';
+            }
+          }
+          html += '</ul>';
+          return html;
         },
       },
       {
