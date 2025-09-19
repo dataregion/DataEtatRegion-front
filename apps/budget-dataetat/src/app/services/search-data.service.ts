@@ -62,7 +62,7 @@ export class SearchDataService {
    * Métadonnées de pagination des résultats.
    */
   public readonly pagination = signal<PaginationMeta | null>(null);
-
+  
   /**
    * Lance une recherche financière avec les paramètres fournis.
    * Met à jour les colonnes et le grouping avant d'appeler l'API.
@@ -73,10 +73,6 @@ export class SearchDataService {
    */
   public search(searchParams: SearchParameters): Observable<LignesResponse> {
     this._logger.debug('==> Début de la méthode search', { searchParams });
-
-    // Mise à jour du signal avec les paramètres fournis
-    this.searchParams.set(searchParams);
-    this._logger.debug('    ==> Signal searchParams mis à jour', { searchParams });
 
     // Préparation des colonnes à retourner
     const colonnesTable = this._colonnesService.selectedColonnesTable();
@@ -128,7 +124,9 @@ export class SearchDataService {
         this.searchInProgress.set(false);
       }
     });
-
+    this.searchParams.set(searchParams);
+    // Mise à jour du signal avec les paramètres fournis
+    this._logger.debug('    ==> Signal searchParams mis à jour', { searchParams });
     return searchRequest$;
   }
 

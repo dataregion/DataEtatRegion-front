@@ -291,7 +291,7 @@ export class SearchDataComponent implements OnInit {
     // Resolve des référentiels et de la marque blanche
     const resolvedFinancial = this._route.snapshot.data['financial'] as FinancialDataResolverModel;
     const resolvedMarqueBlanche = this._route.snapshot.data['mb_parsed_params'] as MarqueBlancheParsedParamsResolverModel;
-    
+    this._logger.debug('resolvedMarqueBlanche => ', resolvedMarqueBlanche );
     // Sauvegarde des référentiels dans les listes
     this.themes = resolvedFinancial.data?.themes ?? [];
     this.bops = resolvedFinancial.data?.bop ?? [];
@@ -313,6 +313,7 @@ export class SearchDataComponent implements OnInit {
         this.searchDataService.searchParams.set(this._prefilterMapperService.mapPrefilterToSearchParams(mb_prefilter));
       }
     }
+    // TODO manque application des preferences ?
   }
 
   /**
@@ -322,7 +323,6 @@ export class SearchDataComponent implements OnInit {
     return this.formSearch.errors != null ? this.formSearch.errors['benefOrBopRequired'] : null;
   }
 
-  // TODO : Accent thème
   public doSearch(): void {
     // Récupération des infos du formulaire
     const formValue = this.formSearch.value;

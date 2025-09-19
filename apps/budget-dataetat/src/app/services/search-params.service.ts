@@ -52,13 +52,19 @@ export interface SearchParameters {
 export namespace SearchParameters {
   export function isEqual(a: SearchParameters, b: SearchParameters): boolean {
     if (a === b) return true;
-    if (typeof a !== 'object' || a === null || typeof b !== 'object' || b === null) return false;
+    if (typeof a !== 'object' || a === null || typeof b !== 'object' || b === null) {
+      return false;
+    }
     const keysA = Object.keys(a);
     const keysB = Object.keys(b);
-    if (keysA.length !== keysB.length) return false;
+    if (keysA.length !== keysB.length) {
+      return false;
+    }
     for (const key of keysA) {
       // @ts-expect-error: arrête de me harceler ou j'appelle les flics
-      if (!keysB.includes(key) || !isEqual(a[key], b[key])) return false;
+      if (!keysB.includes(key) || !isEqual(a[key], b[key])) {
+        return false;
+      } 
     }
     return true;
   }

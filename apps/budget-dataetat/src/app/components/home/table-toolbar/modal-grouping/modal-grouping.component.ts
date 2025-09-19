@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, ViewEncapsulation, effect } from '@angular/core';
+import { Component, inject, OnInit, ViewEncapsulation } from '@angular/core';
 import { MaterialModule } from "apps/common-lib/src/public-api";
 import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
 import { ColonneTableau } from '@services/colonnes-mapper.service';
@@ -39,7 +39,6 @@ export class ModalGroupingComponent implements OnInit {
   public remainingColonnes: ColonneTableau<FinancialDataModel>[] = [];
 
   constructor() {
-    // TODO: ne pas utiliser d'effects ici
     // Effect pour réagir aux changements des colonnes de grouping sélectionnées
     // Subscription à nettoyer correctement
     toObservable(this._colonnesService.selectedColonnesGrouping)

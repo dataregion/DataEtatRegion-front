@@ -250,14 +250,17 @@ export class HomeComponent implements OnInit {
 
       // Si une préférence doit être appliquée (UUID fourni dans l'URL)
       if (param[QueryParam.Uuid]) {
+        this._logger.debug("==> Détection UUID", param[QueryParam.Uuid]);
+
         this._httpPreferenceService
           .getPreference(param[QueryParam.Uuid])
           .pipe(takeUntilDestroyed(this._destroyRef))
           .subscribe((preference) => {
+            this._logger.debug("==> Chargement preference", preference);
             // Sauvegarde de la préférence courante
             this._preferenceService.setCurrentPreference(preference);
 
-            // Application des préférences de grouping des colonnes
+            // // Application des préférences de grouping des colonnes
             if (preference.options && preference.options['grouping']) {
               const mapped: ColonneTableau<FinancialDataModel>[] =
                 this._colonnesMapperService.mapNamesFromPreferences(
@@ -265,6 +268,7 @@ export class HomeComponent implements OnInit {
                 );
               this._colonnesService.selectedColonnesGrouping.set(mapped);
               this._colonnesService.selectedColonnesGrouped.set([]);
+              this._logger.debug("==> Grouping a appliquer", mapped);
             }
 
             // Application des préférences d'ordre et d'affichage des colonnes
@@ -274,6 +278,7 @@ export class HomeComponent implements OnInit {
                   preference.options['displayOrder'] as ColonneFromPreference[]
                 );
               this._colonnesService.selectedColonnesTable.set(mapped);
+              this._logger.debug("==> DislayOrder a appliquer", mapped);
             }
 
             // Application des filtres de la préférence

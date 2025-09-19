@@ -19,6 +19,25 @@ import { ColonneTableau } from '@services/colonnes-mapper.service';
 export class ColonnesService {
 
   // ========================================
+  // FONCTION UTILITAIRE DE COMPARAISON
+  // ========================================
+
+  /**
+   * Fonction de comparaison pour les tableaux de colonnes.
+   * Compare les contenus indépendamment de l'ordre des éléments.
+   * Seules les propriétés 'colonne' et 'label' sont comparées.
+   */
+  private readonly compareColonnesArrays = (a: ColonneTableau<FinancialDataModel>[], b: ColonneTableau<FinancialDataModel>[]): boolean => {
+    if (a === b) return true;
+    if (a.length !== b.length) return false;
+    
+    const e =  a.every(colA => 
+      b.some(colB => colA.colonne === colB.colonne && colA.label === colB.label)
+    );
+    return e;
+  };
+
+  // ========================================
   // GESTION DE L'ÉTAT DE GROUPEMENT
   // ========================================
 
@@ -47,7 +66,9 @@ export class ColonnesService {
   /**
    * Signal contenant les colonnes actuellement affichées dans le tableau
    */
-  public readonly selectedColonnesTable = signal<ColonneTableau<FinancialDataModel>[]>([]);
+  public readonly selectedColonnesTable = signal<ColonneTableau<FinancialDataModel>[]>([], {
+    equal: this.compareColonnesArrays
+  });
 
   // ========================================
   // GESTION DES COLONNES DE GROUPEMENT
@@ -61,7 +82,9 @@ export class ColonnesService {
   /**
    * Signal contenant les colonnes actuellement utilisées pour le groupement
    */
-  public readonly selectedColonnesGrouping = signal<ColonneTableau<FinancialDataModel>[]>([]);
+  public readonly selectedColonnesGrouping = signal<ColonneTableau<FinancialDataModel>[]>([], {
+    equal: this.compareColonnesArrays
+  });
   
   // ========================================
   // GESTION DES COLONNES GROUPÉES (RÉSULTAT)
