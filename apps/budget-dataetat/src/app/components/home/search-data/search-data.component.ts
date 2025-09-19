@@ -228,10 +228,10 @@ export class SearchDataComponent implements OnInit {
   }
   
   readonly currentSearchParams = computed(() => { 
+    this._logger.debug("==> currentSearchParams recalculé");
     const tableCols = this._colonnesService.selectedColonnesTable();
     const groupingCols = this._colonnesService.selectedColonnesGrouping();
     const currentParams = this.searchDataService.searchParams();
-
     if (!currentParams)
       return;
 
@@ -258,8 +258,8 @@ export class SearchDataComponent implements OnInit {
         filter(p => p !== undefined && p.colonnes !== undefined && p.colonnes.length > 0),
       )
       .subscribe(params => {
-        this._logger.debug("==> On effectue une nouvelle recherche");
-        this.searchDataService.search(params!);
+        // this._logger.debug("==> On effectue une nouvelle recherche");
+        // this.searchDataService.search(params!);
         this._logger.debug("==> Mapping des paramètres vers le formulaire");
         this.formSearch = this._prefilterMapperService.mapSearchParamsToForm(params!);
       });

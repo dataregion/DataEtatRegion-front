@@ -282,11 +282,10 @@ export class HomeComponent implements OnInit {
             }
 
             // Application des filtres de la préférence
-            this._searchDataService.searchParams.set(
-              this._prefilterMapperService.mapPrefilterToSearchParams(
+            const param =  this._prefilterMapperService.mapPrefilterToSearchParams(
                 preference.filters as PreFilters
-              )
             );
+            this._searchDataService.search(param!);          
             this._alertService.openInfo(`Application du filtre ${preference.name}`);
           });
       }

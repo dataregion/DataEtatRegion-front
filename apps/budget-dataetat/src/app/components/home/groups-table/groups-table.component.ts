@@ -4,7 +4,7 @@ import { FinancialDataModel } from '@models/financial/financial-data.models';
 import { ColonneTableau } from '@services/colonnes-mapper.service';
 import { ColonnesService } from '@services/colonnes.service';
 import { SearchDataService, SearchResults } from '@services/search-data.service';
-import { GroupedData } from 'apps/clients/v3/financial-data';
+import { GroupedData, LignesResponse } from 'apps/clients/v3/financial-data';
 import { TreeAccordionDirective } from './tree-accordion.directive';
 import { NumberFormatPipe } from '../lines-tables/number-format.pipe';
 import { SearchParameters } from '@services/search-params.service';
@@ -124,39 +124,38 @@ export class GroupsTableComponent {
     this.logger.debug(node.groupedData?.colonne + " : " + node.groupedData?.value)
     node.opened = !node.opened
     if (!node.loaded) {
-      if (this._searchDataService.searchParams) {
+      if (this._searchDataService.searchParams()) {
         const grouped: (string | undefined)[] = this._recGetPathFromNode(node).map(gd => gd.value?.toString())
         
-        this._searchDataService.searchParams.set({
+        const searchParam = {
           ...this._searchDataService.searchParams(),
           page: node.currentPage,
-        } as SearchParameters);
+        } as SearchParameters;
         
         this._colonnesService.selectedColonnesGrouped.set(grouped.filter(g => g !== undefined));
         // TODO
-        // this._searchDataService.search().subscribe((response: LignesResponse) => {
-        //   console.log(response)
-        //   node.loaded = true
-        //   response.data?.groupings.forEach(gd => {
-        //     node.children.push({
-        //       parent: node,
-        //       children: [],
-        //       groupedData: gd,
-        //       opened: false,
-        //       loaded: false,
-        //       loadingMore: false,
-        //       currentPage: 1,
-        //     } as Group)
-        //   })
-        //   this._searchDataService.searchInProgress.set(false);
-        //   console.log("Loaded children : ", node.children.length)
-        // })
+        this._searchDataService.search(searchParam).subscribe((response: LignesResponse) => {
+          this.logger.debug("==> LOAD RESPONSE GROUPED ?", response)
+          node.loaded = true
+          response.data?.groupings.forEach(gd => {
+            node.children.push({
+              parent: node,
+              children: [],
+              groupedData: gd,
+              opened: false,
+              loaded: false,
+              loadingMore: false,
+              currentPage: 1,
+            } as Group)
+          })
+          console.log("Loaded children : ", node.children.length)
+        })
       }
     }
   }
 
   loadMore(parent: Group) {
-    if (!this._searchDataService.searchParams)
+    if (!this._searchDataService.searchParams())
       return;
 
     this.logger.debug("==> LOAD MORE")
