@@ -7,6 +7,7 @@ import { FinancialDataModel } from '@models/financial/financial-data.models';
 import { FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { LoggerService } from 'apps/common-lib/src/lib/services/logger.service';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
+import { SearchDataService } from '@services/search-data.service';
 
 
 export interface ColonneFormValues {
@@ -33,6 +34,8 @@ export class ModalGroupingComponent implements OnInit {
   public formGrouping: FormGroup<FormColonnes> = new FormGroup({
     colonnes: new FormArray<FormGroup<ColonneFormValues>>([])
   });
+  public searchDataService = inject(SearchDataService);
+  
 
   public colonnes: ColonneTableau<FinancialDataModel>[] = [];
   public selectedColonnes: ColonneTableau<FinancialDataModel>[] = [];
@@ -58,7 +61,6 @@ export class ModalGroupingComponent implements OnInit {
         })
       )
       });
-
       this.remainingColonnes = this.calculateRemainingColumns();
     });
   }
@@ -110,8 +112,7 @@ export class ModalGroupingComponent implements OnInit {
       .map((name) => this.colonnes.find((c) => c.colonne === name)!)
       .filter((c) => c !== null);
 
-    this._colonnesService.selectedColonnesGrouping.set(selected);
-    this._colonnesService.selectedColonnesGrouped.set([]);
+    this.searchDataService.doSearchGrouping(selected);
   }
 
   /**

@@ -39,6 +39,7 @@
                   </td>
                 </tr>
 
+                <!-- Rendu récursif de l'arbre des groupes à partir du nœud racine -->
                 <ng-container *ngTemplateOutlet="renderNode; context: { $implicit: root()?.children, level: 0 }"/>
 
                 @if (root() && pageSize && root().children.length % pageSize === 0) {

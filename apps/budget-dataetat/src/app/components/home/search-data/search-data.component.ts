@@ -35,8 +35,6 @@ import { tag_fullname } from '@models/refs/tag.model';
 import { PrefilterMapperService } from './prefilter-mapper.services';
 import { PreferenceService } from '@services/preference.service';
 import { SearchDataService } from '@services/search-data.service';
-
-import { ColonnesService } from '@services/colonnes.service';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 
 
@@ -73,8 +71,6 @@ export class SearchDataComponent implements OnInit {
   private _logger = inject(LoggerService).getLogger(SearchDataComponent.name);
   private _autocompleteBeneficiaires = inject(AutocompleteBeneficiaireService);
   private _autocompleteTags = inject(AutocompleteTagsService);
-  private _colonnesService = inject(ColonnesService)
-
 
   public searchDataService = inject(SearchDataService);
 
@@ -227,39 +223,15 @@ export class SearchDataComponent implements OnInit {
     this.tagsInputChange$.next(v);
   }
   
-  readonly currentSearchParams = computed(() => { 
-    this._logger.debug("==> currentSearchParams recalculé");
-    const tableCols = this._colonnesService.selectedColonnesTable();
-    const groupingCols = this._colonnesService.selectedColonnesGrouping();
-    const currentParams = this.searchDataService.searchParams();
-    if (!currentParams)
-      return;
-
-    const search = {
-      ...currentParams,
-      colonnes: tableCols.map(c => c.back.map(b => b.code)).flat().filter(c => c !== undefined && c !== null),
-      grouping: groupingCols.map(c => c.grouping?.code).filter(c => c !== undefined && c !== null) ?? undefined,
-      grouped: []
-    };
-
-    if (search.grouping?.length === 0) {
-      search.grouping = [];
-    }
-    
-    return search
-  });
-  
 
   constructor() {
-    // Déclenche la recherche à chaque changement des paramètres de recherche
-    toObservable(this.currentSearchParams)
+    // Renseigne le formulaire à chaque changement des paramètres de recherche
+    toObservable(this.searchDataService.searchParams)
       .pipe(
         takeUntilDestroyed(),
         filter(p => p !== undefined && p.colonnes !== undefined && p.colonnes.length > 0),
       )
       .subscribe(params => {
-        // this._logger.debug("==> On effectue une nouvelle recherche");
-        // this.searchDataService.search(params!);
         this._logger.debug("==> Mapping des paramètres vers le formulaire");
         this.formSearch = this._prefilterMapperService.mapSearchParamsToForm(params!);
       });
@@ -339,8 +311,6 @@ export class SearchDataComponent implements OnInit {
       tags: formValue.tags?.map((tag) => tag_fullname(tag)) ?? undefined,
       domaines_fonctionnels: formValue.domaines_fonctionnels || undefined,
       source_region: formValue.sources_region || undefined,
-      grouping: this._colonnesService.selectedColonnesGrouping().map(c => c.label),
-      grouped: this._colonnesService.selectedColonnesGrouped()
     };
     // Lancement de la recherche - le service traite automatiquement la réponse
     this.searchDataService.search(search_parameters);

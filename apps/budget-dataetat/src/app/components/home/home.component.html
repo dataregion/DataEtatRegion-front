@@ -45,9 +45,11 @@
             @else if (searchResults() && searchResults().length > 0) {
               <budget-table-toolbar [grouped]="grouped" />
               @if (grouped) {
+                grouped
                 <budget-groups-table />
               }
               @else {
+                non grouped
                 <budget-lines-table />
               }
             }

@@ -11,6 +11,7 @@ import { EnrichedFlattenFinancialLines2, GroupedData, LignesFinancieresService, 
 import { ColonnesService } from '@services/colonnes.service';
 import { SearchParamsService } from './search-params.service';
 import { LoggerService } from 'apps/common-lib/src/lib/services/logger.service';
+import { ColonneTableau } from './colonnes-mapper.service';
 
 
 export type SearchResults = GroupedData[] | FinancialDataModel[]
@@ -62,7 +63,34 @@ export class SearchDataService {
    * Métadonnées de pagination des résultats.
    */
   public readonly pagination = signal<PaginationMeta | null>(null);
-  
+
+
+  /**
+   * Lance la recherche avec des colonnes de grouping sélectionnées.
+   * @param selectedColonnes 
+   * @returns 
+   */
+  public doSearchGrouping(selectedColonnes: ColonneTableau<FinancialDataModel>[]): Observable<LignesResponse> {
+    this._logger.debug('==> Début de la méthode doSearchGrouping', { selectedColonnes });
+
+    // set les grouping;
+    this._colonnesService.selectedColonnesGrouping.set(selectedColonnes);
+    this._colonnesService.selectedColonnesGrouped.set([]);
+
+    return this.search(this.searchParams()!);
+  }
+
+  /**
+   * Lance une recherche avec des  un sous niveau de grouping
+   * @param grouped 
+   * @returns 
+   */
+  public zoomOnGrouping(grouped: (string | undefined)[]): Observable<LignesResponse> {
+    this._logger.debug('==> Début de la méthode zoomOnGrouping', { grouped });
+    this._colonnesService.selectedColonnesGrouped.set(grouped.filter(g => g !== undefined));
+    return this.search(this.searchParams()!);
+
+  }
   /**
    * Lance une recherche financière avec les paramètres fournis.
    * Met à jour les colonnes et le grouping avant d'appeler l'API.
