@@ -53,3 +53,5 @@ Thumbs.db
 .tool-versions
 apps/budget-dataetat/public/config/settings.json
 apps/budget-dataetat/src/config/settings.json
+
+.envrc
