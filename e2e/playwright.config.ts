@@ -41,110 +41,89 @@ const config: PlaywrightTestConfig = {
     actionTimeout: 5000,
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'retain-on-failure',
-    baseURL: 'https://budget-bretagne.nocode.csm.ovh',
+    // baseURL: 'https://budget-bretagne.nocode.csm.ovh',
     testIdAttribute: 'data-test-id'
   },
-
+  
   projects: [
+    // Page de login
     {
       name: 'no-login-chrome',
       testDir: './tests/no-login',
       use: {
-        ...devices['Desktop Chrome']
+        ...devices['Desktop Chrome'],
+        baseURL: process.env['BUDGET_BRETAGNE_BASE_URL'],
       }
     },
     {
       name: 'no-login-firefox',
       testDir: './tests/no-login',
       use: {
-        ...devices['Desktop Firefox']
+        ...devices['Desktop Firefox'],
+        baseURL: process.env['BUDGET_BRETAGNE_BASE_URL'],
       }
     },
 
-    // test profile USE SImple
+    // Tests simples
     {
-      name: 'login-simple-chrome',
-      testIgnore: ['**/no-login/**', '**/admin/**'],
+      name: 'financial-data-simple-chrome',
+      testDir: './tests/financial-data',
+      testIgnore: ['**/admin/**'],
       use: {
         storageState: 'storage-state/storageState-simple.json',
-        ...devices['Desktop Chrome']
+        ...devices['Desktop Chrome'],
+        baseURL: process.env['BUDGET_BRETAGNE_BASE_URL'],
       }
     },
     {
-      name: 'login-simple-firefox',
-      testIgnore: ['**/no-login/**', '**/admin/**'],
+      name: 'financial-data-simple-firefox',
+      testDir: './tests/financial-data',
+      testIgnore: ['**/admin/**'],
       use: {
         storageState: 'storage-state/storageState-simple.json',
-        ...devices['Desktop Firefox']
+        ...devices['Desktop Firefox'],
+        baseURL: process.env['BUDGET_BRETAGNE_BASE_URL'],
       }
     },
-    // test profile ADMIN
+    // tests profil ADMIN
     {
-      name: 'admin-profile-chrome',
-      testMatch: '**/admin/**.spec.ts',
+      name: 'financial-data-admin-profile-chrome',
+      testDir: './tests/financial-data/admin/',
       use: {
         storageState: 'storage-state/storageState-admin.json',
-        ...devices['Desktop Chrome']
+        ...devices['Desktop Chrome'],
+        baseURL: process.env['BUDGET_BRETAGNE_BASE_URL'],
       }
     },
     {
-      name: 'admin-profile-firefox',
-      testMatch: '**/admin/**.spec.ts',
+      name: 'financial-data-admin-profile-firefox',
+      testDir: './tests/financial-data/admin/',
       use: {
         storageState: 'storage-state/storageState-admin.json',
-        ...devices['Desktop Firefox']
+        ...devices['Desktop Firefox'],
+        baseURL: process.env['BUDGET_BRETAGNE_BASE_URL'],
       }
-    }
-    // {
-    //   name: 'firefox',
-    //   use: {
-    //     ...devices['Desktop Firefox'],
-    //   },
-    // },
-
-    // {
-    //   name: 'webkit',
-    //   use: {
-    //     ...devices['Desktop Safari'],
-    //   },
-    // },
-
-    /* Test against mobile viewports. */
-    // {
-    //   name: 'Mobile Chrome',
-    //   use: {
-    //     ...devices['Pixel 5'],
-    //   },
-    // },
-    // {
-    //   name: 'Mobile Safari',
-    //   use: {
-    //     ...devices['iPhone 12'],
-    //   },
-    // },
-
-    /* Test against branded browsers. */
-    // {
-    //   name: 'Microsoft Edge',
-    //   use: {
-    //     channel: 'msedge',
-    //   },
-    // },
-    // {
-    //   name: 'Google Chrome',
-    //   use: {
-    //     channel: 'chrome',
-    //   },
-    // },
+    },
+    // Tests budget-dataetat
+    {
+      name: 'budget-dataetat-simple-profile-firefox',
+      testDir: './tests/budget-dataetat/',
+      use: {
+        storageState: 'storage-state/storageState-de.json',
+        ...devices['Desktop Firefox'],
+        baseURL: process.env['NEW_BUDGET_BRETAGNE_BASE_URL'],
+      }
+    },
+    {
+      name: 'budget-dataetat-simple-profile-chrome',
+      testDir: './tests/budget-dataetat/',
+      use: {
+        storageState: 'storage-state/storageState-de.json',
+        ...devices['Desktop Chrome'],
+        baseURL: process.env['NEW_BUDGET_BRETAGNE_BASE_URL'],
+      }
+    },
   ]
-
-  /* Folder for test artifacts such as screenshots, videos, traces, etc. */
-  // outputDir: 'test-results/',
-
-  /* Run your local dev server before starting the tests */
-  // use: {
-  //   baseURL: 'https://budget.nocode.csm.ovh',
-  // },
 };
 
 export default config;
