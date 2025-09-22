@@ -129,12 +129,35 @@ export class SearchDataService {
    * @returns 
    */
   public loadMore() {
-    const search = this.searchParams();
-    if (search) {
-      search.page = (this.pagination()?.current_page ?? 1) + 1;
+    this._logger.debug('==> Tentative de chargement de la page suivante');
+
+    // Vérifications préalables
+    const currentParams = this.searchParams();
+    const currentPagination = this.pagination();
+    const isSearchInProgress = this.searchInProgress();
+
+    if (!currentParams) {
+      this._logger.debug('==> Aucun paramètre de recherche disponible');
+      return;
     }
 
-    return this.search(search!);
+    if (isSearchInProgress) {
+      this._logger.debug('==> Recherche déjà en cours, abandon');
+      return;
+    }
+
+    if (!currentPagination?.has_next) {
+      this._logger.debug('==> Aucune page suivante disponible', { pagination: currentPagination });
+      return;
+    }
+
+    // Calcul de la page suivante
+    const currentPage = currentPagination.current_page ?? 0;
+    const nextPage = currentPage + 1;
+
+    currentParams.page = nextPage;
+    
+    return this.search(currentParams);
   }
 
   /**
@@ -286,56 +309,6 @@ export class SearchDataService {
     this._logger.debug('==> Signaux mis à jour suite à la recherche');
   }
 
-  /**
-   * Charge la page suivante des résultats si elle existe.
-   * Vérifie qu'il y a une page suivante disponible et qu'aucune recherche n'est en cours
-   * avant de lancer la requête.
-   *
-   * @returns true si le chargement a été déclenché, false sinon
-   */
-  public loadNextPage(): boolean {
-    this._logger.debug('==> Tentative de chargement de la page suivante');
-
-    // Vérifications préalables
-    const currentParams = this.searchParams();
-    const currentPagination = this.pagination();
-    const isSearchInProgress = this.searchInProgress();
-
-    if (!currentParams) {
-      this._logger.debug('==> Aucun paramètre de recherche disponible');
-      return false;
-    }
-
-    if (isSearchInProgress) {
-      this._logger.debug('==> Recherche déjà en cours, abandon');
-      return false;
-    }
-
-    if (!currentPagination?.has_next) {
-      this._logger.debug('==> Aucune page suivante disponible', { pagination: currentPagination });
-      return false;
-    }
-
-    // Calcul de la page suivante
-    const currentPage = currentPagination.current_page ?? 0;
-    const nextPage = currentPage + 1;
-
-    this._logger.debug('==> Chargement de la page', nextPage, {
-      currentPage,
-      hasNext: currentPagination.has_next
-    });
-
-    // Mise à jour des paramètres avec la nouvelle page
-    const updatedParams: SearchParameters = {
-      ...currentParams,
-      page: nextPage
-    };
-
-    // Lancement de la recherche pour la page suivante
-    this.search(updatedParams);
-
-    return true;
-  }
 
   /**
    * Sélectionne une ligne financière pour affichage détaillé.

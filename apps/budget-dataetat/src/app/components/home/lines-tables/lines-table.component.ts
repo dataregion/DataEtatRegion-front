@@ -97,12 +97,9 @@ export class LinesTableComponent implements OnDestroy {
           this._logger.debug("==> Spinner visible, tentative de chargement page suivante");
           
           // Délégation au service pour gérer la logique de pagination
-          const loaded = this.searchDataService.loadNextPage();
-          
-          if (loaded) {
-            console.log("==> Chargement de la page suivante déclenché");
-          } else {
-            console.log("==> Chargement de la page suivante impossible (pas de page suivante, recherche en cours, etc.)");
+          const load = this.searchDataService.loadMore();
+          if (load) {
+            load.subscribe();
           }
         }
       });

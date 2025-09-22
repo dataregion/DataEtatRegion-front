@@ -185,39 +185,42 @@ export class GroupsTableComponent implements OnDestroy {
       // S'il y a un parent pour les nodes, on remet le loadingMore à true
       parent.loadingMore = true;
 
-      this._searchDataService.loadMore().subscribe((apiResponse: LignesResponse) => {
-        this.logger.debug("==> LOAD MORE RESPONSE", apiResponse);
+      const load = this._searchDataService.loadMore();
+      if (load) {
+        load.subscribe((apiResponse: LignesResponse) => {
+          this.logger.debug("==> LOAD MORE RESPONSE", apiResponse);
 
-        if (!apiResponse.data?.groupings) {
+          if (!apiResponse.data?.groupings) {
+            parent.loadingMore = false;
+            return;
+          }
+
+          const newPage: number = parent.currentPage + 1;
+
+          const newChildren: Group[] = [
+            ...parent.children,
+            ...apiResponse.data.groupings.map((gd: GroupedData) => ({
+              parent: parent,
+              children: [],
+              groupedData: gd,
+              opened: false,
+              loaded: false,
+              loadingMore: false,
+              currentPage: 1,
+            } as Group))
+          ];
+
+          // Appliquer les changements au parent
+          parent.children = newChildren;
           parent.loadingMore = false;
-          return;
-        }
+          parent.currentPage = newPage;
 
-        const newPage: number = parent.currentPage + 1;
+          // Forcer la détection de changement pour le signal
+          this.root.update(currentRoot => ({ ...currentRoot }));
 
-        const newChildren: Group[] = [
-          ...parent.children,
-          ...apiResponse.data.groupings.map((gd: GroupedData) => ({
-            parent: parent,
-            children: [],
-            groupedData: gd,
-            opened: false,
-            loaded: false,
-            loadingMore: false,
-            currentPage: 1,
-          } as Group))
-        ];
-
-        // Appliquer les changements au parent
-        parent.children = newChildren;
-        parent.loadingMore = false;
-        parent.currentPage = newPage;
-
-        // Forcer la détection de changement pour le signal
-        this.root.update(currentRoot => ({ ...currentRoot }));
-
-        this.logger.debug("Parent state updated:", parent);
-      });
+          this.logger.debug("Parent state updated:", parent);
+        });
+      }
     }
   }
 
