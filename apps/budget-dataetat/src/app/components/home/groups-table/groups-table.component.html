@@ -45,7 +45,7 @@
                 @if (root() && pageSize && root().children.length % pageSize === 0) {
                   <tr>
                     <td class="td-group" colspan="4">
-                      <button class="fr-btn fr-btn--secondary fr-icon-add-circle-fill fr-btn--icon-left" (click)="loadMore(root()); $event.stopPropagation()" style="margin-left:50px;">
+                      <button class="fr-btn fr-btn--secondary fr-icon-add-circle-fill fr-btn--icon-left" (click)="loadMore(0); $event.stopPropagation()" style="margin-left:50px;">
                         Charger plus
                       </button>
                     </td>
@@ -94,7 +94,7 @@
                           <tr>
                             <td class="td-group" colspan="4" [style.padding-left.px]="((lvl + 1) * 50) + 30">
                               <button class="fr-btn fr-btn--secondary fr-icon-add-circle-fill fr-btn--icon-left"
-                                (click)="loadMore(node); $event.stopPropagation()"
+                                (click)="loadMore(lvl); $event.stopPropagation()"
                                 [class.fr-ml-5v]="isLastLevel(lvl)">
                                 Charger plus
                               </button>

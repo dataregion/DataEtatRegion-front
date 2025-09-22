@@ -3,7 +3,7 @@
  * Expose l'état via des BehaviorSubject/Observable et propose des méthodes utilitaires pour la transformation des données.
  */
 import { inject, Injectable, signal } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { Observable, of, tap } from 'rxjs';
 import { SearchParameters } from '@services/search-params.service';
 import { FinancialDataModel } from '@models/financial/financial-data.models';
 import { SearchDataMapper } from './search-data-mapper.service';
@@ -20,6 +20,9 @@ export type SearchResults = GroupedData[] | FinancialDataModel[]
   providedIn: 'root'
 })
 export class SearchDataService {
+
+
+
   // --- Services dépendants ---
   private _mapper: SearchDataMapper = inject(SearchDataMapper);
   private _colonnesService: ColonnesService = inject(ColonnesService);
@@ -55,6 +58,11 @@ export class SearchDataService {
   public readonly searchInProgress = signal<boolean>(false);
 
   /**
+   * Indique si une recherche de grouping est en cours.
+   */
+  public readonly searchGroupingInProgress = signal<boolean>(false);
+
+  /**
    * Résultats de la recherche (tableau de lignes ou de groupes).
    */
   public readonly searchResults = signal<SearchResults>([]);
@@ -76,8 +84,57 @@ export class SearchDataService {
     // set les grouping;
     this._colonnesService.selectedColonnesGrouping.set(selectedColonnes);
     this._colonnesService.selectedColonnesGrouped.set([]);
+    this.searchGroupingInProgress.set(true);
+    return this.search(this.searchParams()!).pipe(tap({
+      next: () => {
+        this.searchGroupingInProgress.set(false);
+      }
+    }));
+  }
 
+
+  public searchFromGrouping(newGrouping: ColonneTableau<FinancialDataModel>[], newGrouped: string[]) {
+    this._logger.debug('==> Début de la méthode searchFromGrouping', { newGrouping, newGrouped });
+    this._colonnesService.selectedColonnesGrouping.set(newGrouping);
+    this._colonnesService.selectedColonnesGrouped.set(newGrouped);
+    
+    this.searchGroupingInProgress.set(false);
+    this.searchFinish.set(false);
+    this.searchResults.set([]);
     return this.search(this.searchParams()!);
+  }
+
+  /**
+   * Annule la recherche grouping et remet les ligne à plat
+   */
+  public resetSearchGrouping() {
+    this.searchGroupingInProgress.set(false);
+    this._colonnesService.selectedColonnesGrouping.set([]);
+    this._colonnesService.selectedColonnesGrouped.set([]);
+
+    const search = this.searchParams();
+    this.searchFinish.set(false);
+    this.searchResults.set([]);
+    if (search) {
+      search.grouping = [];
+      search.grouped = [];
+      search.page = 1;
+    }
+
+    return this.search(search!);
+  }
+
+  /**
+   * Récupéère les données de pagination + 1
+   * @returns 
+   */
+  public loadMore() {
+    const search = this.searchParams();
+    if (search) {
+      search.page = (this.pagination()?.current_page ?? 1) + 1;
+    }
+
+    return this.search(search!);
   }
 
   /**
@@ -85,12 +142,13 @@ export class SearchDataService {
    * @param grouped 
    * @returns 
    */
-  public zoomOnGrouping(grouped: (string | undefined)[]): Observable<LignesResponse> {
+  public searchOnNextLevel(grouped: (string | undefined)[]): Observable<LignesResponse> {
     this._logger.debug('==> Début de la méthode zoomOnGrouping', { grouped });
     this._colonnesService.selectedColonnesGrouped.set(grouped.filter(g => g !== undefined));
-    return this.search(this.searchParams()!);
 
+    return this.search(this.searchParams()!);
   }
+
   /**
    * Lance une recherche financière avec les paramètres fournis.
    * Met à jour les colonnes et le grouping avant d'appeler l'API.
@@ -140,22 +198,23 @@ export class SearchDataService {
     }
 
     this._logger.debug('    ==> Appel de _search avec paramètres finaux', { searchParams });
-    const searchRequest$ = this._search(searchParams);
 
-    // Traitement automatique de la réponse dans le service
-    searchRequest$.subscribe({
-      next: (response: LignesResponse) => {
-        this._processSearchResponse(response);
-      },
-      error: (err: unknown) => {
-        this._logger.error('Erreur lors de la recherche', err);
-        this.searchInProgress.set(false);
-      }
-    });
     this.searchParams.set(searchParams);
     // Mise à jour du signal avec les paramètres fournis
     this._logger.debug('    ==> Signal searchParams mis à jour', { searchParams });
-    return searchRequest$;
+    return this._search(searchParams).pipe(
+      tap({
+        next: (response: LignesResponse) => {
+          this._processSearchResponse(response);
+          this.searchParams.set(searchParams);
+        },
+        error: (err: unknown) => {
+          this._logger.error('Erreur lors de la recherche', err);
+          this.searchInProgress.set(false);
+          this.searchGroupingInProgress.set(false);
+        }
+      })
+    );
   }
 
   // --- Méthodes privées ---

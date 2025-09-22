@@ -45,11 +45,17 @@
             @else if (searchResults() && searchResults().length > 0) {
               <budget-table-toolbar [grouped]="grouped" />
               @if (grouped) {
-                grouped
-                <budget-groups-table />
+                @if(searchGroupingInProgress) {
+                  <div class="fr-alert fr-alert--info">
+                    <h4 class="fr-alert__title">Recherche en cours</h4>
+                    <p>Recherche des données financières en cours, veuillez patienter...</p>
+                  </div>
+                }
+                @else { 
+                  <budget-groups-table />
+                }
               }
               @else {
-                non grouped
                 <budget-lines-table />
               }
             }

@@ -1,4 +1,4 @@
-import { Component, OnInit, computed, inject } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import {
@@ -313,7 +313,7 @@ export class SearchDataComponent implements OnInit {
       source_region: formValue.sources_region || undefined,
     };
     // Lancement de la recherche - le service traite automatiquement la réponse
-    this.searchDataService.search(search_parameters);
+    this.searchDataService.search(search_parameters).subscribe();
   }
 
   /**

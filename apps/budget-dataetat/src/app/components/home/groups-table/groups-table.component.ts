@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, ViewEncapsulation, computed, signal, DestroyRef } from '@angular/core';
+import { Component, inject, ViewEncapsulation, computed, signal, DestroyRef, OnDestroy } from '@angular/core';
 import { FinancialDataModel } from '@models/financial/financial-data.models';
 import { ColonneTableau } from '@services/colonnes-mapper.service';
 import { ColonnesService } from '@services/colonnes.service';
@@ -7,7 +7,6 @@ import { SearchDataService, SearchResults } from '@services/search-data.service'
 import { GroupedData, LignesResponse } from 'apps/clients/v3/financial-data';
 import { TreeAccordionDirective } from './tree-accordion.directive';
 import { NumberFormatPipe } from '../lines-tables/number-format.pipe';
-import { SearchParameters } from '@services/search-params.service';
 import { LoggerService } from 'apps/common-lib/src/lib/services/logger.service';
 import { distinctUntilChanged, filter } from 'rxjs';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
@@ -29,7 +28,7 @@ export interface Group {
   styleUrls: ['./groups-table.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
-export class GroupsTableComponent {
+export class GroupsTableComponent implements OnDestroy {
   private logger = inject(LoggerService).getLogger(GroupsTableComponent.name);
   private _searchDataService = inject(SearchDataService);
   private _colonnesService = inject(ColonnesService);
@@ -64,7 +63,7 @@ export class GroupsTableComponent {
   });
 
   /**
-   * Effect qui initialise le root seulement si les données de base ont vraiment changé
+   * Computed qui initialise le root seulement si les données de base ont vraiment changé
    */
   private readonly initialTreeStructure = computed(() => {
     const currentGroupedData = this.groupedData();
@@ -114,6 +113,11 @@ export class GroupsTableComponent {
       });
   }
 
+  ngOnDestroy(): void {
+    // on ré-init bien le root si le composant est detruit (plus affiché)
+    this.rootAlreadySet.set(false);
+  }
+
 
   getTotal() {
     return this._searchDataService.total();
@@ -128,9 +132,8 @@ export class GroupsTableComponent {
   }
 
   removeGrouping() {
-    this._colonnesService.selectedColonnesGrouping.set([]);
-    this._colonnesService.selectedColonnesGrouped.set([]);
     this.rootAlreadySet.set(false);
+    this._searchDataService.resetSearchGrouping().subscribe();
   }
 
   /**
@@ -143,10 +146,10 @@ export class GroupsTableComponent {
     this.logger.debug("==> TOGGLE ROW")
     this.logger.debug(node.groupedData?.colonne + " : " + node.groupedData?.value)
     node.opened = !node.opened
-    
+
     if (!node.loaded && this._searchDataService.searchParams()) {
       const grouped: (string | undefined)[] = this._recGetPathFromNode(node).map(gd => gd.value?.toString());
-      this._searchDataService.zoomOnGrouping(grouped).subscribe((response: LignesResponse) => {
+      this._searchDataService.searchOnNextLevel(grouped).subscribe((response: LignesResponse) => {
         this.logger.debug("==> LOAD RESPONSE GROUPED ?", response)
         node.loaded = true;
         response.data?.groupings.forEach(gd => {
@@ -160,61 +163,64 @@ export class GroupsTableComponent {
             currentPage: 1,
           } as Group)
         })
-        
+
         this.logger.debug("Node state : ", node)
       })
     }
   }
 
-  loadMore(parent: Group) {
+  loadMore(level: number) {
     if (!this._searchDataService.searchParams())
       return;
 
-    this.logger.debug("==> LOAD MORE")
-    this.logger.debug(parent.groupedData?.colonne + " : " + parent.groupedData?.value);
-    const grouped: GroupedData[] = this._recGetPathFromNode(parent);
+    const parent = this.getNodeAtLevel(level) as Group;
+    if (!parent) {
+      this.logger.warn(`Aucun nœud trouvé au niveau ${level}`);
+      return;
+    }
 
-    const searchGrouping = grouped.map(g => g.colonne).filter(c => c !== undefined);
-    const searchGrouped = grouped.map(g => g.value?.toString()).filter(c => c !== undefined);
+    this.logger.debug("==> LOAD MORE", parent)
 
     if (this._searchDataService.searchParams()) {
       // S'il y a un parent pour les nodes, on remet le loadingMore à true
-      parent.loadingMore = true
+      parent.loadingMore = true;
 
-      const newPage: number = parent.currentPage + 1;
+      this._searchDataService.loadMore().subscribe((apiResponse: LignesResponse) => {
+        this.logger.debug("==> LOAD MORE RESPONSE", apiResponse);
 
-      this._searchDataService.searchParams.set({
-        ...this._searchDataService.searchParams(),
-        page: newPage,
-        grouping: searchGrouping,
-        grouped: searchGrouped
-      } as SearchParameters);
+        if (!apiResponse.data?.groupings) {
+          parent.loadingMore = false;
+          return;
+        }
 
-      this._colonnesService.selectedColonnesGrouped.set(grouped.map(gd => gd.value?.toString()).filter(g => g !== undefined));
-      // TODO
-      // this._searchDataService.search().subscribe((response: LignesResponse) => {
-      //   if (!response.data?.groupings)
-      //     return;
-      //   const newChildren: Group[] = [
-      //     ...parent.children,
-      //     ...response.data.groupings.map(gd => ({
-      //       parent: parent,
-      //       children: [],
-      //       groupedData: gd,
-      //       opened: false,
-      //       loaded: false,
-      //       loadingMore: false,
-      //       currentPage: 1,
-      //     } as Group))
-      //   ];
-      //   parent.currentPage = newPage;
-      //   parent.children = newChildren;
-      //   parent.loadingMore = false
-      //   this._searchDataService.searchInProgress.set(false);
-      //   console.log("Parent state : ", parent)
-      // })
+        const newPage: number = parent.currentPage + 1;
+
+        const newChildren: Group[] = [
+          ...parent.children,
+          ...apiResponse.data.groupings.map((gd: GroupedData) => ({
+            parent: parent,
+            children: [],
+            groupedData: gd,
+            opened: false,
+            loaded: false,
+            loadingMore: false,
+            currentPage: 1,
+          } as Group))
+        ];
+
+        // Appliquer les changements au parent
+        parent.children = newChildren;
+        parent.loadingMore = false;
+        parent.currentPage = newPage;
+
+        // Forcer la détection de changement pour le signal
+        this.root.update(currentRoot => ({ ...currentRoot }));
+
+        this.logger.debug("Parent state updated:", parent);
+      });
     }
   }
+
 
   getGroupingColumnByCode(code: string): ColonneTableau<FinancialDataModel> {
     return this._colonnesService.allColonnesGrouping().filter(c => c.grouping?.code === code)[0] as ColonneTableau<FinancialDataModel>
@@ -228,28 +234,21 @@ export class GroupsTableComponent {
    * Faire une recherche à partir de ce groupe
    */
   searchFromGroup(node: Group) {
-    console.log("==> SEARCH FROM GROUP :", node)
-    if (this._searchDataService.searchParams()) {
-      const gd: GroupedData[] = this._recGetPathFromNode(node)
-      const newGrouping: ColonneTableau<FinancialDataModel>[] = []
-      const newGrouped: string[] = []
-      gd.forEach((g) => {
-        if (g.colonne)
-          newGrouping.push(this.getGroupingColumnByCode(g.colonne.toString()))
-        if (g.value)
-          newGrouped.push(g.value.toString())
-      })
 
-      this._colonnesService.selectedColonnesGrouping.set(newGrouping);
-      this._colonnesService.selectedColonnesGrouped.set(newGrouped);
+    const gd: GroupedData[] = this._recGetPathFromNode(node)
+    const newGrouping: ColonneTableau<FinancialDataModel>[] = []
+    const newGrouped: string[] = []
+    gd.forEach((g) => {
+      if (g.colonne)
+        newGrouping.push(this.getGroupingColumnByCode(g.colonne.toString()))
+      if (g.value)
+        newGrouped.push(g.value.toString())
+    })
 
-      // this._searchDataService.searchParams.set({
-      //   ...this._searchDataService.searchParams(),
-      //   page: 1,
-      //   grouping: newGrouping.map(g => g.grouping?.code).filter(g => g !== undefined && g !== null),
-      //   grouped: newGrouped
-      // } as SearchParameters);
-    }
+    // this._colonnesService.selectedColonnesGrouping.set(newGrouping);
+    // this._colonnesService.selectedColonnesGrouped.set(newGrouped);
+    this._searchDataService.searchFromGrouping(newGrouping, newGrouped).subscribe();
+
   }
 
   /**
@@ -259,6 +258,45 @@ export class GroupsTableComponent {
    */
   private _isGroupedDataArray(results: SearchResults): boolean {
     return Array.isArray(results) && !results.some(item => 'id' in item);
+  }
+
+  /**
+   * Trouve le premier nœud ouvert au niveau spécifié dans l'arbre de groupement.
+   * Parcourt récursivement l'arbre depuis la racine pour localiser un nœud accessible au niveau donné.
+   * @param level - Le niveau recherché (0 = racine, 1 = premier niveau, etc.)
+   * @returns Le nœud trouvé ou null si aucun nœud ouvert n'existe à ce niveau
+   */
+  private getNodeAtLevel(level: number) {
+    if (level === 0) {
+      return this.root();
+    }
+
+    // Fonction récursive pour parcourir l'arbre
+    const findNodeAtLevel = (node: Group, currentLevel: number): Group | null => {
+      // Si on a atteint le niveau recherché
+      if (currentLevel === level) {
+        return node;
+      }
+
+      // Si le nœud n'est pas ouvert, on ne peut pas descendre plus
+      if (!node.opened || node.children.length === 0) {
+        return null;
+      }
+
+      // Parcourir les enfants pour trouver un nœud au bon niveau
+      for (const child of node.children) {
+        const found = findNodeAtLevel(child, currentLevel + 1);
+        if (found) {
+          return found;
+        }
+      }
+
+      return null;
+    };
+
+    // Commencer la recherche depuis la racine
+    const rootNode = this.root();
+    return findNodeAtLevel(rootNode, 0);
   }
 
   /**

@@ -21,8 +21,6 @@ run-tests-e2e:
     - export TEST_PASSWORD=${TEST_PASSWORD}
     - export TEST_USERNAME_ADMIN=${TEST_USERNAME_ADMIN}
     - export TEST_PASSWORD_ADMIN=${TEST_PASSWORD_ADMIN}
-    - export BUDGET_BRETAGNE_BASE_URL="https://budget-bretagne.nocode.csm.ovh" 
-    - export NEW_BUDGET_BRETAGNE_BASE_URL="https://budget-bretagne-new.nocode.csm.ovh/"
     - npx playwright test
   artifacts:
     expire_in: 3 days

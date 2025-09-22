@@ -3,8 +3,14 @@ import config from './playwright.config';
 const devConfig = {
   ...config,
 
+  // webServer: {
+  //   command: 'npm run start:financial-dev',
+  //   timeout: 120 * 1000,
+  //   reuseExistingServer: !process.env.CI,
+  // },
   use: {
-    testIdAttribute: 'data-test-id',
+    baseURL: 'http://localhost:4200/',
+    testIdAttribute: 'data-test-id'
   }
 };
 

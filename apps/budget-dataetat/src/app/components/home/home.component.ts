@@ -110,6 +110,14 @@ export class HomeComponent implements OnInit {
   get grouped(): boolean {
     return this._colonnesService.grouped();
   }
+
+  /**
+   * Indique si une recherche groupée est en cours
+   * @returns true si une recherche groupée est en cours
+   */
+  get searchGroupingInProgress(): boolean {
+    return this._searchDataService.searchGroupingInProgress();
+  }
   
   // --- Signals du service de recherche ---
   
@@ -285,7 +293,7 @@ export class HomeComponent implements OnInit {
             const param =  this._prefilterMapperService.mapPrefilterToSearchParams(
                 preference.filters as PreFilters
             );
-            this._searchDataService.search(param!);          
+            this._searchDataService.search(param!).subscribe();          
             this._alertService.openInfo(`Application du filtre ${preference.name}`);
           });
       }

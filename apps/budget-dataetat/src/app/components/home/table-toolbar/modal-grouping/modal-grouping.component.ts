@@ -111,8 +111,7 @@ export class ModalGroupingComponent implements OnInit {
       .map((group) => group.controls.name.value)
       .map((name) => this.colonnes.find((c) => c.colonne === name)!)
       .filter((c) => c !== null);
-
-    this.searchDataService.doSearchGrouping(selected);
+    this.searchDataService.doSearchGrouping(selected).subscribe();
   }
 
   /**
