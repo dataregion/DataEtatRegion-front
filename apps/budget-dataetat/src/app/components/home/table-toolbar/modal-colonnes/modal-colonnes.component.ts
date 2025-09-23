@@ -1,11 +1,10 @@
-import { Component, inject, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, inject, OnInit, ViewEncapsulation, computed } from '@angular/core';
 import { MaterialModule } from "apps/common-lib/src/public-api";
 import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
 import { ColonnesService } from '@services/colonnes.service';
 import { ReactiveFormsModule, FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
-import { FinancialDataModel } from '@models/financial/financial-data.models';
-import { ColonnesMapperService, ColonneTableau } from '@services/colonnes-mapper.service';
 import { CommonModule } from '@angular/common';
+import { SearchDataService } from '@services/search-data.service';
 
 export interface ColonneFormValues {
   name: FormControl<string>;
@@ -27,24 +26,24 @@ export interface FormColonnes {
 export class ModalColonnesComponent implements OnInit {
 
   private _formBuilder = inject(FormBuilder);
-  private _colonnesService = inject(ColonnesService)
-  private _colonnesMapperService = inject(ColonnesMapperService)
-  
+  private _colonnesService = inject(ColonnesService);
+  public searchDataService = inject(SearchDataService);
+
   public formColonnes: FormGroup<FormColonnes> = new FormGroup({
     colonnes: new FormArray<FormGroup<ColonneFormValues>>([])
   });
 
-  public colonnes: ColonneTableau<FinancialDataModel>[] = []
-  public selectedColonnes: ColonneTableau<FinancialDataModel>[] = []
+  /**
+   * Computed signal pour récupérer les colonnes actuellement sélectionnées.
+ */
+  public readonly selectedColonnes = computed(() => this._colonnesService.selectedColonnesTable());
 
   ngOnInit() {
-    // Récupération des colonnes du tableau, les sélectionnées mappées sur les colonnes du back
-    this.colonnes = this._colonnesService.allColonnesTable()
-    this.selectedColonnes = this._colonnesService.selectedColonnesTable()
-    
+    const allColonnes = this._colonnesService.allColonnesTable();
+
     // On ordonne les colonnes pour mettre les selected en haut
-    const namesSelected = new Set(this.selectedColonnes.map(c => c.colonne));
-    const orderedColonnes = [...this.colonnes].sort((a, b) => {
+    const namesSelected = new Set(this.selectedColonnes().map(c => c.colonne));
+    const orderedColonnes = [...allColonnes].sort((a, b) => {
       const aSelected = namesSelected.has(a.colonne);
       const bSelected = namesSelected.has(b.colonne);
       if (aSelected && !bSelected) return -1;
@@ -56,7 +55,7 @@ export class ModalColonnesComponent implements OnInit {
     this.formColonnes = this._formBuilder.group({
       colonnes: this._formBuilder.array(
         orderedColonnes.map(col => {
-          const isSelected = this.selectedColonnes.some(sc => sc.colonne === col.colonne);
+          const isSelected = this.selectedColonnes().some(sc => sc.colonne === col.colonne);
           return this._formBuilder.group({
             name: this._formBuilder.control(col.colonne, { nonNullable: true }),
             label: this._formBuilder.control(col.label, { nonNullable: true }),
@@ -92,6 +91,7 @@ export class ModalColonnesComponent implements OnInit {
    */
   public validate(): void {
     const formArray = this.formColonnes.controls.colonnes;
+    const allColonnes = this._colonnesService.allColonnesTable();
 
     // preserve order as it appears in the form array
     const selectedInOrder = formArray.controls
@@ -100,10 +100,11 @@ export class ModalColonnesComponent implements OnInit {
 
     // map back to ColonneTableau objects in the right order
     const selectedColonnes = selectedInOrder
-      .map(name => this.colonnes.find(c => c.colonne === name)!)
+      .map(name => allColonnes.find(c => c.colonne === name)!)
       .filter(Boolean);
 
-    this._colonnesService.selectedColonnesTable.set(selectedColonnes);
+    // build selected in the same order as in the form array
+    this.searchDataService.doSelectColumn(selectedColonnes);
   }
 
 }

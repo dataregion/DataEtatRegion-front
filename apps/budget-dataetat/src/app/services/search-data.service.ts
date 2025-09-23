@@ -73,6 +73,16 @@ export class SearchDataService {
   public readonly pagination = signal<PaginationMeta | null>(null);
 
 
+  public doSelectColumn(selectedColonnes: ColonneTableau<FinancialDataModel>[]) {
+    this._logger.debug('==> Début de la méthode doSelectColumn', { selectedColonnes });
+
+    // set les grouping;
+    this._colonnesService.selectedColonnesTable.set(selectedColonnes);
+    this._colonnesService.selectedColonnesGrouping.set([]);
+    this._colonnesService.selectedColonnesGrouped.set([]);
+    this.searchGroupingInProgress.set(false);
+  }
+
   /**
    * Lance la recherche avec des colonnes de grouping sélectionnées.
    * @param selectedColonnes 
