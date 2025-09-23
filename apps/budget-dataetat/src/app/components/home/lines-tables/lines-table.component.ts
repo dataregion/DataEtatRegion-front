@@ -5,6 +5,7 @@ import { ColonnesService } from '@services/colonnes.service';
 import { SearchDataService } from '@services/search-data.service';
 import { NumberFormatPipe } from "./number-format.pipe";
 import { LoggerService } from 'apps/common-lib/src/lib/services/logger.service';
+import { GridInFullscreenStateService } from 'apps/common-lib/src/lib/services/grid-in-fullscreen-state.service';
 
 /**
  * Composant d'affichage des lignes financières sous forme de tableau.
@@ -42,6 +43,9 @@ export class LinesTableComponent implements OnDestroy {
   
   /** Service central de gestion de la recherche de données */
   public readonly searchDataService: SearchDataService = inject(SearchDataService);
+
+  /** Service pour controler le full screen */
+  public readonly grid_fullscreen = inject(GridInFullscreenStateService).isFullscreen;
 
   // --- ViewChild et observateurs ---
   

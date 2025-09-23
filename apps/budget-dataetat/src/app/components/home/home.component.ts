@@ -85,6 +85,8 @@ export class HomeComponent implements OnInit {
   /** Service de destruction pour les subscriptions */
   private _destroyRef = inject(DestroyRef);
 
+  public readonly grid_fullscreen = inject(GridInFullscreenStateService).isFullscreen;
+
   // --- Propriétés du template ---
   
   /** Référence au spinner de chargement */
@@ -94,14 +96,6 @@ export class HomeComponent implements OnInit {
   lastImportDate: string | null = null;
 
   // --- Getters pour le template ---
-  
-  /** 
-   * Indique si l'interface est en mode plein écran 
-   * @returns true si la grille est en mode plein écran
-   */
-  get grid_fullscreen(): boolean {
-    return this._gridFullscreen.fullscreen;
-  }
 
   /** 
    * Indique si les résultats sont affichés en mode groupé 
@@ -167,7 +161,7 @@ export class HomeComponent implements OnInit {
    * @returns true si on n'est pas en plein écran et qu'aucune ligne n'est sélectionnée
    */
   public readonly showSearchForm = computed(() => {
-    const gridFullscreen = this.grid_fullscreen;
+    const gridFullscreen = this.grid_fullscreen();
     const selectedLine = this.selectedLine();
     return !gridFullscreen && selectedLine === undefined;
   });

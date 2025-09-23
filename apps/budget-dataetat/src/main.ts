@@ -14,9 +14,9 @@ async function loadApp(): Promise<{ settings: SettingsBudgetService, logger: Log
   const settingsService = new SettingsBudgetService();
   settingsService.setSettings(json);
 
-  const is_in_production = settingsService.getSetting().production;
+  const isInProduction = settingsService.getSetting().production;
   const loggerService = new LoggerService();
-  if (is_in_production) {
+  if (isInProduction) {
     loggerService.setLogLevel(LogLevel.WARN)
   } else {
     loggerService.setLogLevel(LogLevel.DEBUG)

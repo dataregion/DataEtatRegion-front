@@ -1,17 +1,33 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 
 @Injectable({
   providedIn: 'root'
 })
 export class GridInFullscreenStateService {
-  // @TODO Passer en signals
-  private _is_fullscreen = false;
-
+  
+  // Signals API
+  private readonly _isFullscreen = signal<boolean>(false);
+  
+  public readonly isFullscreen = this._isFullscreen.asReadonly();
+  
+  public setFullscreen(fullscreen: boolean): void {
+    this._isFullscreen.set(fullscreen);
+  }
+  
+  public toggleFullscreen(): boolean {
+    const newState = !this._isFullscreen();
+    this._isFullscreen.set(newState);
+    return newState;
+  }
+  
+  // Legacy API (deprecated)
+  /** @deprecated Utiliser isFullscreen() signal */
   public get fullscreen(): boolean {
-    return this._is_fullscreen;
+    return this._isFullscreen();
   }
 
-  public set fullscreen(data) {
-    this._is_fullscreen = data;
+  /** @deprecated Utiliser setFullscreen(boolean) */
+  public set fullscreen(data: boolean) {
+    this._isFullscreen.set(data);
   }
 }

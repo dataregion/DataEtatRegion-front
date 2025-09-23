@@ -1,4 +1,4 @@
-<lib-header [logo]="'BudgetEtat.svg'" [ngClass]="{'hidden': grid_fullscreen }" [title]="title()">
+<lib-header [logo]="'BudgetEtat.svg'" [ngClass]="{'hidden': grid_fullscreen() }" [title]="title()">
 
   @if(showUpdateTagsPage()) {
   <li tags>
@@ -78,7 +78,7 @@
 </main>
 
 @if(isAuthenticated()) {
-<lib-footer [logo]="'DataEtat.svg'" [ngClass]="{'hidden': grid_fullscreen }">
+<lib-footer [logo]="'DataEtat.svg'" [ngClass]="{'hidden': grid_fullscreen() }">
   @if(help) {
   <li class="fr-footer__bottom-item">
     <a class="fr-footer__bottom-link" href="{{help}}" target="_blank">Aide en

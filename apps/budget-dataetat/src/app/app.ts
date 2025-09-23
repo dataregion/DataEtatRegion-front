@@ -23,13 +23,13 @@ import { LoggerService } from 'apps/common-lib/src/lib/services/logger.service';
 export class App {
   private _loaderService = inject(LoaderService);
   private _sessionService = inject(SessionService);
-  private _gridFullscreen = inject(GridInFullscreenStateService);
   private _multiregions = inject(MultiregionsService);
   private _resourceService = inject(ResourceService);
   private logger = inject(LoggerService).getLogger(App.name);
   readonly settings = inject(SettingsBudgetService);
 
   public ressources = toSignal(this._resourceService.getResources(), { initialValue: null });
+  public readonly grid_fullscreen = inject(GridInFullscreenStateService).isFullscreen;
 
   public user = toSignal(this._sessionService.getUser());
 
@@ -84,9 +84,7 @@ export class App {
     });
   }
 
-  get grid_fullscreen() {
-    return this._gridFullscreen.fullscreen;
-  }
+  
   public get contact(): string | undefined {
     return this.settings.getSetting().contact;
   }

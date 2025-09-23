@@ -36,20 +36,18 @@ export class TableToolbarComponent {
   public searchFinish: boolean = true
   public searchInProgress: boolean = false
 
+  public readonly grid_fullscreen = this._gridFullscreen.isFullscreen;
+
 
   tableData?: TableData;
   virtualGroupFn?: (_: TableData) => VirtualGroup;
 
-  get grid_fullscreen() {
-    return this._gridFullscreen.fullscreen;
-  }
-
   toggleGridFullscreen() {
-    this._gridFullscreen.fullscreen = !this.grid_fullscreen;
+    this._gridFullscreen.toggleFullscreen();
   }
 
   get fullscreen_label() {
-    if (!this.grid_fullscreen) return 'Agrandir le tableau';
+    if (!this.grid_fullscreen()) return 'Agrandir le tableau';
     else return 'Rétrécir le tableau';
   }
 

@@ -7,6 +7,12 @@
 
 .fr-table__content {
   max-height: 75vh;
+  overflow-y: auto;
+  
+  &.fullscreen {
+    max-height: 108vh;
+    height: 110vh;
+  }
 }
 
 .fr-table__content table {

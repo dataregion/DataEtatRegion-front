@@ -1,13 +1,13 @@
 <div class="fr-grid-row">
   <div class="fr-col-12 table-toolbar">
     <span class="left-buttons">
-      @if (!grid_fullscreen && !isGrouped()) {
+      @if (!grid_fullscreen() && !isGrouped()) {
         <button data-fr-opened="false" aria-controls="modalColonnes" type="button" aria-label="Choisir les colonnes"
           class="fr-btn fr-btn--secondary fr-btn--icon-left fr-icon-table-line" data-test-id="chose-columns-btn">
           Choisir les colonnes
         </button>
       }
-      @if (!grid_fullscreen) {
+      @if (!grid_fullscreen()) {
         <button data-fr-opened="false" aria-controls="modalGrouping" type="button" aria-label="Grouper les lignes par"
           class="fr-btn fr-btn--secondary fr-btn--icon-left" data-test-id="group-by-btn"
           [ngClass]="{
@@ -32,7 +32,7 @@
       }
     </span>
     <span class="right-buttons">
-        @if (!grid_fullscreen) {
+        @if (!grid_fullscreen()) {
           <button data-fr-opened="false" aria-controls="modalSauvegarde" type="button" aria-label="Sauvegarder la recherche"
             class="fr-btn fr-btn--icon-left"
             [ngClass]="{
@@ -43,7 +43,7 @@
           </button>
         }
         <!-- TODO : Download disable -->
-        <!-- @if(!grid_fullscreen && searchFinish === true && !isGrouped()) { -->
+        <!-- @if(!grid_fullscreen() && searchFinish === true && !isGrouped()) { -->
           <!-- <button [disabled]="searchInProgress === true" aria-label="Bouton de téléchargement de données." -->
           <!-- <button disabled aria-label="Bouton de téléchargement de données."
             class="fr-btn fr-btn--sm fr-btn--secondary fr-btn--icon-left fr-icon-download-fill">
@@ -73,7 +73,7 @@
         </mat-menu> -->
 
         <button (click)="toggleGridFullscreen()"
-          [ngClass]="{ 'fr-icon-subtract-line': grid_fullscreen, 'fr-icon-fullscreen-line': !grid_fullscreen }"
+          [ngClass]="{ 'fr-icon-subtract-line': grid_fullscreen(), 'fr-icon-fullscreen-line': !grid_fullscreen() }"
           aria-label="Bouton de contrôle du plein écran" class="fr-btn fr-btn--sm fr-btn--secondary fr-btn--icon-left"
           data-test-id="toggle-grid-fullscreen-btn">
           {{ fullscreen_label }}
