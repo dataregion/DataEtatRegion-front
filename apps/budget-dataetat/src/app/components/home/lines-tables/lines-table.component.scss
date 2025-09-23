@@ -5,10 +5,24 @@
   display: none;
 }
 
+.fr-table__content {
+  max-height: 75vh;
+}
+
 .fr-table__content table {
   min-width: 100%; /* or something larger to allow scroll */
   border-collapse: separate; /* not collapse */
 }
+
+/* ===== THEAD FIXE LORS DU SCROLL VERTICAL ===== */
+
+/* Figer le thead directement sur la table */
+#table-10 thead {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
 th.fr-cell--fixed.not-index,
 td.fr-cell--fixed.not-index {
   box-shadow: 3px 0 5px rgba(0,0,0,0.3);
