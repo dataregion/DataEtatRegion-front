@@ -87,6 +87,8 @@ export class BopsReferentielsComponent {
 
   @Input()
   set selectedThemes(data: string[] | null) {
+    const changed = (data != this._selectedThemes)
+
     this._selectedThemes = data ?? null;
     // Filtrage des bops en fonction des thèmes sélectionnés
     this.filteredBops = [];
@@ -100,7 +102,9 @@ export class BopsReferentielsComponent {
     else {
       this.filteredBops = this.bops;
     }
-    this.selectedBops = null;
+
+    if (changed)
+      this.selectedBops = null;
 
     this.selectedThemesChange.emit(this._selectedThemes);
   }
