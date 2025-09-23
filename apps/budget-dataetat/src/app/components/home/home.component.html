@@ -1,11 +1,11 @@
 
 @if(displayError && error.name) {
-  <div class="fr-container">
+  <div class="fr-container" data-test-id="application-error-message">
     <div class="fr-grid-row">
       <div class="fr-col-12">
         <div class="fr-alert fr-alert--error" style="margin-top:50px;">
           <h3 class="fr-alert__title">Erreur</h3>
-          <p>{{error.name}}</p>
+          <p>{{error.message}}</p>
         </div>
       </div>
     </div>
