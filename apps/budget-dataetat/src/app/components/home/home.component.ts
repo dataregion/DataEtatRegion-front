@@ -221,14 +221,7 @@ export class HomeComponent implements OnInit {
     this._colonnesService.allColonnesGrouping.set(this._colonnesMapperService.colonnes.filter(c => c.grouping !== undefined));
 
     // --- 4. Application des paramètres de marque blanche ---
-    
     const mb_group_by = resolvedMarqueBlanche.data?.group_by;
-    const mb_fullscreen = resolvedMarqueBlanche.data?.fullscreen;
-
-    // Application du mode plein écran si demandé par la marque blanche
-    if (mb_fullscreen) {
-      this._gridFullscreen.fullscreen = !this.grid_fullscreen;
-    }
     
     // Application du grouping par défaut si spécifié par la marque blanche
     if (mb_group_by && mb_group_by?.length > 0) {

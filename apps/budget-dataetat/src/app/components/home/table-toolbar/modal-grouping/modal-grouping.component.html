@@ -21,7 +21,7 @@
             } @else {
             <div>
               <p style="font-weight: bold;">Cliquer-glisser pour réordonner les groupes :</p>
-              <div>
+              <div  data-test-id="group-modal_selected">
                 <div formArrayName="colonnes" cdkDropList class="column-list" [cdkDropListData]="formGrouping.controls.colonnes.controls" (cdkDropListDropped)="moveGroup($event)">
                   @for (group of formGrouping.controls.colonnes.controls; let i = $index; track $index) {
                     <div [formGroupName]="i" cdkDrag class="column-box">

@@ -42,7 +42,7 @@ function is_url_data_demarche_reconciliation(url: URL) {
 }
 
 async function mockRefApi(page: Page) {
-   await page.route(is_url_budget_themes, async (route: Route) => {
+  await page.route(is_url_budget_themes, async (route: Route) => {
     const json = themes;
     await route.fulfill({ json });
   });
@@ -53,7 +53,7 @@ async function mockRefApi(page: Page) {
   });
 
   await page.route(is_url_ae_annees, async (route: Route) => {
-    const json = [2023];
+    const json = [2019,2022,2021,2022,2023,2024,2025,2026,2027];
     await route.fulfill({ json });
   });
 

@@ -120,7 +120,12 @@ export class BopsReferentielsComponent {
 
   @Input()
   set selectedBops(data: BopModel[] | null) {
+    const changed = (data != this._selectedBops)
     this._selectedBops = data ?? null;
+    
+    if (!changed)
+      return
+
     this.selectedBopsChange.emit(this._selectedBops);
 
     // Mise en place des options du select selon le niveau géographique sélectionné
@@ -164,6 +169,17 @@ export class BopsReferentielsComponent {
   @Input()
   set selectedReferentiels(data: ReferentielProgrammation[] | null) {
     this._selectedReferentiels = data;
+
+    // On maj les referentiels possibles en ajoutant les nouveaux sélectionnés
+    const referentiels = [
+      ...(this.referentiels || []),
+      ...(
+        this._selectedReferentiels
+          ?.filter(ref => !this.referentiels?.some(existing => existing.code === ref.code)) || []
+      )
+    ];
+    this.referentiels = referentiels;
+
     this.selectedReferentielsChange.emit(this._selectedReferentiels);
   }
 

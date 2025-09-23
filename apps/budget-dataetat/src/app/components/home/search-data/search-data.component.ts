@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, DestroyRef, OnInit, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import {
@@ -8,7 +8,8 @@ import {
   Observable,
   of,
   startWith,
-  switchMap
+  switchMap,
+  tap
 } from 'rxjs';
 import { GeoModel, TypeLocalisation } from 'apps/common-lib/src/public-api';
 import { MarqueBlancheParsedParamsResolverModel } from '../../../resolvers/marqueblanche-parsed-params.resolver';
@@ -36,6 +37,7 @@ import { PrefilterMapperService } from './prefilter-mapper.services';
 import { PreferenceService } from '@services/preference.service';
 import { SearchDataService } from '@services/search-data.service';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
+import { GridInFullscreenStateService } from 'apps/common-lib/src/lib/services/grid-in-fullscreen-state.service';
 
 
 /**
@@ -64,6 +66,7 @@ export interface FormSearch {
 })
 export class SearchDataComponent implements OnInit {
 
+  private _destroy_ref = inject(DestroyRef);
   private _route = inject(ActivatedRoute);
   private _preferenceService = inject(PreferenceService)
   private _prefilterMapperService = inject(PrefilterMapperService);
@@ -71,6 +74,7 @@ export class SearchDataComponent implements OnInit {
   private _logger = inject(LoggerService).getLogger(SearchDataComponent.name);
   private _autocompleteBeneficiaires = inject(AutocompleteBeneficiaireService);
   private _autocompleteTags = inject(AutocompleteTagsService);
+  private _gridFullscreen = inject(GridInFullscreenStateService);
 
   public searchDataService = inject(SearchDataService);
 
@@ -228,12 +232,13 @@ export class SearchDataComponent implements OnInit {
     // Renseigne le formulaire à chaque changement des paramètres de recherche
     toObservable(this.searchDataService.searchParams)
       .pipe(
-        takeUntilDestroyed(),
-        filter(p => p !== undefined && p.colonnes !== undefined && p.colonnes.length > 0),
+        takeUntilDestroyed(this._destroy_ref),
+        filter(p => p !== undefined),
       )
       .subscribe(params => {
         this._logger.debug("==> Mapping des paramètres vers le formulaire");
-        this.formSearch = this._prefilterMapperService.mapSearchParamsToForm(params!);
+        const formSearch = this._prefilterMapperService.mapSearchParamsToForm(params!);
+        this.formSearch = formSearch;
       });
   }
 
@@ -282,7 +287,25 @@ export class SearchDataComponent implements OnInit {
         this._logger.debug(`Application des filtres`);
         this._preferenceService.setCurrentPrefilter(mb_prefilter);
         // Mapping du prefilter vers le formulaire
-        this.searchDataService.searchParams.set(this._prefilterMapperService.mapPrefilterToSearchParams(mb_prefilter));
+        const previousParams = this.searchDataService.searchParams();
+        this._logger.debug("Paramètres avant application du prefilter marqueblanche : ", previousParams);
+        const preFilteredSearchParams = this._prefilterMapperService.mapPrefilterToSearchParams(mb_prefilter)
+        this._logger.debug("Paramètres après application du prefilter marqueblanche : ", preFilteredSearchParams);
+        this.searchDataService.searchParams.set(preFilteredSearchParams);
+        
+        // Lancement de la recherche
+        const mb_fullscreen = resolvedMarqueBlanche.data?.fullscreen ?? false;
+        this.searchDataService.search(preFilteredSearchParams!)
+          .pipe(
+            takeUntilDestroyed(this._destroy_ref),
+            tap(_ => {
+              if (mb_fullscreen) {
+                this._logger.debug("Active le mode fullescreen comme demandé par la marque blanche");
+                this._gridFullscreen.toggleFullscreen();
+              }
+            })
+          )
+          .subscribe();
       }
     }
     // TODO manque application des preferences ?

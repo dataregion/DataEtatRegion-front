@@ -15,24 +15,20 @@
     <div class="fr-grid-row">
       <div class="fr-col-12">
 
-      @if (!grid_fullscreen()) {
-        <div class="title-wrapper">
-          <h6>Rechercher des données financières</h6>
-          <!-- TODO Bug ExpressionChangedAfterItHasBeenCheckedError => passer en signals-->
-          @if(lastImportDate) {
-            <div class="last-import">
-                Le dernier chargement complet des données financières date du
-                <lib-display-date [date]="lastImportDate" />
-                . <br>
-                Les données prennent donc en compte la situation au dernier jour du mois précédent.
-            </div>
-          }
-        </div>
-      }
-        
-        @if (showSearchForm()) {
-          <budget-search-data />
+      <div class="title-wrapper" [style.display]="grid_fullscreen() ? 'none' : ''">
+        <h6>Rechercher des données financières</h6>
+        <!-- TODO Bug ExpressionChangedAfterItHasBeenCheckedError => passer en signals-->
+        @if(lastImportDate) {
+          <div class="last-import">
+              Le dernier chargement complet des données financières date du
+              <lib-display-date [date]="lastImportDate" />
+              . <br>
+              Les données prennent donc en compte la situation au dernier jour du mois précédent.
+          </div>
         }
+      </div>
+        
+        <budget-search-data [style.display]="showSearchForm() ? '' : 'none'" />
 
         <div class="main-content overlay-container" [class.no-content]="!shouldShowContent()">
           @if (selectedLine()) {

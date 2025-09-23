@@ -109,7 +109,7 @@ const config: PlaywrightTestConfig = {
       name: 'budget-dataetat-simple-profile-firefox',
       testDir: './tests/budget-dataetat/',
       use: {
-        storageState: 'storage-state/storageState-de.json',
+        storageState: 'storage-state/storageState-simple.json',
         ...devices['Desktop Firefox'],
         baseURL: process.env['NEW_BUDGET_BRETAGNE_BASE_URL'],
       }
@@ -118,7 +118,7 @@ const config: PlaywrightTestConfig = {
       name: 'budget-dataetat-simple-profile-chrome',
       testDir: './tests/budget-dataetat/',
       use: {
-        storageState: 'storage-state/storageState-de.json',
+        storageState: 'storage-state/storageState-simple.json',
         ...devices['Desktop Chrome'],
         baseURL: process.env['NEW_BUDGET_BRETAGNE_BASE_URL'],
       }

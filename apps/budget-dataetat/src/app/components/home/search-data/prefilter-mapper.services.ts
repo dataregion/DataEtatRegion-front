@@ -125,14 +125,15 @@ export class PrefilterMapperService {
       selected = pf.beneficiaires as BeneficiaireFieldData[];
     else if (pf.beneficiaire)
       selected = [pf.beneficiaire as BeneficiaireFieldData];
-    return selected as Beneficiaire[];
-    // forkJoin(
-    //   selected
-    //     .map((ref) => ref.siret)
-    //     .map((siret) => this._autocompleteBeneficiaires.autocompleteSingleBeneficiaire$(siret))
-    // ).subscribe((joined) => {
-    //   this.selectedBeneficiaires = joined;
-    // });
+
+    const mappedSelected = selected.map(benef => {
+      return {
+        ...benef,
+        item: benef.siret,
+      }
+    })
+
+    return mappedSelected;
   }
 
   private _mapTypesBeneficiaires(pf: PreFilters): SearchTypeCategorieJuridique[] | undefined {
