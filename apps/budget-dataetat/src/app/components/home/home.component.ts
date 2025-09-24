@@ -292,7 +292,9 @@ export class HomeComponent implements OnInit {
 
             // Application des filtres de la préférence
             const param = searchParams;
-            this._searchDataService.search(param!).subscribe();          
+            this._searchDataService.search(param!)
+              .pipe(takeUntilDestroyed(this._destroyRef))
+              .subscribe();          
             this._alertService.openInfo(`Application du filtre ${preference.name}`);
           });
       }

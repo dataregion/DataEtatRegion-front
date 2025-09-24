@@ -239,7 +239,6 @@ export class SearchDataService {
       tap({
         next: (response: LignesResponse) => {
           this._processSearchResponse(response);
-          this.searchParams.set(searchParams);
         },
         error: (err: unknown) => {
           this._logger.error('Erreur lors de la recherche', err);

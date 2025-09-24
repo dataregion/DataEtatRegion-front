@@ -85,23 +85,26 @@ export class PrefilterMapperService {
 
   private mapPrefilterToSearchParams(prefilter: PreFilters): SearchParameters | undefined {
     const searchParams = this._searchDataService.searchParams() ?? this._searchParamsService.getEmpty()
-    searchParams.page = 1
-    searchParams.page_size = 100
-    searchParams.themes = this._mapThemes(prefilter)
-    searchParams.bops = this._mapProgrammes(prefilter)
-    searchParams.referentiels_programmation = this._mapReferentielsProgrammation(prefilter)
-    searchParams.niveau = this._mapNiveau(prefilter)
-    searchParams.locations = this._mapLocalisations(prefilter)
-    searchParams.years = this._mapAnnees(prefilter)
-    searchParams.beneficiaires = this._mapBeneficiaires(prefilter)
-    searchParams.types_beneficiaires = this._mapTypesBeneficiaires(prefilter)
-    searchParams.tags = this._mapTags(prefilter)?.map(t => t.value ? t.type + ':' + t.value : t.type)
-    searchParams.domaines_fonctionnels = this._mapDomainesFonctionnels(prefilter)
-    searchParams.source_region = this._mapSourcesRegion(prefilter)
+    const newSearchParam = {
+      ...searchParams,
+    }
+    newSearchParam.page = 1
+    newSearchParam.page_size = 100
+    newSearchParam.themes = this._mapThemes(prefilter)
+    newSearchParam.bops = this._mapProgrammes(prefilter)
+    newSearchParam.referentiels_programmation = this._mapReferentielsProgrammation(prefilter)
+    newSearchParam.niveau = this._mapNiveau(prefilter)
+    newSearchParam.locations = this._mapLocalisations(prefilter)
+    newSearchParam.years = this._mapAnnees(prefilter)
+    newSearchParam.beneficiaires = this._mapBeneficiaires(prefilter)
+    newSearchParam.types_beneficiaires = this._mapTypesBeneficiaires(prefilter)
+    newSearchParam.tags = this._mapTags(prefilter)?.map(t => t.value ? t.type + ':' + t.value : t.type)
+    newSearchParam.domaines_fonctionnels = this._mapDomainesFonctionnels(prefilter)
+    newSearchParam.source_region = this._mapSourcesRegion(prefilter)
 
     this.logger.debug("==> MAP : PreFilters => SearchParameters", prefilter, searchParams);
 
-    return searchParams
+    return newSearchParam
   }
 
   mapSearchParamsToForm(params: SearchParameters): FormGroup<FormSearch> {
