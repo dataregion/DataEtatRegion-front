@@ -2,6 +2,16 @@ td:last-child > button:not(:first-child) {
   margin-left: 10px;
 }
 
+.fr-icon-delete-line {
+  background-color: #f44336;
+  color: white;
+  
+  &:hover {
+    background: linear-gradient(135deg, #ff6b6b, #ff8a80);
+    color: white;
+  }
+}
+
 // .fr-tooltip {
 //   display: none;
 //   // position: absolute; /* style as needed */

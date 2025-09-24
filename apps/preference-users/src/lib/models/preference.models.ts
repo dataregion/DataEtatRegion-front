@@ -11,6 +11,7 @@ export interface Preference {
   filters: JSONObject;
   options?: JSONObject;
   shares?: Shared[];
+  username?: string;
 }
 
 export interface PreferenceWithShared {
