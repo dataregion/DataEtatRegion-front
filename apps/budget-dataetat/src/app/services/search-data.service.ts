@@ -281,7 +281,7 @@ export class SearchDataService {
   private _processSearchResponse(response: LignesResponse): void {
     this._logger.debug('==> Traitement de la réponse de recherche', response);
 
-    if (response.code == 204 && !response.data) {
+    if (!response || (response.code == 204 && !response.data)) {
       this._logger.debug('==> Réponse vide, reset des résultats');
       this.searchResults.set([]);
       this.searchFinish.set(true);

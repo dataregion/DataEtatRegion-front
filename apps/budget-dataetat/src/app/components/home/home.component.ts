@@ -27,6 +27,9 @@ import { InfosLigneComponent } from "../infos-ligne/infos-ligne.component";
 import { PreferenceService } from '@services/preference.service';
 import { LoggerService } from 'apps/common-lib/src/lib/services/logger.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { map, mergeMap } from 'rxjs';
+import { Preference } from 'apps/preference-users/src/lib/models/preference.models';
+import { SearchParameters } from '@services/search-params.service';
 
 /**
  * Composant principal de la page d'accueil de l'application budget-dataetat.
@@ -249,8 +252,21 @@ export class HomeComponent implements OnInit {
 
         this._httpPreferenceService
           .getPreference(param[QueryParam.Uuid])
-          .pipe(takeUntilDestroyed(this._destroyRef))
-          .subscribe((preference) => {
+          .pipe(
+            takeUntilDestroyed(this._destroyRef),
+            mergeMap(preference => {
+              const searchParams$ = 
+                this._prefilterMapperService.mapAndResolvePrefiltersToSearchParams$(preference.filters as PreFilters);
+                return searchParams$
+                .pipe(
+                  map((searchParams): [Preference, SearchParameters | undefined] => [preference, searchParams])
+                );
+            })
+          )
+          .subscribe(([ preference, searchParams ]) => {
+            // const preference = result[0] as Preference;
+            // const searchParams = result[1] as (SearchParameters | undefined);
+
             this._logger.debug("==> Chargement preference", preference);
             // Sauvegarde de la préférence courante
             this._preferenceService.setCurrentPreference(preference);
@@ -277,9 +293,7 @@ export class HomeComponent implements OnInit {
             }
 
             // Application des filtres de la préférence
-            const param =  this._prefilterMapperService.mapPrefilterToSearchParams(
-                preference.filters as PreFilters
-            );
+            const param = searchParams;
             this._searchDataService.search(param!).subscribe();          
             this._alertService.openInfo(`Application du filtre ${preference.name}`);
           });

@@ -10,16 +10,16 @@ import { SelectedData } from 'apps/common-lib/src/lib/components/advanced-chips-
 
 export type BeneficiaireFieldData = Beneficiaire & SelectedData;
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class AutocompleteBeneficiaireService {
   private _refService = inject(ReferentielsHttpService);
   private _referentielsService = inject(ReferentielsService);
 
-
   autocomplete$(input: string): Observable<BeneficiaireFieldData[]> {
-    let sanitzed_input = input
-    if (input && !Number.isNaN(parseInt(input)))
-      sanitzed_input = input.replace(/\s+/g, "")
+    let sanitzed_input = input;
+    if (input && !Number.isNaN(parseInt(input))) sanitzed_input = input.replace(/\s+/g, '');
     const autocompletion$ = this._refService.filterRefSiret$(sanitzed_input).pipe(
       map((response: Beneficiaire[]) => {
         return response.map((ref) => {

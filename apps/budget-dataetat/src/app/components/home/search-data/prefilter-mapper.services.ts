@@ -7,21 +7,27 @@ import { ReferentielProgrammation } from '@models/refs/referentiel_programmation
 import { Bop } from '@models/search/bop.model';
 import { BopModel } from '@models/refs/bop.models';
 import { SearchParameters, SearchParamsService, SearchTypeCategorieJuridique } from '@services/search-params.service';
-import { BeneficiaireFieldData } from './autocomplete/autocomplete-beneficiaire.service';
+import { AutocompleteBeneficiaireService, BeneficiaireFieldData } from './autocomplete/autocomplete-beneficiaire.service';
 import { Beneficiaire } from '@models/search/beneficiaire.model';
 import { BudgetDataHttpService } from '@services/http/budget.service';
 import { Tag } from '@models/refs/tag.model';
 import { SearchDataService } from '@services/search-data.service';
+import { forkJoin, map, mergeMap, Observable, of } from 'rxjs';
+import { LoggerService } from 'apps/common-lib/src/lib/services/logger.service';
+import { catchError } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PrefilterMapperService {
 
+  private logger = inject(LoggerService).getLogger(PrefilterMapperService.name);
+
   private _formBuilder: FormBuilder = inject(FormBuilder)
   private _referentielsService: BudgetDataHttpService = inject(BudgetDataHttpService)
   private _searchDataService: SearchDataService = inject(SearchDataService)
   private _searchParamsService: SearchParamsService = inject(SearchParamsService)
+  private _autocompleteBeneficiaireService: AutocompleteBeneficiaireService = inject(AutocompleteBeneficiaireService)
 
   public init: boolean = false
   public themes: string[] = []
@@ -41,7 +47,43 @@ export class PrefilterMapperService {
     })
   }
 
-  mapPrefilterToSearchParams(prefilter: PreFilters): SearchParameters | undefined {
+  mapAndResolvePrefiltersToSearchParams$(prefilter: PreFilters): Observable<SearchParameters | undefined> {
+    const res$ = 
+      of(this.mapPrefilterToSearchParams(prefilter))
+        .pipe(
+          mergeMap(searchParams => {
+            const benefs = searchParams?.beneficiaires ?? []
+            if (benefs.length === 0)
+              return of(searchParams)
+            
+            // Pour chaque bénéficiaire, on fait un appel pour récupérer les infos complètes
+            const arrAutoComplete$ = benefs
+              .map(b => this._autocompleteBeneficiaireService.autocompleteSingleBeneficiaire$(b.siret));
+
+            const resolvedBenefsFilter$ = 
+              forkJoin(arrAutoComplete$)
+                .pipe(
+                  map(benefs => {
+                    const resolved = {
+                      ...searchParams,
+                      beneficiaires: benefs
+                    } as SearchParameters
+                    return resolved
+                  }),
+                  catchError(error => {
+                    this.logger.error("Erreur lors de la résolution des bénéficiaires", error, prefilter);
+                    return of(searchParams);
+                  })
+                )
+            
+            return resolvedBenefsFilter$;
+          }
+        )
+      )
+    return res$;
+  }
+
+  private mapPrefilterToSearchParams(prefilter: PreFilters): SearchParameters | undefined {
     const searchParams = this._searchDataService.searchParams() ?? this._searchParamsService.getEmpty()
     searchParams.page = 1
     searchParams.page_size = 100
@@ -56,9 +98,9 @@ export class PrefilterMapperService {
     searchParams.tags = this._mapTags(prefilter)?.map(t => t.value ? t.type + ':' + t.value : t.type)
     searchParams.domaines_fonctionnels = this._mapDomainesFonctionnels(prefilter)
     searchParams.source_region = this._mapSourcesRegion(prefilter)
-    console.log("==> MAP : PreFilters => SearchParameters")
-    console.log(prefilter)
-    console.log(searchParams)
+
+    this.logger.debug("==> MAP : PreFilters => SearchParameters", prefilter, searchParams);
+
     return searchParams
   }
 

@@ -38,6 +38,7 @@ import { PreferenceService } from '@services/preference.service';
 import { SearchDataService } from '@services/search-data.service';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { GridInFullscreenStateService } from 'apps/common-lib/src/lib/services/grid-in-fullscreen-state.service';
+import { PreFilters } from '@models/search/prefilters.model';
 
 
 /**
@@ -289,25 +290,33 @@ export class SearchDataComponent implements OnInit {
         // Mapping du prefilter vers le formulaire
         const previousParams = this.searchDataService.searchParams();
         this._logger.debug("Paramètres avant application du prefilter marqueblanche : ", previousParams);
-        const preFilteredSearchParams = this._prefilterMapperService.mapPrefilterToSearchParams(mb_prefilter)
-        this._logger.debug("Paramètres après application du prefilter marqueblanche : ", preFilteredSearchParams);
-        this.searchDataService.searchParams.set(preFilteredSearchParams);
-        
-        // Lancement de la recherche
-        const mb_fullscreen = resolvedMarqueBlanche.data?.fullscreen ?? false;
-        this.searchDataService.search(preFilteredSearchParams!)
-          .pipe(
-            takeUntilDestroyed(this._destroy_ref),
-            tap(_ => {
-              if (mb_fullscreen) {
-                this._logger.debug("Active le mode fullescreen comme demandé par la marque blanche");
-                this._gridFullscreen.toggleFullscreen();
-              }
-            })
-          )
-          .subscribe();
+        this._ngOnInitOnMbSearchParams(mb_prefilter)
       }
     }
+  }
+  
+  private _ngOnInitOnMbSearchParams(preFilter: PreFilters) {
+      this._prefilterMapperService.mapAndResolvePrefiltersToSearchParams$(preFilter)
+        .pipe(takeUntilDestroyed(this._destroy_ref))
+        .subscribe(resolvedParams => {
+          this._logger.debug("Paramètres APRES RESOLUTION des bénéficiaires du prefilter marqueblanche : ", resolvedParams);
+          this.searchDataService.searchParams.set(resolvedParams);
+
+          // Lancement de la recherche
+          const resolvedMarqueBlanche = this._route.snapshot.data['mb_parsed_params'] as MarqueBlancheParsedParamsResolverModel;
+          const mb_fullscreen = resolvedMarqueBlanche.data?.fullscreen ?? false;
+          this.searchDataService.search(resolvedParams!)
+            .pipe(
+              takeUntilDestroyed(this._destroy_ref),
+              tap(_ => {
+                if (mb_fullscreen) {
+                  this._logger.debug("Active le mode fullescreen comme demandé par la marque blanche");
+                  this._gridFullscreen.toggleFullscreen();
+                }
+              })
+            )
+            .subscribe();
+        })
   }
 
   /**
