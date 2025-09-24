@@ -264,8 +264,6 @@ export class HomeComponent implements OnInit {
             })
           )
           .subscribe(([ preference, searchParams ]) => {
-            // const preference = result[0] as Preference;
-            // const searchParams = result[1] as (SearchParameters | undefined);
 
             this._logger.debug("==> Chargement preference", preference);
             // Sauvegarde de la préférence courante
