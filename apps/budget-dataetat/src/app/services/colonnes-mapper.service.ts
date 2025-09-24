@@ -33,35 +33,7 @@ export interface ColonneTableau<T> {
  * - **Configuration des rendus** : Définit comment chaque donnée doit être formatée (montants, dates, badges)
  * - **Gestion du grouping** : Associe chaque colonne à sa capacité de groupement
  * - **Préférences utilisateur** : Mappe les préférences sauvegardées vers les colonnes actives
- * 
- * ## 🏗️ Structure clé
- * - `_colonnesTableau` : Dictionnaire des 28+ colonnes disponibles avec codes et libellés
- * - `ColonneTableau<T>` : Interface uniforme pour chaque colonne (identifiant, rendu, style, grouping)
- * - Fonctions de rendu spécialisées : badges DSFR, formatage monétaire, dates localisées
- * 
- * ## ⚡ Méthodes importantes
- * - `initService()` : Construit la liste complète des colonnes avec leurs rendus spécifiques
- * - `getDefaults()` : Retourne les colonnes affichées par défaut
- * - `mapNamesFromPreferences()` : Convertit les préférences utilisateur en colonnes actives
- * 
- * ## 🎨 Exemples de rendu
- * - **Montants** : `'<div class="fr-badge fr-badge--success">123 456,78 €</div>'`
- * - **Années** : `'<div class="fr-badge fr-badge--info">2024</div>'`
- * - **Tags** : Liste HTML avec tooltips DSFR
- * - **Géolocalisation** : Format "Code - Libellé (Commune)"
- * 
- * ## 🔧 Usage typique
- * ```typescript
- * // Initialisation avec les colonnes API
- * colonnesMapper.initService(colonnesTable, colonnesGrouping);
- * 
- * // Récupération pour affichage
- * const colonnes = colonnesMapper.getDefaults();
- * const rendered = colonne.render(financialData); // HTML prêt à afficher
  * ```
- * 
- * **En résumé** : Ce service centralise toute la logique de présentation des données financières, 
- * du mapping API jusqu'au HTML final avec le design system DSFR.
  */
 @Injectable({ providedIn: 'root' })
 export class ColonnesMapperService {
