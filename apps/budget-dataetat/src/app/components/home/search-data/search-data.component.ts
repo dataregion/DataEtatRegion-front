@@ -308,7 +308,6 @@ export class SearchDataComponent implements OnInit {
           .subscribe();
       }
     }
-    // TODO manque application des preferences ?
   }
 
   /**
