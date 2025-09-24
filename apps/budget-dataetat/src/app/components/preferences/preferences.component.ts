@@ -88,7 +88,7 @@ export class PreferencesComponent implements OnInit {
   }
 
 
-  public selectedPreference: Preference | undefined;
+  public selectedPreference = signal<Preference | undefined>(undefined);
 
   public dataSource = signal<PreferenceWithShared>({
     create_by_user: [],
@@ -137,6 +137,24 @@ export class PreferencesComponent implements OnInit {
   }
 
   /**
+   * Applique la preference mise à jours
+   * @param preference 
+   * @returns 
+   */
+  onPreferenceSave(preference: Preference) {
+    if (!preference.uuid)
+      return
+    const uuid: string = preference.uuid;
+
+    this.dataSource.update((prev) => ({
+      ...prev,
+      create_by_user: prev.create_by_user.map((data) =>
+        data.uuid === uuid ? { ...data, ...preference } : data
+      )
+    }));
+  }
+
+  /**
    * Redirige vers la page d'accueil avec l'identifiant du filtre
    *
    * @param uuid
@@ -150,7 +168,7 @@ export class PreferencesComponent implements OnInit {
 
 
   setSelected(preference: Preference) {
-    this.selectedPreference = preference
+    this.selectedPreference.set(preference);
   }
-  
+
 }

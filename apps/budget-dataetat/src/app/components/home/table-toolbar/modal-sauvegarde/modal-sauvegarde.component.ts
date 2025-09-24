@@ -1,5 +1,5 @@
 import { AsyncPipe } from '@angular/common';
-import { Component, DestroyRef, inject, Input, ViewEncapsulation } from '@angular/core';
+import { Component, DestroyRef, inject, input, output, ViewEncapsulation } from '@angular/core';
 
 import { AlertService } from "apps/common-lib/src/public-api";
 import { debounceTime, distinctUntilChanged, finalize, map, Observable, of, Subject, switchMap } from 'rxjs';
@@ -37,7 +37,7 @@ export class ModalSauvegardeComponent {
   private _colonnesService = inject(ColonnesService);
   private _searchDataService = inject(SearchDataService);
   private _destroyRef = inject(DestroyRef);
-  
+
   public formPreference: FormGroup<FormPreference> = new FormGroup({
     name: new FormControl<string>("", { nonNullable: true }),
     shared: new FormControl<boolean>(false, { nonNullable: true }),
@@ -47,18 +47,18 @@ export class ModalSauvegardeComponent {
   public shareSearch: boolean = false;
   public search: string = '';
   public filterUser: string[] = [];
-  
   public separatorKeysCodes: number[] = [ENTER, COMMA];
 
-  @Input()
-  public preference?: Preference | null = null;
+  public preference = input<Preference>();
+
+  public preferenceSave = output<Preference>();
 
   public searchUserChanged = new Subject<string>();
 
   public suggestions$: Observable<string[]> = of([]);
   public loading: boolean = false;
   public delay: number = 500
-  
+
   constructor() {
     // Recherche des suggestions d'users
     this.suggestions$ = this.searchUserChanged.pipe(
@@ -84,73 +84,74 @@ export class ModalSauvegardeComponent {
       takeUntilDestroyed(this._destroyRef)
     );
 
-    toObservable(this._preferenceService.currentPreference)
+    toObservable(this.preference)
       .pipe(takeUntilDestroyed(this._destroyRef))
-      .subscribe((newPreferences) => {
-        this.preference = newPreferences;
-        if (!this.preference)
+      .subscribe((preference) => {
+        if (!preference) {
           return;
+        }
         this.formPreference = this._formBuilder.group<FormPreference>({
-          name: this._formBuilder.control<string>(this.preference.name ?? "", { nonNullable: true }),
-          shared: this._formBuilder.control<boolean>(this.preference.shares?.length !== 0, { nonNullable: true }),
-          users: this._formBuilder.control<string[]>((this.preference.shares ?? []).map(s =>
+          name: this._formBuilder.control<string>(preference.name ?? "", { nonNullable: true }),
+          shared: this._formBuilder.control<boolean>(preference.shares?.length !== 0, { nonNullable: true }),
+          users: this._formBuilder.control<string[]>((preference.shares ?? []).map(s =>
             s.shared_username_email), { nonNullable: true }
           )
         });
       });
   }
-  
+
   onSearchAsync(event: DsfrCompleteEvent) {
     const value = event?.query?.toLowerCase() ?? '';
     this.searchUserChanged.next(value);
   }
-  
+
   public validate(): void {
-    // Options de colonnes et grouping
-    const options: JSONObject = {} as JSONObject
-    if (this._colonnesService.selectedColonnesTable.length) {
-      options['displayOrder'] = this._colonnesService.selectedColonnesTable().map(c => {
-        return { "columnLabel": c.label }
-      })
-    }
-    if (this._colonnesService.selectedColonnesGrouping.length) {
-      options['grouping'] = this._colonnesService.selectedColonnesGrouping().map(c => {
-        return { "columnName": c.colonne }
-      })
-    }
-    
+
     // Récupération du formulaire de préférence
     const { name, shared, users } = this.formPreference.getRawValue();
     const preference = {
-      uuid: this.preference?.uuid,
       name: name,
       filters: {},
-      options: options,
       shares: shared ? users.map(u => ({ shared_username_email: u })) : []
     } as Preference;
-    
-    // Récupération des critères de recherche
-    const object = this._searchDataService.searchParams() as unknown as JSONObject
-    const ignore = new Set(['colonnes', 'page', 'page_size', 'grouping', 'grouped']);
-    Object.keys(object).forEach((key) => {
-      if (!ignore.has(key)) {
-        let newKey: string = key
-        if (key === 'years')
-          newKey = 'year'
-        if (object[key] !== null && object[key] !== undefined && object[key] !== '') {
-          preference.filters[newKey] = object[key];
-        }
+
+    if (this.preference()) {
+      preference.uuid = this.preference()?.uuid;
+      preference.options = this.preference()?.options;
+      preference.filters = this.preference()?.filters ?? {};
+    } else {
+      // Options de colonnes et grouping
+      const options: JSONObject = {} as JSONObject
+      if (this._colonnesService.selectedColonnesTable().length) {
+        options['displayOrder'] = this._colonnesService.selectedColonnesTable().map(c => {
+          return { "columnLabel": c.label }
+        })
       }
-    });
-    
-    this.preference = preference
-    console.log("==> SAVE Preference")
-    console.log(this.preference)
-    this._preferenceService.setCurrentPreference(this.preference)
+      if (this._colonnesService.selectedColonnesGrouping().length) {
+        options['grouping'] = this._colonnesService.selectedColonnesGrouping().map(c => {
+          return { "columnName": c.colonne }
+        })
+      }
+      // Récupération des critères de recherche
+      const object = this._searchDataService.searchParams() as unknown as JSONObject
+      const ignore = new Set(['colonnes', 'page', 'page_size', 'grouping', 'grouped']);
+      Object.keys(object).forEach((key) => {
+        if (!ignore.has(key)) {
+          let newKey: string = key
+          if (key === 'years')
+            newKey = 'year'
+          if (object[key] !== null && object[key] !== undefined && object[key] !== '') {
+            preference.filters[newKey] = object[key];
+          }
+        }
+      });
+      preference.options = options;
+    }
     this._preferenceHttpService
-      .savePreference(this.preference)
+      .savePreference(preference)
       .pipe(takeUntilDestroyed(this._destroyRef))
       .subscribe((_response) => {
+        this.preferenceSave.emit(preference);
         this._alertService.openAlertSuccess('Filtre enregistré avec succès');
       });
   }
