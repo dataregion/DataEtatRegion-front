@@ -169,7 +169,7 @@ export class AffichageDemarcheComponent implements OnInit {
       .subscribe((results) => {
         // Paramètre 'number' obligatoire !
         if (!('number' in results.params)) {
-          this._router.navigate(['/administration/demarches/integration']);
+          this._router.navigate(['/demarches/']);
         }
 
         // Si pas déjà récupéré par le compagnon DS
@@ -188,7 +188,7 @@ export class AffichageDemarcheComponent implements OnInit {
                 this._initWithDemarche(value);
               } else {
                 this._alertService.openAlertError("Cette démarche n'a pas été intégrée.");
-                this._router.navigate(['/administration/demarches/integration']);
+                this._router.navigate(['/demarches/']);
               }
             },
             error: (err: HttpErrorResponse) => {

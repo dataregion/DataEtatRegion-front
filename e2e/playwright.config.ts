@@ -84,6 +84,26 @@ const config: PlaywrightTestConfig = {
         baseURL: process.env['BUDGET_BRETAGNE_BASE_URL'],
       }
     },
+    {
+      name: 'budget-dataetat-simple-profile-firefox',
+      testDir: './tests/budget-dataetat/',
+      testIgnore: ['**/admin/**'],
+      use: {
+        storageState: 'storage-state/storageState-simple.json',
+        ...devices['Desktop Firefox'],
+        baseURL: process.env['NEW_BUDGET_BRETAGNE_BASE_URL'],
+      }
+    },
+    {
+      name: 'budget-dataetat-simple-profile-chrome',
+      testDir: './tests/budget-dataetat/',
+      testIgnore: ['**/admin/**'],
+      use: {
+        storageState: 'storage-state/storageState-simple.json',
+        ...devices['Desktop Chrome'],
+        baseURL: process.env['NEW_BUDGET_BRETAGNE_BASE_URL'],
+      }
+    },
     // tests profil ADMIN
     {
       name: 'financial-data-admin-profile-chrome',
@@ -103,22 +123,21 @@ const config: PlaywrightTestConfig = {
         baseURL: process.env['BUDGET_BRETAGNE_BASE_URL'],
       }
     },
-    // Tests budget-dataetat
     {
-      name: 'budget-dataetat-simple-profile-firefox',
-      testDir: './tests/budget-dataetat/',
+      name: 'budget-dataetat-admin-profile-chrome',
+      testDir: './tests/budget-dataetat/admin/',
       use: {
-        storageState: 'storage-state/storageState-simple.json',
-        ...devices['Desktop Firefox'],
+        storageState: 'storage-state/storageState-admin.json',
+        ...devices['Desktop Chrome'],
         baseURL: process.env['NEW_BUDGET_BRETAGNE_BASE_URL'],
       }
     },
     {
-      name: 'budget-dataetat-simple-profile-chrome',
-      testDir: './tests/budget-dataetat/',
+      name: 'budget-dataetat-admin-profile-firefox',
+      testDir: './tests/budget-dataetat/admin/',
       use: {
-        storageState: 'storage-state/storageState-simple.json',
-        ...devices['Desktop Chrome'],
+        storageState: 'storage-state/storageState-admin.json',
+        ...devices['Desktop Firefox'],
         baseURL: process.env['NEW_BUDGET_BRETAGNE_BASE_URL'],
       }
     },

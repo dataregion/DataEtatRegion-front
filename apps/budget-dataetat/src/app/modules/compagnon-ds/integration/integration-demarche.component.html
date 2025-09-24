@@ -13,7 +13,7 @@
             <lib-select-simple [(selected)]="selectedToken" [canClear]="false" [canFilter]="false" [options]="tokens"
               [renderLabelFunction]="renderToken" id="token" />
             <button class="fr-btn fr-btn--secondary" type="button"
-              [routerLink]="['/administration/demarches/gestion-token']">Gérer mes tokens DS
+              [routerLink]="['/demarches/gestion-token']">Gérer mes tokens DS
             </button>
           </div>
 
@@ -84,7 +84,7 @@
       <div style="display: flex; justify-content: right;">
         <button data-test-id="btnSubmit" [disabled]="nomDemarche === '' || (!integree && !dejaIntegree)"
           class="fr-btn fr-btn--primary fr-btn--icon-right fr-icon-arrow-right-line"
-          [routerLink]="['/administration/demarches/reconciliation']"
+          [routerLink]="['/demarches/reconciliation']"
           [queryParams]="{ 'number': demarche?.number}">Etape suivante
         </button>
       </div>
