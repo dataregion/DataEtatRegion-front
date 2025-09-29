@@ -91,15 +91,18 @@ export class SearchDataService {
   public doSearchGrouping(selectedColonnes: ColonneTableau<FinancialDataModel>[]): Observable<LignesResponse> {
     this._logger.debug('==> Début de la méthode doSearchGrouping', { selectedColonnes });
 
-    // set les grouping;
-    this._colonnesService.selectedColonnesGrouping.set(selectedColonnes);
-    this._colonnesService.selectedColonnesGrouped.set([]);
-    this.searchGroupingInProgress.set(true);
-    return this.search(this.searchParams()!).pipe(tap({
-      next: () => {
-        this.searchGroupingInProgress.set(false);
-      }
-    }));
+    if (selectedColonnes.length === 0) {
+      return this.resetSearchGrouping();
+    } else {
+      this._colonnesService.selectedColonnesGrouping.set(selectedColonnes);
+      this._colonnesService.selectedColonnesGrouped.set([]);
+      this.searchGroupingInProgress.set(true);
+      return this.search(this.searchParams()!).pipe(tap({
+        next: () => {
+          this.searchGroupingInProgress.set(false);
+        }
+      }));
+    }
   }
 
 
@@ -166,7 +169,7 @@ export class SearchDataService {
     const nextPage = currentPage + 1;
 
     currentParams.page = nextPage;
-    
+
     return this.search(currentParams);
   }
 
