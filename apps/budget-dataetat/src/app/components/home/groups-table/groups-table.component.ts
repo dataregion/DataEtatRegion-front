@@ -248,8 +248,6 @@ export class GroupsTableComponent implements OnDestroy {
         newGrouped.push(g.value.toString())
     })
 
-    // this._colonnesService.selectedColonnesGrouping.set(newGrouping);
-    // this._colonnesService.selectedColonnesGrouped.set(newGrouped);
     this._searchDataService.searchFromGrouping(newGrouping, newGrouped).subscribe();
 
   }

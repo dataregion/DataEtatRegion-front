@@ -122,7 +122,7 @@ export class ColonnesMapperService {
           colonnesTable.filter(c => c.code == this.colNameOfEnriched('beneficiaire_code'))[0],
           colonnesTable.filter(c => c.code == this.colNameOfEnriched('beneficiaire_denomination'))[0]
         ],
-        grouping: colonnesGrouping.filter(c => c.code == this.colNameOfEnriched('beneficiaire_denomination'))[0],
+        grouping: colonnesGrouping.filter(c => c.code == this.colNameOfEnriched('beneficiaire_code'))[0],
         render: (row: FinancialDataModel) => {
           return row.siret?.nom_beneficiaire ?? this.NON_RENSEIGNE
         }
@@ -300,7 +300,6 @@ export class ColonnesMapperService {
         colonne: this._colonnesTableau.SIRET.code,
         label: this._colonnesTableau.SIRET.label,
         back: [colonnesTable.filter(c => c.code == this.colNameOfEnriched('beneficiaire_code'))[0]],
-        grouping: colonnesGrouping.filter(c => c.code == this.colNameOfEnriched('beneficiaire_code'))[0],
         render: (row: FinancialDataModel) => row.siret?.code ?? this.NON_RENSEIGNE,
         style: { 'min-width': '16ex', 'flex-grow': '0' },
       },
