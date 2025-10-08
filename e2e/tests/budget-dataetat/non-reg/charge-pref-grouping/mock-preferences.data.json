@@ -61,7 +61,7 @@
       "options": {
         "grouping": [
           {
-            "columnName": "beneficiaires"
+            "columnName": "beneficiaire"
           }
         ]
       }
