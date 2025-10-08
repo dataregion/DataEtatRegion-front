@@ -63,6 +63,17 @@ const config: PlaywrightTestConfig = {
       }
     },
 
+    // Tests de non reg
+    {
+      name: 'budget-dataetat-nonreg-chrome',
+      testDir: './tests/budget-dataetat/non-reg',
+      use: {
+        storageState: 'storage-state/storageState-simple.json',
+        ...devices['Desktop Chrome'],
+        baseURL: process.env['NEW_BUDGET_BRETAGNE_BASE_URL'],
+      }
+    },
+
     // Tests simples
     {
       name: 'financial-data-simple-chrome',

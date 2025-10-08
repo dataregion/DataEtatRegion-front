@@ -1,6 +1,7 @@
 import { Page } from '@playwright/test';
 
 async function login(page: Page, url: string, username: string, password: string): Promise<void> {
+  console.log(`Go to baseurl ${url}...`);
   await page.goto(url);
   await page.waitForURL(url);
 
