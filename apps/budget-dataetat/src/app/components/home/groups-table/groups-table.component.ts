@@ -68,10 +68,6 @@ export class GroupsTableComponent implements OnDestroy {
   private readonly initialTreeStructure = computed(() => {
     const currentGroupedData = this.groupedData();
 
-    if (currentGroupedData.length === 0 || this.rootAlreadySet()) {
-      return null;
-    }
-
     return {
       opened: false,
       loaded: false,
