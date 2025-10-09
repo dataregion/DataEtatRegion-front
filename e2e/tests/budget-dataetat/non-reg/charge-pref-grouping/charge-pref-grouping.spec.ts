@@ -14,7 +14,7 @@ test.describe('Chargement des préférences - non reg', () => {
   test("Applique deux filtres successifs et vérifie que les groupings s'appliquent bien", async ({ page }) => {
     let selected_groupings = await selectionne_filtre_et_check_grouping(page, 'grouping-annee')
     await expect(selected_groupings.nth(1)).toContainText('Année');
-    await expect(page.getByRole('cell', { name: 'Année Exercice comptable 2019' }).getByRole('paragraph').first()).toBeVisible();
+    await expect(page.getByRole('cell', { name: 'Année Exercice comptable 2021' }).getByRole('paragraph').first()).toBeVisible();
 
     await page.getByRole('button', { name: 'Fermer' }).click();
     await page.getByRole('button', { name: 'Mes recherches' }).click();
