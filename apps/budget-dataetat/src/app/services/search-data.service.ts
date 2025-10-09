@@ -12,6 +12,7 @@ import { ColonnesService } from '@services/colonnes.service';
 import { SearchParamsService } from './search-params.service';
 import { LoggerService } from 'apps/common-lib/src/lib/services/logger.service';
 import { ColonneTableau } from './colonnes-mapper.service';
+import { Optional } from 'apps/common-lib/src/lib/utilities/optional.type';
 
 
 export type SearchResults = GroupedData[] | FinancialDataModel[]
@@ -138,30 +139,34 @@ export class SearchDataService {
   }
 
   /**
-   * Récupéère les données de pagination + 1
+   * Récupère les données de pagination + 1
    * @returns 
    */
-  public loadMore() {
+  public loadMore() : Optional<Observable<LignesResponse>> {
     this._logger.debug('==> Tentative de chargement de la page suivante');
 
     // Vérifications préalables
-    const currentParams = this.searchParams();
-    const currentPagination = this.pagination();
+    const currentParams = { 
+      ...this.searchParams() 
+    } as SearchParameters;
+    const currentPagination = {
+      ...this.pagination() 
+    } as PaginationMeta;
     const isSearchInProgress = this.searchInProgress();
 
     if (!currentParams) {
       this._logger.debug('==> Aucun paramètre de recherche disponible');
-      return;
+      return
     }
 
     if (isSearchInProgress) {
       this._logger.debug('==> Recherche déjà en cours, abandon');
-      return;
+      return
     }
 
     if (!currentPagination?.has_next) {
       this._logger.debug('==> Aucune page suivante disponible', { pagination: currentPagination });
-      return;
+      return
     }
 
     // Calcul de la page suivante

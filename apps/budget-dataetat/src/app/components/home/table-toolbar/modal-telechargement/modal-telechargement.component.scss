@@ -1,0 +1,125 @@
+.download-buttons-section {
+  margin-top: 2rem;
+
+  h3 {
+    margin-bottom: 1rem;
+    color: var(--text-title-grey);
+  }
+
+  .fr-btns-group {
+    flex-direction: column;
+    align-items: stretch;
+
+    .fr-btn {
+      margin-bottom: 0.75rem;
+      justify-content: flex-start;
+      text-align: left;
+      
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+}
+
+#modalTelechargement {
+  .fr-modal__content {
+    .fr-fieldset__element {
+      margin-bottom: 1.5rem;
+    }
+    
+    .fr-checkbox-group {
+      .fr-label {
+        font-weight: 500;
+      }
+    }
+  }
+
+  // Styles pour les boutons désactivés
+  .fr-btns-group .fr-btn {
+    &:disabled,
+    &[disabled] {
+      opacity: 0.5;
+      cursor: not-allowed;
+      pointer-events: none;
+      
+      span {
+        opacity: 0.7;
+      }
+      
+      &::before {
+        opacity: 0.5;
+      }
+    }
+  }
+
+  // Mode loading - overlay et spinner
+  &.loading-mode {
+    .fr-modal__body {
+      position: relative;
+    }
+  }
+
+  .loading-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(255, 255, 255, 0.9);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    backdrop-filter: blur(2px);
+  }
+
+  .loading-spinner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+
+    .spinning {
+      animation: spin 1s linear infinite;
+      color: var(--background-action-primary-blue-france);
+    }
+
+    .loading-text {
+      margin: 0;
+      font-weight: 500;
+      color: var(--text-title-grey);
+      text-align: center;
+    }
+  }
+
+  // Styles pour les éléments désactivés en mode loading
+  &.loading-mode {
+    .fr-modal__header .fr-btn--close,
+    .fr-modal__footer .fr-btn,
+    .fr-checkbox-group input,
+    .fr-btns-group .fr-btn {
+      &:disabled,
+      &[disabled] {
+        opacity: 0.3;
+        cursor: not-allowed;
+        pointer-events: none;
+      }
+    }
+
+    .fr-checkbox-group .fr-label {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+  }
+}
+
+// Animation pour le spinner
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
