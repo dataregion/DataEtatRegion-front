@@ -6,17 +6,19 @@ import { provideMatomo, withRouteData, withRouter } from 'ngx-matomo-client';
 export function providerMatomoDynamic(settingsService: SettingsBudgetService, logger: LoggerService): EnvironmentProviders | null {
     const matomo_settings = settingsService.getMatomo();
 
-    if (!matomo_settings.disabled) {
+    if (matomo_settings.disabled) {
+        logger.debug("Matomo disabled")
+    } else {
         logger.debug("Matomo activé")
-        return provideMatomo(
-            {
-                siteId: matomo_settings.site_id,
-                trackerUrl: matomo_settings.tracker_url,
-            },
-            withRouter(),
-            withRouteData(),
-        )
     }
-    logger.debug("Matomo disabled")
-    return null;
+
+    return provideMatomo(
+        {
+            siteId: matomo_settings.site_id,
+            trackerUrl: matomo_settings.tracker_url,
+            disabled: matomo_settings.disabled,
+        },
+        withRouter(),
+        withRouteData(),
+    )
 }
