@@ -148,11 +148,6 @@ export type GroupingColumn = {
   selected?: boolean;
 };
 
-export type DisplayedOrderedColumn = {
-  columnLabel: string;
-  displayed?: boolean;
-};
-
 /**
  * Un groupe, qui peut contenir soit des groupes enfants, soit des lignes de données.
  */

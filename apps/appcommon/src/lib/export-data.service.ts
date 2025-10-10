@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ExportableAsJson } from 'apps/common-lib/src/lib/models/exportable-as-json.model';
 import { JSONObject } from 'apps/common-lib/src/lib/models/jsonobject';
-import { DisplayedOrderedColumn } from 'apps/grouping-table/src/lib/components/grouping-table/group-utils';
 
 import * as XLSX from 'xlsx';
 
@@ -91,3 +90,8 @@ export class ExportDataService {
       return jsonData;
     }
 }
+
+export type DisplayedOrderedColumn = {
+  columnLabel: string;
+  displayed?: boolean;
+};

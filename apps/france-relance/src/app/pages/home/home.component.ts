@@ -11,11 +11,11 @@ import { AlertService, GeoModel } from 'apps/common-lib/src/public-api';
 import { GridInFullscreenStateService } from 'apps/common-lib/src/lib/services/grid-in-fullscreen-state.service';
 import {
   ColumnsMetaData,
-  DisplayedOrderedColumn,
   GroupingColumn,
   ParameterizedColumnsMetaData,
   TableData
 } from 'apps/grouping-table/src/lib/components/grouping-table/group-utils';
+import { DisplayedOrderedColumn } from "apps/appcommon/src/lib/export-data.service";
 import { GroupingConfigDialogComponent } from 'apps/grouping-table/src/lib/components/grouping-config-dialog/grouping-config-dialog.component';
 import {
   colonnes,

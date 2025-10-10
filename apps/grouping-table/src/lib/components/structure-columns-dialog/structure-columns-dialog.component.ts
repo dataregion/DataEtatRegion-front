@@ -1,6 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
-import { ColumnMetaDataDef, DisplayedOrderedColumn } from '../grouping-table/group-utils';
+import { ColumnMetaDataDef } from '../grouping-table/group-utils';
+import { DisplayedOrderedColumn } from "apps/appcommon/src/lib/export-data.service";
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
