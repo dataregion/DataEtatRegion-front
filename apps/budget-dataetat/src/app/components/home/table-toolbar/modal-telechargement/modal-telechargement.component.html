@@ -10,6 +10,17 @@
                 <div class="fr-icon-refresh-line fr-icon--lg spinning"></div>
                 <p class="loading-text">Traitement en cours...</p>
               </div>
+              <br />
+              <div class="progress-info">
+                <p class="progress-text">{{ currentCpt }} / {{ total }} éléments traités</p>
+                <div >
+                  <progress class="fr-range__input" 
+                            [value]="currentCpt" 
+                            [max]="total" 
+                            aria-label="Progression du téléchargement">
+                  </progress>
+                </div>
+              </div>
             </div>
           }
           

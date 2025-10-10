@@ -22,9 +22,13 @@ export class TableExportService {
 
   // Signaux pour l'état de l'export
   private _isExporting = signal(false);
+  private _total = signal(0)
+  private _currentCount = signal(0)
   
-  // Computed pour les informations d'export
+  
   public readonly isExporting = this._isExporting.asReadonly();
+  public readonly total = this._total.asReadonly();
+  public readonly currentCount = this._currentCount.asReadonly();
   
   public readonly isOverExportLimit = computed(() => {
     const totaux = this._searchDataService.total();
@@ -78,12 +82,15 @@ export class TableExportService {
    * Télécharge les données au format spécifié
    */
   public downloadData(format: string, allColumns: boolean): void {
-    this._isExporting.set(true);
-
     const current_results = this._searchDataService.searchResults() as FinancialDataModel[];
     const selected_colonnes = this._colonnesService.selectedColonnesTable();
+    const totaux = this._searchDataService.total();
     const pagination = this._searchDataService.pagination();
     const all_colonnes = this._colonnesService.allColonnesTable();
+
+    this._isExporting.set(true);
+    this._total.set(totaux?.total ?? 0)
+    this._currentCount.set(current_results.length)
     
     // Si on n'a pas toutes les données et qu'il y en a plus à charger
     if (current_results.length < LIMITE_EXPORT && pagination?.has_next) {

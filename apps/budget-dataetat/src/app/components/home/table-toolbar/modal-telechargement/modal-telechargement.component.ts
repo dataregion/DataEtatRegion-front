@@ -22,6 +22,12 @@ export class ModalTelechargementComponent {
   public get isProcessing(): boolean {
     return this._tableExportService.isExporting();
   }
+  public get total() {
+    return this._tableExportService.total();
+  }
+  public get currentCpt() {
+    return this._tableExportService.currentCount();
+  }
 
   /**
    * Demande de téléchargement des données
