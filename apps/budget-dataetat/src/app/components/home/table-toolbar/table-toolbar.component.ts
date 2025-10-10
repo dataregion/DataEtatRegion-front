@@ -1,5 +1,5 @@
-import { CommonModule, DatePipe } from '@angular/common';
-import { Component, inject, ViewEncapsulation, input, DestroyRef } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Component, inject, ViewEncapsulation, input } from '@angular/core';
 
 import { GridInFullscreenStateService } from 'apps/common-lib/src/lib/services/grid-in-fullscreen-state.service';
 import {
@@ -15,30 +15,24 @@ import { ColonnesService } from '@services/colonnes.service';
 import { ColonneTableau } from '@services/colonnes-mapper.service';
 import { PreferenceService } from '@services/preference.service';
 import { Preference } from 'apps/preference-users/src/lib/models/preference.models';
-import { ExportDataService } from 'apps/appcommon/src/lib/export-data.service';
 import { SearchDataService } from '@services/search-data.service';
-import { MatomoTracker } from 'ngx-matomo-client';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MaterialModule } from "apps/common-lib/src/public-api";
-
-const LIMITE_EXPORT = 6_000;
+import { TableExportService } from './services/table-export.service';
 
 @Component({
   selector: 'budget-table-toolbar',
   templateUrl: './table-toolbar.component.html',
   imports: [CommonModule, ModalGroupingComponent, ModalColonnesComponent, ModalSauvegardeComponent, ModalTelechargementComponent, MaterialModule],
   styleUrls: ['./table-toolbar.component.scss'],
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
+  providers: [TableExportService]
 })
 export class TableToolbarComponent {
   
-  private _destroyRef = inject(DestroyRef);
-  private _datePipe = inject(DatePipe)
   private _gridFullscreen = inject(GridInFullscreenStateService);
   private _colonnesService = inject(ColonnesService);
   private _preferenceService = inject(PreferenceService);
-  private readonly _tracker = inject(MatomoTracker)
-  private _exportDataService = inject(ExportDataService);
+  private _tableExportService = inject(TableExportService);
 
   public _searchDataService = inject(SearchDataService);
 
@@ -64,21 +58,17 @@ export class TableToolbarComponent {
     else return 'Rétrécir le tableau';
   }
   
-  private get is_over_export_limit(): boolean {
-    const totaux = this._searchDataService.total()
-    const is_over_limit = (totaux?.total ?? 0) > LIMITE_EXPORT;
-    return is_over_limit
-  }
-  
+  // Délégation vers le service d'export
   public get is_export_disabled(): boolean {
-    const is_searching = this.searchInProgress;
-    
-    return this.is_over_export_limit || is_searching;
+    return this._tableExportService.isExportDisabled();
   }
   
   public get export_tooltip(): string {
-    if (!this.is_over_export_limit) return '';
-    return `Le téléchargement est limité à ${LIMITE_EXPORT.toLocaleString('fr-FR')} lignes. Veuillez affiner votre recherche.`;
+    return this._tableExportService.exportTooltip();
+  }
+
+  public get isExporting(): boolean {
+    return this._tableExportService.isExporting();
   }
 
   isGrouped() {
@@ -98,73 +88,11 @@ export class TableToolbarComponent {
   }
 
   public exportToGrist(allColumns: boolean): void {
-    // TODO: brancher l’export Grist quand disponible
-    console.warn('[TableToolbar] exportToGrist non implémenté', { allColumns });
-  }
-
-  private _filename(extension: string): string {
-    const searchParams = this._searchDataService.searchParams()
-    
-    let filename = `${this._datePipe.transform(new Date(), 'yyyyMMdd')}_export`;
-    if (searchParams?.locations) {
-      const locations = searchParams.locations;
-      filename += '_' + locations[0].type?.toLowerCase() + '-';
-      filename += locations
-        .filter((loc) => loc.code)
-        .map((loc) => loc.code)
-        .join('-');
-    }
-    
-    if (searchParams?.bops) {
-      const bops = searchParams.bops;
-      filename +=
-        '_bops-' +
-        bops
-          .filter((bop) => bop.code)
-          .map((bop) => bop.code)
-          .join('-');
-    }
-
-    filename = filename + '.' + extension;
-    return filename;
+    this._tableExportService.exportToGrist(allColumns);
   }
 
   public downloadData(extension: string, allColumns: boolean): void {
-    
-    const current_results = this._searchDataService.searchResults() as FinancialDataModel[]
-    const selected_colonnes = this._colonnesService.selectedColonnesTable()
-    const pagination = this._searchDataService.pagination()
-    const all_colonnes = this._colonnesService.allColonnesTable()
-    
-    if (current_results.length < LIMITE_EXPORT && pagination?.has_next) {
-      const loadMore$ = this._searchDataService.loadMore()
-      loadMore$
-        ?.pipe(takeUntilDestroyed(this._destroyRef))
-        .subscribe({
-          next: () => this.downloadData(extension, allColumns),
-        });
-      return
-    }
-    this._tracker.trackEvent("Export","Click", extension, undefined, {"allColumns": allColumns});
-
-    const colonnes = (allColumns)? all_colonnes : selected_colonnes;
-    const export_colonnes = colonnes.map(col => {
-      return { columnLabel: col.label, displayed: true }
-    });
-
-    const blob = this._exportDataService.getBlob(
-      current_results ?? [],
-      extension,
-      export_colonnes,
-    );
-    if (blob) {
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = this._filename(extension);
-      document.body.appendChild(a);
-      a.click();
-    }
+    this._tableExportService.downloadData(extension, allColumns);
   }
 
   // public exportToGrist(allColumns: boolean): void {

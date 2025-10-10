@@ -1,6 +1,6 @@
 import { Component, ViewEncapsulation, inject, output, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { LoaderService } from 'apps/common-lib/src/lib/services/loader.service';
+import { TableExportService } from '../services/table-export.service';
 
 @Component({
   selector: 'budget-modal-telechargement',
@@ -12,23 +12,15 @@ import { LoaderService } from 'apps/common-lib/src/lib/services/loader.service';
 })
 export class ModalTelechargementComponent {
   
-  private _loaderService = inject(LoaderService);
+  private _tableExportService = inject(TableExportService);
   
-  public isProcessing = false;
-  
-  // État de la checkbox pour toutes les colonnes
   public allColumnsSelected: boolean = false;
   
-  // Outputs pour communiquer avec le composant parent
   downloadRequested = output<{format: string, allColumns: boolean}>();
   exportToGristRequested = output<{allColumns: boolean}>();
-  
-  constructor() {
-    this._loaderService.isLoading().subscribe(
-      next => {
-        this.isProcessing = next;
-      }
-    )
+
+  public get isProcessing(): boolean {
+    return this._tableExportService.isExporting();
   }
 
   /**
