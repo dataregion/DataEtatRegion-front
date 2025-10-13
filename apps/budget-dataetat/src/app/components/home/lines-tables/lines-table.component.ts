@@ -68,7 +68,10 @@ export class LinesTableComponent implements OnDestroy {
   // --- Constructeur et effects ---
   
   /** Lignes financières actuellement affichées */
-  readonly currentLignes = computed(() => this.searchDataService.searchResults() as FinancialDataModel[]);
+  readonly currentLignes = computed(() => { 
+    const searchResults = this.searchDataService.searchResults() as FinancialDataModel[];
+    return searchResults
+  });
   
   /** Colonnes actuellement sélectionnées pour l'affichage */
   readonly currentColonnes = computed(() => { 

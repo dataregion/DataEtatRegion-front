@@ -29,12 +29,18 @@
       </div>
         
         <budget-search-data [style.display]="showSearchForm() ? '' : 'none'" />
-
+          
         <div class="main-content overlay-container" [class.no-content]="!shouldShowContent()">
           @if (selectedLine()) {
             <budget-infos-ligne />
           } @else {
-            @if (shouldShowEmptyMessage()) {
+            @if (searchInProgress()) {
+              <div class="fr-alert fr-alert--info">
+                <h4 class="fr-alert__title">Recherche en cours</h4>
+                <p>Recherche des données financières en cours, veuillez patienter...</p>
+              </div>
+            }
+            @else if (shouldShowEmptyMessage()) {
               <div class="fr-alert fr-alert--info">
                 <h4 class="fr-alert__title">Aucun résultat</h4>
                 <p>Aucune donnée ne correspond à vos critères de recherche. Essayez de modifier vos filtres ou d'élargir votre recherche.</p>
@@ -56,12 +62,6 @@
               @else {
                 <budget-lines-table />
               }
-            }
-            @else if (searchInProgress()) {
-              <div class="fr-alert fr-alert--info">
-                <h4 class="fr-alert__title">Recherche en cours</h4>
-                <p>Recherche des données financières en cours, veuillez patienter...</p>
-              </div>
             }
             @else {
               <div class="fr-alert fr-alert--info">

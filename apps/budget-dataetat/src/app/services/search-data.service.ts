@@ -127,8 +127,8 @@ export class SearchDataService {
     this._colonnesService.selectedColonnesGrouped.set([]);
 
     const search = this.searchParams();
-    this.searchFinish.set(false);
     this.searchResults.set([]);
+    this.searchFinish.set(false);
     if (search) {
       search.grouping = [];
       search.grouped = [];
@@ -195,11 +195,12 @@ export class SearchDataService {
    * Met à jour les colonnes et le grouping avant d'appeler l'API.
    * Met à jour le signal searchParams avec les paramètres fournis.
    * Traite automatiquement la réponse et met à jour les signaux du service.
-   * @param searchParams Paramètres de recherche à utiliser (obligatoire)
+   * @param searchParamsCopy Paramètres de recherche à utiliser (obligatoire)
    * @returns Observable du résultat de l'API (pour compatibilité)
    */
   public search(searchParams: SearchParameters): Observable<LignesResponse> {
-    this._logger.debug('==> Début de la méthode search', { searchParams });
+    const searchParamsCopy = { ...searchParams }
+    this._logger.debug('==> Début de la méthode search', { searchParams: searchParamsCopy });
 
     // Préparation des colonnes à retourner
     const colonnesTable = this._colonnesService.selectedColonnesTable();
@@ -212,8 +213,8 @@ export class SearchDataService {
     if (colonnesTable.length) {
       this._logger.debug('    ==> Préparation des colonnes de table');
       const fieldsBack = colonnesTable.map((c) => c.back.map((b) => b.code)).flat();
-      searchParams.colonnes = fieldsBack.filter((v): v is string => v != null);
-      this._logger.debug('    ==> Colonnes préparées', { colonnes: searchParams.colonnes });
+      searchParamsCopy.colonnes = fieldsBack.filter((v): v is string => v != null);
+      this._logger.debug('    ==> Colonnes préparées', { colonnes: searchParamsCopy.colonnes });
     }
 
     // Préparation du grouping
@@ -223,27 +224,30 @@ export class SearchDataService {
       const fieldsGrouping = colonnesGrouping
         .map((c) => c.grouping?.code)
         .filter((v): v is string => v != null);
-      searchParams.grouping = fieldsGrouping.slice(
+      searchParamsCopy.grouping = fieldsGrouping.slice(
         0,
         Math.min(fieldsGrouping.length, grouped ? grouped.length + 1 : 1)
       );
-      searchParams.grouped =
+      searchParamsCopy.grouped =
         this._colonnesService.selectedColonnesGrouped()?.map((v) => v ?? 'None') ?? undefined;
       // Debug logs
-      this._logger.debug('    ==> Grouping && Grouped', {
-        grouping: searchParams.grouping,
-        grouped: searchParams.grouped
-      });
     } else {
       this._logger.debug('    ==> Pas de grouping configuré');
+      searchParamsCopy.grouping = []
+      searchParamsCopy.grouped = []
     }
+    this._logger.debug('    ==> Grouping && Grouped', {
+      grouping: searchParamsCopy.grouping,
+      grouped: searchParamsCopy.grouped
+    });
 
-    this._logger.debug('    ==> Appel de _search avec paramètres finaux', { searchParams });
+    //
+    this._logger.debug('    ==> Appel de _search avec paramètres finaux', { searchParams: searchParamsCopy });
 
-    this.searchParams.set(searchParams);
+    this.searchParams.set(searchParamsCopy);
     // Mise à jour du signal avec les paramètres fournis
-    this._logger.debug('    ==> Signal searchParams mis à jour', { searchParams });
-    return this._search(searchParams).pipe(
+    this._logger.debug('    ==> Signal searchParams mis à jour', { searchParams: searchParamsCopy });
+    return this._search(searchParamsCopy).pipe(
       tap({
         next: (response: LignesResponse) => {
           this._processSearchResponse(response);
@@ -274,6 +278,7 @@ export class SearchDataService {
 
     this._logger.debug('==> Paramètres validés, démarrage de la recherche');
     this.searchInProgress.set(true);
+    this.searchResults.set([]);
     const req$ = this._lignesFinanciereService.getLignesFinancieresLignesGet(
       ...this._searchParamsService.getSanitizedParams(searchParams),
       'body'

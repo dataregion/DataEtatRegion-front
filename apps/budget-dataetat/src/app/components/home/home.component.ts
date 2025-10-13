@@ -270,10 +270,11 @@ export class HomeComponent implements OnInit {
             this._preferenceService.setCurrentPreference(preference);
 
             // // Application des préférences de grouping des colonnes
-            if (preference.options && preference.options['grouping']) {
+            {
+              const groupings = (preference.options && preference.options['grouping']) ? preference.options['grouping'] : [];
               const mapped: ColonneTableau<FinancialDataModel>[] =
                 this._colonnesMapperService.mapNamesFromPreferences(
-                  preference.options['grouping'] as ColonneFromPreference[]
+                  groupings as ColonneFromPreference[]
                 );
               this._colonnesService.selectedColonnesGrouping.set(mapped);
               this._colonnesService.selectedColonnesGrouped.set([]);
@@ -281,10 +282,11 @@ export class HomeComponent implements OnInit {
             }
 
             // Application des préférences d'ordre et d'affichage des colonnes
-            if (preference.options && preference.options['displayOrder']) {
+            {
+              const displayOrder = (preference.options && preference.options['displayOrder']) ? preference.options['displayOrder'] : [];
               const mapped: ColonneTableau<FinancialDataModel>[] =
                 this._colonnesMapperService.mapLabelsFromPreferences(
-                  preference.options['displayOrder'] as ColonneFromPreference[]
+                  displayOrder as ColonneFromPreference[]
                 );
               this._colonnesService.selectedColonnesTable.set(mapped);
               this._logger.debug("==> DislayOrder a appliquer", mapped);
