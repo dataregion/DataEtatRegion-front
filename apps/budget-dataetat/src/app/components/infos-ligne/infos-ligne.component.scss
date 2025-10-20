@@ -2,13 +2,6 @@
   align-items: center;
   flex-wrap: nowrap;
 }
-.ligne-titre {
-  display: flex;
-  flex-direction: row;
-}
-.ligne-titre h2 {
-  margin-top: 15px;
-}
 
 .colonne {
   margin: 10px;
@@ -36,8 +29,10 @@
   }
 }
 
-.newtab:focus {
-  outline: none;
+.newtab {
+  position: absolute;
+  top:16px;
+  z-index: 1000;
 }
 
 .titre {

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, ElementRef, inject, OnDestroy, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Component, computed, ElementRef, EventEmitter, inject, OnDestroy, Output, ViewChild, ViewEncapsulation } from '@angular/core';
 import { FinancialDataModel } from '@models/financial/financial-data.models';
 import { ColonnesService } from '@services/colonnes.service';
 import { SearchDataService } from '@services/search-data.service';
@@ -46,6 +46,11 @@ export class LinesTableComponent implements OnDestroy {
 
   /** Service pour controler le full screen */
   public readonly grid_fullscreen = inject(GridInFullscreenStateService).isFullscreen;
+
+  // --- Events vers le parent ---
+  
+  /** Événement émis quand une ligne est cliquée pour ouvrir le modal */
+  @Output() lineClicked = new EventEmitter<FinancialDataModel>();
 
   // --- ViewChild et observateurs ---
   
@@ -129,7 +134,7 @@ export class LinesTableComponent implements OnDestroy {
 
   /**
    * Gestionnaire de clic sur une ligne du tableau.
-   * Sélectionne la ligne pour affichage détaillé.
+   * Sélectionne la ligne pour affichage détaillé et émet un événement au parent.
    * 
    * @param line - La ligne financière sélectionnée
    */
@@ -138,6 +143,9 @@ export class LinesTableComponent implements OnDestroy {
     
     // Délégation au service pour gérer la sélection de ligne
     this.searchDataService.selectLine(line);
+    
+    // Émettre l'événement au composant parent pour ouvrir le modal
+    this.lineClicked.emit(line);
   }
 
 }

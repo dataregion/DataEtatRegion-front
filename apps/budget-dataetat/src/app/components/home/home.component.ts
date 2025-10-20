@@ -1,4 +1,4 @@
-import { Component, DestroyRef, ElementRef, inject, OnInit, ViewChild, ViewEncapsulation, computed } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit, ViewChild, ViewEncapsulation, computed } from '@angular/core';
 
 import { GridInFullscreenStateService } from 'apps/common-lib/src/lib/services/grid-in-fullscreen-state.service';
 import { TableToolbarComponent } from './table-toolbar/table-toolbar.component';
@@ -30,6 +30,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { map, mergeMap } from 'rxjs';
 import { Preference } from 'apps/preference-users/src/lib/models/preference.models';
 import { SearchParameters } from '@services/search-params.service';
+import { DsfrModalModule, DsfrModalComponent } from '@edugouvfr/ngx-dsfr';
 
 /**
  * Composant principal de la page d'accueil de l'application budget-dataetat.
@@ -44,7 +45,7 @@ import { SearchParameters } from '@services/search-params.service';
 @Component({
   selector: 'budget-home',
   templateUrl: './home.component.html',
-  imports: [CommonModule, SearchDataComponent, TableToolbarComponent, GroupsTableComponent, LinesTableComponent, DisplayDateComponent, InfosLigneComponent],
+  imports: [CommonModule, SearchDataComponent, InfosLigneComponent, DsfrModalModule, TableToolbarComponent, GroupsTableComponent, LinesTableComponent, DisplayDateComponent],
   styleUrls: ['./home.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
@@ -73,9 +74,6 @@ export class HomeComponent implements OnInit {
   /** Service de mapping entre préfiltres et paramètres de recherche */
   private _prefilterMapperService = inject(PrefilterMapperService);
   
-  /** Service de gestion de l'état plein écran des grilles */
-  private _gridFullscreen = inject(GridInFullscreenStateService);
-  
   /** Service central de gestion de la recherche de données */
   private _searchDataService = inject(SearchDataService);
   
@@ -91,9 +89,9 @@ export class HomeComponent implements OnInit {
   public readonly grid_fullscreen = inject(GridInFullscreenStateService).isFullscreen;
 
   // --- Propriétés du template ---
-  
-  /** Référence au spinner de chargement */
-  @ViewChild('spinner', { static: false }) spinner!: ElementRef;
+
+  /** Référence au modal d'informations de ligne */
+  @ViewChild('modalLigne', { static: false }) modalLigne!: DsfrModalComponent;
 
   /** Date du dernier import des données financières */
   lastImportDate: string | null = null;
@@ -311,5 +309,18 @@ export class HomeComponent implements OnInit {
           this.lastImportDate = response.date;
         }
       });
+  }
+
+  // --- Méthodes publiques ---
+
+  /**
+   * Gestionnaire d'événement pour l'ouverture du modal d'informations de ligne.
+   * Appelé quand une ligne est cliquée dans le tableau.
+   * 
+   * @param line - La ligne financière sélectionnée
+   */
+  onLineClicked(line: FinancialDataModel): void {
+    this._logger.debug("==> Ouverture du modal pour la ligne", line);
+    this.modalLigne.open();
   }
 }

@@ -127,6 +127,7 @@ export class InfosLigneComponent implements OnInit {
     if (data) {
       this._searchDataService.selectedLine.set(data);
       this.linkedToTable = false; // XXX: heuristique, l'info vient de l'url, pas de lien au tableau
+      this.view = View.full;
     }
   }
 
@@ -147,6 +148,10 @@ export class InfosLigneComponent implements OnInit {
   // MÉTHODES PUBLIQUES - CHANGEMENT DE VUE
   // ========================================
   
+
+  backToView(): void {
+    this.view = this.linkedToTable ? View.light : View.full;
+  }
 
   onClickFullApiEntreprise(): void {
     this.view = View.full_api_entreprise;
