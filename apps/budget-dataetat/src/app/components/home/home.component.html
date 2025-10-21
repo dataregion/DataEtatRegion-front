@@ -77,6 +77,6 @@
   size="LG"
 >
   @if(selectedLine()) {
-    <budget-infos-ligne />
+    <budget-infos-ligne [financialLine]="selectedLine()!" />
   }
 </dsfr-modal>

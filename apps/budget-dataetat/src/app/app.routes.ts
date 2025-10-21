@@ -4,9 +4,10 @@ import { resolveColonnes } from './resolvers/colonnes.resolver';
 import { resolveFinancialData } from './resolvers/financial-data.resolver';
 import { resolveMarqueBlancheParsedParams } from './resolvers/marqueblanche-parsed-params.resolver';
 import { Profil } from 'apps/common-lib/src/lib/models/profil.enum.model';
-import { router_template_path_full as info_supplementaires_path } from './modules/informations-supplementaires/routes';
 import { inject } from '@angular/core';
 import Keycloak from 'keycloak-js';
+import { resolveInfosSupplementaires } from './resolvers/informations-supplementaires-resolver';
+import { _path_full } from './modules/informations-supplementaires/routes';
 
 export const profiles_required_for_upload_financial_page = [Profil.ADMIN, Profil.COMPTABLE];
 export const profiles_required_for_tags_page = [Profil.USERS];
@@ -18,6 +19,11 @@ const registerRedirect: CanActivateFn = () => {
     keycloak.register()
     return false;
 }
+
+function info_supplementaires_path() {
+  return _path_full(':source', ':id');
+}
+
 
 export const routes: Routes = [
     {
@@ -87,8 +93,11 @@ export const routes: Routes = [
                     roles: profiles_required_for_demarches
                 },
                 runGuardsAndResolvers: 'always',
-                loadChildren: () =>
-                    import('./modules/informations-supplementaires/informations-supplementaires.module').then((m) => m.InformationsSupplementairesModule)
+                resolve: {
+                    infos_supplementaires: resolveInfosSupplementaires
+                },
+                loadComponent: () =>
+                    import('./components/infos-ligne/infos-ligne.component').then(m => m.InfosLigneComponent),
             }
         ]
     },

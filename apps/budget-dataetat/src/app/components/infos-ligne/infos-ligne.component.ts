@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, inject, input, OnInit, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { Observable } from 'rxjs';
@@ -19,7 +19,6 @@ import { InformationsSupplementairesService } from '../../modules/informations-s
 import { SearchDataService } from '@services/search-data.service';
 
 import { OuNonRenseignePipe } from 'apps/common-lib/src/public-api';
-import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 
 /**
  * Énumération des différents modes d'affichage pour les informations supplémentaires
@@ -66,6 +65,9 @@ export class InfosLigneComponent implements OnInit {
   private readonly _route = inject(ActivatedRoute);
   private readonly _searchDataService = inject(SearchDataService);
   private readonly _infoSupplementaireService = inject(InformationsSupplementairesService);
+
+
+  public readonly financialLine = input<FinancialDataModel>();
 
   // ========================================
   // PROPRIÉTÉS PUBLIQUES
@@ -114,21 +116,28 @@ export class InfosLigneComponent implements OnInit {
   // CYCLE DE VIE ANGULAR
   // ========================================
   
-  constructor() {
-    toObservable(this._searchDataService.selectedLine)
-    .pipe(takeUntilDestroyed())
-    .subscribe((line) => {
-      this._initFromResolverModel(line);
-    })
-  }
 
   ngOnInit(): void {
-    const data: FinancialDataModel = this._route.snapshot.data['infos_supplementaires'];
-    if (data) {
-      this._searchDataService.selectedLine.set(data);
-      this.linkedToTable = false; // XXX: heuristique, l'info vient de l'url, pas de lien au tableau
-      this.view = View.full;
+    // Priorité 1: données passées via l'input
+    let financialData = this.financialLine();
+    this.view = View.light;
+    
+    // Priorité 2: données du resolver (route directe)
+    if (!financialData) {
+      const resolverData: FinancialDataModel = this._route.snapshot.data['infos_supplementaires'];
+      if (resolverData) { 
+        financialData = resolverData;
+        this.linkedToTable = false; // Pas de lien au tableau car vient de l'URL
+        this.view = View.full; // Vue complète par défaut pour les accès directs
+      }
     }
+
+    if (!financialData) {
+      return;
+    }
+
+    this._financial = financialData;
+    this._setupViewServices();
   }
 
   // ========================================
@@ -170,20 +179,6 @@ export class InfosLigneComponent implements OnInit {
   // MÉTHODES PRIVÉES - INITIALISATION
   // ========================================
   
-  /**
-   * Initialise le composant avec les données du modèle financier
-   * @param data - Les données financières à afficher
-   */
-  private _initFromResolverModel(data: FinancialDataModel | undefined): void {
-    if (data === undefined) {
-      return;
-    }
-    
-    this._financial = data;
-    this.view = View.light;
-    this._setupViewServices();
-  }
-
   /**
    * Configure les services de vue et initialise les observables des données supplémentaires
    */

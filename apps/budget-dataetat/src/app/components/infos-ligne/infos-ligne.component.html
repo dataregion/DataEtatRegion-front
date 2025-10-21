@@ -12,10 +12,12 @@
   <div class="fr-col-12">
     <!-- Templates always declared before usage -->
     <ng-template #titre let-libelle="libelle">
+      @if(view !== 'full') {
       <button class="fr-btn fr-btn--primary" (click)="backToView()" type="button"
         aria-label="Revenir à l'accueil présentant les informations de la ligne financière">Revenir à la fiche
         principale</button>
-      @if (linkedToTable) {
+      }
+      @if (linkedToTable || view === 'full') {
       <h2 class="fr-modal__title">{{ libelle }}</h2>
       }
       <br />
@@ -147,7 +149,7 @@
     <budget-informations-demarche-simplifie />
     }
     @case ('full') {
-    <ng-container *ngTemplateOutlet="titre; context:{ libelle: '' }" />
+    <!-- <ng-container *ngTemplateOutlet="titre; context:{ libelle: '' }" /> -->
     <div class="conteneur-full">
       <div class="conteneur-section">
         <ng-container
