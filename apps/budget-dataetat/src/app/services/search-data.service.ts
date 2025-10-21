@@ -22,8 +22,6 @@ export type SearchResults = GroupedData[] | FinancialDataModel[]
 })
 export class SearchDataService {
 
-
-
   // --- Services dépendants ---
   private _mapper: SearchDataMapper = inject(SearchDataMapper);
   private _colonnesService: ColonnesService = inject(ColonnesService);
@@ -73,6 +71,19 @@ export class SearchDataService {
    */
   public readonly pagination = signal<PaginationMeta | null>(null);
 
+  
+  public cleanResults() {
+    this._logger.debug('==> Début de la méthode cleanResults');
+    this.total.set(undefined);
+    this.selectedLine.set(undefined);
+    this.searchFinish.set(false);
+    this.searchInProgress.set(false);
+    this.searchGroupingInProgress.set(false);
+    this.searchResults.set([]);
+    this.pagination.set(null);
+  }
+
+
 
   public doSelectColumn(selectedColonnes: ColonneTableau<FinancialDataModel>[]) {
     this._logger.debug('==> Début de la méthode doSelectColumn', { selectedColonnes });
@@ -92,13 +103,20 @@ export class SearchDataService {
   public doSearchGrouping(selectedColonnes: ColonneTableau<FinancialDataModel>[]): Observable<LignesResponse> {
     this._logger.debug('==> Début de la méthode doSearchGrouping', { selectedColonnes });
 
+     // Vérifications préalables
+    const currentParams = { 
+      ...this.searchParams() 
+    } as SearchParameters;
+
+    currentParams.page = 1; // on force la page 1 sur le grouping
+
     if (selectedColonnes.length === 0) {
       return this.resetSearchGrouping();
     } else {
       this._colonnesService.selectedColonnesGrouping.set(selectedColonnes);
       this._colonnesService.selectedColonnesGrouped.set([]);
       this.searchGroupingInProgress.set(true);
-      return this.search(this.searchParams()!).pipe(tap({
+      return this.search(currentParams!).pipe(tap({
         next: () => {
           this.searchGroupingInProgress.set(false);
         }
@@ -174,8 +192,7 @@ export class SearchDataService {
     const nextPage = currentPage + 1;
 
     currentParams.page = nextPage;
-
-    return this.search(currentParams);
+    return this.search(currentParams, true); //mode lazyloading
   }
 
   /**
@@ -198,7 +215,7 @@ export class SearchDataService {
    * @param searchParamsCopy Paramètres de recherche à utiliser (obligatoire)
    * @returns Observable du résultat de l'API (pour compatibilité)
    */
-  public search(searchParams: SearchParameters): Observable<LignesResponse> {
+  public search(searchParams: SearchParameters, lazyLoading = false): Observable<LignesResponse> {
     const searchParamsCopy = { ...searchParams }
     this._logger.debug('==> Début de la méthode search', { searchParams: searchParamsCopy });
 
@@ -247,6 +264,9 @@ export class SearchDataService {
     this.searchParams.set(searchParamsCopy);
     // Mise à jour du signal avec les paramètres fournis
     this._logger.debug('    ==> Signal searchParams mis à jour', { searchParams: searchParamsCopy });
+
+    if (!lazyLoading) this.searchInProgress.set(true);
+
     return this._search(searchParamsCopy).pipe(
       tap({
         next: (response: LignesResponse) => {
@@ -277,8 +297,6 @@ export class SearchDataService {
     }
 
     this._logger.debug('==> Paramètres validés, démarrage de la recherche');
-    this.searchInProgress.set(true);
-    this.searchResults.set([]);
     const req$ = this._lignesFinanciereService.getLignesFinancieresLignesGet(
       ...this._searchParamsService.getSanitizedParams(searchParams),
       'body'

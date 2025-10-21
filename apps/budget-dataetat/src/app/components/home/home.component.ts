@@ -247,6 +247,7 @@ export class HomeComponent implements OnInit {
       // Si une préférence doit être appliquée (UUID fourni dans l'URL)
       if (param[QueryParam.Uuid]) {
         this._logger.debug("==> Détection UUID", param[QueryParam.Uuid]);
+        this._searchDataService.cleanResults();
 
         this._httpPreferenceService
           .getPreference(param[QueryParam.Uuid])
