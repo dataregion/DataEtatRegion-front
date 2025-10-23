@@ -1,0 +1,13 @@
+export * from './dashboards.service';
+import { DashboardsService } from './dashboards.service';
+export * from './dashboards.serviceInterface';
+export * from './healthcheck.service';
+import { HealthcheckService } from './healthcheck.service';
+export * from './healthcheck.serviceInterface';
+export * from './lignesFinancieres.service';
+import { LignesFinancieresService } from './lignesFinancieres.service';
+export * from './lignesFinancieres.serviceInterface';
+export * from './listeDesColonnes.service';
+import { ListeDesColonnesService } from './listeDesColonnes.service';
+export * from './listeDesColonnes.serviceInterface';
+export const APIS = [DashboardsService, HealthcheckService, LignesFinancieresService, ListeDesColonnesService];
