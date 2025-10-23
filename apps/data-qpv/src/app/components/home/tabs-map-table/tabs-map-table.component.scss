@@ -1,0 +1,22 @@
+.fr-tabs {
+    border-bottom: 0px;
+}
+
+.fr-tabs__panel {
+    background-color: white;
+}
+
+.fr-table__footer dsfr-form-select:host {
+    display: none;
+}
+
+.wrapper-tab-content {
+    width: 100%;
+    height: auto;
+    min-height: 1180px;
+}
+:host {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}

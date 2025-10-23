@@ -6,7 +6,7 @@ export interface PreFilters {
   localisation?: JSONObject[]
   qpv?: JSONObject[]
   financeurs?: JSONObject[]
-  thematiques?: string[]
+  thematiques?: JSONObject[]
   porteurs?: JSONObject[]
   types_porteur?: JSONObject[]
 

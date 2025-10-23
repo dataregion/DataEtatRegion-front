@@ -381,17 +381,9 @@
             "tsConfig": "apps/data-qpv/tsconfig.app.json",
             "inlineStyleLanguage": "scss",
             "assets": [
-              "apps/data-qpv/src/favicon.ico",
-              "apps/data-qpv/src/assets",
               {
                 "glob": "**/*",
-                "input": "./node_modules/@gouvfr/dsfr/dist",
-                "output": "/@gouvfr"
-              },
-              {
-                "glob": "**/*",
-                "input": "./apps/shared-assets/img",
-                "output": "assets/img"
+                "input": "apps/data-qpv/public"
               }
             ],
             "styles": [

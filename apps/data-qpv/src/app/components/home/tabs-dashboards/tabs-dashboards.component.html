@@ -1,0 +1,29 @@
+<dsfr-tabs [selectedTabIndex]="selectedDashboard()" (tabSelect)="setSelectedDashboard($event)" style="margin-bottom: 100px;">
+  <dsfr-tab tabId="dashboard-147" label="Crédits P147">
+    @if (selectedDashboard() === 0) {
+    <div class="fr-grid-row fr-grid-row--gutters">
+      <div class="fr-col-12">
+        <data-qpv-dashboard class="dashboard-credit-wrapper" />
+      </div>
+    </div>
+    }
+  </dsfr-tab>
+  <dsfr-tab tabId="dashboard-autres" label="Crédits droit commun">
+     @if (selectedDashboard() === 1) {
+    <div class="fr-grid-row fr-grid-row--gutters">
+      <div class="fr-col-12">
+        <data-qpv-dashboard class="dashboard-credit-wrapper" />
+      </div>
+    </div>
+    }
+  </dsfr-tab>
+  <dsfr-tab tabId="dashboard-tous" label="Total des crédits">
+     @if (selectedDashboard() === 2) {
+      <div class="fr-grid-row fr-grid-row--gutters">
+        <div class="fr-col-12">
+          <data-qpv-dashboard class="dashboard-credit-wrapper" />
+        </div>
+      </div>
+    }
+  </dsfr-tab>
+</dsfr-tabs>

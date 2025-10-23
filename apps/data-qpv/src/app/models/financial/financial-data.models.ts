@@ -36,6 +36,7 @@ export interface FinancialDataModel extends ExportableAsJson {
   lieu_action: Optional<LieuAction>;
   date_cp: Optional<string>;
   date_replication: Optional<string>;
+  date_modification: Optional<string>;
 
   tags: Tag[];
 

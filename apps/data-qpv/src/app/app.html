@@ -1,0 +1,30 @@
+<lib-header [title]="title()" [displayPreference]="false" [subTitle]="'Rechercher des données financières à l\'échelle des QPV'" [logo]="'DataQpvLogo.svg'">
+
+  <li help>
+    <button
+      routerLink="aide" matTooltip="Aide"
+      class="fr-btn fr-btn--tertiary-no-outline">Aide</button>
+  </li>
+
+</lib-header>
+
+@if(progressBarVisible() === true) {
+<div>
+  <mat-progress-bar mode="query"/>
+</div>
+}
+
+
+<router-outlet class="page-content-outlet"/>
+
+@if(isAuthenticated()) {
+<lib-footer [logo]="'DataEtat.svg'">
+  @if(help) {
+    <li class="fr-footer__bottom-item">
+      <a class="fr-footer__bottom-link" href="{{help}}" target="_blank">Aide en
+        ligne</a>
+    </li>
+  }
+ 
+</lib-footer>
+}

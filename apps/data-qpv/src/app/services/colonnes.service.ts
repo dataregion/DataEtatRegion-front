@@ -1,38 +1,98 @@
+import { Injectable, signal, computed } from '@angular/core';
+import { FinancialDataModel } from '@models/financial/financial-data.models';
+import { ColonneTableau } from '@services/colonnes-mapper.service';
 
-export enum ColonneLibelles {
-  SOURCE = "Source de données",
-  N_EJ = "N° EJ",
-  POSTE_EJ = "N° Poste EJ",
-  MONTANT_AE = "Montant engagé",
-  MONTANT_CP = "Montant payé",
-  THEME = "Thème",
-  CODE_PROGRAMME = "Code programme",
-  PROGRAMME = "Programme",
-  CODE_DOMAINE = "Code domaine fonctionnel",
-  DOMAINE = "Domaine fonctionnel",
-  REFERENTIEL_PROGRAMMATION = "Ref Programmation",
-  COMMUNE = "Commune du SIRET",
-  CRTE = "CRTE du SIRET",
-  EPCI = "EPCI du SIRET",
-  ARRONDISSEMENT = "Arrondissement du SIRET",
-  DEPARTEMENT = "Département du SIRET",
-  REGION = "Région du SIRET",
-  CODE_LOC_INTER = "Code localisation interministérielle",
-  LOC_INTER = "Localisation interministérielle",
-  COMPTE_BUDGETAIRE = "Compte budgétaire",
-  CPER = "CPER",
-  CODE_GROUPE_MARCHANDISE = "Code groupe marchandise",
-  GROUPE_MARCHANDISE = "Groupe marchandise",
-  SIRET = "Siret",
-  BENEFICIAIRE = "Bénéficiaire",
-  TYPE_ETABLISSEMENT = "Type d'établissement",
-  CODE_QPV = "Code QPV",
-  QPV = "QPV",
-  DATE_DERNIER_PAIEMENT = "Date dernier paiement",
-  DATE_CREATION_EJ = "Date création EJ",
-  ANNEE_ENGAGEMENT = "Année Exercice Comptable",
-  CODE_CENTRE_COUTS = "Code centre coûts",
-  LABEL_CENTRE_COUTS = "Label centre coûts",
-  CENTRE_COUTS = "Centre coûts",
-  TAGS = "Tags",
+/**
+ * Service de gestion des colonnes pour les tableaux de données financières.
+ * 
+ * Ce service centralise la gestion des colonnes pour :
+ * - L'affichage dans les tableaux (sélection et configuration des colonnes visibles)
+ * - Le groupement des données (colonnes utilisées pour regrouper les lignes)
+ * - L'état de groupement (actif/inactif selon les colonnes sélectionnées)
+ * 
+ * Utilise des signals Angular pour maintenir un état réactif et permettre
+ * aux composants de réagir automatiquement aux changements de configuration.
+ * Le signal computed 'grouped' se met à jour automatiquement selon l'état
+ * des colonnes de groupement sélectionnées.
+ */
+@Injectable({ providedIn: 'root' })
+export class ColonnesService {
+
+  // ========================================
+  // FONCTION UTILITAIRE DE COMPARAISON
+  // ========================================
+
+  /**
+   * Fonction de comparaison pour les tableaux de colonnes.
+   * Compare les contenus indépendamment de l'ordre des éléments.
+   * Seules les propriétés 'colonne' et 'label' sont comparées.
+   */
+  private readonly compareColonnesArrays = (a: ColonneTableau<FinancialDataModel>[], b: ColonneTableau<FinancialDataModel>[]): boolean => {
+    if (a === b) return true;
+    if (a.length !== b.length) return false;
+    
+    const e =  a.every(colA => 
+      b.some(colB => colA.colonne === colB.colonne && colA.label === colB.label)
+    );
+    return e;
+  };
+
+  // ========================================
+  // GESTION DE L'ÉTAT DE GROUPEMENT
+  // ========================================
+
+  /**
+   * Signal calculé qui détermine si le mode groupement est actuellement actif.
+   * Le groupement est actif quand :
+   * - Au moins une colonne de groupement est sélectionnée
+   * - Le nombre de colonnes groupées diffère du nombre de colonnes de groupement
+   * 
+   * @returns true si le mode groupement est actif
+   */
+  public readonly grouped = computed(() => {
+    return this.selectedColonnesGrouping().length != 0 && 
+           this.selectedColonnesGrouping().length != this.selectedColonnesGrouped().length;
+  });
+
+  // ========================================
+  // GESTION DES COLONNES DE TABLEAU
+  // ========================================
+
+  /**
+   * Signal contenant toutes les colonnes disponibles pour le tableau
+   */
+  public readonly allColonnesTable = signal<ColonneTableau<FinancialDataModel>[]>([]);
+
+  /**
+   * Signal contenant les colonnes actuellement affichées dans le tableau
+   */
+  public readonly selectedColonnesTable = signal<ColonneTableau<FinancialDataModel>[]>([], {
+    equal: this.compareColonnesArrays
+  });
+
+  // ========================================
+  // GESTION DES COLONNES DE GROUPEMENT
+  // ========================================
+
+  /**
+   * Signal contenant toutes les colonnes disponibles pour le groupement
+   */
+  public readonly allColonnesGrouping = signal<ColonneTableau<FinancialDataModel>[]>([]);
+  
+  /**
+   * Signal contenant les colonnes actuellement utilisées pour le groupement
+   */
+  public readonly selectedColonnesGrouping = signal<ColonneTableau<FinancialDataModel>[]>([], {
+    equal: this.compareColonnesArrays
+  });
+  
+  // ========================================
+  // GESTION DES COLONNES GROUPÉES (RÉSULTAT)
+  // ========================================
+
+  /**
+   * Signal contenant les identifiants des colonnes présentes dans les groupes créés
+   */
+  public readonly selectedColonnesGrouped = signal<string[]>([]);
+
 }

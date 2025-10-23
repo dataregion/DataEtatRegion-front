@@ -1,0 +1,68 @@
+
+@if(displayError && error.name) {
+  <div class="fr-container" data-test-id="application-error-message">
+    <div class="fr-grid-row">
+      <div class="fr-col-12">
+        <div class="fr-alert fr-alert--error" style="margin-top:50px;">
+          <h3 class="fr-alert__title">Erreur</h3>
+          <p>{{error.message}}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+} @else {
+  <div style="background-color: #fff;">
+
+    <div class="fr-container">
+      <div class="fr-grid-row">
+        <div class="fr-col-12" style="padding-bottom: 50px;">
+
+          <h3 style="margin-top:50px; margin-bottom:10px;">Rechercher des données financières à l'échelle des QPV</h3>
+          <p>Affiche les données des territoires et leurs crédits</p>
+          <data-qpv-search-data [style.display]="showSearchForm() ? '' : 'none'" />
+
+        </div>
+      </div>      
+    </div>
+  </div>
+
+  <div class="fr-container">
+    <div class="fr-grid-row">
+      <div class="fr-col-12">
+        <div class="main-content" [class.no-content]="!shouldShowContent()">
+          <!-- @if (shouldShowEmptyMessage()) {
+            <div class="fr-alert fr-alert--info">
+              <h4 class="fr-alert__title">Aucun résultat</h4>
+              <p>Aucune donnée ne correspond à vos critères de recherche. Essayez de modifier vos filtres ou d'élargir votre recherche.</p>
+            </div>
+          } -->
+          @if (!searchFormInProgress() && !noSearchDone()) {
+            <div class="fr-grid-row">
+              <div class="fr-col-12"> 
+                <span class="search-resume" [innerText]="searchParametersToText()"></span>
+              </div>
+              <div class="fr-col-6" style="margin-bottom: 50px;">
+                <data-qpv-tabs-dashboards />
+              </div>
+              <div class="fr-col-6" style="margin-bottom: 50px;">
+                <data-qpv-tabs-map-table />
+              </div>
+            </div>
+          }
+          @else if (searchFormInProgress()) {
+            <div class="fr-alert fr-alert--info">
+              <h4 class="fr-alert__title">Recherche en cours</h4>
+              <p>Recherche des données financières en cours, veuillez patienter...</p>
+            </div>
+          }
+          @else {
+            <div class="fr-alert fr-alert--info">
+              <h4 class="fr-alert__title">Prêt pour la recherche</h4>
+              <p>Utilisez les filtres ci-dessus pour rechercher des données financières.</p>
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+}

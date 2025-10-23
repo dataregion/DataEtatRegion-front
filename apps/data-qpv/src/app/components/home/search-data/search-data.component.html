@@ -1,0 +1,149 @@
+<form [formGroup]="formSearch" autocomplete="off">
+  <div class="box fr-grid-row">
+    <div class="fr-col-2 wrapper-select">
+      <lib-select-multiple  [canFilter]="false"
+                            [canSelectAll]="true"
+                            [placeholder]="'Année'"
+                            [options]="annees"
+                            [(selected)]="selectedAnnees"
+                            data-test-id="annees-form-field"
+                            class="select-multiple"
+                            icon="calendar_month" />
+    </div>
+    <div class="field-localisation fr-col-5 wrapper-select">
+      <lib-localisation
+        [textTooltip]="'Votre recherche affichera les résultats si le SIRET du bénéficiaire ou si la localisation interministérielle est géolocalisée dans la zone recherchée'"
+        [(selectedNiveau)]="selectedNiveau"
+        [(selectedLocalisation)]="selectedLocation" />
+      <!-- @if (refGeo !== null) {
+        <lib-localisation
+          [textTooltip]="'Votre recherche affichera les résultats si le lieu d\'action est géolocalisé dans un QPV de la zone recherchée'"
+          [(selectedNiveau)]="selectedNiveau"
+          [(selectedLocalisation)]="selectedLocation"
+          (selectedNiveauChange)="selectNiveauChange()"
+          (selectedLocalisationChange)="selectLocalisationChange($event)"
+          [dataPreLoaded]="true"
+          [data]="refGeo"
+          [niveauxExcludeFilter]="['Région', 'CRTE', 'Arrondissement', 'QPV']"
+          [filterRegion]="true"
+          [wordingNiveaux]="wordingNiveaux"/>
+        } -->
+    </div>
+    
+    <div class="fr-col-3 wrapper-select">
+      <lib-select-multiple  [canFilter]="true"
+                            [canSelectAll]="false"
+                            [placeholder]="'QPV'"
+                            [options]="filteredQPV()"
+                            [(selected)]="selectedQpv"
+                            [filterFunction]="filterQPV"
+                            [renderLabelFunction]="renderQPVLabel"
+                            [renderFunction]="renderQPVOption"
+                            data-test-id="qpv-form-field" />
+    </div>
+    <div class="col-fr-2">
+      <ul class="fr-btns-group fr-btns-group--inline">
+        <li>
+          <button class="fr-btn fr-icon-search-line btn-form-action" (click)="doSearch()" aria-label="Bouton de recherche."></button>
+        </li>
+        <li>
+          <button class="fr-btn fr-btn--secondary fr-icon-delete-line btn-form-action" (click)="reset()" aria-label="Bouton de réinitialisation"></button>
+        </li>
+      </ul>
+    </div>
+  </div>
+  
+  <div class="box fr-grid-row">
+    <div class="fr-col-10">
+      <ul class="fr-btns-group fr-btns-group--inline">
+        <li>
+          <button data-fr-opened="false" aria-controls="modal-financeurs"
+                  class="fr-btn fr-btn--icon-right fr-icon-arrow-right-s-line btn-open-modal"
+                  [ngClass]="{
+                    'fr-btn--primary': selectedFinanceurs !== null && selectedFinanceurs.length !== 0,
+                    'fr-btn--tertiary': selectedFinanceurs === null || selectedFinanceurs.length === 0
+                  }">
+                  @if (selectedFinanceurs !== null && selectedFinanceurs.length !== 0) {
+                    <p class="fr-tag">{{selectedFinanceurs.length}}</p>
+                  }
+                  
+                  Financeur
+          </button>
+        </li>
+        <li>
+          <button data-fr-opened="false" aria-controls="modal-thematiques"
+                  class="fr-btn fr-btn--icon-right fr-icon-arrow-right-s-line btn-open-modal"
+                  [ngClass]="{
+                    'fr-btn--primary': selectedThematiques !== null && selectedThematiques.length !== 0,
+                    'fr-btn--tertiary': selectedThematiques === null || selectedThematiques.length === 0
+                  }">
+                  @if (selectedThematiques !== null && selectedThematiques.length !== 0) {
+                    <p class="fr-tag">{{selectedThematiques.length}}</p>
+                  }
+                  
+                  Thématique
+          </button>
+        </li>
+        <li>
+          <button data-fr-opened="false" aria-controls="modal-porteurs"
+                  class="fr-btn fr-btn--icon-right fr-icon-arrow-right-s-line btn-open-modal"
+                  [ngClass]="{
+                    'fr-btn--primary': selectedPorteurs !== null && selectedPorteurs.length !== 0,
+                    'fr-btn--tertiary': selectedPorteurs === null || selectedPorteurs.length === 0
+                  }">
+                  @if (selectedPorteurs !== null && selectedPorteurs.length !== 0) {
+                    <p  class="fr-tag">{{selectedPorteurs.length}}</p>
+                  }
+                  
+                  Nom du porteur de projet
+          </button>
+        </li>
+        <li>
+          <button data-fr-opened="false" aria-controls="modal-types"
+                  class="fr-btn fr-btn--icon-right fr-icon-arrow-right-s-line btn-open-modal"
+                  [ngClass]="{
+                    'fr-btn--primary': selectedTypesPorteur !== null && selectedTypesPorteur.length !== 0,
+                    'fr-btn--tertiary': selectedTypesPorteur === null || selectedTypesPorteur.length === 0
+                  }">
+                  @if(selectedTypesPorteur !== null && selectedTypesPorteur.length !== 0) {
+                    <p class="fr-tag">{{selectedTypesPorteur.length}}</p>
+                  }
+                  
+                  Type de porteur de projet
+          </button>
+        </li>
+      </ul>
+    </div>
+    <div class="fr-col-2">
+    </div>
+  </div>
+
+  <data-qpv-modal-additional-params #modalFinanceurs
+        [title]="'Liste des financeurs'"
+        [idModal]="'modal-financeurs'"
+        [checkboxes]="filteredFinanceurs"
+        [(selected)]="selectedFinanceurs"
+        [renderFunction]="renderFinanceurCheckbox" />
+
+  <data-qpv-modal-additional-params #modalThematiques
+        [title]="'Liste des thématiques'"
+        [idModal]="'modal-thematiques'"
+        [checkboxes]="thematiques"
+        [(selected)]="selectedThematiques"
+        [renderFunction]="renderThematiqueCheckbox" />
+
+  <data-qpv-modal-additional-params #modalPorteurs
+        [title]="'Liste des porteurs de projet'"
+        [idModal]="'modal-porteurs'"
+        [checkboxes]="filteredPorteurs"
+        [(selected)]="selectedPorteurs"
+        [renderFunction]="renderPorteurCheckbox" />
+
+  <data-qpv-modal-additional-params #modalTypesPorteur
+        [title]="'Liste des types de porteur de projet'"
+        [idModal]="'modal-types'"
+        [checkboxes]="typesPorteur"
+        [(selected)]="selectedTypesPorteur"
+        [renderFunction]="renderTypePorteurCheckbox" />
+
+</form>

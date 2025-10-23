@@ -10,13 +10,13 @@ import { Component } from "@angular/core";
             display: flex;
             justify-content: center;
             align-items: center;
-            padding-top: 100px;
+            padding: 10px 0px;
         }
         .loadingspinner {
             display: block;
             pointer-events: none;
-            width: 7em;
-            height: 7em;
+            width: 5em;
+            height: 5em;
             border: 0.4em solid transparent;
             border-color: #eee;
             border-top-color: #000099;
