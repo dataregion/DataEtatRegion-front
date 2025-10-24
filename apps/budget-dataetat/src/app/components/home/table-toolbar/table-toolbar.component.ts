@@ -91,59 +91,6 @@ export class TableToolbarComponent {
     this._tableExportService.downloadData(extension, allColumns);
   }
 
-  // public exportToGrist(allColumns: boolean): void {
-  //   if (this.searchData.searchForm.valid && !this.searchData.searchInProgress.value) {
-  //     this.tracker.trackEvent("Export","Click", "grist", undefined, {"allColumns": allColumns});
-  //     this.searchData.searchInProgress.next(true);
-  //     const dataToExport = this._exportDataService.getDataToExport(
-  //       this.searchData.searchResult() ?? [],
-  //       !allColumns ? this.displayedOrderedColumns : null
-  //     );
-
-  //     if (dataToExport) {
-  //       this._budgetService.exportToGrist(dataToExport).subscribe(
-  //         {
-  //           next:() => {
-  //             this._alertService.openAlertSuccess(`Les données ont bien été transférées dans votre espace Grist.`);
-  //           },
-  //           error: (err: Error) => {
-  //             this._alertService.openAlert("error", err, 8);
-  //             this.searchData.searchInProgress.next(false);
-  //           },
-  //           complete:() => {
-  //             this.searchData.searchInProgress.next(false);
-  //           }
-  //         }
-  //       )
-  //     }
-  //   }
-  // }
-
-  // private _filename(extension: string): string {
-  //   const formValue = this.searchData.searchForm.value;
-  //   let filename = `${this._datePipe.transform(new Date(), 'yyyyMMdd')}_export`;
-  //   if (formValue.location) {
-  //     const locations = formValue.location as GeoModel[];
-  //     filename += '_' + locations[0].type?.toLowerCase() + '-';
-  //     filename += locations
-  //       .filter((loc) => loc.code)
-  //       .map((loc) => loc.code)
-  //       .join('-');
-  //   }
-
-  //   if (formValue.bops) {
-  //     const bops = formValue.bops;
-  //     filename +=
-  //       '_bops-' +
-  //       bops
-  //         .filter((bop) => bop.code)
-  //         .map((bop) => bop.code)
-  //         .join('-');
-  //   }
-
-  //   return filename + '.' + extension;
-  // }
-
   /**
    * Gestionnaire d'événement pour le téléchargement depuis la modale
    */

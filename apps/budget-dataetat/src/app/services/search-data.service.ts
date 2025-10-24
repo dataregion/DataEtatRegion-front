@@ -284,7 +284,7 @@ export class SearchDataService {
     this._logger.debug('==> Début de la méthode zoomOnGrouping', { grouped });
     this._colonnesService.selectedColonnesGrouped.set(grouped.filter(g => g !== undefined));
 
-    return this._doSearch(this.searchParams()!);
+    return this._doSearch(this.searchParams()!, true);
   }
 
   /**
