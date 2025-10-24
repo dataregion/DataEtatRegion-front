@@ -6,6 +6,7 @@ import { provideKeycloakAngularDynamic } from './app/keycloak.config';
 import { configApp, providerBugdetConfiguration } from './app/app.config';
 import { LoggerService, LogLevel } from 'apps/common-lib/src/lib/services/logger.service';
 import { providerMatomoDynamic } from './app/matomo.config';
+import { configureColonnesInitialization } from './app/colonnes.config';
 
 async function loadApp(): Promise<{ settings: SettingsBudgetService, logger: LoggerService }> {
   const response = await fetch('/config/settings.json');
@@ -25,7 +26,7 @@ async function loadApp(): Promise<{ settings: SettingsBudgetService, logger: Log
   return { settings: settingsService, logger: loggerService };
 }
 
-loadApp().then((services) => {
+loadApp().then(async (services) => {
 
   const providerMatomo = providerMatomoDynamic(services.settings, services.logger);
   const appConfig: ApplicationConfig = {
@@ -41,10 +42,14 @@ loadApp().then((services) => {
       // ✅ Appelle une fonction qui retourne les providers
       provideKeycloakAngularDynamic(services.settings, services.logger),
       ...(providerMatomo ? [providerMatomo] : []),
+      
       ...configApp.providers
     ]
   };
 
-  bootstrapApplication(App, appConfig)
-    .catch(err => console.error('❌ Bootstrap error:', err));
+  // Bootstrap de l'application avec initialisation des colonnes
+  const bootstrapPromise = bootstrapApplication(App, appConfig);
+  
+  // Configuration de l'initialisation des colonnes
+  configureColonnesInitialization(bootstrapPromise);
 });

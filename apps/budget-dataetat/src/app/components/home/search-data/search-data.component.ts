@@ -305,7 +305,7 @@ export class SearchDataComponent implements OnInit {
           // Lancement de la recherche
           const resolvedMarqueBlanche = this._route.snapshot.data['mb_parsed_params'] as MarqueBlancheParsedParamsResolverModel;
           const mb_fullscreen = resolvedMarqueBlanche.data?.fullscreen ?? false;
-          this.searchDataService.search(resolvedParams!)
+          this.searchDataService.searchFromMarqueBlanche(resolvedParams!)
             .pipe(
               takeUntilDestroyed(this._destroy_ref),
               tap(_ => {
@@ -344,7 +344,7 @@ export class SearchDataComponent implements OnInit {
       source_region: formValue.sources_region || undefined,
     };
     // Lancement de la recherche - le service traite automatiquement la réponse
-    this.searchDataService.search(search_parameters).subscribe();
+    this.searchDataService.flatSearchFromScratch(search_parameters).subscribe();
   }
 
   /**

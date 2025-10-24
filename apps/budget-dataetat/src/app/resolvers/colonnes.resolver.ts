@@ -4,10 +4,12 @@ import { forkJoin } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ColonnesResolved, ColonnesResolvedModel } from '@models/financial/colonnes.models';
 import { ListeDesColonnesService } from 'apps/clients/v3/financial-data';
+import { ColonnesMapperService } from '@services/colonnes-mapper.service';
 
 export const resolveColonnes: ResolveFn<ColonnesResolvedModel> = () => {
   
   const colonnesService: ListeDesColonnesService = inject(ListeDesColonnesService);
+  const colonnesMapperService: ColonnesMapperService = inject(ColonnesMapperService);
 
   return forkJoin([
     colonnesService.getColonnesTableauColonnesTableauGet(),
@@ -18,6 +20,13 @@ export const resolveColonnes: ResolveFn<ColonnesResolvedModel> = () => {
         colonnesTable: fetchedColonnesTable.data,
         colonnesGrouping: fetchedColonnesGrouping.data
       } as ColonnesResolved;
+      
+      // Initialisation du service de mapper avec les colonnes récupérées
+      colonnesMapperService.initService(
+        result.colonnesTable ?? [],
+        result.colonnesGrouping ?? []
+      );
+      
       return { data: result };
     })
   );

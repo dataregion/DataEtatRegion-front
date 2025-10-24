@@ -71,8 +71,10 @@ export class SearchDataService {
    */
   public readonly pagination = signal<PaginationMeta | null>(null);
 
-  
-  public cleanResults() {
+  /**
+   * Nettoyage du service pour ré-init
+   */
+  public cleanSearchResults() {
     this._logger.debug('==> Début de la méthode cleanResults');
     this.total.set(undefined);
     this.selectedLine.set(undefined);
@@ -83,8 +85,39 @@ export class SearchDataService {
     this.pagination.set(null);
   }
 
+  public flatSearchFromScratch(searchParams: SearchParameters) {
+    this._logger.debug('==> Début de la méthode flatSearchFromScratch');
+    this._colonnesService.selectedColonnesGrouping.set([]);
+    return this._doSearch(searchParams);
+  }
 
 
+
+  public searchFromPreference(
+    searchParams: SearchParameters, 
+    mappedGrouping: ColonneTableau<FinancialDataModel>[], 
+    mappedDisplayOrder: ColonneTableau<FinancialDataModel>[]
+  ): Observable<LignesResponse> {
+    this._logger.debug('==> Début de la méthode searchFromPreference', { searchParams, mappedGrouping, mappedDisplayOrder });
+
+    // Application des colonnes de grouping
+    this._colonnesService.selectedColonnesGrouping.set(mappedGrouping);
+    this._colonnesService.selectedColonnesGrouped.set([]);
+    this._logger.debug("==> Grouping appliqué dans searchFromPreference", mappedGrouping);
+
+    // Application des colonnes d'affichage
+    this._colonnesService.selectedColonnesTable.set(mappedDisplayOrder);
+    this._logger.debug("==> DisplayOrder appliqué dans searchFromPreference", mappedDisplayOrder);
+
+    // Lancement de la recherche
+    return this._doSearch(searchParams);
+  }
+
+
+  /**
+   * Change la selection des colonnes
+   * @param selectedColonnes 
+   */
   public doSelectColumn(selectedColonnes: ColonneTableau<FinancialDataModel>[]) {
     this._logger.debug('==> Début de la méthode doSelectColumn', { selectedColonnes });
 
@@ -116,7 +149,7 @@ export class SearchDataService {
       this._colonnesService.selectedColonnesGrouping.set(selectedColonnes);
       this._colonnesService.selectedColonnesGrouped.set([]);
       this.searchGroupingInProgress.set(true);
-      return this.search(currentParams!).pipe(tap({
+      return this._doSearch(currentParams!).pipe(tap({
         next: () => {
           this.searchGroupingInProgress.set(false);
         }
@@ -124,7 +157,12 @@ export class SearchDataService {
     }
   }
 
-
+  /**
+   * Lance la recherche depuis un grouping
+   * @param newGrouping 
+   * @param newGrouped 
+   * @returns 
+   */
   public searchFromGrouping(newGrouping: ColonneTableau<FinancialDataModel>[], newGrouped: string[]) {
     this._logger.debug('==> Début de la méthode searchFromGrouping', { newGrouping, newGrouped });
     this._colonnesService.selectedColonnesGrouping.set(newGrouping);
@@ -133,7 +171,7 @@ export class SearchDataService {
     this.searchGroupingInProgress.set(false);
     this.searchFinish.set(false);
     this.searchResults.set([]);
-    return this.search(this.searchParams()!);
+    return this._doSearch(this.searchParams()!);
   }
 
   /**
@@ -153,7 +191,7 @@ export class SearchDataService {
       search.page = 1;
     }
 
-    return this.search(search!);
+    return this._doSearch(search!);
   }
 
   /**
@@ -192,7 +230,7 @@ export class SearchDataService {
     const nextPage = currentPage + 1;
 
     currentParams.page = nextPage;
-    return this.search(currentParams, true); //mode lazyloading
+    return this._doSearch(currentParams, true); //mode lazyloading
   }
 
   /**
@@ -204,18 +242,56 @@ export class SearchDataService {
     this._logger.debug('==> Début de la méthode zoomOnGrouping', { grouped });
     this._colonnesService.selectedColonnesGrouped.set(grouped.filter(g => g !== undefined));
 
-    return this.search(this.searchParams()!);
+    return this._doSearch(this.searchParams()!);
+  }
+
+   /**
+   * Sélectionne une ligne financière pour affichage détaillé.
+   * Met à jour le signal selectedLine avec la ligne fournie.
+   *
+   * @param line - La ligne financière à sélectionner
+   */
+  public selectLine(line: FinancialDataModel): void {
+    this._logger.debug("==> Sélection d'une ligne financière", {
+      lineId: line.id,
+      programme: line.programme?.label,
+      montant: line.montant_ae
+    });
+
+    this.selectedLine.set(line);
+
+    this._logger.debug('==> Ligne sélectionnée mise à jour dans le service');
   }
 
   /**
+   * Transforme une ligne "aplatie" (issue de l'API) en objet métier structuré.
+   * @param object Ligne à transformer
+   * @returns FinancialDataModel
+   */
+  public unflatten(object: EnrichedFlattenFinancialLines2): FinancialDataModel {
+    return this._mapper.map(object);
+  }
+
+  // TODO refacto
+  public searchFromMarqueBlanche(search: SearchParameters): Observable<LignesResponse> {
+    return this._doSearch(search);
+  }
+
+
+  // --- Méthodes privées ---
+
+  /**
    * Lance une recherche financière avec les paramètres fournis.
+   * Cette méthode n'est jamais être appelé par les composants. Il faut passer par les autres type de recherche
+   * 
+   *
    * Met à jour les colonnes et le grouping avant d'appeler l'API.
    * Met à jour le signal searchParams avec les paramètres fournis.
    * Traite automatiquement la réponse et met à jour les signaux du service.
    * @param searchParamsCopy Paramètres de recherche à utiliser (obligatoire)
    * @returns Observable du résultat de l'API (pour compatibilité)
    */
-  public search(searchParams: SearchParameters, lazyLoading = false): Observable<LignesResponse> {
+  private _doSearch(searchParams: SearchParameters, lazyLoading = false): Observable<LignesResponse> {
     const searchParamsCopy = { ...searchParams }
     this._logger.debug('==> Début de la méthode search', { searchParams: searchParamsCopy });
 
@@ -281,7 +357,6 @@ export class SearchDataService {
     );
   }
 
-  // --- Méthodes privées ---
 
   /**
    * Appelle le client API pour récupérer les lignes financières selon les paramètres.
@@ -349,31 +424,4 @@ export class SearchDataService {
     this._logger.debug('==> Signaux mis à jour suite à la recherche');
   }
 
-
-  /**
-   * Sélectionne une ligne financière pour affichage détaillé.
-   * Met à jour le signal selectedLine avec la ligne fournie.
-   *
-   * @param line - La ligne financière à sélectionner
-   */
-  public selectLine(line: FinancialDataModel): void {
-    this._logger.debug("==> Sélection d'une ligne financière", {
-      lineId: line.id,
-      programme: line.programme?.label,
-      montant: line.montant_ae
-    });
-
-    this.selectedLine.set(line);
-
-    this._logger.debug('==> Ligne sélectionnée mise à jour dans le service');
-  }
-
-  /**
-   * Transforme une ligne "aplatie" (issue de l'API) en objet métier structuré.
-   * @param object Ligne à transformer
-   * @returns FinancialDataModel
-   */
-  public unflatten(object: EnrichedFlattenFinancialLines2): FinancialDataModel {
-    return this._mapper.map(object);
-  }
 }
