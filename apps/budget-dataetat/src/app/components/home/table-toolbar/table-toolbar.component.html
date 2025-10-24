@@ -34,11 +34,7 @@
     <span class="right-buttons">
         @if (!grid_fullscreen()) {
           <button data-fr-opened="false" aria-controls="modalSauvegarde" type="button" aria-label="Sauvegarder la recherche"
-            class="fr-btn fr-btn--icon-left"
-            [ngClass]="{
-              'fr-btn--primary fr-icon-checkbox-line': currentPreference,
-              'fr-btn--secondary fr-icon-save-fill': !currentPreference
-            }">
+            class="fr-btn fr-btn--icon-left fr-btn--secondary fr-icon-save-fill">
             Sauvegarder la recherche
           </button>
         }

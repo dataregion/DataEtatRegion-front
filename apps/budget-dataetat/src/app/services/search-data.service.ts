@@ -3,7 +3,7 @@
  * Expose l'état via des BehaviorSubject/Observable et propose des méthodes utilitaires pour la transformation des données.
  */
 import { inject, Injectable, signal } from '@angular/core';
-import { Observable, of, tap } from 'rxjs';
+import { mergeMap, Observable, of, tap } from 'rxjs';
 import { SearchParameters } from '@services/search-params.service';
 import { FinancialDataModel } from '@models/financial/financial-data.models';
 import { SearchDataMapper } from './search-data-mapper.service';
@@ -11,8 +11,12 @@ import { EnrichedFlattenFinancialLines2, GroupedData, LignesFinancieresService, 
 import { ColonnesService } from '@services/colonnes.service';
 import { SearchParamsService } from './search-params.service';
 import { LoggerService } from 'apps/common-lib/src/lib/services/logger.service';
-import { ColonneTableau } from './colonnes-mapper.service';
+import { ColonneFromPreference, ColonnesMapperService, ColonneTableau } from './colonnes-mapper.service';
 import { Optional } from 'apps/common-lib/src/lib/utilities/optional.type';
+import { Preference } from 'apps/preference-users/src/lib/models/preference.models';
+import { PrefilterMapperService } from '../components/home/search-data/prefilter-mapper.services';
+import { PreFilters } from '@models/search/prefilters.model';
+import { MarqueBlancheParsedParams } from '../resolvers/marqueblanche-parsed-params.resolver';
 
 
 export type SearchResults = GroupedData[] | FinancialDataModel[]
@@ -28,6 +32,8 @@ export class SearchDataService {
   private _searchParamsService: SearchParamsService = inject(SearchParamsService);
   private _lignesFinanciereService: LignesFinancieresService = inject(LignesFinancieresService);
   private _logger = inject(LoggerService).getLogger(SearchDataService.name);
+  private _colonnesMapperService = inject(ColonnesMapperService);
+  private _prefilterMapperService = inject(PrefilterMapperService);
 
   /**
    * Paramètres courants de la recherche.
@@ -71,19 +77,6 @@ export class SearchDataService {
    */
   public readonly pagination = signal<PaginationMeta | null>(null);
 
-  /**
-   * Nettoyage du service pour ré-init
-   */
-  public cleanSearchResults() {
-    this._logger.debug('==> Début de la méthode cleanResults');
-    this.total.set(undefined);
-    this.selectedLine.set(undefined);
-    this.searchFinish.set(false);
-    this.searchInProgress.set(false);
-    this.searchGroupingInProgress.set(false);
-    this.searchResults.set([]);
-    this.pagination.set(null);
-  }
 
   public flatSearchFromScratch(searchParams: SearchParameters) {
     this._logger.debug('==> Début de la méthode flatSearchFromScratch');
@@ -92,25 +85,74 @@ export class SearchDataService {
   }
 
 
+  /**
+   * Lance la recherche depuis une preference utilisateur
+   * @param preference 
+   * @returns 
+   */
+  public searchFromPreference(preference: Preference): Observable<LignesResponse> {
+    this._logger.debug('==> Début de la méthode searchFromPreference', { preference });
 
-  public searchFromPreference(
-    searchParams: SearchParameters, 
-    mappedGrouping: ColonneTableau<FinancialDataModel>[], 
-    mappedDisplayOrder: ColonneTableau<FinancialDataModel>[]
-  ): Observable<LignesResponse> {
-    this._logger.debug('==> Début de la méthode searchFromPreference', { searchParams, mappedGrouping, mappedDisplayOrder });
+    // Application des préférences de grouping des colonnes
+    const groupings = (preference.options && preference.options['grouping']) ? preference.options['grouping'] : [];
+    const mappedGrouping: ColonneTableau<FinancialDataModel>[] =
+      this._colonnesMapperService.mapNamesFromPreferences(
+        groupings as ColonneFromPreference[]
+      );
 
-    // Application des colonnes de grouping
-    this._colonnesService.selectedColonnesGrouping.set(mappedGrouping);
-    this._colonnesService.selectedColonnesGrouped.set([]);
-    this._logger.debug("==> Grouping appliqué dans searchFromPreference", mappedGrouping);
+    // Application des préférences d'ordre et d'affichage des colonnes
+    const displayOrder = (preference.options && preference.options['displayOrder']) ? preference.options['displayOrder'] : [];
+    const mappedDisplayOrder: ColonneTableau<FinancialDataModel>[] =
+      this._colonnesMapperService.mapLabelsFromPreferences(
+        displayOrder as ColonneFromPreference[]
+      );
 
-    // Application des colonnes d'affichage
-    this._colonnesService.selectedColonnesTable.set(mappedDisplayOrder);
-    this._logger.debug("==> DisplayOrder appliqué dans searchFromPreference", mappedDisplayOrder);
+    const searchParams$ =
+      this._prefilterMapperService.mapAndResolvePrefiltersToSearchParams$(preference.filters as PreFilters);
+    return searchParams$
+      .pipe(
+        mergeMap(searchParams => {
+          // Nettoyage des résultats précédents
+          this._cleanSearchResults();
+          if (searchParams === undefined) return of();
 
-    // Lancement de la recherche
-    return this._doSearch(searchParams);
+          this._colonnesService.selectedColonnesGrouping.set(mappedGrouping);
+          this._colonnesService.selectedColonnesGrouped.set([]);
+          this._logger.debug("==> Grouping appliqué dans searchFromPreference", mappedGrouping);
+          //   // Application des colonnes d'affichage
+          this._colonnesService.selectedColonnesTable.set(mappedDisplayOrder);
+          this._logger.debug("==> DisplayOrder appliqué dans searchFromPreference", mappedDisplayOrder);
+
+
+          // Lancement de la recherche avec application des colonnes
+          return this._doSearch(searchParams);
+        })
+      )
+  }
+
+
+  public searchFromMarqueBlanche(mqb: MarqueBlancheParsedParams): Observable<LignesResponse> {
+    this._logger.debug('==> Début de la méthode searchFromMarqueBlanche', { mqb });
+    const searchParams$ =
+      this._prefilterMapperService.mapAndResolvePrefiltersToSearchParams$(mqb.preFilters as PreFilters);
+    return searchParams$
+      .pipe(
+        mergeMap(searchParams => {
+          // Nettoyage des résultats précédents
+          if (searchParams === undefined) return of();
+
+          const mb_group_by = mqb.group_by;
+          // Application du grouping par défaut si spécifié par la marque blanche
+          if (mb_group_by && mb_group_by?.length > 0) {
+            const mappedGrouping: ColonneTableau<FinancialDataModel>[] = this._colonnesMapperService.mapNamesFromPreferences(mb_group_by as ColonneFromPreference[]);
+            this._colonnesService.selectedColonnesGrouping.set(mappedGrouping);
+            this._logger.debug("==> Grouping appliqué dans searchFromPreference", mappedGrouping);
+          }
+          this._colonnesService.selectedColonnesGrouped.set([]);
+          // Lancement de la recherche avec application des colonnes
+          return this._doSearch(searchParams);
+        })
+      )
   }
 
 
@@ -136,9 +178,9 @@ export class SearchDataService {
   public doSearchGrouping(selectedColonnes: ColonneTableau<FinancialDataModel>[]): Observable<LignesResponse> {
     this._logger.debug('==> Début de la méthode doSearchGrouping', { selectedColonnes });
 
-     // Vérifications préalables
-    const currentParams = { 
-      ...this.searchParams() 
+    // Vérifications préalables
+    const currentParams = {
+      ...this.searchParams()
     } as SearchParameters;
 
     currentParams.page = 1; // on force la page 1 sur le grouping
@@ -167,7 +209,7 @@ export class SearchDataService {
     this._logger.debug('==> Début de la méthode searchFromGrouping', { newGrouping, newGrouped });
     this._colonnesService.selectedColonnesGrouping.set(newGrouping);
     this._colonnesService.selectedColonnesGrouped.set(newGrouped);
-    
+
     this.searchGroupingInProgress.set(false);
     this.searchFinish.set(false);
     this.searchResults.set([]);
@@ -198,15 +240,15 @@ export class SearchDataService {
    * Récupère les données de pagination + 1
    * @returns 
    */
-  public loadMore() : Optional<Observable<LignesResponse>> {
+  public loadMore(): Optional<Observable<LignesResponse>> {
     this._logger.debug('==> Tentative de chargement de la page suivante');
 
     // Vérifications préalables
-    const currentParams = { 
-      ...this.searchParams() 
+    const currentParams = {
+      ...this.searchParams()
     } as SearchParameters;
     const currentPagination = {
-      ...this.pagination() 
+      ...this.pagination()
     } as PaginationMeta;
     const isSearchInProgress = this.searchInProgress();
 
@@ -245,12 +287,12 @@ export class SearchDataService {
     return this._doSearch(this.searchParams()!);
   }
 
-   /**
-   * Sélectionne une ligne financière pour affichage détaillé.
-   * Met à jour le signal selectedLine avec la ligne fournie.
-   *
-   * @param line - La ligne financière à sélectionner
-   */
+  /**
+  * Sélectionne une ligne financière pour affichage détaillé.
+  * Met à jour le signal selectedLine avec la ligne fournie.
+  *
+  * @param line - La ligne financière à sélectionner
+  */
   public selectLine(line: FinancialDataModel): void {
     this._logger.debug("==> Sélection d'une ligne financière", {
       lineId: line.id,
@@ -271,12 +313,6 @@ export class SearchDataService {
   public unflatten(object: EnrichedFlattenFinancialLines2): FinancialDataModel {
     return this._mapper.map(object);
   }
-
-  // TODO refacto
-  public searchFromMarqueBlanche(search: SearchParameters): Observable<LignesResponse> {
-    return this._doSearch(search);
-  }
-
 
   // --- Méthodes privées ---
 
@@ -355,6 +391,21 @@ export class SearchDataService {
         }
       })
     );
+  }
+
+
+  /**
+   * Nettoyage du service pour ré-init
+   */
+  private _cleanSearchResults() {
+    this._logger.debug('==> Début de la méthode cleanResults');
+    this.total.set(undefined);
+    this.selectedLine.set(undefined);
+    this.searchFinish.set(false);
+    this.searchInProgress.set(false);
+    this.searchGroupingInProgress.set(false);
+    this.searchResults.set([]);
+    this.pagination.set(null);
   }
 
 

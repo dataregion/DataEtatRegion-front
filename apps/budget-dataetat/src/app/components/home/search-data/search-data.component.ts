@@ -11,7 +11,7 @@ import {
   switchMap,
   tap
 } from 'rxjs';
-import { GeoModel, TypeLocalisation } from 'apps/common-lib/src/public-api';
+import { AlertService, GeoModel, TypeLocalisation } from 'apps/common-lib/src/public-api';
 import { MarqueBlancheParsedParamsResolverModel } from '../../../resolvers/marqueblanche-parsed-params.resolver';
 import { BeneficiaireFieldData } from './autocomplete/autocomplete-beneficiaire.service';
 import { AutocompleteBeneficiaireService } from './autocomplete/autocomplete-beneficiaire.service';
@@ -34,11 +34,11 @@ import { FinancialDataResolverModel } from '../../../models/financial/financial-
 import { MatButtonModule } from '@angular/material/button';
 import { tag_fullname } from '@models/refs/tag.model';
 import { PrefilterMapperService } from './prefilter-mapper.services';
-import { PreferenceService } from '@services/preference.service';
+
 import { SearchDataService } from '@services/search-data.service';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { GridInFullscreenStateService } from 'apps/common-lib/src/lib/services/grid-in-fullscreen-state.service';
-import { PreFilters } from '@models/search/prefilters.model';
+import { PreferenceResolverModel } from '@models/preference/preference-resolver.models';
 
 
 /**
@@ -63,19 +63,21 @@ export interface FormSearch {
   templateUrl: './search-data.component.html',
   styleUrls: ['./search-data.component.scss'],
   providers: [AutocompleteBeneficiaireService, AutocompleteTagsService],
-  imports: [MatIconModule, ReactiveFormsModule,MatButtonModule, CommonModule, BopsReferentielsComponent,AdvancedChipsMultiselectComponent, LocalisationComponent, SelectMultipleComponent]
+  imports: [MatIconModule, ReactiveFormsModule, MatButtonModule, CommonModule, BopsReferentielsComponent, AdvancedChipsMultiselectComponent, LocalisationComponent, SelectMultipleComponent]
 })
 export class SearchDataComponent implements OnInit {
 
   private _destroy_ref = inject(DestroyRef);
   private _route = inject(ActivatedRoute);
-  private _preferenceService = inject(PreferenceService)
+
   private _prefilterMapperService = inject(PrefilterMapperService);
   private _searchParamsService = inject(SearchParamsService);
   private _logger = inject(LoggerService).getLogger(SearchDataComponent.name);
   private _autocompleteBeneficiaires = inject(AutocompleteBeneficiaireService);
   private _autocompleteTags = inject(AutocompleteTagsService);
   private _gridFullscreen = inject(GridInFullscreenStateService);
+  private _alertService = inject(AlertService);
+
 
   public searchDataService = inject(SearchDataService);
 
@@ -227,7 +229,7 @@ export class SearchDataComponent implements OnInit {
   public onTagInputChange(v: string) {
     this.tagsInputChange$.next(v);
   }
-  
+
 
   constructor() {
     // Renseigne le formulaire à chaque changement des paramètres de recherche
@@ -269,7 +271,8 @@ export class SearchDataComponent implements OnInit {
     // Resolve des référentiels et de la marque blanche
     const resolvedFinancial = this._route.snapshot.data['financial'] as FinancialDataResolverModel;
     const resolvedMarqueBlanche = this._route.snapshot.data['mb_parsed_params'] as MarqueBlancheParsedParamsResolverModel;
-    this._logger.debug('resolvedMarqueBlanche => ', resolvedMarqueBlanche );
+    const resolvedPreference = this._route.snapshot.data['preference'] as PreferenceResolverModel;
+
     // Sauvegarde des référentiels dans les listes
     this.themes = resolvedFinancial.data?.themes ?? [];
     this.bops = resolvedFinancial.data?.bop ?? [];
@@ -277,46 +280,32 @@ export class SearchDataComponent implements OnInit {
     this.filteredReferentiels = resolvedFinancial.data?.referentiels_programmation ?? [];
     this.annees = resolvedFinancial.data?.annees ?? [];
 
-    // Création d'un prefilter avec la marque blanche
-    const mb_hasParams = resolvedMarqueBlanche.data?.has_marqueblanche_params;
-    const mb_prefilter = resolvedMarqueBlanche.data?.preFilters;
-    this._preferenceService.setCurrentPrefilter(mb_prefilter ?? null);
-
-    if (mb_hasParams) {
+    this._logger.debug('resolvedMarqueBlanche => ', resolvedMarqueBlanche);
+    this._logger.debug('resolvedPreference => ', resolvedPreference);
+    if (resolvedMarqueBlanche.data?.has_marqueblanche_params) {
       this._logger.debug(`Mode marque blanche actif.`);
-      if (mb_prefilter) {
-        this._logger.debug(`Application des filtres`);
-        this._preferenceService.setCurrentPrefilter(mb_prefilter);
-        // Mapping du prefilter vers le formulaire
-        const previousParams = this.searchDataService.searchParams();
-        this._logger.debug("Paramètres avant application du prefilter marqueblanche : ", previousParams);
-        this._ngOnInitOnMbSearchParams(mb_prefilter)
-      }
-    }
-  }
-  
-  private _ngOnInitOnMbSearchParams(preFilter: PreFilters) {
-      this._prefilterMapperService.mapAndResolvePrefiltersToSearchParams$(preFilter)
-        .pipe(takeUntilDestroyed(this._destroy_ref))
-        .subscribe(resolvedParams => {
-          this._logger.debug("Paramètres APRES RESOLUTION des bénéficiaires du prefilter marqueblanche : ", resolvedParams);
-          this.searchDataService.searchParams.set(resolvedParams);
 
-          // Lancement de la recherche
-          const resolvedMarqueBlanche = this._route.snapshot.data['mb_parsed_params'] as MarqueBlancheParsedParamsResolverModel;
+      this.searchDataService.searchFromMarqueBlanche(resolvedMarqueBlanche.data).pipe(
+        takeUntilDestroyed(this._destroy_ref),
+        tap(_ => {
           const mb_fullscreen = resolvedMarqueBlanche.data?.fullscreen ?? false;
-          this.searchDataService.searchFromMarqueBlanche(resolvedParams!)
-            .pipe(
-              takeUntilDestroyed(this._destroy_ref),
-              tap(_ => {
-                if (mb_fullscreen) {
-                  this._logger.debug("Active le mode fullescreen comme demandé par la marque blanche");
-                  this._gridFullscreen.toggleFullscreen();
-                }
-              })
-            )
-            .subscribe();
+          if (mb_fullscreen) {
+            this._logger.debug("Active le mode fullscreen comme demandé par la marque blanche");
+            this._gridFullscreen.toggleFullscreen();
+          }
         })
+      )
+        .subscribe();
+
+    } else if (resolvedPreference.data) {
+      this._logger.debug("==> Préférence chargée depuis le resolver", resolvedPreference.data);
+
+      // Traitement de la préférence brute
+      this.searchDataService.searchFromPreference(resolvedPreference.data)
+        .subscribe(() => {
+          this._alertService.openInfo(`Application du filtre ${resolvedPreference.data!.name}`);
+        });
+    }
   }
 
   /**

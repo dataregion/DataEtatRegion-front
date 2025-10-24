@@ -10,23 +10,15 @@ import { FinancialDataResolverModel } from '../../models/financial/financial-dat
 import { CommonModule } from '@angular/common';
 import { SearchDataComponent } from './search-data/search-data.component';
 import { ColonnesService } from '@services/colonnes.service';
-import { AlertService } from 'apps/common-lib/src/public-api';
 import { FinancialDataModel } from '@models/financial/financial-data.models';
 import { AuditHttpService } from '@services/http/audit.service';
 import { MarqueBlancheParsedParamsResolverModel } from '../../resolvers/marqueblanche-parsed-params.resolver';
-import { ColonneFromPreference, ColonnesMapperService, ColonneTableau } from '@services/colonnes-mapper.service';
 import { SearchDataService } from '@services/search-data.service';
-import { PrefilterMapperService } from './search-data/prefilter-mapper.services';
-import { ReferentielProgrammation } from '@models/refs/referentiel_programmation.model';
-import { Bop } from '@models/search/bop.model';
 import { InfosLigneComponent } from "../infos-ligne/infos-ligne.component";
 import { LoggerService } from 'apps/common-lib/src/lib/services/logger.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DsfrModalModule, DsfrModalComponent } from '@edugouvfr/ngx-dsfr';
 import { PreferenceResolverModel } from '@models/preference/preference-resolver.models';
-import { Preference } from 'apps/preference-users/src/lib/models/preference.models';
-import { PreFilters } from '@models/search/prefilters.model';
-import {  mergeMap } from 'rxjs';
 
 /**
  * Composant principal de la page d'accueil de l'application budget-dataetat.
@@ -51,21 +43,13 @@ export class HomeComponent implements OnInit {
   
   /** Service pour accéder aux données de route et aux resolvers */
   private _route = inject(ActivatedRoute);
-  
-  /** Service pour afficher les alertes utilisateur */
-  private _alertService = inject(AlertService);
+
   
   /** Service HTTP pour récupérer les données d'audit */
   private _auditService = inject(AuditHttpService);
   
   /** Service de gestion des colonnes (sélection, configuration) */
   private _colonnesService = inject(ColonnesService);
-  
-  /** Service de mapping entre les colonnes et les préférences */
-  private _colonnesMapperService = inject(ColonnesMapperService);
-  
-  /** Service de mapping entre préfiltres et paramètres de recherche */
-  private _prefilterMapperService = inject(PrefilterMapperService);
   
   /** Service central de gestion de la recherche de données */
   private _searchDataService = inject(SearchDataService);
@@ -198,45 +182,7 @@ export class HomeComponent implements OnInit {
       this.error = error;
       return;
     }
-    
-    // --- 3. Initialisation du service de colonnes ---
-    
-    // Le ColonnesMapperService et les colonnes UI sont déjà initialisés au démarrage de l'application
-
-    // --- 4. Application des paramètres de marque blanche ---
-    const mb_group_by = resolvedMarqueBlanche.data?.group_by;
-    
-    // Application du grouping par défaut si spécifié par la marque blanche
-    if (mb_group_by && mb_group_by?.length > 0) {
-      const mapped: ColonneTableau<FinancialDataModel>[] = this._colonnesMapperService.mapNamesFromPreferences(mb_group_by as ColonneFromPreference[]);
-      this._colonnesService.selectedColonnesGrouping.set(mapped);
-    }
-
-    // --- 5. Initialisation du service de mapping des préfiltres ---
-    
-    const themes: string[] = resolvedFinancial.data?.themes ?? [];
-    const programmes: Bop[] = resolvedFinancial.data?.bop ?? [];
-    const referentiels: ReferentielProgrammation[] = resolvedFinancial.data?.referentiels_programmation ?? [];
-    const annees: number[] = resolvedFinancial.data?.annees ?? [];
-    this._prefilterMapperService.initService(themes, programmes, referentiels, annees);
-
-    // --- 6. Application des préférences depuis le resolver ---
-    
-    // Configuration des colonnes par défaut
-    this._colonnesService.selectedColonnesTable.set(this._colonnesMapperService.getDefaults());
-    
-    // Récupération de la préférence depuis le resolver
-    
-    
-    if (resolvedPreference?.data) {
-      this._logger.debug("==> Préférence chargée depuis le resolver", resolvedPreference.data);
-      
-      // Traitement de la préférence brute
-      this._processPreferenceFromResolver(resolvedPreference.data as Preference);
-    }
-
-    // --- 7. Récupération de la date du dernier import ---
-    
+     
     this._auditService.getLastDateUpdateData()
       .pipe(takeUntilDestroyed(this._destroyRef))
       .subscribe((response) => {
@@ -257,50 +203,5 @@ export class HomeComponent implements OnInit {
   onLineClicked(line: FinancialDataModel): void {
     this._logger.debug("==> Ouverture du modal pour la ligne", line);
     this.modalLigne.open();
-  }
-
-  // --- Méthodes privées ---
-
-  /**
-   * Traite une préférence chargée par le resolver.
-   * Cette méthode reprend la logique qui était auparavant dans ngOnInit.
-   * 
-   * @param preference - La préférence à traiter
-   */
-  private _processPreferenceFromResolver(preference: Preference): void {
-    this._logger.debug("==> Traitement de la préférence", preference);
-    
-    // Application des préférences de grouping des colonnes
-    const groupings = (preference.options && preference.options['grouping']) ? preference.options['grouping'] : [];
-    const mappedGrouping: ColonneTableau<FinancialDataModel>[] =
-      this._colonnesMapperService.mapNamesFromPreferences(
-        groupings as ColonneFromPreference[]
-      );
-
-    // Application des préférences d'ordre et d'affichage des colonnes
-    const displayOrder = (preference.options && preference.options['displayOrder']) ? preference.options['displayOrder'] : [];
-    const mappedDisplayOrder: ColonneTableau<FinancialDataModel>[] =
-      this._colonnesMapperService.mapLabelsFromPreferences(
-        displayOrder as ColonneFromPreference[]
-      );
-
-    // Conversion des préfiltres en paramètres de recherche et lancement de la recherche
-    const searchParams$ = 
-      this._prefilterMapperService.mapAndResolvePrefiltersToSearchParams$(preference.filters as PreFilters);
-    
-    searchParams$
-      .pipe(
-        takeUntilDestroyed(this._destroyRef),
-        mergeMap(searchParams => {
-          // Nettoyage des résultats précédents
-          this._searchDataService.cleanSearchResults();
-          
-          // Lancement de la recherche avec application des colonnes
-          return this._searchDataService.searchFromPreference(searchParams!, mappedGrouping, mappedDisplayOrder);
-        })
-      )
-      .subscribe(() => {
-        this._alertService.openInfo(`Application du filtre ${preference.name}`);
-      });
   }
 }

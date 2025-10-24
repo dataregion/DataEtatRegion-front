@@ -8,7 +8,7 @@ import { Preference } from 'apps/preference-users/src/lib/models/preference.mode
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { DsfrAutocompleteComponent, DsfrCompleteEvent } from '@edugouvfr/ngx-dsfr-ext'
 import { ReactiveFormsModule, FormGroup, FormBuilder, FormControl } from '@angular/forms';
-import { PreferenceService } from '@services/preference.service';
+
 import { ColonnesService } from '@services/colonnes.service';
 import { SearchDataService } from '@services/search-data.service';
 import { JSONObject } from 'apps/common-lib/src/lib/models/jsonobject';
@@ -31,7 +31,7 @@ export interface FormPreference {
 export class ModalSauvegardeComponent {
 
   private _preferenceHttpService = inject(PreferenceUsersHttpService);
-  private _preferenceService = inject(PreferenceService);
+
   private _alertService = inject(AlertService);
   private _formBuilder = inject(FormBuilder);
   private _colonnesService = inject(ColonnesService);

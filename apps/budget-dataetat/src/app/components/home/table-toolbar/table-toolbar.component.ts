@@ -13,8 +13,6 @@ import { ModalTelechargementComponent } from "./modal-telechargement/modal-telec
 import { FinancialDataModel } from '@models/financial/financial-data.models';
 import { ColonnesService } from '@services/colonnes.service';
 import { ColonneTableau } from '@services/colonnes-mapper.service';
-import { PreferenceService } from '@services/preference.service';
-import { Preference } from 'apps/preference-users/src/lib/models/preference.models';
 import { SearchDataService } from '@services/search-data.service';
 import { MaterialModule } from "apps/common-lib/src/public-api";
 import { TableExportService } from './services/table-export.service';
@@ -31,7 +29,7 @@ export class TableToolbarComponent {
   
   private _gridFullscreen = inject(GridInFullscreenStateService);
   private _colonnesService = inject(ColonnesService);
-  private _preferenceService = inject(PreferenceService);
+
   private _tableExportService = inject(TableExportService);
 
   public _searchDataService = inject(SearchDataService);
@@ -83,9 +81,7 @@ export class TableToolbarComponent {
     return this._colonnesService.selectedColonnesGrouped();
   }
 
-  get currentPreference(): Preference | null {
-    return this._preferenceService.currentPreference();
-  }
+
 
   public exportToGrist(allColumns: boolean): void {
     this._tableExportService.exportToGrist(allColumns);

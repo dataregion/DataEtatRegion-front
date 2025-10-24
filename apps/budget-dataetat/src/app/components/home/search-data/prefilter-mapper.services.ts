@@ -11,7 +11,6 @@ import { AutocompleteBeneficiaireService, BeneficiaireFieldData } from './autoco
 import { Beneficiaire } from '@models/search/beneficiaire.model';
 import { BudgetDataHttpService } from '@services/http/budget.service';
 import { Tag } from '@models/refs/tag.model';
-import { SearchDataService } from '@services/search-data.service';
 import { forkJoin, map, mergeMap, Observable, of } from 'rxjs';
 import { LoggerService } from 'apps/common-lib/src/lib/services/logger.service';
 import { catchError } from 'rxjs/operators';
@@ -25,7 +24,6 @@ export class PrefilterMapperService {
 
   private _formBuilder: FormBuilder = inject(FormBuilder)
   private _referentielsService: BudgetDataHttpService = inject(BudgetDataHttpService)
-  private _searchDataService: SearchDataService = inject(SearchDataService)
   private _searchParamsService: SearchParamsService = inject(SearchParamsService)
   private _autocompleteBeneficiaireService: AutocompleteBeneficiaireService = inject(AutocompleteBeneficiaireService)
 
@@ -84,7 +82,7 @@ export class PrefilterMapperService {
   }
 
   private mapPrefilterToSearchParams(prefilter: PreFilters): SearchParameters | undefined {
-    const searchParams = this._searchDataService.searchParams() ?? this._searchParamsService.getEmpty()
+    const searchParams = this._searchParamsService.getEmpty()
     const newSearchParam = {
       ...searchParams,
     }
