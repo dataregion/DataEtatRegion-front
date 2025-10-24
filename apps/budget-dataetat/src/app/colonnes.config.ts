@@ -30,6 +30,7 @@ async function initializeColonnes(
     
     // Sauvegarde des colonnes disponibles dans le service de colonnes UI
     colonnesUiService.allColonnesTable.set(colonnesMapperService.colonnes);
+    colonnesUiService.selectedColonnesTable.set(colonnesMapperService.getDefaults());
     colonnesUiService.allColonnesGrouping.set(colonnesMapperService.colonnes.filter(c => c.grouping !== undefined));
     
     logger.info('✅ Colonnes initialisées avec succès au démarrage');
