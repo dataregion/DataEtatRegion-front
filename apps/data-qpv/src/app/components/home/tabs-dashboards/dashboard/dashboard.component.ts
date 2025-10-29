@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, OnChanges, SimpleChanges, inject, CUSTOM_ELEMENTS_SCHEMA, ViewChild, AfterViewInit, ElementRef, computed, signal } from '@angular/core';
+import { Component, Input, OnInit, OnChanges, SimpleChanges, inject, CUSTOM_ELEMENTS_SCHEMA, ViewChild, AfterViewInit, ElementRef, computed, signal, Renderer2 } from '@angular/core';
 import {DomSanitizer, SafeResourceUrl} from '@angular/platform-browser';
 import { SETTINGS } from 'apps/common-lib/src/lib/environments/settings.http.service';
 import {SettingsService} from "../../../../../environments/settings.service";
@@ -7,42 +7,38 @@ import { SearchDataService } from 'apps/data-qpv/src/app/services/search-data.se
 import { CurrencyPipe, JsonPipe } from '@angular/common';
 import { ChartData, DashboardData } from 'apps/clients/v3/data-qpv';
 import { SpinnerComponent } from 'apps/common-lib/src/lib/components/spinner/spinner.component';
-import { NavigationService } from 'apps/data-qpv/src/app/services/navigation.service';
 import { toObservable } from '@angular/core/rxjs-interop';
+import { PieChartComponent } from "./pie-chart/pie-chart.component";
+import { LineChartComponent } from "./line-chart/line-chart.component";
+import { BarChartComponent } from "./bar-chart/bar-chart.component";
 
 
 @Component({
     selector: 'data-qpv-dashboard',
     templateUrl: './dashboard.component.html',
     styleUrls: ['./dashboard.component.scss'],
-    imports: [CurrencyPipe, JsonPipe, SpinnerComponent],
-    schemas: [CUSTOM_ELEMENTS_SCHEMA]
+    imports: [CurrencyPipe, SpinnerComponent, PieChartComponent, LineChartComponent, BarChartComponent]
 })
 export class DashboardComponent {
 
   private _searchDataService = inject(SearchDataService);
-  private _navigationService = inject(NavigationService);
 
-  readonly searchTabInProgress = computed(() => this._searchDataService.searchTabInProgress());
-
-  currentDashboardData = signal<DashboardData | undefined>(undefined);
+  currentDashboardData = signal<DashboardData | null>(null);
+  
+  public readonly selectedTab = this._searchDataService.selectedTab;
 
   constructor() {
-    toObservable(this._searchDataService.searchTabInProgress).subscribe(response => {
-      console.log("saw changes : " + response)
+    toObservable(this._searchDataService.searchInProgress).subscribe(response => {
       if (!response) {
-        console.log()
-        this.currentDashboardData.set(this._navigationService.currentTab.dashboardData)
-        console.log(this.currentDashboardData()?.line_chart_annees)
+        this.currentDashboardData.set(this._searchDataService.currentResults.dashboardData)
       } else {
-        this.currentDashboardData.set(undefined)
-        console.log(this.currentDashboardData())
+        this.currentDashboardData.set(null)
       }
     })
   }
 
-  isArrayFilled(arr: Array<any> | undefined) {
-    return arr !== undefined && arr.length > 0
+  isArrayFilled(arr: ChartData | null | undefined) {
+    return arr && arr !== null && arr.labels.length > 0
   }
   
 }

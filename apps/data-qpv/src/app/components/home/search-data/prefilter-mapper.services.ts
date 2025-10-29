@@ -14,6 +14,7 @@ import { catchError } from 'rxjs/operators';
 import { CentreCouts } from '../../../models/financial/common.models';
 import { RefSiret } from 'apps/common-lib/src/lib/models/refs/RefSiret';
 import { ThemeModel } from '../../../models/refs/bop.models';
+import { RefQpvWithCommune } from '../../../models/refs/qpv.model';
 
 @Injectable({
   providedIn: 'root'
@@ -123,8 +124,8 @@ export class PrefilterMapperService {
     return pf.localisation as unknown as GeoModel[]
   }
 
-  private _mapQpv(pf: PreFilters): GeoModel[] | undefined {
-    return pf.qpv as unknown as GeoModel[]
+  private _mapQpv(pf: PreFilters): RefQpvWithCommune[] | undefined {
+    return pf.qpv as unknown as RefQpvWithCommune[]
   }
 
   private _mapFinanceurs(pf: PreFilters): CentreCouts[] | undefined {

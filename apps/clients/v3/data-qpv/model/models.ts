@@ -9,5 +9,8 @@ export * from './enrichedFlattenFinancialLinesDataQPV';
 export * from './enrichedFlattenFinancialLinesDataQPV1';
 export * from './lignesFinancieres';
 export * from './lignesResponse';
+export * from './mapData';
+export * from './mapResponse';
 export * from './paginationMeta';
+export * from './qpvData';
 export * from './tags';

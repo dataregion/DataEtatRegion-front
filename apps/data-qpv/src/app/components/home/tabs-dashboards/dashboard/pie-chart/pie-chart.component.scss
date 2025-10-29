@@ -1,0 +1,59 @@
+.doughnut-chart-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  margin: 0 auto;
+  width: 100%;
+  max-width: 700px;
+
+  .chart-canvas-wrapper {
+    height: 250px;
+    aspect-ratio: 1 / 1;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    canvas {
+      width: 100% !important;
+      height: 100% !important;
+    }
+  }
+
+  .chart-legend {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 8px;
+    font-family: Marianne, Arial, sans-serif;
+    font-size: 16px;
+    color: #1E1E1E;
+
+    ul {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin: 0;
+      padding: 0;
+      list-style-type: none;
+    }
+
+    li {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 8px;
+      line-height: 1.2;
+    }
+
+    li div {
+      display: flex;                /* ← ensures width and height are respected */
+      width: 14px;
+      height: 14px;
+      border-radius: 2px;
+      flex-shrink: 0;
+      flex-grow: 0;
+    }
+  }
+}

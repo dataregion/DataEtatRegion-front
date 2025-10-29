@@ -7,6 +7,7 @@ import { ReferentielProgrammation } from '../models/refs/referentiel_programmati
 import { GeoModel, TypeLocalisation } from 'apps/common-lib/src/public-api';
 import { RefSiret } from 'apps/common-lib/src/lib/models/refs/RefSiret';
 import { ThemeModel } from '../models/refs/bop.models';
+import { RefQpvWithCommune } from '../models/refs/qpv.model';
 
 
 export enum OtherTypeCategorieJuridique {
@@ -34,7 +35,7 @@ export interface SearchParameters {
   niveau: TypeLocalisation | undefined;
   locations: GeoModel[] | undefined;
   ref_qpv: "2015" | "2024" | undefined;
-  code_qpv: GeoModel[] | undefined;
+  code_qpv: RefQpvWithCommune[] | undefined;
   centres_couts: CentreCouts[] | undefined;
   themes: ThemeModel[] | undefined;
   beneficiaires: RefSiret[] | undefined;
@@ -115,6 +116,7 @@ export class SearchParamsService {
     const sanitized_not_codes_programme = this._sanitizeReqArg(searchParams.notBops?.filter((bop) => bop.code).map((bop) => bop.code))
     const sanitized_niveau_geo = this._sanitizeReqArg(this._searchUtils.normalize_type_geo(searchParams.niveau));
     const sanitized_codes_geo = this._sanitizeReqArg(searchParams.locations?.map((l) => l.code));
+    const sanitized_codes_qpv = this._sanitizeReqArg(searchParams.code_qpv?.map((l) => l.code));
     const sanitized_annees = this._sanitizeReqArg(searchParams.years?.map((a) => a.toString()));
     const sanitized_beneficiaire_siret: string[] | undefined = this._sanitizeReqArg(searchParams.beneficiaires?.map((x) => x.siret));
 
@@ -132,7 +134,7 @@ export class SearchParamsService {
       sanitized_niveau_geo,
       sanitized_codes_geo?.join(','),
       searchParams.ref_qpv,
-      searchParams.code_qpv?.join(','),
+      sanitized_codes_qpv?.join(','),
       searchParams.themes?.join('|'),
       searchParams.centres_couts?.join(','),
       sanitized_beneficiaire_siret?.join(','),

@@ -12,9 +12,6 @@ import localeFr from '@angular/common/locales/fr';
 
 registerLocaleData(localeFr);
 
-import '@gouvfr/dsfr-chart/dist/DSFRChart/DSFRChart.js';
-import '@gouvfr/dsfr-chart/dist/DSFRChart/DSFRChart.css';
-
 
 async function loadApp(): Promise<{ settings: SettingsDataQPVService, logger: LoggerService }> {
   const response = await fetch('/config/settings.json');

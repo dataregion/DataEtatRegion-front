@@ -1,55 +1,101 @@
-<dsfr-tabs [selectedTabIndex]="selectedTabIndex" style="margin-bottom: 100px;">
-    <dsfr-tab tabId="tab-table" label="Tableau">
-      <div class="wrapper-tab-content">
+<dsfr-tabs appMatchDashboardHeight [selectedTabIndex]="selectedTabIndex">
+  <dsfr-tab tabId="tab-table" label="Tableau"  [class.empty] = "noResults()">
+    <div class="wrapper-tab-content">
 
-        @if(searchFormInProgress()) {
-        <div class="spinner-wrapper">
-          <lib-spinner />
-        </div>
-        } @else {
-        <div class="fr-grid-row fr-grid-row--gutters test">
+      @if(searchInProgress()) {
+      <div class="spinner-wrapper">
+        <lib-spinner />
+      </div>
+      } @else {
+        @if (currentTableData()?.length == 0) {
           <div class="fr-col-12">
-            <dsfr-datatable #datatable
-              [caption]="''"
-              [data]="searchResults()"
-              [columns]="columns"
-              [showSearch]="false"
-              [pagination]="true"
-              [initialState]="initialState"
-              >
-              <ng-template #tableBodyTemplate let-row let-rowOptions>
-                <tr>
-                  <td>{{ row.siret?.nom_beneficiaire ?? 'N/A' }}</td>
-                  <td>{{ row.montant_ae }}</td>
-                  <td>{{ row.annee }}</td>
-                  <td>{{ row.centre_couts?.code ?? 'N/A' }}</td>
-                  <td>{{ row.centre_couts?.description ?? 'N/A' }}</td>
-                  <td>{{ row.programme?.theme ?? 'N/A' }}</td>
-                  <td>{{ row.programme?.code ?? 'N/A' }}</td>
-                  <td>{{ row.lieu_action?.code_qpv ?? 'N/A' }}</td>
-                  <td>{{ row.lieu_action?.label_qpv ?? 'N/A' }}</td>
-                  <td>{{ row.commune?.label ?? 'N/A' }}</td>
-                  <td>{{ row.commune?.label_departement ?? 'N/A' }}</td>
-
-                </tr>
-              </ng-template>
-
-              </dsfr-datatable>
+              <div class="fr-alert fr-alert--info">
+                  <h6 class="fr-alert__title">Aucune ligne financière</h6>
+              </div>
           </div>
-        </div>
+        } @else {
+          <div class="fr-grid-row fr-grid-row--gutters test">
+            <div class="fr-col-12">
+              <div class="fr-table fr-table--bordered fr-table--lg" style="margin-top:0px;">
+                <div class="fr-table__wrapper">
+                  <div class="fr-table__container">
+                    <div class="fr-table__content" >
+                      <table id="table-10">
+                        <thead>
+                          <tr>
+                            <th role="columnheader">#</th>
+                            @for (col of columns; track col.field; let isFirst = $first) {
+                              <th [class.fixed-size]="isFirst" class="not-index" role="columnheader">
+                                <div class="fr-cell__title">{{col.label}}</div>
+                              </th>
+                            }
+                          </tr>
+                        </thead>
+                        <tbody>
+                          @for (row of currentTableData(); track row.id; let i = $index) {
+                            <tr id="table-10-row-key-{{i}}" [attr.data-row-key]="i" scope="row">
+                              <td scope="row">{{i + 1}}</td>
+                              <td class="fixed-size">
+                                @if (row.siret && row.commune) {
+                                  <b>{{ row.siret.nom_beneficiaire }}</b>
+                                  <br/>
+                                  <span>{{ row.commune.code + ' - ' + row.commune.label + ', ' + row.commune.label_departement }}</span>
+                                } @else {
+                                  N/A
+                                }
+                              </td>
+                              <td style="text-align: center;">
+                                <p class="fr-mr-2v fr-badge fr-badge--success badge-no-icon">{{ row.montant_ae | currency:'EUR':'symbol':'1.0-2'}}</p>
+                              </td>
+                              <td style="text-align: center;">
+                                <p class="fr-mr-2v fr-badge fr-badge--info badge-no-icon">{{ row.annee }}</p>
+                              </td>
+                              <td>{{ row.centre_couts?.label ?? 'N/A' }}</td>
+                              <td>{{ row.programme?.theme ?? 'N/A' }}</td>
+                              <td>{{ row.programme?.label ?? 'N/A' }}</td>
+                              <td>
+                                <b>{{ row.lieu_action?.code_qpv ?? 'N/A' }}</b>
+                                <br/>
+                                <span>{{ row.lieu_action?.label_qpv ?? 'N/A' }}</span>
+                              </td>
+                            </tr>
+                          }
+                        </tbody>
+                      </table>
+                      @if (currentPagination()?.has_next) {
+                        <div #spinner class="spinner-wrapper fr-spinner--md" style="text-align: center; margin: 30px 0px;">
+                          <span class="fr-spinner" aria-label="Chargement…" role="status"></span>
+                          <span class="fr-spinner-message">Chargement en cours ...</span>
+                        </div>
+                      }
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         }
-      </div> 
-    </dsfr-tab>
+      }
+    </div> 
+  </dsfr-tab>
 
-    <dsfr-tab tabId="tab-cartographie" label="Cartographie">
-      <div class="wrapper-tab-content">
-      @if (!searchFormInProgress()) {
-        <div class="fr-grid-row fr-grid-row--gutters test">
+  <dsfr-tab tabId="tab-cartographie" label="Cartographie" [class.empty] = "noResults()">
+    <div class="wrapper-tab-content">
+    @if (!searchInProgress()) {
+      @if (currentTableData()?.length == 0) {
+        <div class="fr-col-12">
+            <div class="fr-alert fr-alert--info">
+                <h6 class="fr-alert__title">Aucune ligne financière</h6>
+            </div>
+        </div>
+      } @else {
+        <div class="fr-grid-row fr-grid-row--gutters">
           <div class="fr-col-12">
             <data-qpv-map />
           </div>
         </div>
       }
-      </div>
-    </dsfr-tab>
+    }
+    </div>
+  </dsfr-tab>
 </dsfr-tabs>

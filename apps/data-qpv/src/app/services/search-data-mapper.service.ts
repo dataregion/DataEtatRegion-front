@@ -18,7 +18,7 @@ import { Optional } from 'apps/common-lib/src/lib/utilities/optional.type';
 import { JSONObject } from 'apps/common-lib/src/lib/models/jsonobject';
 import { inject, Injectable } from '@angular/core';
 import { ColonnesMapperService } from './colonnes-mapper.service';
-import { EnrichedFlattenFinancialLines2, Tags } from 'apps/clients/v3/financial-data';
+import { EnrichedFlattenFinancialLinesDataQPV, Tags } from 'apps/clients/v3/data-qpv';
 
 @Injectable({
   providedIn: 'root'
@@ -32,7 +32,7 @@ export class SearchDataMapper {
    * @param object 
    * @returns 
    */
-  map(object: EnrichedFlattenFinancialLines2): FinancialDataModel {
+  map(object: EnrichedFlattenFinancialLinesDataQPV): FinancialDataModel {
     // eslint-disable-next-line @typescript-eslint/no-this-alias
     const that = this
     return {
@@ -96,7 +96,7 @@ export class SearchDataMapper {
   }
 
   private _sourceFinancialDataFromEnrichedFlattenBudgetSource(
-    source?: EnrichedFlattenFinancialLines2.SourceEnum
+    source?: EnrichedFlattenFinancialLinesDataQPV.SourceEnum
   ): SourceFinancialData {
     switch (source) {
       case 'FINANCIAL_DATA_AE':
@@ -111,7 +111,7 @@ export class SearchDataMapper {
     }
   }
 
-  private _mapBeneficiaireSiret(object: EnrichedFlattenFinancialLines2): Optional<Siret> {
+  private _mapBeneficiaireSiret(object: EnrichedFlattenFinancialLinesDataQPV): Optional<Siret> {
     if (!object.beneficiaire_code) return null;
 
     return {
@@ -120,12 +120,12 @@ export class SearchDataMapper {
       categorie_juridique: this._mapBeneficiaireCategorieJuridique(object),
       code_qpv: object.beneficiaire_qpv_code,
       label_qpv: object.beneficiaire_qpv_label,
-      code_qpv24: object.beneficiaire_qpv_code,
-      label_qpv24: object.beneficiaire_qpv_label
+      code_qpv24: object.beneficiaire_qpv24_code,
+      label_qpv24: object.beneficiaire_qpv24_label
     };
   }
 
-  private _mapLieuAction(object: EnrichedFlattenFinancialLines2): Optional<LieuAction> {
+  private _mapLieuAction(object: EnrichedFlattenFinancialLinesDataQPV): Optional<LieuAction> {
     if (!object.lieu_action_code_qpv) return null;
 
     return {
@@ -135,7 +135,7 @@ export class SearchDataMapper {
   }
 
   private _mapLocInterministerielle(
-    object: EnrichedFlattenFinancialLines2
+    object: EnrichedFlattenFinancialLinesDataQPV
   ): Optional<LocalisationInterministerielle> {
     if (!object.localisationInterministerielle_code) return null;
 
@@ -172,7 +172,7 @@ export class SearchDataMapper {
     };
   }
 
-  private _mapCentreCouts(object: EnrichedFlattenFinancialLines2): Optional<CentreCouts> {
+  private _mapCentreCouts(object: EnrichedFlattenFinancialLinesDataQPV): Optional<CentreCouts> {
     return {
       code: object.centreCouts_code ? object.centreCouts_code : '',
       label: object.centreCouts_label!,
@@ -181,7 +181,7 @@ export class SearchDataMapper {
   }
 
   private _mapGroupeMarchandise(
-    object: EnrichedFlattenFinancialLines2
+    object: EnrichedFlattenFinancialLinesDataQPV
   ): Optional<GroupeMarchandise> {
     if (!object.groupeMarchandise_code) return null;
     return {
@@ -191,7 +191,7 @@ export class SearchDataMapper {
   }
 
   private _mapRefProg(
-    object: EnrichedFlattenFinancialLines2
+    object: EnrichedFlattenFinancialLinesDataQPV
   ): Optional<ReferentielProgrammation> {
     return {
       code: object.referentielProgrammation_code || '',
@@ -199,7 +199,7 @@ export class SearchDataMapper {
     };
   }
 
-  private _mapProgramme(object: EnrichedFlattenFinancialLines2): Optional<Programme> {
+  private _mapProgramme(object: EnrichedFlattenFinancialLinesDataQPV): Optional<Programme> {
     if (!object.programme_code) return null;
     return {
       code: object.programme_code,
@@ -209,7 +209,7 @@ export class SearchDataMapper {
   }
 
   private _mapDomaineFonctionnel(
-    object: EnrichedFlattenFinancialLines2
+    object: EnrichedFlattenFinancialLinesDataQPV
   ): Optional<DomaineFonctionnel> {
     return {
       code: object.domaineFonctionnel_code || '',
@@ -218,12 +218,12 @@ export class SearchDataMapper {
   }
 
   _mapBeneficiaireCategorieJuridique(
-    object: EnrichedFlattenFinancialLines2
+    object: EnrichedFlattenFinancialLinesDataQPV
   ): TypeCategorieJuridique {
     return object.beneficiaire_categorieJuridique_type as TypeCategorieJuridique;
   }
 
-  _mapTags(object: EnrichedFlattenFinancialLines2): Tag[] {
+  _mapTags(object: EnrichedFlattenFinancialLinesDataQPV): Tag[] {
     const _tags_schema: Tags[] = object.tags ?? [];
     const tags: Tag[] = [];
     for (const tag_schema of _tags_schema) {
@@ -241,7 +241,7 @@ export class SearchDataMapper {
     return tags;
   }
 
-  _mapBeneficiaireCommune(object: EnrichedFlattenFinancialLines2): Optional<Commune> {
+  _mapBeneficiaireCommune(object: EnrichedFlattenFinancialLinesDataQPV): Optional<Commune> {
     if (!object.beneficiaire_commune_code) return null;
 
     let arrondissement = null;

@@ -10,4 +10,7 @@ export * from './lignesFinancieres.serviceInterface';
 export * from './listeDesColonnes.service';
 import { ListeDesColonnesService } from './listeDesColonnes.service';
 export * from './listeDesColonnes.serviceInterface';
-export const APIS = [DashboardsService, HealthcheckService, LignesFinancieresService, ListeDesColonnesService];
+export * from './map.service';
+import { MapService } from './map.service';
+export * from './map.serviceInterface';
+export const APIS = [DashboardsService, HealthcheckService, LignesFinancieresService, ListeDesColonnesService, MapService];

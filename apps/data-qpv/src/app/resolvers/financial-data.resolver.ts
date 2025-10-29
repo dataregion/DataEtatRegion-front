@@ -14,11 +14,13 @@ export const resolveFinancialData: ResolveFn<FinancialDataResolverModel> =
 
     return forkJoin([
       financialService.getAnnees(),
-      referentielsService.getThemes()
+      referentielsService.getThemes(),
+      referentielsService.getRefGeoQpv()
     ]).pipe(
-      map(([fetchedAnnees, fetchedThemes]) => {
+      map(([fetchedAnnees, fetchedThemes, fetchedRefGeo]) => {
         const result = {
           annees: fetchedAnnees,
+          refGeo: fetchedRefGeo,
           financeurs: [],
           thematiques: fetchedThemes,
           porteurs: [],

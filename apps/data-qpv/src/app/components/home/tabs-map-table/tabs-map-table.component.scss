@@ -20,3 +20,52 @@
   flex-direction: column;
   flex: 1;
 }
+
+
+.fr-badge.fr-badge--info:before {
+  display: none;
+}
+.fr-badge.fr-badge--success:before {
+  display: none;
+}
+
+th.fixed-size,
+td.fixed-size {
+  min-width: 500px;
+  max-width: 500px;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  white-space: normal;
+}
+
+dsfr-tab {
+  display: flex;
+  flex-direction: column;
+  min-height: 0; 
+}
+
+.wrapper-tab-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0; /* prevent content from pushing parent */
+  overflow: hidden;
+}
+
+.fr-table__content {
+  flex: 1;
+  overflow-y: auto;
+  min-height: 0;
+  max-height: 100%; /* stays within tab height */
+}
+
+data-qpv-map {
+  display: block;
+  height: 100% !important; /* the directive sets px height, this just allows propagation */
+}
+
+data-qpv-map .ol-map,
+data-qpv-map .ol-viewport {
+  height: 100%;
+  width: 100%;
+}

@@ -16,6 +16,7 @@ export interface DashboardData {
     total_porteurs?: number;
     pie_chart_themes?: ChartData;
     pie_chart_types_porteurs?: ChartData;
+    bar_chart_financeurs?: ChartData;
     line_chart_annees?: ChartData;
 }
 

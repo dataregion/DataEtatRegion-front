@@ -5,7 +5,6 @@ import { Injectable } from '@angular/core';
 export enum Region {
   BRETAGNE = 'Bretagne',
   PDL = 'Pays de la Loire',
-  HDF = 'Hauts-de-France'
 }
 
 @Injectable({
@@ -24,7 +23,6 @@ export class MultiregionsService {
       "qpv-paysdelaloire.dataregion.fr",
       "qpv-paysdelaloire.preprod.dataregion.fr",
     ],
-    [Region.HDF]: []
   };
 
   public getRegionByHostname(): string {

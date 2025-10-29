@@ -39,14 +39,11 @@ import { SearchDataService } from '../../../services/search-data.service';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { GridInFullscreenStateService } from 'apps/common-lib/src/lib/services/grid-in-fullscreen-state.service';
 import { PreFilters } from '../../../models/search/prefilters.model';
-import { RefQpvWithCommune } from '../../../models/refs/qpv.model';
+import { RefGeoQpv, RefQpvWithCommune } from '../../../models/refs/qpv.model';
 import { ModalAdditionalParamsComponent } from './modal-additional-params/modal-additional-params.component';
 import { RefSiret } from 'apps/common-lib/src/lib/models/refs/RefSiret';
 import { AutocompleteCentreCoutsService } from './autocomplete/autocomplete-centre-couts.service';
 import { ThemeModel } from '@models/refs/bop.models';
-import { Beneficiaire } from '../../../models/search/beneficiaire.model';
-import { themes } from 'storybook/internal/theming';
-import { NavigationService } from '../../../services/navigation.service';
 
 
 /**
@@ -56,7 +53,7 @@ export interface FormSearch {
   annees: FormControl<number[] | null>;
   niveau: FormControl<TypeLocalisation | null>;
   localisations: FormControl<GeoModel[] | null>;
-  qpv: FormControl<GeoModel[] | null>;
+  qpv: FormControl<RefQpvWithCommune[] | null>;
   financeurs: FormControl<CentreCouts[] | null>;
   thematiques: FormControl<ThemeModel[] | null>;
   porteurs: FormControl<RefSiret[] | null>;
@@ -84,7 +81,6 @@ export class SearchDataComponent implements OnInit {
   private _gridFullscreen = inject(GridInFullscreenStateService);
 
   public searchDataService = inject(SearchDataService);
-  public navigationService = inject(NavigationService);
 
 
   /**
@@ -99,7 +95,7 @@ export class SearchDataComponent implements OnInit {
     }),
     niveau: new FormControl<TypeLocalisation | null>(null),
     localisations: new FormControl<GeoModel[] | null>({ value: null, disabled: false }, []),
-    qpv: new FormControl<GeoModel[] | null>(null),
+    qpv: new FormControl<RefQpvWithCommune[] | null>(null),
     financeurs: new FormControl<CentreCouts[] | null>(null),
     thematiques: new FormControl<ThemeModel[] | null>(null),
     porteurs: new FormControl<RefSiret[] | null>(null),
@@ -109,8 +105,11 @@ export class SearchDataComponent implements OnInit {
   // public bops: BopModel[] = [];
   public thematiques: ThemeModel[] = [];
   public annees: number[] = [];
+  public qpvs: RefQpvWithCommune[] = [];
   public filteredFinanceurs: CentreCouts[] = []
   public filteredPorteurs: RefSiret[] = []
+
+  public refGeo: RefGeoQpv | undefined;
   // public filteredBops: BopModel[] = [];
   // public filteredReferentiels: ReferentielProgrammation[] = [];
   // public searchFinish: boolean = false;
@@ -143,26 +142,28 @@ export class SearchDataComponent implements OnInit {
   set selectedLocation(data: GeoModel[] | null) {
     this.formSearch.controls.localisations.setValue(data ?? null);
   }
-
+  public wordingNiveaux: Map<TypeLocalisation, string> = new Map<TypeLocalisation, string>([
+    [TypeLocalisation.EPCI, "Contrat de ville"]
+  ])
 
   /**
    * QPV
    */
-  get selectedQpv(): GeoModel[] | null {
+  get selectedQpv(): RefQpvWithCommune[] | null {
     return this.formSearch.controls.qpv.value ?? null;
   }
-  set selectedQpv(data: GeoModel[] | null) {
+  set selectedQpv(data: RefQpvWithCommune[] | null) {
     this.formSearch.controls.qpv?.setValue(data ?? null);
   }
 
   inputQPV: string = '';
   inputFilterQPV = new Subject<string>();
-  public filteredQPV = signal<GeoModel[]>([]);
+  public filteredQPV = signal<RefQpvWithCommune[]>([]);
 
   public renderQPVOption = (geo: RefQpvWithCommune): string => {
     return geo.code + ' - ' + geo.label
   }
-  public filterQPV = (value: string): GeoModel[] => {
+  public filterQPV = (value: string): RefQpvWithCommune[] => {
     this.inputQPV = value;
     this.inputFilterQPV.next(value);
     return this.filteredQPV();
@@ -310,6 +311,33 @@ export class SearchDataComponent implements OnInit {
   // }
 
   ngOnInit(): void {
+        this.inputFilterQPV.pipe(
+      debounceTime(300),
+      takeUntilDestroyed(this._destroy_ref)
+    ).subscribe(() => {
+      const term = this.inputQPV !== '' ? this.inputQPV : null;
+      if (this.formSearch.get('localisations')?.value) {
+        const localisations = this.formSearch.controls.localisations?.value as GeoModel[];
+        const type = this.formSearch.controls.niveau?.value;
+        const codes = localisations.map(geo => geo.code);
+        this.filteredQPV.set(this._filterQpvByTypeLocalisation(codes, type as TypeLocalisation));
+      } else {
+        this.filteredQPV.set(this.qpvs);
+      }
+
+     
+      if (term != null) {
+        const qpv = this.filteredQPV();
+        this.filteredQPV.set(qpv.filter(qpv => qpv.code.includes(term) || (qpv as RefQpvWithCommune).label.toLocaleLowerCase().includes(term.toLocaleLowerCase())));
+      }
+
+      if(this.selectedQpv != null) {
+        this.filteredQPV.set([
+          ...this.selectedQpv,
+          ...this.filteredQPV().filter((el) => !this.selectedQpv?.map(s => s.code).includes(el.code))
+        ])
+      }
+    });
     // Subscribe pour l'autocomplete des financeurs
     this.financeurInputChange$.pipe(
       startWith(''),
@@ -437,6 +465,9 @@ export class SearchDataComponent implements OnInit {
     // this.filteredBops = this.bops ?? []
     // this.filteredReferentiels = resolvedFinancial.data?.referentiels_programmation ?? [];
     this.annees = resolvedFinancial.data?.annees ?? [];
+    this.refGeo = resolvedFinancial.data?.refGeo;
+    this.qpvs = this.refGeo?.qpvs ?? [];
+    this.filteredQPV.set(this.qpvs);
 
     // Création d'un prefilter avec la marque blanche
     const mb_hasParams = resolvedMarqueBlanche.data?.has_marqueblanche_params;
@@ -488,12 +519,16 @@ export class SearchDataComponent implements OnInit {
   }
 
   public doSearch(): void {
+    // Réinitialisation des résultats trouvés
+    this.searchDataService.firstSearchDone.set(false);
+    this.searchDataService.resetResults();
     // Récupération des infos du formulaire
     const formValue = this.formSearch.value;
     const search_parameters: SearchParameters = {
       ...this._searchParamsService.getEmpty(),
       bops: [{"code": "147"} as BopModel],
       years: formValue.annees || undefined,
+      niveau: formValue.niveau || undefined,
       locations: formValue.localisations || undefined,
       code_qpv: formValue.qpv || undefined,
       centres_couts: formValue.financeurs || undefined,
@@ -503,19 +538,49 @@ export class SearchDataComponent implements OnInit {
     };
     // Lancement de la recherche - le service traite automatiquement la réponse
     this.searchDataService.searchParams.set(search_parameters)
-    this.searchDataService.searchFormInProgress.set(true);
-    this.navigationService.selectedDashboard.set(0);
-    // this.searchDataService.search(search_parameters).subscribe();
+    this.searchDataService.searchInProgress.set(true);
+    this.searchDataService.search(search_parameters).subscribe(response => {
+      this.searchDataService.firstSearchDone.set(true);
+      this.searchDataService.selectedTab.set(0);
+    });
   }
 
   /**
    * Reset du formulaire
    */
   public reset(): void {
-    this.searchDataService.searchFormInProgress.set(false);
-    this.searchDataService.searchTabInProgress.set(false);
-    this.searchDataService.noSearchDone.set(true);
+    this.searchDataService.searchInProgress.set(false);
     this.formSearch.reset();
   }
 
+  private _filterQpvByTypeLocalisation(codes: string[], type: TypeLocalisation): RefQpvWithCommune[] {
+    switch (type) {
+      case TypeLocalisation.DEPARTEMENT:
+        return this.qpvs.filter((qpv) => codes.includes(qpv.code_departement))
+      case TypeLocalisation.EPCI:
+        return this.qpvs.filter((qpv) => codes.includes(qpv.code_epci))
+      case TypeLocalisation.COMMUNE:
+      default:
+        return this.qpvs.filter((qpv) => codes.includes(qpv.code_commune))
+    }
+  }
+
+  public selectNiveauChange(): void {
+    this.formSearch.get('qpv')?.reset();
+
+    this.filteredQPV.set(this.refGeo?.qpvs as RefQpvWithCommune[]);
+  }
+
+  public selectLocalisationChange(event: GeoModel[] | null): void {
+    this.formSearch.get('qpv')?.reset();
+
+    if (event && event.length > 0) {
+      const type = event[0].type;
+      const codes = event.map(geo => geo.code);
+      this.filteredQPV.set(this._filterQpvByTypeLocalisation(codes, type as TypeLocalisation));
+    } else {
+      this.filteredQPV.set(this.refGeo?.qpvs as RefQpvWithCommune[]);
+    }
+  }
+  
 }

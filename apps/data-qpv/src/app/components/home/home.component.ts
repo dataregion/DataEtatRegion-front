@@ -26,6 +26,7 @@ import { Preference } from 'apps/preference-users/src/lib/models/preference.mode
 import { SearchParameters } from '@services/search-params.service';
 import { TabsMapTableComponent } from './tabs-map-table/tabs-map-table.component';
 import { TabDashboardsComponent } from './tabs-dashboards/tabs-dashboards.component';
+import { EqualizeAllTabsDirective } from '../../directives/equalize-all-tabs.directive';
 
 
 /**
@@ -41,7 +42,7 @@ import { TabDashboardsComponent } from './tabs-dashboards/tabs-dashboards.compon
 @Component({
   selector: 'data-qpv-home',
   templateUrl: './home.component.html',
-  imports: [CommonModule, SearchDataComponent, TabDashboardsComponent, TabsMapTableComponent],
+  imports: [CommonModule, SearchDataComponent, TabDashboardsComponent, TabsMapTableComponent, EqualizeAllTabsDirective],
   styleUrls: ['./home.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
@@ -52,33 +53,15 @@ export class HomeComponent implements OnInit {
   /** Service pour accéder aux données de route et aux resolvers */
   private _route = inject(ActivatedRoute);
   
-  /** Service pour afficher les alertes utilisateur */
-  private _alertService = inject(AlertService);
-  
-  /** Service HTTP pour récupérer les données d'audit */
-  private _auditService = inject(AuditHttpService);
-  
   /** Service de gestion des colonnes (sélection, configuration) */
   private _colonnesService = inject(ColonnesService);
-  
-  /** Service de mapping entre les colonnes et les préférences */
-  private _colonnesMapperService = inject(ColonnesMapperService);
-  
-  /** Service HTTP pour la gestion des préférences utilisateur */
-  private _httpPreferenceService = inject(PreferenceUsersHttpService);
   
   /** Service central de gestion de la recherche de données */
   private _searchDataService = inject(SearchDataService);
   
-  /** Service de gestion des préférences locales */
-  private _preferenceService = inject(PreferenceService);
-  
   /** Service de logging pour le debugging */
   private _logger = inject(LoggerService);
   
-  /** Service de destruction pour les subscriptions */
-  private _destroyRef = inject(DestroyRef);
-
   public readonly grid_fullscreen = inject(GridInFullscreenStateService).isFullscreen;
 
   // --- Propriétés du template ---
@@ -110,10 +93,10 @@ export class HomeComponent implements OnInit {
   // --- Signals du service de recherche ---
   
   /** Signal indiquant si une recherche a déjà été effectuée */
-  public readonly noSearchDone = this._searchDataService.noSearchDone;
+  public readonly firstSearchDone = this._searchDataService.firstSearchDone;
   
   /** Signal indiquant si une recherche est en cours */
-  public readonly searchFormInProgress = this._searchDataService.searchFormInProgress;
+  public readonly searchInProgress = this._searchDataService.searchInProgress;
   
   /** Signal contenant les résultats de la recherche */
   public readonly searchResults = this._searchDataService.searchResults;
@@ -128,31 +111,6 @@ export class HomeComponent implements OnInit {
   public readonly searchParams = this._searchDataService.searchParams;
 
   // --- Computed signals pour l'état d'affichage ---
-
-  /** 
-   * Computed signal indiquant si le message "aucun résultat" doit être affiché 
-   * @returns true si la recherche est terminée, qu'il n'y a pas de résultats mais qu'il y a des paramètres
-   */
-  public readonly shouldShowEmptyMessage = computed(() => {
-    const finished = this.searchFinish();
-    const results = this.searchResults();
-    const hasResults = results && results.length > 0;
-    const hasParams = this.searchParams() !== undefined;
-    this._logger.debug("==> shouldShowEmptyMessage", { finished, hasResults, hasParams });
-    return finished && !hasResults && hasParams;
-  });
-
-  /** 
-   * Computed signal indiquant si le contenu principal doit être affiché 
-   * @returns true s'il y a des résultats ou qu'une ligne est sélectionnée
-   */
-  public readonly shouldShowContent = computed(() => {
-    const results = this.searchResults();
-    const hasResults = results && results.length > 0;
-    // const selectedLine = this.selectedLine();
-    // return hasResults || selectedLine !== undefined;
-    return hasResults
-  });
 
   /** 
    * Computed signal indiquant si le formulaire de recherche doit être affiché 
@@ -206,7 +164,7 @@ export class HomeComponent implements OnInit {
       this.error = error;
       return;
     }
-    
+
     // // --- 3. Initialisation des services de mapping et de colonnes ---
     
     // // Initialisation du service de mapper avec les colonnes résolues

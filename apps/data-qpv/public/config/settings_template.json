@@ -22,14 +22,6 @@
     "apis_externes": "url api externes",
     "apis_externes_v3": "url api externes v3"
   },
-  "superset": {
-    "baseDashboardUrl": "<url superset>",
-    "dashboardsSlugs": {
-      "credit": "<slug du dashboard crédit>",
-      "territoire": "<slug du dashboard territoire>",
-      "tableau": "<slug du dashboard tableau>"
-    }
-  },
   "contact": "http://contact.fr",
   "help_pdf": "https://www.africau.edu/images/default/sample.pdf"
 }

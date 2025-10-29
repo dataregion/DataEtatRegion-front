@@ -29,18 +29,14 @@
   <div class="fr-container">
     <div class="fr-grid-row">
       <div class="fr-col-12">
-        <div class="main-content" [class.no-content]="!shouldShowContent()">
-          <!-- @if (shouldShowEmptyMessage()) {
-            <div class="fr-alert fr-alert--info">
-              <h4 class="fr-alert__title">Aucun résultat</h4>
-              <p>Aucune donnée ne correspond à vos critères de recherche. Essayez de modifier vos filtres ou d'élargir votre recherche.</p>
-            </div>
-          } -->
-          @if (!searchFormInProgress() && !noSearchDone()) {
-            <div class="fr-grid-row">
-              <div class="fr-col-12"> 
-                <span class="search-resume" [innerText]="searchParametersToText()"></span>
-              </div>
+        <div class="main-content">
+          @if (firstSearchDone()) {
+            <div class="fr-grid-row" style="margin-top:50px;" appEqualizeAllTabs>
+              @if (searchParametersToText().length) {
+                <div class="fr-col-12"> 
+                  <span class="search-resume" [innerText]="searchParametersToText()"></span>
+                </div>
+              }
               <div class="fr-col-6" style="margin-bottom: 50px;">
                 <data-qpv-tabs-dashboards />
               </div>
@@ -49,16 +45,24 @@
               </div>
             </div>
           }
-          @else if (searchFormInProgress()) {
-            <div class="fr-alert fr-alert--info">
-              <h4 class="fr-alert__title">Recherche en cours</h4>
-              <p>Recherche des données financières en cours, veuillez patienter...</p>
+          @else if (searchInProgress() && !firstSearchDone()) {
+            <div class="fr-grid-row" style="margin-top:50px;">
+              <div class="fr-col-4 fr-col-offset-4">
+                <div class="fr-alert fr-alert--info">
+                  <h4 class="fr-alert__title">Recherche en cours</h4>
+                  <p>Recherche des données financières en cours, veuillez patienter...</p>
+                </div>
+              </div>
             </div>
           }
           @else {
-            <div class="fr-alert fr-alert--info">
-              <h4 class="fr-alert__title">Prêt pour la recherche</h4>
-              <p>Utilisez les filtres ci-dessus pour rechercher des données financières.</p>
+            <div class="fr-grid-row" style="margin-top:50px;">
+              <div class="fr-col-4 fr-col-offset-4">
+                <div class="fr-alert fr-alert--info">
+                  <h4 class="fr-alert__title">Prêt pour la recherche</h4>
+                  <p>Utilisez les filtres ci-dessus pour rechercher des données financières.</p>
+                </div>
+              </div>
             </div>
           }
         </div>

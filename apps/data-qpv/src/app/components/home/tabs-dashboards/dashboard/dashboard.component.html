@@ -35,74 +35,112 @@
         <div style="background-color: #FFF3FE; padding: 15px;">
             <p style="color: #A558A0; font-weight: bold;">Répartition des financements par thématique</p>
             <div class="fr-griw-row">
-                <div class="fr-col-6 fr-col-offset-3">
-                    @if (currentDashboardData()) {
-                        @if (isArrayFilled(currentDashboardData()?.pie_chart_themes?.labels)) {
+                @if (currentDashboardData()) {
+                    @if (isArrayFilled(currentDashboardData()?.pie_chart_themes)) {
+                        <div class="fr-col-9 fr-col-offset-3">
                             <pie-chart
-                                [x]="[currentDashboardData()?.pie_chart_themes?.labels] | json"
-                                [y]="[currentDashboardData()?.pie_chart_themes?.values] | json"
-                                [name]="currentDashboardData()?.pie_chart_themes?.labels | json"
+                                [labels]="currentDashboardData()?.pie_chart_themes?.labels"
+                                [values]="currentDashboardData()?.pie_chart_themes?.values"
                                 unit-tooltip='€'>
                             </pie-chart>
-                        } @else {
+                        </div>
+                    } @else {
+                        <div class="fr-col-12">
                             <div class="fr-alert fr-alert--info">
                                 <h6 class="fr-alert__title">Aucun résultat</h6>
                             </div>
-                        }
-                    } @else {
-                        <lib-spinner />
+                        </div>
                     }
-                </div>
+                } @else {
+                    <div class="fr-col-12">
+                        <lib-spinner />
+                    </div>
+                }
             </div>
         </div>
     </div>
     <div class="fr-col-12">
-        <div style="background-color: #FFF3FE; padding: 15px;">
-            <p style="color: #A558A0; font-weight: bold;">Répartition des financements par type de porteur de projet</p>
-            <div class="fr-griw-row">
-                <div class="fr-col-8 fr-col-offset-2">
+        @if (selectedTab() === 0) {
+            <div style="background-color: #FFF3FE; padding: 15px;">
+                <p style="color: #A558A0; font-weight: bold;">Répartition des financements par type de porteur de projet</p>
+                <div class="fr-griw-row">
                     @if (currentDashboardData()) {
-                        @if (isArrayFilled(currentDashboardData()?.pie_chart_types_porteurs?.labels)) {
-                            <pie-chart
-                                [x]="[currentDashboardData()?.pie_chart_types_porteurs?.labels] | json"
-                                [y]="[currentDashboardData()?.pie_chart_types_porteurs?.values] | json"
-                                [name]="currentDashboardData()?.pie_chart_types_porteurs?.labels | json"
-                                unit-tooltip='€'>
-                            </pie-chart>
+                        @if (isArrayFilled(currentDashboardData()?.pie_chart_types_porteurs)) {
+                            <div class="fr-col-9 fr-col-offset-3">
+                                <pie-chart
+                                    [labels]="currentDashboardData()?.pie_chart_types_porteurs?.labels"
+                                    [values]="currentDashboardData()?.pie_chart_types_porteurs?.values"
+                                    unit-tooltip='€'>
+                                </pie-chart>
+                            </div>
                         } @else {
-                            <div class="fr-alert fr-alert--info">
-                                <h6 class="fr-alert__title">Aucun résultat</h6>
+                            <div class="fr-col-12">
+                                <div class="fr-alert fr-alert--info">
+                                    <h6 class="fr-alert__title">Aucun résultat</h6>
+                                </div>
                             </div>
                         }
                     } @else {
-                        <lib-spinner />
+                        <div class="fr-col-12">
+                            <lib-spinner />
+                        </div>
                     }
                 </div>
             </div>
-        </div>
+        } @else {
+            <div style="background-color: #FFF3FE; padding: 15px;">
+                <p style="color: #A558A0; font-weight: bold;">Représentation par financeur</p>
+                <div class="fr-griw-row">
+                    @if (currentDashboardData()) {
+                        @if (isArrayFilled(currentDashboardData()?.bar_chart_financeurs)) {
+                            <div class="fr-col-8 fr-col-offset-2">
+                                <bar-chart
+                                    [labels]="currentDashboardData()?.bar_chart_financeurs?.labels"
+                                    [values]="currentDashboardData()?.bar_chart_financeurs?.values"
+                                    unit-tooltip='€'>
+                                </bar-chart>
+                            </div>
+                        } @else {
+                            <div class="fr-col-12">
+                                <div class="fr-alert fr-alert--info">
+                                    <h6 class="fr-alert__title">Aucun résultat</h6>
+                                </div>
+                            </div>
+                        }
+                    } @else {
+                        <div class="fr-col-12">
+                            <lib-spinner />
+                        </div>
+                    }
+                </div>
+            </div>
+        }
     </div>
     <div class="fr-col-12">
         <div style="background-color: #FFF3FE; padding: 15px;">
             <p style="color: #A558A0; font-weight: bold;">Evolution des financements par année</p>
             <div class="fr-griw-row">
-                <div class="fr-col-6 fr-col-offset-3">
-                    @if (currentDashboardData()) {
-                        @if (isArrayFilled(currentDashboardData()?.line_chart_annees?.labels) && isArrayFilled(currentDashboardData()?.line_chart_annees?.values)) {
+                @if (currentDashboardData()) {
+                    @if (isArrayFilled(currentDashboardData()?.line_chart_annees) && isArrayFilled(currentDashboardData()?.line_chart_annees)) {
+                        <div class="fr-col-8 fr-col-offset-2">
                             <line-chart
-                                [attr.x]="[currentDashboardData()?.line_chart_annees?.labels] | json"
-                                [attr.y]="[currentDashboardData()?.line_chart_annees?.values] | json"
-                                name='["Evolution par année"]'
-                                selected-palette='default'>
+                                [labels]="currentDashboardData()?.line_chart_annees?.labels"
+                                [values]="currentDashboardData()?.line_chart_annees?.values"
+                                >
                             </line-chart>
-                        } @else {
+                        </div>
+                    } @else {
+                        <div class="fr-col-12">
                             <div class="fr-alert fr-alert--info">
                                 <h6 class="fr-alert__title">Aucun résultat</h6>
                             </div>
-                        }
-                    } @else {
-                        <lib-spinner />
+                        </div>
                     }
-                </div>
+                } @else {
+                    <div class="fr-col-12">
+                        <lib-spinner />
+                    </div>
+                }
             </div>
         </div>
     </div>

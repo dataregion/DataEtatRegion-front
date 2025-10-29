@@ -12,6 +12,8 @@ api/lignesFinancieres.service.ts
 api/lignesFinancieres.serviceInterface.ts
 api/listeDesColonnes.service.ts
 api/listeDesColonnes.serviceInterface.ts
+api/map.service.ts
+api/map.serviceInterface.ts
 configuration.ts
 encoder.ts
 git_push.sh
@@ -27,8 +29,11 @@ model/enrichedFlattenFinancialLinesDataQPV.ts
 model/enrichedFlattenFinancialLinesDataQPV1.ts
 model/lignesFinancieres.ts
 model/lignesResponse.ts
+model/mapData.ts
+model/mapResponse.ts
 model/models.ts
 model/paginationMeta.ts
+model/qpvData.ts
 model/tags.ts
 ng-package.json
 package.json
