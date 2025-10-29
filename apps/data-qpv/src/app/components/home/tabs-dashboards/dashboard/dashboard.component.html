@@ -41,8 +41,7 @@
                             <pie-chart
                                 [labels]="currentDashboardData()?.pie_chart_themes?.labels"
                                 [values]="currentDashboardData()?.pie_chart_themes?.values"
-                                unit-tooltip='€'>
-                            </pie-chart>
+                                unit-tooltip='€' />
                         </div>
                     } @else {
                         <div class="fr-col-12">
@@ -70,8 +69,7 @@
                                 <pie-chart
                                     [labels]="currentDashboardData()?.pie_chart_types_porteurs?.labels"
                                     [values]="currentDashboardData()?.pie_chart_types_porteurs?.values"
-                                    unit-tooltip='€'>
-                                </pie-chart>
+                                    unit-tooltip='€' />
                             </div>
                         } @else {
                             <div class="fr-col-12">
@@ -97,8 +95,7 @@
                                 <bar-chart
                                     [labels]="currentDashboardData()?.bar_chart_financeurs?.labels"
                                     [values]="currentDashboardData()?.bar_chart_financeurs?.values"
-                                    unit-tooltip='€'>
-                                </bar-chart>
+                                    unit-tooltip='€' />
                             </div>
                         } @else {
                             <div class="fr-col-12">
@@ -125,9 +122,7 @@
                         <div class="fr-col-8 fr-col-offset-2">
                             <line-chart
                                 [labels]="currentDashboardData()?.line_chart_annees?.labels"
-                                [values]="currentDashboardData()?.line_chart_annees?.values"
-                                >
-                            </line-chart>
+                                [values]="currentDashboardData()?.line_chart_annees?.values" />
                         </div>
                     } @else {
                         <div class="fr-col-12">

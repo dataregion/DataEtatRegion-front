@@ -4,7 +4,6 @@ import { ActivatedRoute } from '@angular/router';
 import {
   BehaviorSubject,
   debounceTime,
-  filter,
   Observable,
   of,
   startWith,
@@ -14,29 +13,21 @@ import {
 } from 'rxjs';
 import { GeoModel, TypeLocalisation } from 'apps/common-lib/src/public-api';
 import { MarqueBlancheParsedParamsResolverModel } from '../../../resolvers/marqueblanche-parsed-params.resolver';
-import { BeneficiaireFieldData } from './autocomplete/autocomplete-beneficiaire.service';
 import { AutocompleteBeneficiaireService } from './autocomplete/autocomplete-beneficiaire.service';
-import { AdvancedChipsMultiselectComponent, SelectedData } from 'apps/common-lib/src/lib/components/advanced-chips-multiselect/advanced-chips-multiselect.component';
-// import { TagFieldData } from './autocomplete/autocomplete-tags.service';
 import { LoggerService } from 'apps/common-lib/src/lib/services/logger.service';
 import { BopModel } from '../../../models/refs/bop.models';
-import { ReferentielProgrammation } from '../../../models/refs/referentiel_programmation.model';
 import { OtherTypeCategorieJuridique, SearchParameters, SearchParamsService, SearchTypeCategorieJuridique } from '../../../services/search-params.service';
 import { CentreCouts, TypeCategorieJuridique } from '../../../models/financial/common.models';
-// import { Beneficiaire } from '../../../models/search/beneficiaire.model';
-// import { Bop } from '../../../models/search/bop.model';
 import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
 import { SelectMultipleComponent } from 'apps/common-lib/src/lib/components/select-multiple/select-multiple.component';
 import { LocalisationComponent } from 'apps/common-lib/src/lib/components/localisation/localisation.component';
-import { BopsReferentielsComponent } from 'apps/common-lib/src/lib/components/bops-referentiels/bops-referentiels.component';
 import { FinancialDataResolverModel } from '../../../models/financial/financial-data-resolvers.models';
 import { MatButtonModule } from '@angular/material/button';
-import { tag_fullname } from '@models/refs/tag.model';
 import { PrefilterMapperService } from './prefilter-mapper.services';
 import { PreferenceService } from '../../../services/preference.service';
 import { SearchDataService } from '../../../services/search-data.service';
-import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { GridInFullscreenStateService } from 'apps/common-lib/src/lib/services/grid-in-fullscreen-state.service';
 import { PreFilters } from '../../../models/search/prefilters.model';
 import { RefGeoQpv, RefQpvWithCommune } from '../../../models/refs/qpv.model';
@@ -539,7 +530,7 @@ export class SearchDataComponent implements OnInit {
     // Lancement de la recherche - le service traite automatiquement la réponse
     this.searchDataService.searchParams.set(search_parameters)
     this.searchDataService.searchInProgress.set(true);
-    this.searchDataService.search(search_parameters).subscribe(response => {
+    this.searchDataService.search(search_parameters).subscribe(() => {
       this.searchDataService.firstSearchDone.set(true);
       this.searchDataService.selectedTab.set(0);
     });

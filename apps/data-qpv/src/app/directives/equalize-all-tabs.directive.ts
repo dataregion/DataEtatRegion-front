@@ -3,23 +3,27 @@ import {
   ElementRef,
   AfterViewInit,
   OnDestroy,
-  NgZone
+  NgZone,
+  inject
 } from '@angular/core';
 
 @Directive({
   selector: '[appEqualizeAllTabs]'
 })
 export class EqualizeAllTabsDirective implements AfterViewInit, OnDestroy {
+
+  private host = inject(ElementRef<HTMLElement>)
+  private zone = inject(NgZone)
+
   private resizeObservers: ResizeObserver[] = [];
   private mutationObserver?: MutationObserver;
   private destroyed = false;
 
-  constructor(private host: ElementRef<HTMLElement>, private zone: NgZone) {}
-
   ngAfterViewInit() {
     this.zone.runOutsideAngular(() => {
       // Just wait a bit for dsfr-tabs to render
-      setTimeout(() => this.initialize(), 500);
+      // #TODO Voir si meilleur moyen
+      setTimeout(() => this.initialize(), 100);
     });
   }
 

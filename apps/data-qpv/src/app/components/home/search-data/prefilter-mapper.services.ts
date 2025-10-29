@@ -4,9 +4,7 @@ import { FormSearch } from './search-data.component';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { PreFilters } from '../../../models/search/prefilters.model';
 import { SearchParameters, SearchParamsService, SearchTypeCategorieJuridique } from '../../../services/search-params.service';
-import { AutocompleteBeneficiaireService, BeneficiaireFieldData } from './autocomplete/autocomplete-beneficiaire.service';
-import { Beneficiaire } from '../../../models/search/beneficiaire.model';
-import { BudgetDataHttpService } from '../../../services/http/budget.service';
+import { AutocompleteBeneficiaireService } from './autocomplete/autocomplete-beneficiaire.service';
 import { SearchDataService } from '../../../services/search-data.service';
 import { forkJoin, map, mergeMap, Observable, of } from 'rxjs';
 import { LoggerService } from 'apps/common-lib/src/lib/services/logger.service';
@@ -24,7 +22,6 @@ export class PrefilterMapperService {
   private logger = inject(LoggerService).getLogger(PrefilterMapperService.name);
 
   private _formBuilder: FormBuilder = inject(FormBuilder)
-  private _referentielsService: BudgetDataHttpService = inject(BudgetDataHttpService)
   private _searchDataService: SearchDataService = inject(SearchDataService)
   private _searchParamsService: SearchParamsService = inject(SearchParamsService)
   private _autocompleteBeneficiaireService: AutocompleteBeneficiaireService = inject(AutocompleteBeneficiaireService)
@@ -144,7 +141,7 @@ export class PrefilterMapperService {
   private _mapPorteurs(pf: PreFilters): RefSiret[] | undefined {
     if (!pf.porteurs)
       return undefined;
-    let selected: RefSiret[] = pf.porteurs as unknown as RefSiret[];
+    const selected: RefSiret[] = pf.porteurs as unknown as RefSiret[];
     const mappedSelected = selected.map(benef => {
       return {
         ...benef,

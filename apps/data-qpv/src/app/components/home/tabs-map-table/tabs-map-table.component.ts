@@ -1,14 +1,13 @@
-import { Component, computed, effect, ElementRef, EventEmitter, inject, input, Input, Output, signal, ViewChild } from "@angular/core";
+import { Component, computed, ElementRef, inject, signal, ViewChild } from "@angular/core";
 import { FinancialDataModel } from "../../../models/financial/financial-data.models";
-import { DsfrOption, DsfrTableComponent, DsfrTableState, DsfrTabsComponent, DsfrTabComponent } from "@edugouvfr/ngx-dsfr";
-import { RefQpvWithCommune } from "../../../models/refs/qpv.model";
+import { DsfrTabsComponent, DsfrTabComponent } from "@edugouvfr/ngx-dsfr";
 import { MapComponent } from "./map/map.component";
 import { SpinnerComponent } from "apps/common-lib/src/lib/components/spinner/spinner.component";
 import { SearchDataService } from "../../../services/search-data.service";
-import { takeUntilDestroyed, toObservable } from "@angular/core/rxjs-interop";
-import { LignesFinancieres, PaginationMeta } from "apps/clients/v3/data-qpv";
+import { toObservable } from "@angular/core/rxjs-interop";
 import { CurrencyPipe } from "@angular/common";
 import { MatchDashboardHeightDirective } from "../../../directives/match-dashboard-height.directive";
+import { PaginationMeta } from "apps/clients/v3/data-qpv";
 
 @Component({
     selector: 'data-qpv-tabs-map-table',
@@ -41,13 +40,6 @@ export class TabsMapTableComponent {
   /** Observateur d'intersection pour détecter la visibilité du spinner */
   private observer!: IntersectionObserver;
 
-  // public rowsPerPageOptions: DsfrOption[] = [ { label: '20 lignes par page', value: 20 } ]
-
-  public noResults = computed(() => this._searchDataService.currentResults.lignesData?.length === 0);
-
-  // public readonly searchResults = input<FinancialDataModel[] | null>(null);
-  // public readonly qpv =  input<RefQpvWithCommune[]>([]);
-  
   currentTableData = signal<FinancialDataModel[] | null>(null);
   currentPagination = signal<PaginationMeta | null>(null);
 

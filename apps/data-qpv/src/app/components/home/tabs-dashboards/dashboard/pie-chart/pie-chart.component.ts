@@ -1,4 +1,4 @@
-import { Component, Input, ElementRef, AfterViewInit, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input, ElementRef, AfterViewInit, OnChanges, SimpleChanges, inject } from '@angular/core';
 import { Chart, ArcElement, Tooltip, Legend, ChartConfiguration, PieController } from 'chart.js';
 
 Chart.register(PieController, ArcElement, Tooltip, Legend);
@@ -9,6 +9,8 @@ Chart.register(PieController, ArcElement, Tooltip, Legend);
   styleUrls: ['./pie-chart.component.scss'],
 })
 export class PieChartComponent implements AfterViewInit, OnChanges {
+
+  private el = inject(ElementRef)
   
   @Input() labels?: string[] | null;
   @Input() values?: number[] | null;
@@ -20,8 +22,6 @@ export class PieChartComponent implements AfterViewInit, OnChanges {
   private chart?: Chart;
 
   uniqueId = 'chart-' + Math.random().toString(36).substring(2, 9);
-
-  constructor(private el: ElementRef) {}
 
   ngAfterViewInit(): void {
     this.tryRenderChart();

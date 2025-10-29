@@ -1,10 +1,6 @@
-import { Component, Input, OnInit, OnChanges, SimpleChanges, inject, CUSTOM_ELEMENTS_SCHEMA, ViewChild, AfterViewInit, ElementRef, computed, signal, Renderer2 } from '@angular/core';
-import {DomSanitizer, SafeResourceUrl} from '@angular/platform-browser';
-import { SETTINGS } from 'apps/common-lib/src/lib/environments/settings.http.service';
-import {SettingsService} from "../../../../../environments/settings.service";
-import {Superset} from "../../../../../../../common-lib/src/lib/environments/settings";
+import { Component, inject, signal } from '@angular/core';
 import { SearchDataService } from 'apps/data-qpv/src/app/services/search-data.service';
-import { CurrencyPipe, JsonPipe } from '@angular/common';
+import { CurrencyPipe } from '@angular/common';
 import { ChartData, DashboardData } from 'apps/clients/v3/data-qpv';
 import { SpinnerComponent } from 'apps/common-lib/src/lib/components/spinner/spinner.component';
 import { toObservable } from '@angular/core/rxjs-interop';

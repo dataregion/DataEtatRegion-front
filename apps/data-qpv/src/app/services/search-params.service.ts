@@ -3,7 +3,6 @@ import { Optional } from 'apps/common-lib/src/lib/utilities/optional.type';
 import { SearchUtilsService } from 'apps/common-lib/src/lib/services/search-utils.service';
 import { CentreCouts, TypeCategorieJuridique } from '../models/financial/common.models';
 import { BopModel } from '../models/refs/bop.models';
-import { ReferentielProgrammation } from '../models/refs/referentiel_programmation.model';
 import { GeoModel, TypeLocalisation } from 'apps/common-lib/src/public-api';
 import { RefSiret } from 'apps/common-lib/src/lib/models/refs/RefSiret';
 import { ThemeModel } from '../models/refs/bop.models';

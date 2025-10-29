@@ -3,24 +3,28 @@ import {
   ElementRef,
   AfterViewInit,
   OnDestroy,
-  NgZone
+  NgZone,
+  inject
 } from '@angular/core';
 
 @Directive({
   selector: '[appMatchDashboardHeight]'
 })
 export class MatchDashboardHeightDirective implements AfterViewInit, OnDestroy {
+
+  private host = inject(ElementRef<HTMLElement>)
+  private zone = inject(NgZone)
+  
   private resizeObserver?: ResizeObserver;
   private mutationObserver?: MutationObserver;
   private lastHeight = 0;
-
-  constructor(private host: ElementRef<HTMLElement>, private zone: NgZone) {}
 
   ngAfterViewInit() {
     // Run outside Angular for performance
     this.zone.runOutsideAngular(() => {
       // Give charts a bit of time to render
-      setTimeout(() => this.initialize(), 600);
+      // #TODO Voir si meilleur moyen      
+      setTimeout(() => this.initialize(), 100);
     });
   }
 
@@ -78,7 +82,6 @@ export class MatchDashboardHeightDirective implements AfterViewInit, OnDestroy {
     // Apply to map
     const mapContainer = this.host.nativeElement.querySelector('data-qpv-map') as HTMLElement | null;
     if (mapContainer) {
-      const scrollbarY = mapContainer.offsetWidth - mapContainer.clientWidth;
       mapContainer.style.height = `${height - 20}px`;
 
       const mapTarget = mapContainer.querySelector('.map-container') as HTMLElement | null;

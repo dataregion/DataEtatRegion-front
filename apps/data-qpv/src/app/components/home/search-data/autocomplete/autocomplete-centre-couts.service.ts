@@ -1,11 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
-import { Beneficiaire } from '@models/search/beneficiaire.model';
-import { RefSiret } from 'apps/common-lib/src/lib/models/refs/RefSiret';
-import { ReferentielsHttpService } from 'apps/common-lib/src/lib/services/referentiels.service';
 import { ReferentielsService } from '../../../../services/http/referentiels.service';
-import { SelectedData } from 'apps/common-lib/src/lib/components/advanced-chips-multiselect/advanced-chips-multiselect.component';
 import { CentreCouts } from 'apps/data-qpv/src/app/models/financial/common.models';
 
 

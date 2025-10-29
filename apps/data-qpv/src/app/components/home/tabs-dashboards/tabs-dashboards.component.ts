@@ -1,11 +1,7 @@
-import { Component, computed, EventEmitter, inject, Input, Output, signal } from '@angular/core';
-import { FinancialDataModel } from '../../../models/financial/financial-data.models';
+import { Component, computed, inject } from '@angular/core';
 import { DsfrTabsComponent, DsfrTabComponent } from "@edugouvfr/ngx-dsfr";
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { SearchDataService } from '../../../services/search-data.service';
-import { SearchParamsService } from '../../../services/search-params.service';
-import { BopModel } from '@models/refs/bop.models';
-import { DashboardData, DashboardResponse, LignesFinancieres, LignesResponse } from 'apps/clients/v3/data-qpv';
 
 
 @Component({
@@ -17,14 +13,8 @@ import { DashboardData, DashboardResponse, LignesFinancieres, LignesResponse } f
 })
 export class TabDashboardsComponent {
 
-  private _searchParamsService = inject(SearchParamsService);
   private _searchDataService = inject(SearchDataService);
 
-  private _fullViewport: boolean = false
-
-  private searchParams = computed(() => this._searchDataService.searchParams());
-  
-  public noResults = computed(() => this._searchDataService.currentResults.lignesData?.length === 0);
   public selectedTab = computed(() => this._searchDataService.selectedTab());
 
   private _tabs: Record<string, number> = {
@@ -33,7 +23,7 @@ export class TabDashboardsComponent {
     "dashboard-tous": 2,
   }
   
-  public setSelectedDashboard(event: any) {
+  public setSelectedDashboard(event: string) {
     this._searchDataService.changeTab(this._tabs[event])
   }
 

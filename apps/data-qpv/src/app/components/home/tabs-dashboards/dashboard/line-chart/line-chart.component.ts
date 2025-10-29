@@ -1,4 +1,4 @@
-import { Component, Input, ElementRef, AfterViewInit, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input, ElementRef, AfterViewInit, OnChanges, SimpleChanges, inject } from '@angular/core';
 import { Chart, LineElement, PointElement, LineController, Tooltip, Legend, CategoryScale, LinearScale, ChartConfiguration, Filler } from 'chart.js';
 
 Chart.register(LineController, LineElement, PointElement, CategoryScale, LinearScale, Tooltip, Legend, Filler);
@@ -8,6 +8,8 @@ Chart.register(LineController, LineElement, PointElement, CategoryScale, LinearS
   template: `<canvas></canvas>`,
 })
 export class LineChartComponent implements AfterViewInit, OnChanges {
+
+  private el = inject(ElementRef)
 
   @Input() labels?: string[] | null;
   @Input() values?: number[] | null;
@@ -19,8 +21,6 @@ export class LineChartComponent implements AfterViewInit, OnChanges {
   private chart?: Chart;
 
   uniqueId = 'chart-' + Math.random().toString(36).substring(2, 9);
-
-  constructor(private el: ElementRef) {}
 
   ngAfterViewInit(): void {
     this.tryRenderChart();

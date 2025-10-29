@@ -16,7 +16,6 @@ import { toObservable } from '@angular/core/rxjs-interop';
 import { SearchDataService } from 'apps/data-qpv/src/app/services/search-data.service';
 import { QpvData } from 'apps/clients/v3/data-qpv';
 import { Feature } from 'ol';
-import { Point } from 'ol/geom';
 import CircleStyle from 'ol/style/Circle';
 import { ActivatedRoute } from '@angular/router';
 import { FinancialDataResolverModel } from 'apps/data-qpv/src/app/models/financial/financial-data-resolvers.models';
@@ -133,6 +132,7 @@ export class MapComponent implements OnInit, AfterViewInit {
     const url = 'https://data.geopf.fr/tms/1.0.0/ADMIN_EXPRESS/{z}/{x}/{y}.pbf';
 
     /** Dynamic style function */
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const styleFunction = (feature: any): Style | undefined => {
       const zoom = this.map?.getView()?.getZoom() ?? 0;
       const props = feature.getProperties();
@@ -203,8 +203,6 @@ export class MapComponent implements OnInit, AfterViewInit {
     const qpvCodes = data.map(d => d.qpv);
     const featuresContours: Feature[] = [];
     const featuresPoints: Feature[] = [];
-
-    const maxMontant = Math.max(...data.map(d => d.montant || 0));
 
     this._qpvs
       .filter(q => qpvCodes.includes(q.code))

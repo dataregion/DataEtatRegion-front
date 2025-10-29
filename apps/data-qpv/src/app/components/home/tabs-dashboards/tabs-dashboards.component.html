@@ -1,5 +1,5 @@
 <dsfr-tabs [selectedTabIndex]="selectedTab()" (tabSelect)="setSelectedDashboard($event)">
-  <dsfr-tab tabId="dashboard-147" label="Crédits P147" [class.empty] = "noResults()">
+  <dsfr-tab tabId="dashboard-147" label="Crédits P147">
     @if (selectedTab() === 0) {
       <div class="fr-grid-row fr-grid-row--gutters">
         <div class="fr-col-12">
@@ -8,7 +8,7 @@
       </div>
     }
   </dsfr-tab>
-  <dsfr-tab tabId="dashboard-autres" label="Crédits droit commun" [class.empty] = "noResults()">
+  <dsfr-tab tabId="dashboard-autres" label="Crédits droit commun">
     @if (selectedTab() === 1) {
       <div class="fr-grid-row fr-grid-row--gutters">
         <div class="fr-col-12">
@@ -17,7 +17,7 @@
       </div>
     }
   </dsfr-tab>
-  <dsfr-tab tabId="dashboard-tous" label="Total des crédits" [class.empty] = "noResults()">
+  <dsfr-tab tabId="dashboard-tous" label="Total des crédits">
     @if (selectedTab() === 2) {
       <div class="fr-grid-row fr-grid-row--gutters">
         <div class="fr-col-12">

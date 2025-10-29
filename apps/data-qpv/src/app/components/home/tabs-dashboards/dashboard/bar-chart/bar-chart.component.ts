@@ -1,4 +1,4 @@
-import { Component, Input, ElementRef, AfterViewInit, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input, ElementRef, AfterViewInit, OnChanges, SimpleChanges, inject } from '@angular/core';
 import {
   Chart,
   BarController,
@@ -18,6 +18,9 @@ Chart.register(BarController, BarElement, CategoryScale, LinearScale, Tooltip, L
   template: `<canvas></canvas>`,
 })
 export class BarChartComponent implements AfterViewInit, OnChanges {
+
+  private el = inject(ElementRef)
+
   @Input() labels?: string[] | null;
   @Input() values?: number[] | null;
   @Input() unitTooltip: string = '€';
@@ -27,8 +30,6 @@ export class BarChartComponent implements AfterViewInit, OnChanges {
   private chart?: Chart;
 
   uniqueId = 'chart-' + Math.random().toString(36).substring(2, 9);
-
-  constructor(private el: ElementRef) {}
 
   ngAfterViewInit(): void {
     this.tryRenderChart();

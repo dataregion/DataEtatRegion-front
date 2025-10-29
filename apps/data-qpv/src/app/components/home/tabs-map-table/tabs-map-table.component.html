@@ -1,5 +1,5 @@
 <dsfr-tabs appMatchDashboardHeight [selectedTabIndex]="selectedTabIndex">
-  <dsfr-tab tabId="tab-table" label="Tableau"  [class.empty] = "noResults()">
+  <dsfr-tab tabId="tab-table" label="Tableau">
     <div class="wrapper-tab-content">
 
       @if(searchInProgress()) {
@@ -7,7 +7,7 @@
         <lib-spinner />
       </div>
       } @else {
-        @if (currentTableData()?.length == 0) {
+        @if (currentTableData()?.length === 0) {
           <div class="fr-col-12">
               <div class="fr-alert fr-alert--info">
                   <h6 class="fr-alert__title">Aucune ligne financière</h6>
@@ -79,10 +79,10 @@
     </div> 
   </dsfr-tab>
 
-  <dsfr-tab tabId="tab-cartographie" label="Cartographie" [class.empty] = "noResults()">
+  <dsfr-tab tabId="tab-cartographie" label="Cartographie">
     <div class="wrapper-tab-content">
     @if (!searchInProgress()) {
-      @if (currentTableData()?.length == 0) {
+      @if (currentTableData()?.length === 0) {
         <div class="fr-col-12">
             <div class="fr-alert fr-alert--info">
                 <h6 class="fr-alert__title">Aucune ligne financière</h6>
