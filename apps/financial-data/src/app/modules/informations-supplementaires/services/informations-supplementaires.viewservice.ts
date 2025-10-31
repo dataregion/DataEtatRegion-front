@@ -1,11 +1,7 @@
 import { FinancialDataModel } from '../../../models/financial/financial-data.models';
 import {
   ExternalAPIsService,
-  InfoApiEntreprise,
-  InfoApiSubvention,
   ModelError,
-  RepresentantLegal,
-  Subvention
 } from 'apps/clients/apis-externes';
 import { forkJoin, Observable, of } from 'rxjs';
 import { catchError, map, shareReplay } from 'rxjs/operators';
@@ -20,6 +16,8 @@ import { SourceFinancialData } from '../../../models/financial/common.models';
 import { fromInfoApiEntreprise } from './informations-supplementaires.service';
 import { AffichageDossier } from '../../../models/demarche_simplifie/demarche.model';
 import { CompagnonDSService } from '../../administration/compagnon-ds/compagnon-ds.service';
+import { EntrepriseService, InfoApiEntreprise, RepresentantLegal, Subvention } from 'apps/clients/apis-externes-v3';
+import { SubventionService, InfoApiSubvention } from 'apps/clients/apis-externes-v3';
 
 export class InformationSupplementairesViewService {
   private _options = {
@@ -33,6 +31,8 @@ export class InformationSupplementairesViewService {
 
   constructor(
     private _ae: ExternalAPIsService,
+    private _aev3_entreprise: EntrepriseService,
+    private _aev3_subvention: SubventionService,
     private _compagnonDS: CompagnonDSService,
     private _financial: FinancialDataModel
   ) {}
@@ -156,7 +156,7 @@ export class InformationSupplementairesViewService {
   private get api_entreprise_info$() {
     if (this._api_entreprise_info$ == undefined) {
       const siret = this._financial.siret?.code;
-      this._api_entreprise_info$ = this._ae.getInfoEntrepriseCtrl(
+      this._api_entreprise_info$ = this._aev3_entreprise.getInfoEntrepriseInfoEntrepriseSiretGet(
         siret!,
         'body',
         false,
@@ -197,8 +197,8 @@ export class InformationSupplementairesViewService {
   private get api_subvention$() {
     if (this._api_subvention$ === undefined) {
       const siret = this._financial.siret?.code;
-      return this._ae
-        .getInfoSubventionCtrl(siret!, 'body', false, this._options)
+      return this._aev3_subvention
+        .getInfoSubventionInfoSubventionSiretGet(siret!, 'body', false, this._options)
         .pipe(shareReplay(1));
     }
     return this._api_subvention$;

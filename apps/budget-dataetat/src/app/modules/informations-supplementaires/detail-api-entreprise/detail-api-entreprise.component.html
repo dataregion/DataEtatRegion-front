@@ -42,7 +42,12 @@
         <strong>Code NAF :</strong> {{ info.quick.activite_principale.code | ouNonRenseigne }} <br>
 
         <strong>Date de création :</strong>
-        {{ info.donnees_etablissement.date_creation * 1000 | date: 'dd MMMM yyyy' | ouNonRenseigne }}
+        {{
+        info.donnees_etablissement.date_creation ?
+        info.donnees_etablissement.date_creation * 1000 : null
+        | date: 'dd MMMM yyyy'
+        | ouNonRenseigne
+        }}
         <br>
 
         <strong>Effectif de l'organisation (INSEE) :</strong> {{

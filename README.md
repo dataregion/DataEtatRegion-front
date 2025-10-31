@@ -97,6 +97,7 @@ Le dossier [apps/clients](./apps/clients/) contient des clients d'api, ces derni
 
 ```
 ./generate_openapi_client.sh -p ae -s "https://api.databretagne.fr/apis-externes/swagger.json" -t $(pwd)/apps/clients/ -n apis-externes
+./generate_openapi_client.sh -p aev3 -s "https://api.databretagne.fr/apis-externes/v3/admin/openapi.json" -t $(pwd)/apps/clients/ -n apis-externes-v3
 ```
 
 ## API des lignes budgetaires

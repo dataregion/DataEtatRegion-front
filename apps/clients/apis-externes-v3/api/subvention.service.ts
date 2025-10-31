@@ -1,5 +1,5 @@
 /**
- * API
+ * API V3 - Data Etat - API externes
  *
  * 
  *
@@ -17,44 +17,49 @@ import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
 // @ts-ignore
-import { Query } from '../model/query';
+import { ApiExterneError } from '../model/apiExterneError';
+// @ts-ignore
+import { HTTPValidationError } from '../model/hTTPValidationError';
+// @ts-ignore
+import { InfoApiSubvention } from '../model/infoApiSubvention';
 
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
-import { aeConfiguration }                                     from '../configuration';
+import { aev3Configuration }                                     from '../configuration';
 import { BaseService } from '../api.base.service';
 import {
-    ExternalAPIsServiceInterface
-} from './externalAPIs.serviceInterface';
+    SubventionServiceInterface
+} from './subvention.serviceInterface';
 
 
 
 @Injectable({
   providedIn: 'root'
 })
-export class ExternalAPIsService extends BaseService implements ExternalAPIsServiceInterface {
+export class SubventionService extends BaseService implements SubventionServiceInterface {
 
-    constructor(protected httpClient: HttpClient, @Optional() @Inject(BASE_PATH) basePath: string|string[], @Optional() configuration?: aeConfiguration) {
+    constructor(protected httpClient: HttpClient, @Optional() @Inject(BASE_PATH) basePath: string|string[], @Optional() configuration?: aev3Configuration) {
         super(basePath, configuration);
     }
 
     /**
-     * @param payload 
+     * Get Info Subvention
+     * @param siret 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public postDemarcheSimplifie(payload: Query, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any>;
-    public postDemarcheSimplifie(payload: Query, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<any>>;
-    public postDemarcheSimplifie(payload: Query, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<any>>;
-    public postDemarcheSimplifie(payload: Query, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
-        if (payload === null || payload === undefined) {
-            throw new Error('Required parameter payload was null or undefined when calling postDemarcheSimplifie.');
+    public getInfoSubventionInfoSubventionSiretGet(siret: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<InfoApiSubvention>;
+    public getInfoSubventionInfoSubventionSiretGet(siret: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<InfoApiSubvention>>;
+    public getInfoSubventionInfoSubventionSiretGet(siret: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<InfoApiSubvention>>;
+    public getInfoSubventionInfoSubventionSiretGet(siret: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+        if (siret === null || siret === undefined) {
+            throw new Error('Required parameter siret was null or undefined when calling getInfoSubventionInfoSubventionSiretGet.');
         }
 
         let localVarHeaders = this.defaultHeaders;
 
-        // authentication (Bearer) required
-        localVarHeaders = this.configuration.addCredentialToHeaders('Bearer', 'Authorization', localVarHeaders);
+        // authentication (OAuth2PasswordBearer) required
+        localVarHeaders = this.configuration.addCredentialToHeaders('OAuth2PasswordBearer', 'Authorization', localVarHeaders, 'Bearer ');
 
         const localVarHttpHeaderAcceptSelected: string | undefined = options?.httpHeaderAccept ?? this.configuration.selectHeaderAccept([
             'application/json'
@@ -68,15 +73,6 @@ export class ExternalAPIsService extends BaseService implements ExternalAPIsServ
         const localVarTransferCache: boolean = options?.transferCache ?? true;
 
 
-        // to determine the Content-Type header
-        const consumes: string[] = [
-            'application/json'
-        ];
-        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
-        if (httpContentTypeSelected !== undefined) {
-            localVarHeaders = localVarHeaders.set('Content-Type', httpContentTypeSelected);
-        }
-
         let responseType_: 'text' | 'json' | 'blob' = 'json';
         if (localVarHttpHeaderAcceptSelected) {
             if (localVarHttpHeaderAcceptSelected.startsWith('text')) {
@@ -88,11 +84,10 @@ export class ExternalAPIsService extends BaseService implements ExternalAPIsServ
             }
         }
 
-        let localVarPath = `/demarche-simplifie`;
-        return this.httpClient.request<any>('post', `${this.configuration.basePath}${localVarPath}`,
+        let localVarPath = `/info-subvention/${this.configuration.encodeParam({name: "siret", value: siret, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`;
+        return this.httpClient.request<InfoApiSubvention>('get', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
-                body: payload,
                 responseType: <any>responseType_,
                 withCredentials: this.configuration.withCredentials,
                 headers: localVarHeaders,

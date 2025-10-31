@@ -158,9 +158,14 @@ fi
 #
 # Applique les fixes si nécessaire
 #
-# fix_swagger_json_remove_additionalProperties "$temp_swagger"
-# fix_swagger_json_take_firstof_type "$temp_swagger"
-fix_swagger_json_replace_oauth "$temp_swagger"
+echo >&2 "Appliquer les fix dedié aux APIs gérées par flask ? (inutiles pour les apis v3) [y/N]"
+answer="$(confirm)"
+if [ "$answer" == "y" ]; then
+  fix_swagger_json_remove_additionalProperties "$temp_swagger"
+  fix_swagger_json_take_firstof_type "$temp_swagger"
+  fix_swagger_json_replace_oauth "$temp_swagger"
+fi
+
 
 #
 # Création du dossier de montage

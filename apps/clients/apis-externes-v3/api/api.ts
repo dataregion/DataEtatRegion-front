@@ -1,0 +1,10 @@
+export * from './entreprise.service';
+import { EntrepriseService } from './entreprise.service';
+export * from './entreprise.serviceInterface';
+export * from './healthcheck.service';
+import { HealthcheckService } from './healthcheck.service';
+export * from './healthcheck.serviceInterface';
+export * from './subvention.service';
+import { SubventionService } from './subvention.service';
+export * from './subvention.serviceInterface';
+export const APIS = [EntrepriseService, HealthcheckService, SubventionService];

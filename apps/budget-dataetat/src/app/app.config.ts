@@ -14,6 +14,7 @@ import { API_GEO_PATH, API_REF_PATH } from 'apps/common-lib/src/public-api';
 import { BASE_PATH as FINANCIAL_DATA_V3_BASE_PATH } from 'apps/clients/v3/financial-data';
 import { BASE_PATH as REFERENTIELS_V3_BASE_PATH } from 'apps/clients/v3/referentiels';
 import { aeConfiguration, aeConfigurationParameters } from 'apps/clients/apis-externes';
+import { aev3Configuration, aev3ConfigurationParameters } from 'apps/clients/apis-externes-v3';
 
 
 export function providerBugdetConfiguration(settingsService: SettingsBudgetService): Provider[] {
@@ -31,6 +32,17 @@ export function providerBugdetConfiguration(settingsService: SettingsBudgetServi
           basePath: settingsService.apiFinancialDataV2
         };
         return new budgetConfiguration(params);
+      },
+      multi: false
+    },
+    {
+      provide: aev3Configuration,
+      useFactory: () => {
+        const params: aev3ConfigurationParameters = {
+          withCredentials: false,
+          basePath: settingsService.apiExternesV3
+        };
+        return new aev3Configuration(params);
       },
       multi: false
     },

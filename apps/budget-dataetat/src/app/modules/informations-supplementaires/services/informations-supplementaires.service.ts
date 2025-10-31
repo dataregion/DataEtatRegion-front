@@ -1,12 +1,13 @@
 import { Injectable, inject } from '@angular/core';
 import { FinancialDataModel } from '@models/financial/financial-data.models';
-import { ExternalAPIsService, InfoApiEntreprise } from 'apps/clients/apis-externes';
+import { ExternalAPIsService } from 'apps/clients/apis-externes';
 import { EntrepriseFull } from '../models/EntrepriseFull';
 import { PersonneMoraleAttributsCorrige } from '../models/correction-api-externes/PersonneMoraleAttributsCorrige';
 import { ActivitePrincipaleCorrige } from '../models/correction-api-externes/ActivitePrincipaleCorrige';
 import { TrancheEffectifCorrige } from '../models/correction-api-externes/TrancheEffectifCorrige';
 import { InformationSupplementairesViewService } from './informations-supplementaires.viewservice';
 import { CompagnonDSService } from '../../compagnon-ds/compagnon-ds.service';
+import { EntrepriseService, InfoApiEntreprise, SubventionService } from 'apps/clients/apis-externes-v3';
 
 export function fromInfoApiEntreprise(info: InfoApiEntreprise): EntrepriseFull {
   return {
@@ -29,6 +30,8 @@ export function fromInfoApiEntreprise(info: InfoApiEntreprise): EntrepriseFull {
 })
 export class InformationsSupplementairesService {
   private _ea = inject(ExternalAPIsService);
+  private _aev3_entreprise = inject(EntrepriseService);
+  private _aev3_subvention = inject(SubventionService);
   private _compagnonDS = inject(CompagnonDSService);
 
   private _viewService: InformationSupplementairesViewService | undefined;
@@ -40,6 +43,8 @@ export class InformationsSupplementairesService {
   setupViewModelService(financial_data: FinancialDataModel) {
     this._viewService = new InformationSupplementairesViewService(
       this._ea,
+      this._aev3_entreprise,
+      this._aev3_subvention,
       this._compagnonDS,
       financial_data
     );

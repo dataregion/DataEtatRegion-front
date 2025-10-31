@@ -1,5 +1,5 @@
 /**
- * API
+ * API V3 - Data Etat - API externes
  *
  * 
  *
@@ -11,22 +11,20 @@ import { HttpHeaders }                                       from '@angular/comm
 
 import { Observable }                                        from 'rxjs';
 
-import { Query } from '../model/models';
 
 
-import { aeConfiguration }                                     from '../configuration';
+import { aev3Configuration }                                     from '../configuration';
 
 
 
-export interface ExternalAPIsServiceInterface {
+export interface HealthcheckServiceInterface {
     defaultHeaders: HttpHeaders;
-    configuration: aeConfiguration;
+    configuration: aev3Configuration;
 
     /**
+     * Vérification de la disponibilité de l\&#39;API Entreprise en mode batch
      * 
-     * 
-     * @param payload 
      */
-    postDemarcheSimplifie(payload: Query, extraHttpRequestParams?: any): Observable<{}>;
+    entrepriseBatchHealthcheckHealthcheckentrepriseBatchGet(extraHttpRequestParams?: any): Observable<any>;
 
 }

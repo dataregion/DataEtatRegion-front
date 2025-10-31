@@ -1,4 +1,4 @@
-import { InfoApiEntreprise } from 'apps/clients/apis-externes';
+import { InfoApiEntreprise } from 'apps/clients/apis-externes-v3';
 import { ActivitePrincipaleCorrige } from './correction-api-externes/ActivitePrincipaleCorrige';
 import { PersonneMoraleAttributsCorrige } from './correction-api-externes/PersonneMoraleAttributsCorrige';
 import { TrancheEffectifCorrige } from './correction-api-externes/TrancheEffectifCorrige';
