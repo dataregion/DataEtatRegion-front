@@ -18,6 +18,9 @@ export class ModalAdditionalParamsComponent<T> implements OnChanges {
   public autoCloseOnAction: boolean = true
   public actions: DsfrModalAction[] = []
 
+  @Input() mode: 'local' | 'remote' = 'local';
+  @Input() loading = false;
+
   @Input()
   public title: string = ""
   @Input()
@@ -41,6 +44,14 @@ export class ModalAdditionalParamsComponent<T> implements OnChanges {
 
   filterInput: string = "";
   inputFiltre: Subject<string> = new Subject<string>();
+
+  get isEmpty(): boolean {
+    return !this.filteredCheckboxes || this.filteredCheckboxes.length === 0;
+  }
+
+  get hasInput(): boolean {
+    return this.filterInput.trim().length > 0;
+  }
 
   /**
    * Actions au changement des inputs
@@ -69,88 +80,88 @@ export class ModalAdditionalParamsComponent<T> implements OnChanges {
     }
   }
 
-    /**
+  /**
    * Fonction de filtrage par défaut, peut-être remplacée par injection
    * @param text input utilisateur utilisé pour filtrer
    */
-    @Input()
-    filterFunction(text: string): T[] {
-      // Filtre par défaut : options considérées comme des string
-      this.filteredCheckboxes = this.checkboxes ? this.checkboxes?.filter((checkbox) => {
-        const optStr = checkbox ? (checkbox as string).toLowerCase() : '';
-        return optStr.includes(text.toLowerCase());
-      }) : [];
-      return this.filteredCheckboxes;
-    }
+  @Input()
+  filterFunction(text: string): T[] {
+    // Filtre par défaut : options considérées comme des string
+    this.filteredCheckboxes = this.checkboxes ? this.checkboxes?.filter((checkbox) => {
+      const optStr = checkbox ? (checkbox as string).toLowerCase() : '';
+      return optStr.includes(text.toLowerCase());
+    }) : [];
+    return this.filteredCheckboxes;
+  }
     
-    /**
-     * Fonction de rendu d'une option par défaut, peut-être remplacée par injection
-     * @param option 
-     */
-    @Input()
-    renderFunction(option: T): string {
-      // Affichage par défaut : option telle quelle
-      return option as string;
-    }
-  
-    /**
-     * Fonction de rendu des options sélectionnées par défaut, peut-être remplacée par injection
-     * @param selected 
-     * @returns 
-     */
-    @Input()
-    renderLabelFunction(selected: T[] | null): string {
-      // Affichage par défaut : options jointes par des virgules
-      return selected != null ? (selected as string[]).join(', ') : ''
-    }
+  /**
+   * Fonction de rendu d'une option par défaut, peut-être remplacée par injection
+   * @param option 
+   */
+  @Input()
+  renderFunction(option: T): string {
+    // Affichage par défaut : option telle quelle
+    return option as string;
+  }
 
-    /**
-   * Filtrage des option par défaut OU spécifique des options
-   * @param text
+  /**
+   * Fonction de rendu des options sélectionnées par défaut, peut-être remplacée par injection
+   * @param selected 
    * @returns 
    */
-    filter(text?: string): void {
-      // Sauvegarde du texte
-      this.filterInput = text === undefined ? this.filterInput : text;
-      // Filtre
-      const newOptions = this.filterFunction(text ? text : '');
-      if (newOptions == null || newOptions.length === 0)
-        return
-  
-      this.filteredCheckboxes = newOptions;
-      // Concaténation des éléments sélectionnés avec les éléments filtrés (en supprimant les doublons éventuels)
-      this.filteredCheckboxes = this.selected != null ?
-        [
-          ...this.selected,
-          ...this.filteredCheckboxes.filter((el) => !this.selected?.includes(el))
-        ]
-        : this.filteredCheckboxes
-    }
-  
-    /**
-     * Affichage textuel par défaut OU spécifique d'une option
-     * @param option 
-     * @returns 
-     */
-    render(option: T): string {
-      return this.renderFunction(option);
-    }
-  
-    /**
-     * Affichage textuel des options sélectionnées en label
-     * @returns 
-     */
-     renderLabel(): string {
-      return this.renderLabelFunction(this.selected);
-    }
+  @Input()
+  renderLabelFunction(selected: T[] | null): string {
+    // Affichage par défaut : options jointes par des virgules
+    return selected != null ? (selected as string[]).join(', ') : ''
+  }
 
-    onCheckboxChange(value: T): void {
-      if (this.selected?.includes(value)) {
-        this.selected = this.selected.filter((item) => item !== value);
-      } else {
-        this.selected?.push(value);
-      }
+  /**
+ * Filtrage des option par défaut OU spécifique des options
+ * @param text
+ * @returns 
+ */
+  filter(text?: string): void {
+    // Sauvegarde du texte
+    this.filterInput = text === undefined ? this.filterInput : text;
+    // Filtre
+    const newOptions = this.filterFunction(text ? text : '');
+    if (newOptions == null || newOptions.length === 0)
+      return
+
+    this.filteredCheckboxes = newOptions;
+    // Concaténation des éléments sélectionnés avec les éléments filtrés (en supprimant les doublons éventuels)
+    this.filteredCheckboxes = this.selected != null ?
+      [
+        ...this.selected,
+        ...this.filteredCheckboxes.filter((el) => !this.selected?.includes(el))
+      ]
+      : this.filteredCheckboxes
+  }
+
+  /**
+   * Affichage textuel par défaut OU spécifique d'une option
+   * @param option 
+   * @returns 
+   */
+  render(option: T): string {
+    return this.renderFunction(option);
+  }
+
+  /**
+   * Affichage textuel des options sélectionnées en label
+   * @returns 
+   */
+    renderLabel(): string {
+    return this.renderLabelFunction(this.selected);
+  }
+
+  onCheckboxChange(value: T): void {
+    if (this.selected?.includes(value)) {
+      this.selected = this.selected.filter((item) => item !== value);
+    } else {
+      this.selected?.push(value);
     }
+  }
 
 
 }

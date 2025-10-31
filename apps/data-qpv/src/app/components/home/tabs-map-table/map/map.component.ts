@@ -67,9 +67,9 @@ export class MapComponent implements OnInit, AfterViewInit {
   private _totalMontant: number = 0;
   
   constructor() {
-    toObservable(this._searchDataService.searchInProgress).subscribe(response => {
-      if (!response) {
-        this.currentMapData.set(this._searchDataService.currentResults.mapData)
+    toObservable(this._searchDataService.currentResults).subscribe(response => {
+      if (response.mapData !== null) {
+        this.currentMapData.set(response.mapData)
         this._totalMontant = this.currentMapData()?.reduce((acc, qpv) => acc + (qpv.montant ?? 0), 0) ?? 0
         this.tryRenderQpvData();
       } else {

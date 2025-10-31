@@ -15,12 +15,12 @@ export class TabDashboardsComponent {
 
   private _searchDataService = inject(SearchDataService);
 
-  public selectedTab = computed(() => this._searchDataService.selectedTab());
+  public selectedTab = computed(() => Number(this._searchDataService.selectedTab()));
 
-  private _tabs: Record<string, number> = {
-    "dashboard-147": 0,
-    "dashboard-autres": 1,
-    "dashboard-tous": 2,
+  private _tabs: Record<string, string> = {
+    "dashboard-147": "0",
+    "dashboard-autres": "1",
+    "dashboard-tous": "2",
   }
   
   public setSelectedDashboard(event: string) {

@@ -4,6 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import {
   BehaviorSubject,
   debounceTime,
+  finalize,
   Observable,
   of,
   startWith,
@@ -98,6 +99,7 @@ export class SearchDataComponent implements OnInit {
   public annees: number[] = [];
   public qpvs: RefQpvWithCommune[] = [];
   public filteredFinanceurs: CentreCouts[] = []
+  public filteredThematiques: ThemeModel[] = []
   public filteredPorteurs: RefSiret[] = []
 
   public refGeo: RefGeoQpv | undefined;
@@ -179,14 +181,11 @@ export class SearchDataComponent implements OnInit {
   set selectedFinanceurs(data: CentreCouts[] | null) {
     this.formSearch.controls.financeurs.setValue(data);
   }
-  // inputFinanceurs: string = '';
-  // inputFilterFinanceurs = new Subject<string>();
-  // filteredFinanceurs: CentreCouts[] = []
-  // public filterFinanceurCheckbox = (value: string): CentreCouts[] => {
-  //   this.inputFinanceurs = value;
-  //   this.inputFilterFinanceurs.next(value);
-  //   return this.filteredFinanceurs ?? [];
-  // }
+  public loadingFinanceurs = false;
+  public filterFinanceurCheckbox = (value: string): CentreCouts[] => {
+    this.onFinanceursInputChange(value);
+    return this.filteredFinanceurs ?? [];
+  }
   public renderFinanceurCheckbox = (financeur: CentreCouts): string => {
     return financeur.label ? financeur.code + ' - ' + financeur.label : financeur.code
   }
@@ -216,6 +215,10 @@ export class SearchDataComponent implements OnInit {
   public renderThematiqueCheckbox = (thematique: ThemeModel): string => {
     return thematique.label
   }
+  public filterThematiqueCheckbox = (text: string): ThemeModel[] => {
+    this.filteredThematiques = this.thematiques.filter(t => t.label.toLowerCase().includes(text.toLowerCase()))
+    return this.filteredThematiques;
+  };
   
 
   /**
@@ -228,13 +231,11 @@ export class SearchDataComponent implements OnInit {
   set selectedPorteurs(data: RefSiret[]) {
     this.formSearch.controls.porteurs?.setValue(data as RefSiret[]);
   }
-  // inputPorteurs: string = '';
-  // inputFilterPorteurs = new Subject<string>();
-  // public filterPorteurCheckbox = (value: string): RefSiret[] => {
-  //   this.inputPorteurs = value;
-  //   this.inputFilterPorteurs.next(value);
-  //   return this.filteredPorteurs ?? [];
-  // }
+  public loadingPorteurs = false;
+  public filterPorteurCheckbox = (value: string): RefSiret[] => {
+    this.onPorteurInputChange(value);
+    return this.filteredPorteurs ?? [];
+  }
   public renderPorteurCheckbox = (porteur: RefSiret): string => {
     return porteur.siret + ' - ' + porteur.denomination
   }
@@ -285,24 +286,8 @@ export class SearchDataComponent implements OnInit {
   };
 
 
-  
-
-  // constructor() {
-  //   // Renseigne le formulaire à chaque changement des paramètres de recherche
-  //   toObservable(this.searchDataService.searchParams)
-  //     .pipe(
-  //       takeUntilDestroyed(this._destroy_ref),
-  //       filter(p => p !== undefined),
-  //     )
-  //     .subscribe(params => {
-  //       this._logger.debug("==> Mapping des paramètres vers le formulaire");
-  //       const formSearch = this._prefilterMapperService.mapSearchParamsToForm(params!);
-  //       this.formSearch = formSearch;
-  //     });
-  // }
-
   ngOnInit(): void {
-        this.inputFilterQPV.pipe(
+    this.inputFilterQPV.pipe(
       debounceTime(300),
       takeUntilDestroyed(this._destroy_ref)
     ).subscribe(() => {
@@ -332,11 +317,21 @@ export class SearchDataComponent implements OnInit {
     // Subscribe pour l'autocomplete des financeurs
     this.financeurInputChange$.pipe(
       startWith(''),
+      tap((value) => {
+        if (value && value.length > 3) {
+          this.loadingFinanceurs = true;
+        }
+      }),
       debounceTime(300),
       switchMap((value) => {
-        if (!value || value.length <= 3)
+        if (!value || value.length <= 3) {
+          this.loadingFinanceurs = false;
           return of([]);
-        return this._autocompleteFinanceurs.autocomplete$(value);
+        }
+        this.loadingFinanceurs = true;
+        return this._autocompleteFinanceurs.autocomplete$(value).pipe(
+          finalize(() => (this.loadingFinanceurs = false))
+        );
       })
     ).subscribe((response: CentreCouts[]) => {
       this.filteredFinanceurs = response;
@@ -350,11 +345,21 @@ export class SearchDataComponent implements OnInit {
     // Subscribe pour l'autocomplete des porteurs
     this.porteurInputChange$.pipe(
       startWith(''),
+      tap((value) => {
+        if (value && value.length > 3) {
+          this.loadingPorteurs = true;
+        }
+      }),
       debounceTime(300),
       switchMap((value) => {
-        if (!value || value.length <= 3)
+        if (!value || value.length <= 3) {
+          this.loadingPorteurs = false;
           return of([]);
-        return this._autocompletePorteurs.autocomplete$(value);
+        }
+        this.loadingPorteurs = true
+        return this._autocompletePorteurs.autocomplete$(value).pipe(
+          finalize(() => (this.loadingPorteurs = false))
+        );
       })
     ).subscribe((response: RefSiret[]) => {
       this.filteredPorteurs = response;
@@ -366,92 +371,13 @@ export class SearchDataComponent implements OnInit {
         : this.filteredPorteurs
     });
     
-    // this.inputFilterQPV.pipe(
-    //   debounceTime(300),
-    //   takeUntilDestroyed(this._destroyRef)
-    // ).subscribe(() => {
-    //   const term = this.inputQPV !== '' ? this.inputQPV : null;
-    //   if (this.formSearch.get('localisations')?.value) {
-    //     const localisations = this.formSearch.controls.localisations?.value as GeoModel[];
-    //     const type = this.formSearch.controls.niveau?.value;
-    //     const codes = localisations.map(geo => geo.code);
-    //     this.filteredQPV.set(this._filterQpvByTypeLocalisation(codes, type as TypeLocalisation));
-    //   } else {
-    //     this.filteredQPV.set(this.refGeo?.qpvs as GeoModel[]);
-    //   }
-
-      
-    //   if (term != null) {
-    //     const qpv = this.filteredQPV();
-    //     this.filteredQPV.set(qpv.filter(qpv => qpv.code.includes(term) || (qpv as RefQpvWithCommune).label.toLocaleLowerCase().includes(term.toLocaleLowerCase())));
-    //   }
-
-    //   if(this.selectedQpv != null) {
-    //     this.filteredQPV.set([
-    //       ...this.selectedQpv,
-    //       ...this.filteredQPV().filter((el) => !this.selectedQpv?.map(s => s.code).includes(el.code))
-    //     ])
-    //   }
-    // });
-
-    // this.inputFilterFinanceurs.pipe(
-    //   debounceTime(300),
-    //   takeUntilDestroyed(this._destroyRef)
-    // ).subscribe(() => {
-    //   const term = this.inputFinanceurs !== '' ? this.inputFinanceurs : null;
-
-    //   if (this._subFilterGeo)
-    //     this._subFilterGeo.unsubscribe();
-
-    //   this._subFilterGeo = this._referentielsService.getCentreCouts(term)
-    //     .pipe(takeUntilDestroyed(this._destroyRef))
-    //     .subscribe((response: CentreCouts[]) => {
-    //       if (term === '') {
-    //         this.filteredPorteurs = []
-    //         return
-    //       }
-    //       this.filteredFinanceurs = response;
-    //       this.filteredFinanceurs = this.selectedFinanceurs != null ?
-    //         [
-    //           ...this.selectedFinanceurs,
-    //           ...this.filteredFinanceurs.filter((el) => !this.selectedFinanceurs?.map(s => s.code).includes(el.code))
-    //         ]
-    //         : this.filteredFinanceurs
-    //     });
-    // });
-
-    // this.inputFilterPorteurs.pipe(
-    //   debounceTime(300),
-    //   takeUntilDestroyed(this._destroyRef)
-    // ).subscribe(() => {
-    //   const term = this.inputPorteurs !== '' ? this.inputPorteurs : '';
-
-    //   if (this._subFilterGeo)
-    //     this._subFilterGeo.unsubscribe();
-
-    //   this._subFilterGeo = this._refService.filterRefSiret$(term)
-    //     .pipe(takeUntilDestroyed(this._destroyRef))
-    //     .subscribe((response: Beneficiaire[]) => {
-    //       if (term === '') {
-    //         this.filteredPorteurs = []
-    //         return
-    //       }
-    //       this.filteredPorteurs = response;
-    //       this.filteredPorteurs = this.filteredPorteurs != null ?
-    //         [
-    //           ...this.filteredPorteurs,
-    //           ...this.filteredPorteurs.filter((el) => !this.selectedPorteurs?.map(s => s.siret).includes(el.siret))
-    //         ]
-    //         : this.filteredPorteurs
-    //     });
-    // });
-
     // Resolve des référentiels et de la marque blanche
     const resolvedFinancial = this._route.snapshot.data['financial'] as FinancialDataResolverModel;
     const resolvedMarqueBlanche = this._route.snapshot.data['mb_parsed_params'] as MarqueBlancheParsedParamsResolverModel;
     this._logger.debug('resolvedMarqueBlanche => ', resolvedMarqueBlanche );
     // Sauvegarde des référentiels dans les listes
     this.thematiques = resolvedFinancial.data?.thematiques ?? [];
+    this.filteredThematiques = this.thematiques
     // this.bops = resolvedFinancial.data?.bop ?? [];
     // this.filteredBops = this.bops ?? []
     // this.filteredReferentiels = resolvedFinancial.data?.referentiels_programmation ?? [];
@@ -513,6 +439,7 @@ export class SearchDataComponent implements OnInit {
     // Réinitialisation des résultats trouvés
     this.searchDataService.firstSearchDone.set(false);
     this.searchDataService.resetResults();
+    this.searchDataService.selectedTab.set("0");
     // Récupération des infos du formulaire
     const formValue = this.formSearch.value;
     const search_parameters: SearchParameters = {
@@ -532,7 +459,6 @@ export class SearchDataComponent implements OnInit {
     this.searchDataService.searchInProgress.set(true);
     this.searchDataService.search(search_parameters).subscribe(() => {
       this.searchDataService.firstSearchDone.set(true);
-      this.searchDataService.selectedTab.set(0);
     });
   }
 

@@ -121,22 +121,29 @@
   <data-qpv-modal-additional-params #modalFinanceurs
         [title]="'Liste des financeurs'"
         [idModal]="'modal-financeurs'"
+        [mode]="'remote'"
         [checkboxes]="filteredFinanceurs"
         [(selected)]="selectedFinanceurs"
+        [filterFunction]="filterFinanceurCheckbox"
+        [loading]="loadingFinanceurs"
         [renderFunction]="renderFinanceurCheckbox" />
 
   <data-qpv-modal-additional-params #modalThematiques
         [title]="'Liste des thématiques'"
         [idModal]="'modal-thematiques'"
-        [checkboxes]="thematiques"
+        [checkboxes]="filteredThematiques"
         [(selected)]="selectedThematiques"
+        [filterFunction]="filterThematiqueCheckbox"
         [renderFunction]="renderThematiqueCheckbox" />
 
   <data-qpv-modal-additional-params #modalPorteurs
         [title]="'Liste des porteurs de projet'"
         [idModal]="'modal-porteurs'"
+        [mode]="'remote'"
         [checkboxes]="filteredPorteurs"
         [(selected)]="selectedPorteurs"
+        [filterFunction]="filterPorteurCheckbox" 
+        [loading]="loadingPorteurs"
         [renderFunction]="renderPorteurCheckbox" />
 
   <data-qpv-modal-additional-params #modalTypesPorteur

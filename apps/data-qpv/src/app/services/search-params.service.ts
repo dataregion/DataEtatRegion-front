@@ -113,10 +113,11 @@ export class SearchParamsService {
     // Récupération des codes et sanitize
     const sanitized_codes_programme = this._sanitizeReqArg(searchParams.bops?.filter((bop) => bop.code).map((bop) => bop.code))
     const sanitized_not_codes_programme = this._sanitizeReqArg(searchParams.notBops?.filter((bop) => bop.code).map((bop) => bop.code))
+    const sanitized_annees = this._sanitizeReqArg(searchParams.years?.map((a) => a.toString()));
     const sanitized_niveau_geo = this._sanitizeReqArg(this._searchUtils.normalize_type_geo(searchParams.niveau));
     const sanitized_codes_geo = this._sanitizeReqArg(searchParams.locations?.map((l) => l.code));
     const sanitized_codes_qpv = this._sanitizeReqArg(searchParams.code_qpv?.map((l) => l.code));
-    const sanitized_annees = this._sanitizeReqArg(searchParams.years?.map((a) => a.toString()));
+    const sanitized_themes = this._sanitizeReqArg(searchParams.themes?.map((t) => t.label));
     const sanitized_beneficiaire_siret: string[] | undefined = this._sanitizeReqArg(searchParams.beneficiaires?.map((x) => x.siret));
 
     // Respect de l'ordre pour le client généré : getLignesFinancieresLignesGet
@@ -134,10 +135,10 @@ export class SearchParamsService {
       sanitized_codes_geo?.join(','),
       searchParams.ref_qpv,
       sanitized_codes_qpv?.join(','),
-      searchParams.themes?.join('|'),
-      searchParams.centres_couts?.join(','),
+      sanitized_themes?.join('|'),
       sanitized_beneficiaire_siret?.join(','),
       searchParams.types_beneficiaires?.join(','),
+      searchParams.centres_couts?.join(','),
       // V3QueryParams
       searchParams.colonnes?.join(','),
       searchParams.page,

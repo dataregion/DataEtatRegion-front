@@ -8,22 +8,69 @@
 
   <dsfr-form-input
     [type]="'text'"
-    [label]="'Rechercher un élément'"
     [autoCorrect]="false"
     [(ngModel)]="filterInput"
     (ngModelChange)="filter($event)" />
 
-  <fieldset class="fr-fieldset" style="margin-top:20px;">
-    <ng-container *ngFor="let item of filteredCheckboxes; let index = index">
-      <div class="fr-fieldset__element">
-        <div class="fr-checkbox-group">
-            <input [checked]="selected?.includes(item)" name="checkboxes-1" [id]="idModal + '-checkboxes-' + index" type="checkbox" (change)="onCheckboxChange(item)">
+  @if (!isEmpty) {
+    <fieldset class="fr-fieldset" style="margin-top:20px;">
+      @for (item of filteredCheckboxes; track item; let index = $index) {
+        <div class="fr-fieldset__element">
+          <div class="fr-checkbox-group">
+            <input
+              [checked]="selected?.includes(item)"
+              name="checkboxes-1"
+              [id]="idModal + '-checkboxes-' + index"
+              type="checkbox"
+              (change)="onCheckboxChange(item)">
             <label class="fr-label" [for]="idModal + '-checkboxes-' + index">
-                {{render(item)}}
+              {{ render(item) }}
             </label>
+          </div>
         </div>
+      }
+    </fieldset>
+  }
+  @else {
+    <div class="fr-grid-row">
+      <div class="fr-col-8 fr-col-offset-2" style="margin-top: 30px;">
+        @switch (mode) {
+          @case ('remote') {
+            @if (loading)  {
+              <div #spinner class="spinner-wrapper fr-spinner--md" style="text-align: center; margin: 30px 0px;">
+                <span class="fr-spinner" aria-label="Chargement…" role="status"></span>
+                <span class="fr-spinner-message">Chargement en cours ...</span>
+              </div>
+            }
+            @else if (!hasInput || filterInput.length <= 3) {
+              <div class="fr-alert fr-alert--info fr-alert--sm">
+                <h3 class="fr-alert__title">
+                  Tapez quelques lettres pour lancer la recherche
+                </h3>
+                <p>Les résultats apparaîtront automatiquement ci-dessous.</p>
+              </div>
+            }
+            @else {
+              <div class="fr-alert fr-alert--info fr-alert--sm">
+                <h3 class="fr-alert__title">
+                  Aucun résultat trouvé
+                </h3>
+                <p>Aucun élément ne correspond à « {{ filterInput }} ».</p>
+              </div>
+            }
+          }
+
+          @case ('local') {
+            <div class="fr-alert fr-alert--info fr-alert--sm">
+              <h3 class="fr-alert__title">
+                Aucun résultat trouvé
+              </h3>
+              <p>Aucun élément ne correspond à « {{ filterInput }} ».</p>
+            </div>
+          }
+        }
       </div>
-    </ng-container> 
-  </fieldset>
+    </div>
+  }
 
 </dsfr-modal>

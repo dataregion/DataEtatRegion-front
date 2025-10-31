@@ -1,4 +1,4 @@
-import { Component, computed, ElementRef, inject, signal, ViewChild } from "@angular/core";
+import { Component, ElementRef, inject, signal, ViewChild } from "@angular/core";
 import { FinancialDataModel } from "../../../models/financial/financial-data.models";
 import { DsfrTabsComponent, DsfrTabComponent } from "@edugouvfr/ngx-dsfr";
 import { MapComponent } from "./map/map.component";
@@ -19,12 +19,7 @@ export class TabsMapTableComponent {
 
   private _searchDataService = inject(SearchDataService);
 
-  private _selectedTabIndex = 0
-
-  readonly searchParams = computed(() => this._searchDataService.searchParams());
-  readonly searchResults = computed(() => this._searchDataService.searchResults());
-  readonly searchInProgress = computed(() => this._searchDataService.searchInProgress());
-  readonly selectedTab = computed(() => this._searchDataService.selectedTab());
+  readonly searchInProgress = this._searchDataService.searchInProgress;
 
   /**
    * Référence au spinner de chargement pour la pagination infinie.
@@ -55,21 +50,12 @@ export class TabsMapTableComponent {
   ]
 
    constructor() {
-    toObservable(this._searchDataService.searchInProgress).subscribe(response => {
-      if (!response) {
-        this.currentTableData.set(this._searchDataService.currentResults.lignesData)
-        this.currentPagination.set(this._searchDataService.currentResults.pagination)
-      } else {
-        this.currentTableData.set(null)
-        this.currentPagination.set(null)
-      }
+    toObservable(this._searchDataService.currentResults).subscribe(response => {
+      this.currentTableData.set(response.lignesData)
+      this.currentPagination.set(response.pagination)
     })
   }
   
-  get selectedTabIndex() {
-    return this._selectedTabIndex
-  }
-
   /**
    * Configure l'IntersectionObserver pour la pagination infinie.
    * 

@@ -2,7 +2,7 @@
  * Service centralisé pour la gestion de la recherche et des résultats financiers.
  * Expose l'état via des BehaviorSubject/Observable et propose des méthodes utilitaires pour la transformation des données.
  */
-import { inject, Injectable, signal } from '@angular/core';
+import { computed, inject, Injectable, signal } from '@angular/core';
 import { forkJoin, Observable, of, tap } from 'rxjs';
 import { SearchParameters } from './search-params.service';
 import { FinancialDataModel } from '../models/financial/financial-data.models';
@@ -14,8 +14,7 @@ import { BopModel } from '../models/refs/bop.models';
 
 
 export type SearchResults = FinancialDataModel[]
-
-interface TabData {
+export interface TabData {
   codeProgramme: string | undefined;
   notCodeProgramme: string | undefined;
   dashboardData: DashboardData | null;
@@ -62,8 +61,8 @@ export class SearchDataService {
   /**
    * Résultats de la recherche (tableau de lignes).
    */
-  public searchResults = signal<Record<number, TabData>>({
-    0: {
+  public searchResults = signal<Record<string, TabData>>({
+    "0": {
       "codeProgramme": "147",
       "notCodeProgramme": undefined,
       "dashboardData": null,
@@ -71,7 +70,7 @@ export class SearchDataService {
       "pagination": null,
       "mapData": null,
     } as TabData,
-    1: {
+    "1": {
       "codeProgramme": undefined,
       "notCodeProgramme": "147",
       "dashboardData": null,
@@ -79,7 +78,7 @@ export class SearchDataService {
       "pagination": null,
       "mapData": null,
     } as TabData,
-    2: {
+    "2": {
       "codeProgramme": undefined,
       "notCodeProgramme": undefined,
       "dashboardData": null,
@@ -92,11 +91,11 @@ export class SearchDataService {
   /**
    * Indique si l'onglet actif
    */
-  public readonly selectedTab = signal<number>(0);
+  public readonly selectedTab = signal<string>("0");
 
-  get currentResults(): TabData {
-    return this.searchResults()[this.selectedTab()]
-  }
+  public readonly currentResults = computed(() => {
+    return this.searchResults()[this.selectedTab()];
+  });
 
 
   /**
@@ -108,7 +107,7 @@ export class SearchDataService {
 
     // Vérifications préalables
     const currentParams = this.searchParams();
-    const currentPagination = this.currentResults.pagination;
+    const currentPagination = this.currentResults().pagination;
     const isSearchInProgress = this.searchInProgress();
 
     if (!currentParams) {
@@ -164,7 +163,7 @@ export class SearchDataService {
     );
   }
 
-  public changeTab(selected: number) {
+  public changeTab(selected: string) {
     const searchParams = this.searchParams()
     this.searchInProgress.set(true);
     this.selectedTab.set(selected);
@@ -232,15 +231,24 @@ export class SearchDataService {
 
     this._logger.debug('==> Traitement des résultats en tant que lignes financières');
     const newData = response.lignes.data?.lignes.map((r) => this.unflatten(r)) ?? [];
-    // Si page = 1, on reset, sinon on concat
-    if (response.lignes.pagination?.current_page != 1) {
-      this.currentResults.lignesData = (this.currentResults.lignesData as FinancialDataModel[]).concat(newData)
-    } else {
-      this.currentResults.lignesData = newData
-    }
-    this.currentResults.dashboardData = response.dashboard.data ?? null
-    this.currentResults.pagination = response.lignes.pagination
-    this.currentResults.mapData = response.map.data?.data ?? null
+    this.searchResults.update(results => {
+      const tab = this.selectedTab();
+      const previous = results[tab];
+
+      return {
+        ...results,
+        [tab]: {
+          ...previous,
+          lignesData:
+            response.lignes.pagination?.current_page != 1
+              ? [...(previous.lignesData ?? []), ...newData]
+              : newData,
+          dashboardData: response.dashboard.data ?? null,
+          pagination: response.lignes.pagination,
+          mapData: response.map.data?.data ?? null,
+        },
+      };
+    });
 
     // Mise à jour des autres signaux
     this.searchInProgress.set(false);
@@ -275,18 +283,34 @@ export class SearchDataService {
   }
 
   public resetResults() {
-    this.searchResults()[0].dashboardData = null
-    this.searchResults()[0].lignesData = null
-    this.searchResults()[0].pagination = null
-    this.searchResults()[0].mapData = null
-    this.searchResults()[1].dashboardData = null
-    this.searchResults()[1].lignesData = null
-    this.searchResults()[1].pagination = null
-    this.searchResults()[1].mapData = null
-    this.searchResults()[2].dashboardData = null
-    this.searchResults()[2].lignesData = null
-    this.searchResults()[2].pagination = null
-    this.searchResults()[2].mapData = null
+    this.searchResults.update(results => {
+      // return a new object (immutable update)
+      const reset: Record<number, TabData> = {};
+
+      for (const [key, tab] of Object.entries(results)) {
+        reset[Number(key)] = {
+          ...tab,
+          dashboardData: null,
+          lignesData: null,
+          pagination: null,
+          mapData: null,
+        };
+      }
+
+      return reset;
+    });
+    // this.searchResults()[0].dashboardData = null
+    // this.searchResults()[0].lignesData = null
+    // this.searchResults()[0].pagination = null
+    // this.searchResults()[0].mapData = null
+    // this.searchResults()[1].dashboardData = null
+    // this.searchResults()[1].lignesData = null
+    // this.searchResults()[1].pagination = null
+    // this.searchResults()[1].mapData = null
+    // this.searchResults()[2].dashboardData = null
+    // this.searchResults()[2].lignesData = null
+    // this.searchResults()[2].pagination = null
+    // this.searchResults()[2].mapData = null
   }
 
 }

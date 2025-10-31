@@ -24,12 +24,8 @@ export class DashboardComponent {
   public readonly selectedTab = this._searchDataService.selectedTab;
 
   constructor() {
-    toObservable(this._searchDataService.searchInProgress).subscribe(response => {
-      if (!response) {
-        this.currentDashboardData.set(this._searchDataService.currentResults.dashboardData)
-      } else {
-        this.currentDashboardData.set(null)
-      }
+    toObservable(this._searchDataService.currentResults).subscribe(response => {
+      this.currentDashboardData.set(response.dashboardData)
     })
   }
 
