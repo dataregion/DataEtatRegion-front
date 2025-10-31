@@ -7,6 +7,7 @@ import { GeoModel, TypeLocalisation } from 'apps/common-lib/src/public-api';
 import { RefSiret } from 'apps/common-lib/src/lib/models/refs/RefSiret';
 import { ThemeModel } from '../models/refs/bop.models';
 import { RefQpvWithCommune } from '../models/refs/qpv.model';
+import { V3QueryParams, V3QueryParamsService } from './query-params.service';
 
 
 export enum OtherTypeCategorieJuridique {
@@ -14,15 +15,7 @@ export enum OtherTypeCategorieJuridique {
 }
 export type SearchTypeCategorieJuridique = TypeCategorieJuridique | OtherTypeCategorieJuridique;
 
-export interface SearchParameters {
-  // V3QueryParams
-  colonnes: string[] | undefined;
-  page: number;
-  page_size: number;
-  sort_by: string | undefined;
-  sort_order: "asc" | "desc" | undefined;
-  search: string | undefined;
-  fields_search: string[] | undefined;
+export interface SearchParameters extends V3QueryParams {
   // SourceQueryParams
   source_region: string[] | undefined;
   data_source: string | undefined;
@@ -69,6 +62,7 @@ export namespace SearchParameters {
 export class SearchParamsService {
 
   private _searchUtils: SearchUtilsService = inject(SearchUtilsService);
+  private _queryParamsService: V3QueryParamsService = inject(V3QueryParamsService);
 
   private _empty: SearchParameters = {
     // V3QueryParams
@@ -119,6 +113,7 @@ export class SearchParamsService {
     const sanitized_codes_qpv = this._sanitizeReqArg(searchParams.code_qpv?.map((l) => l.code));
     const sanitized_themes = this._sanitizeReqArg(searchParams.themes?.map((t) => t.label));
     const sanitized_beneficiaire_siret: string[] | undefined = this._sanitizeReqArg(searchParams.beneficiaires?.map((x) => x.siret));
+    const sanitized_financeurs = this._sanitizeReqArg(searchParams.centres_couts?.map((t) => t.code));
 
     // Respect de l'ordre pour le client généré : getLignesFinancieresLignesGet
     // Pourquoi cet ordre là à la génération ? ¯\_(ツ)_/¯
@@ -138,7 +133,7 @@ export class SearchParamsService {
       sanitized_themes?.join('|'),
       sanitized_beneficiaire_siret?.join(','),
       searchParams.types_beneficiaires?.join(','),
-      searchParams.centres_couts?.join(','),
+      sanitized_financeurs?.join(','),
       // V3QueryParams
       searchParams.colonnes?.join(','),
       searchParams.page,

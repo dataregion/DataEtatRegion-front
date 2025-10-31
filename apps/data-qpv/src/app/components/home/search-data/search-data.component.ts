@@ -187,7 +187,7 @@ export class SearchDataComponent implements OnInit {
     return this.filteredFinanceurs ?? [];
   }
   public renderFinanceurCheckbox = (financeur: CentreCouts): string => {
-    return financeur.label ? financeur.code + ' - ' + financeur.label : financeur.code
+    return financeur.description ? financeur.code + ' - ' + financeur.description : financeur.code
   }
   public filteredFinanceurs$: Observable<CentreCouts[]> = of([]);
 

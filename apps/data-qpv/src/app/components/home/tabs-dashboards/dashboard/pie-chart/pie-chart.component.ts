@@ -1,4 +1,4 @@
-import { Component, Input, ElementRef, AfterViewInit, OnChanges, SimpleChanges, inject } from '@angular/core';
+import { Component, Input, ElementRef, AfterViewInit, OnChanges, SimpleChanges, inject, ViewEncapsulation } from '@angular/core';
 import { Chart, ArcElement, Tooltip, Legend, ChartConfiguration, PieController } from 'chart.js';
 
 Chart.register(PieController, ArcElement, Tooltip, Legend);
@@ -7,6 +7,7 @@ Chart.register(PieController, ArcElement, Tooltip, Legend);
   selector: 'pie-chart',
   templateUrl: './pie-chart.component.html',
   styleUrls: ['./pie-chart.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class PieChartComponent implements AfterViewInit, OnChanges {
 
@@ -68,12 +69,6 @@ export class PieChartComponent implements AfterViewInit, OnChanges {
       plugins: {
         legend: {
           display: false
-          // position: 'right',
-          // labels: {
-          //   boxWidth: 14,
-          //   color: '#161616',
-          //   font: { family: 'Marianne, Arial, sans-serif', size: 14 },
-          // },
         },
         tooltip: {
           callbacks: {
@@ -96,26 +91,34 @@ export class PieChartComponent implements AfterViewInit, OnChanges {
     this.renderCustomLegend();
   }
 
-  private renderCustomLegend(): void {
-    const legendContainer = this.el.nativeElement.querySelector('#chart-legend') as HTMLElement;
-    if (!legendContainer || !this.chart) return;
+private renderCustomLegend(): void {
+  const legendContainer = this.el.nativeElement.querySelector('#chart-legend') as HTMLElement;
+  if (!legendContainer || !this.chart) return;
 
-    const data = this.chart.data;
-    if (!data?.labels?.length) return;
+  const data = this.chart.data;
+  if (!data?.labels?.length) return;
 
-    const html = data.labels
-      .map((label, i) => {
-        const color = (data.datasets[0].backgroundColor as string[])[i];
-        return `
-          <li>
-            <div style="background-color:${color}"></div>
-            ${label}
-          </li>`;
-      })
-      .join('');
+  const html = data.labels
+    .map((label, i) => {
+      const color = (data.datasets[0].backgroundColor as string[])[i];
+      return `
+        <li>
+          <span style="
+            display:inline-block;
+            width:14px;
+            height:14px;
+            border:1px solid #888;
+            background-color:${color};
+            margin-right:8px;
+            flex-shrink:0;
+          "></span>
+          <span>${label}</span>
+        </li>`;
+    })
+    .join('');
 
-    legendContainer.innerHTML = `<ul>${html}</ul>`;
-  }
+  legendContainer.innerHTML = `<ul>${html}</ul>`;
+}
 
   private tryUpdateOrRender(): void {
     if (!this.isDataValid()) {

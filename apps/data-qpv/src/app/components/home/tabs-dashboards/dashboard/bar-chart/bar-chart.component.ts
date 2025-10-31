@@ -64,6 +64,9 @@ export class BarChartComponent implements AfterViewInit, OnChanges {
           hoverBackgroundColor: 'rgba(92, 104, 229, 1)',
           borderColor: '#5C68E5',
           borderWidth: 1,
+          maxBarThickness: 60,
+          categoryPercentage: 0.6,
+          barPercentage: 0.7,
         },
       ],
     };

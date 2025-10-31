@@ -4,6 +4,8 @@ README.md
 api.base.service.ts
 api.module.ts
 api/api.ts
+api/centreCouts.service.ts
+api/centreCouts.serviceInterface.ts
 api/healthcheck.service.ts
 api/healthcheck.serviceInterface.ts
 api/programmes.service.ts

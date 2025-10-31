@@ -82,8 +82,9 @@ export class LineChartComponent implements AfterViewInit, OnChanges {
       },
       scales: {
         x: {
+          offset: true, // 
           ticks: { color: '#161616', font: { family: 'Marianne, Arial, sans-serif' } },
-          grid: { color: '#e5e5e5' },
+          grid: { display: false },
         },
         y: {
           ticks: { color: '#161616', font: { family: 'Marianne, Arial, sans-serif' } },

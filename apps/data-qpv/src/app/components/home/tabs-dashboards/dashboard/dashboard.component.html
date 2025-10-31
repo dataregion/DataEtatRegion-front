@@ -91,7 +91,7 @@
                 <div class="fr-griw-row">
                     @if (currentDashboardData()) {
                         @if (isArrayFilled(currentDashboardData()?.bar_chart_financeurs)) {
-                            <div class="fr-col-8 fr-col-offset-2">
+                            <div class="fr-col-10 fr-col-offset-1">
                                 <bar-chart
                                     [labels]="currentDashboardData()?.bar_chart_financeurs?.labels"
                                     [values]="currentDashboardData()?.bar_chart_financeurs?.values"
@@ -119,7 +119,7 @@
             <div class="fr-griw-row">
                 @if (currentDashboardData()) {
                     @if (isArrayFilled(currentDashboardData()?.line_chart_annees) && isArrayFilled(currentDashboardData()?.line_chart_annees)) {
-                        <div class="fr-col-8 fr-col-offset-2">
+                        <div class="fr-col-10 fr-col-offset-1">
                             <line-chart
                                 [labels]="currentDashboardData()?.line_chart_annees?.labels"
                                 [values]="currentDashboardData()?.line_chart_annees?.values" />

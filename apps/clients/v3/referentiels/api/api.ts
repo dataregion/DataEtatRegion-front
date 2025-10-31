@@ -1,3 +1,6 @@
+export * from './centreCouts.service';
+import { CentreCoutsService } from './centreCouts.service';
+export * from './centreCouts.serviceInterface';
 export * from './healthcheck.service';
 import { HealthcheckService } from './healthcheck.service';
 export * from './healthcheck.serviceInterface';
@@ -7,4 +10,4 @@ export * from './programmes.serviceInterface';
 export * from './qpv.service';
 import { QpvService } from './qpv.service';
 export * from './qpv.serviceInterface';
-export const APIS = [HealthcheckService, ProgrammesService, QpvService];
+export const APIS = [CentreCoutsService, HealthcheckService, ProgrammesService, QpvService];

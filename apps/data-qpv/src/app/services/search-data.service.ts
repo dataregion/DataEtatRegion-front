@@ -299,18 +299,6 @@ export class SearchDataService {
 
       return reset;
     });
-    // this.searchResults()[0].dashboardData = null
-    // this.searchResults()[0].lignesData = null
-    // this.searchResults()[0].pagination = null
-    // this.searchResults()[0].mapData = null
-    // this.searchResults()[1].dashboardData = null
-    // this.searchResults()[1].lignesData = null
-    // this.searchResults()[1].pagination = null
-    // this.searchResults()[1].mapData = null
-    // this.searchResults()[2].dashboardData = null
-    // this.searchResults()[2].lignesData = null
-    // this.searchResults()[2].pagination = null
-    // this.searchResults()[2].mapData = null
   }
 
 }
