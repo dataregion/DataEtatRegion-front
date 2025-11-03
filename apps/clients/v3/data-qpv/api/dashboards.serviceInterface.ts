@@ -24,7 +24,7 @@ export interface DashboardsServiceInterface {
     configuration: dataQpvV3Configuration;
 
     /**
-     * Récupére les lignes QPV
+     * Récupére les lignes QPV agrégées pour les graphiques
      * 
      * @param sourceRegion 
      * @param dataSource 

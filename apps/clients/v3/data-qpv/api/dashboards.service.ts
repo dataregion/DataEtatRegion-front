@@ -41,7 +41,7 @@ export class DashboardsService extends BaseService implements DashboardsServiceI
     }
 
     /**
-     * Récupére les lignes QPV
+     * Récupére les lignes QPV agrégées pour les graphiques
      * @param sourceRegion 
      * @param dataSource 
      * @param source 

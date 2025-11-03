@@ -24,7 +24,7 @@ export interface MapServiceInterface {
     configuration: dataQpvV3Configuration;
 
     /**
-     * Récupére les lignes QPV
+     * Récupére les lignes QPV agrégées pour la cartographie
      * 
      * @param sourceRegion 
      * @param dataSource 

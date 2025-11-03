@@ -9,7 +9,7 @@ import { FinancialDataModel } from '../models/financial/financial-data.models';
 import { SearchDataMapper } from './search-data-mapper.service';
 import { SearchParamsService } from './search-params.service';
 import { LoggerService } from 'apps/common-lib/src/lib/services/logger.service';
-import { DashboardData, DashboardResponse, DashboardsService, EnrichedFlattenFinancialLinesDataQPV, LignesFinancieresService, LignesResponse, MapResponse, MapService, PaginationMeta, QpvData } from 'apps/clients/v3/data-qpv';
+import { DashboardData, DashboardResponse, DashboardsService, FlattenFinancialLinesDataQPV, LignesFinancieresService, LignesResponse, MapResponse, MapService, PaginationMeta, QpvData } from 'apps/clients/v3/data-qpv';
 import { BopModel } from '../models/refs/bop.models';
 
 
@@ -261,7 +261,7 @@ export class SearchDataService {
    * @param object Ligne à transformer
    * @returns FinancialDataModel
    */
-  public unflatten(object: EnrichedFlattenFinancialLinesDataQPV): FinancialDataModel {
+  public unflatten(object: FlattenFinancialLinesDataQPV): FinancialDataModel {
     return this._mapper.map(object);
   }
 

@@ -12,13 +12,11 @@ import {
 } from '../models/financial/common.models';
 import { FinancialDataModel } from '../models/financial/financial-data.models';
 import { ReferentielProgrammation } from '../models/refs/referentiel_programmation.model';
-import { Tag, tag_fullname } from '../models/refs/tag.model';
-import { TagsSchema } from 'apps/clients/budget';
 import { Optional } from 'apps/common-lib/src/lib/utilities/optional.type';
 import { JSONObject } from 'apps/common-lib/src/lib/models/jsonobject';
 import { inject, Injectable } from '@angular/core';
 import { ColonnesMapperService } from './colonnes-mapper.service';
-import { EnrichedFlattenFinancialLinesDataQPV, Tags } from 'apps/clients/v3/data-qpv';
+import { FlattenFinancialLinesDataQPV } from 'apps/clients/v3/data-qpv';
 
 @Injectable({
   providedIn: 'root'
@@ -32,7 +30,7 @@ export class SearchDataMapper {
    * @param object 
    * @returns 
    */
-  map(object: EnrichedFlattenFinancialLinesDataQPV): FinancialDataModel {
+  map(object: FlattenFinancialLinesDataQPV): FinancialDataModel {
     // eslint-disable-next-line @typescript-eslint/no-this-alias
     const that = this
     return {
@@ -58,7 +56,7 @@ export class SearchDataMapper {
       lieu_action: this._mapLieuAction(object),
       date_cp: object.dateDeDernierPaiement,
       date_replication: object.dateDeCreation,
-      tags: this._mapTags(object),
+      tags: [],
       exportAsJson(): JSONObject {
         return {
           [that._colonnesMapperService.getColonneByKey("SOURCE").label]: this.source,
@@ -89,14 +87,14 @@ export class SearchDataMapper {
           [that._colonnesMapperService.getColonneByKey("DATE_DERNIER_PAIEMENT").label]: this.date_cp ?? '',
           [that._colonnesMapperService.getColonneByKey("DATE_CREATION_EJ").label]: this.date_replication ?? '',
           [that._colonnesMapperService.getColonneByKey("ANNEE_ENGAGEMENT").label]: this.annee ?? '',
-          [that._colonnesMapperService.getColonneByKey("TAGS").label]: this.tags?.map((tag) => tag_fullname(tag)).join(' ')
+          [that._colonnesMapperService.getColonneByKey("TAGS").label]: ""
         };
       }
     };
   }
 
   private _sourceFinancialDataFromEnrichedFlattenBudgetSource(
-    source?: EnrichedFlattenFinancialLinesDataQPV.SourceEnum
+    source?: FlattenFinancialLinesDataQPV.SourceEnum
   ): SourceFinancialData {
     switch (source) {
       case 'FINANCIAL_DATA_AE':
@@ -111,7 +109,7 @@ export class SearchDataMapper {
     }
   }
 
-  private _mapBeneficiaireSiret(object: EnrichedFlattenFinancialLinesDataQPV): Optional<Siret> {
+  private _mapBeneficiaireSiret(object: FlattenFinancialLinesDataQPV): Optional<Siret> {
     if (!object.beneficiaire_code) return null;
 
     return {
@@ -125,7 +123,7 @@ export class SearchDataMapper {
     };
   }
 
-  private _mapLieuAction(object: EnrichedFlattenFinancialLinesDataQPV): Optional<LieuAction> {
+  private _mapLieuAction(object: FlattenFinancialLinesDataQPV): Optional<LieuAction> {
     if (!object.lieu_action_code_qpv) return null;
 
     return {
@@ -135,7 +133,7 @@ export class SearchDataMapper {
   }
 
   private _mapLocInterministerielle(
-    object: EnrichedFlattenFinancialLinesDataQPV
+    object: FlattenFinancialLinesDataQPV
   ): Optional<LocalisationInterministerielle> {
     if (!object.localisationInterministerielle_code) return null;
 
@@ -172,7 +170,7 @@ export class SearchDataMapper {
     };
   }
 
-  private _mapCentreCouts(object: EnrichedFlattenFinancialLinesDataQPV): Optional<CentreCouts> {
+  private _mapCentreCouts(object: FlattenFinancialLinesDataQPV): Optional<CentreCouts> {
     return {
       code: object.centreCouts_code ? object.centreCouts_code : '',
       label: object.centreCouts_label!,
@@ -181,7 +179,7 @@ export class SearchDataMapper {
   }
 
   private _mapGroupeMarchandise(
-    object: EnrichedFlattenFinancialLinesDataQPV
+    object: FlattenFinancialLinesDataQPV
   ): Optional<GroupeMarchandise> {
     if (!object.groupeMarchandise_code) return null;
     return {
@@ -191,7 +189,7 @@ export class SearchDataMapper {
   }
 
   private _mapRefProg(
-    object: EnrichedFlattenFinancialLinesDataQPV
+    object: FlattenFinancialLinesDataQPV
   ): Optional<ReferentielProgrammation> {
     return {
       code: object.referentielProgrammation_code || '',
@@ -199,7 +197,7 @@ export class SearchDataMapper {
     };
   }
 
-  private _mapProgramme(object: EnrichedFlattenFinancialLinesDataQPV): Optional<Programme> {
+  private _mapProgramme(object: FlattenFinancialLinesDataQPV): Optional<Programme> {
     if (!object.programme_code) return null;
     return {
       code: object.programme_code,
@@ -209,7 +207,7 @@ export class SearchDataMapper {
   }
 
   private _mapDomaineFonctionnel(
-    object: EnrichedFlattenFinancialLinesDataQPV
+    object: FlattenFinancialLinesDataQPV
   ): Optional<DomaineFonctionnel> {
     return {
       code: object.domaineFonctionnel_code || '',
@@ -218,30 +216,12 @@ export class SearchDataMapper {
   }
 
   _mapBeneficiaireCategorieJuridique(
-    object: EnrichedFlattenFinancialLinesDataQPV
+    object: FlattenFinancialLinesDataQPV
   ): TypeCategorieJuridique {
     return object.beneficiaire_categorieJuridique_type as TypeCategorieJuridique;
   }
 
-  _mapTags(object: EnrichedFlattenFinancialLinesDataQPV): Tag[] {
-    const _tags_schema: Tags[] = object.tags ?? [];
-    const tags: Tag[] = [];
-    for (const tag_schema of _tags_schema) {
-      const _tag_schema = tag_schema as TagsSchema;
-      const _tag: Tag = {
-        type: _tag_schema.type,
-        value: _tag_schema.value,
-        description: _tag_schema.description,
-        display_name: _tag_schema.display_name
-      };
-
-      tags.push(_tag);
-    }
-
-    return tags;
-  }
-
-  _mapBeneficiaireCommune(object: EnrichedFlattenFinancialLinesDataQPV): Optional<Commune> {
+  _mapBeneficiaireCommune(object: FlattenFinancialLinesDataQPV): Optional<Commune> {
     if (!object.beneficiaire_commune_code) return null;
 
     let arrondissement = null;

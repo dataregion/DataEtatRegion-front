@@ -41,7 +41,7 @@ export class MapService extends BaseService implements MapServiceInterface {
     }
 
     /**
-     * Récupére les lignes QPV
+     * Récupére les lignes QPV agrégées pour la cartographie
      * @param sourceRegion 
      * @param dataSource 
      * @param source 

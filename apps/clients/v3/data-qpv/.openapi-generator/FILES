@@ -25,8 +25,8 @@ model/chartData.ts
 model/colonne.ts
 model/dashboardData.ts
 model/dashboardResponse.ts
-model/enrichedFlattenFinancialLinesDataQPV.ts
-model/enrichedFlattenFinancialLinesDataQPV1.ts
+model/flattenFinancialLinesDataQPV.ts
+model/flattenFinancialLinesDataQPV1.ts
 model/lignesFinancieres.ts
 model/lignesResponse.ts
 model/mapData.ts
@@ -34,7 +34,6 @@ model/mapResponse.ts
 model/models.ts
 model/paginationMeta.ts
 model/qpvData.ts
-model/tags.ts
 ng-package.json
 package.json
 param.ts

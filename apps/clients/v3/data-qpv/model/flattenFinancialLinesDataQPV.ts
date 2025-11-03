@@ -7,15 +7,13 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { Tags } from './tags';
 
 
 /**
  * dict() -> new empty dictionary dict(mapping) -> new dictionary initialized from a mapping object\'s     (key, value) pairs dict(iterable) -> new dictionary initialized as if via:     d = {}     for k, v in iterable:         d[k] = v dict(**kwargs) -> new dictionary initialized with the name=value pairs     in the keyword argument list.  For example:  dict(one=1, two=2)
  */
-export interface EnrichedFlattenFinancialLinesDataQPV1 { 
-    source?: EnrichedFlattenFinancialLinesDataQPV1.SourceEnum | null;
-    tags?: Array<Tags> | null;
+export interface FlattenFinancialLinesDataQPV { 
+    source?: FlattenFinancialLinesDataQPV.SourceEnum | null;
     id: number;
     n_ej?: string | null;
     n_poste_ej?: number | null;
@@ -80,7 +78,7 @@ export interface EnrichedFlattenFinancialLinesDataQPV1 {
     lieu_action_label_qpv?: string | null;
     date_modification?: string | null;
 }
-export namespace EnrichedFlattenFinancialLinesDataQPV1 {
+export namespace FlattenFinancialLinesDataQPV {
     export type SourceEnum = 'FINANCIAL_DATA_AE' | 'FINANCIAL_DATA_CP' | 'FRANCE_RELANCE' | 'FRANCE_2030' | 'ADEME' | 'REFERENTIEL';
     export const SourceEnum = {
         FinancialDataAe: 'FINANCIAL_DATA_AE' as SourceEnum,

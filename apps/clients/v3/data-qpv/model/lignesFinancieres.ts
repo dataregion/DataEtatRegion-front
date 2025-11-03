@@ -7,10 +7,10 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { EnrichedFlattenFinancialLinesDataQPV1 } from './enrichedFlattenFinancialLinesDataQPV1';
+import { FlattenFinancialLinesDataQPV1 } from './flattenFinancialLinesDataQPV1';
 
 
 export interface LignesFinancieres { 
-    lignes: Array<EnrichedFlattenFinancialLinesDataQPV1>;
+    lignes: Array<FlattenFinancialLinesDataQPV1>;
 }
 
