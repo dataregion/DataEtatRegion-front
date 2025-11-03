@@ -34,6 +34,7 @@ export function provideKeycloakAngularDynamic(settingsService: SettingsBudgetSer
 
   const urls = [
     settingsService.apiExternes,
+    settingsService.apiExternesV3,
     settingsService.apiFinancialData,
     settingsService.apiFinancialDataV2,
     settingsService.apiFinancialDataV3,

@@ -16,7 +16,7 @@ import { SourceFinancialData } from '@models/financial/common.models';
 import { fromInfoApiEntreprise } from './informations-supplementaires.service';
 import { AffichageDossier } from '@models/demarche_simplifie/demarche.model';
 import { CompagnonDSService } from '../../compagnon-ds/compagnon-ds.service';
-import { EntrepriseService, InfoApiEntreprise, InfoApiSubvention, RepresentantLegal, Subvention, SubventionService } from 'apps/clients/apis-externes-v3';
+import { ApiExterneError, EntrepriseService, InfoApiEntreprise, InfoApiSubvention, RepresentantLegal, Subvention, SubventionService } from 'apps/clients/apis-externes-v3';
 
 export class InformationSupplementairesViewService {
   private _options = {
@@ -86,7 +86,7 @@ export class InformationSupplementairesViewService {
     } as EtablissementLight;
   }
 
-  api_subvention_light_error: ModelError | null = null;
+  api_subvention_light_error: ApiExterneError | null = null;
 
   apiSubventionLight$() {
     const light = forkJoin({
@@ -116,7 +116,7 @@ export class InformationSupplementairesViewService {
     return this._dossier_demarche$;
   }
 
-  api_subvention_full_error: ModelError | null = null;
+  api_subvention_full_error: ApiExterneError | null = null;
 
   apiSubventionFull$(): Observable<SubventionFull> {
     const siret = this._financial?.siret?.code
@@ -132,7 +132,7 @@ export class InformationSupplementairesViewService {
     );
   }
 
-  api_entreprise_full_error: ModelError | null = null;
+  api_entreprise_full_error: ApiExterneError | null = null;
 
   apiEntrepriseFull$(): Observable<EntrepriseFull> {
     return this.api_entreprise_info$.pipe(

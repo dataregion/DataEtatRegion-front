@@ -1,7 +1,8 @@
 import { Component, Input, input } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ModelError } from 'apps/clients/apis-externes';
+import { ApiExterneError } from 'apps/clients/apis-externes-v3';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { ModelError } from 'apps/clients/apis-externes';
 
 @Component({
     selector: 'budget-informations-supplementaires-chargement-ou-erreur',
@@ -13,7 +14,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     ]
 })
 export class ChargementOuErreurComponent {
-  @Input() erreur: ModelError | null = null;
+  @Input() erreur: ApiExterneError | ModelError | null = null;
 
   readonly nom_service_distant = input<string>('Inconnu');
 }
