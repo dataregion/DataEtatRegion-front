@@ -12,6 +12,7 @@ import { HttpHeaders }                                       from '@angular/comm
 import { Observable }                                        from 'rxjs';
 
 import { APIError } from '../model/models';
+import { QpvResponse } from '../model/models';
 
 
 import { referentielsV3Configuration }                                     from '../configuration';
@@ -34,7 +35,7 @@ export interface QpvServiceInterface {
      * @param search 
      * @param fieldsSearch 
      */
-    findAllByAnneeDecoupageQpvAnneeGet(annee: string, colonnes?: string, page?: number, pageSize?: number, sortBy?: string, sortOrder?: 'asc' | 'desc', search?: string, fieldsSearch?: string, extraHttpRequestParams?: any): Observable<any>;
+    findAllByAnneeDecoupageQpvDecoupageAnneeGet(annee: string, colonnes?: string, page?: number, pageSize?: number, sortBy?: string, sortOrder?: 'asc' | 'desc', search?: string, fieldsSearch?: string, extraHttpRequestParams?: any): Observable<QpvResponse>;
 
     /**
      * Get qpv by code
@@ -48,7 +49,7 @@ export interface QpvServiceInterface {
      * @param search 
      * @param fieldsSearch 
      */
-    getByCodeQpvCodeGet(code: string, colonnes?: string, page?: number, pageSize?: number, sortBy?: string, sortOrder?: 'asc' | 'desc', search?: string, fieldsSearch?: string, extraHttpRequestParams?: any): Observable<any>;
+    getByCodeQpvCodeGet(code: string, colonnes?: string, page?: number, pageSize?: number, sortBy?: string, sortOrder?: 'asc' | 'desc', search?: string, fieldsSearch?: string, extraHttpRequestParams?: any): Observable<QpvResponse>;
 
     /**
      * Liste de tous les qpv
@@ -61,6 +62,6 @@ export interface QpvServiceInterface {
      * @param search 
      * @param fieldsSearch 
      */
-    listAllQpvGet(colonnes?: string, page?: number, pageSize?: number, sortBy?: string, sortOrder?: 'asc' | 'desc', search?: string, fieldsSearch?: string, extraHttpRequestParams?: any): Observable<any>;
+    listAllQpvGet(colonnes?: string, page?: number, pageSize?: number, sortBy?: string, sortOrder?: 'asc' | 'desc', search?: string, fieldsSearch?: string, extraHttpRequestParams?: any): Observable<QpvResponse>;
 
 }

@@ -18,7 +18,7 @@ import { AutocompleteBeneficiaireService } from './autocomplete/autocomplete-ben
 import { LoggerService } from 'apps/common-lib/src/lib/services/logger.service';
 import { BopModel } from '../../../models/refs/bop.models';
 import { OtherTypeCategorieJuridique, SearchParameters, SearchParamsService, SearchTypeCategorieJuridique } from '../../../services/search-params.service';
-import { CentreCouts, TypeCategorieJuridique } from '../../../models/financial/common.models';
+import { TypeCategorieJuridique } from '../../../models/financial/common.models';
 import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
 import { SelectMultipleComponent } from 'apps/common-lib/src/lib/components/select-multiple/select-multiple.component';
@@ -36,6 +36,7 @@ import { ModalAdditionalParamsComponent } from './modal-additional-params/modal-
 import { RefSiret } from 'apps/common-lib/src/lib/models/refs/RefSiret';
 import { AutocompleteCentreCoutsService } from './autocomplete/autocomplete-centre-couts.service';
 import { ThemeModel } from '@models/refs/bop.models';
+import { CentreCouts } from 'apps/clients/v3/referentiels';
 
 
 /**

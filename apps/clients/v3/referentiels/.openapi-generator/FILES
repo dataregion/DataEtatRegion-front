@@ -18,7 +18,16 @@ git_push.sh
 index.ts
 model/aPIError.ts
 model/aPISuccess.ts
+model/centreCouts.ts
+model/centreCouts1.ts
+model/centreCoutsResponse.ts
+model/codeProgramme.ts
+model/codeProgramme1.ts
 model/models.ts
+model/programmeResponse.ts
+model/qpv.ts
+model/qpv1.ts
+model/qpvResponse.ts
 ng-package.json
 package.json
 param.ts

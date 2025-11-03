@@ -12,6 +12,7 @@ import { HttpHeaders }                                       from '@angular/comm
 import { Observable }                                        from 'rxjs';
 
 import { APIError } from '../model/models';
+import { CentreCoutsResponse } from '../model/models';
 
 
 import { referentielsV3Configuration }                                     from '../configuration';
@@ -34,7 +35,7 @@ export interface CentreCoutsServiceInterface {
      * @param search 
      * @param fieldsSearch 
      */
-    getByCodeCentreCoutsCodeGet(code: string, colonnes?: string, page?: number, pageSize?: number, sortBy?: string, sortOrder?: 'asc' | 'desc', search?: string, fieldsSearch?: string, extraHttpRequestParams?: any): Observable<any>;
+    getByCodeCentreCoutsCodeGet(code: string, colonnes?: string, page?: number, pageSize?: number, sortBy?: string, sortOrder?: 'asc' | 'desc', search?: string, fieldsSearch?: string, extraHttpRequestParams?: any): Observable<CentreCoutsResponse>;
 
     /**
      * Liste de tous les centre-couts
@@ -47,6 +48,6 @@ export interface CentreCoutsServiceInterface {
      * @param search 
      * @param fieldsSearch 
      */
-    listAllCentreCoutsGet(colonnes?: string, page?: number, pageSize?: number, sortBy?: string, sortOrder?: 'asc' | 'desc', search?: string, fieldsSearch?: string, extraHttpRequestParams?: any): Observable<any>;
+    listAllCentreCoutsGet(colonnes?: string, page?: number, pageSize?: number, sortBy?: string, sortOrder?: 'asc' | 'desc', search?: string, fieldsSearch?: string, extraHttpRequestParams?: any): Observable<CentreCoutsResponse>;
 
 }

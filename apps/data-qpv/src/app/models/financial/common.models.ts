@@ -58,9 +58,6 @@ export interface LocalisationInterministerielle extends CodeLabel {
 }
 export type DomaineFonctionnel = CodeLabel
 
-export interface CentreCouts extends CodeLabel {
-  description: string;
-}
 
 // XXX: sous ensemble de DataType
 export enum SourceFinancialData {

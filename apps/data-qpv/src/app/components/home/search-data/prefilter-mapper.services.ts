@@ -9,10 +9,10 @@ import { SearchDataService } from '../../../services/search-data.service';
 import { forkJoin, map, mergeMap, Observable, of } from 'rxjs';
 import { LoggerService } from 'apps/common-lib/src/lib/services/logger.service';
 import { catchError } from 'rxjs/operators';
-import { CentreCouts } from '../../../models/financial/common.models';
 import { RefSiret } from 'apps/common-lib/src/lib/models/refs/RefSiret';
 import { ThemeModel } from '../../../models/refs/bop.models';
 import { RefQpvWithCommune } from '../../../models/refs/qpv.model';
+import { CentreCouts } from 'apps/clients/v3/referentiels';
 
 @Injectable({
   providedIn: 'root'

@@ -15,13 +15,13 @@ const registerRedirect: CanActivateFn = () => {
 export const routes: Routes = [
     {
         path: '',
-        title: "Data QPV",
+        title: "Données des quartiers prioritaires de la politique de la ville",
         canActivate: [authConnected],
         runGuardsAndResolvers: 'always',
         children: [
             {
                 path: '',
-                title: "Data QPV",
+                title: "Données des quartiers prioritaires de la politique de la ville",
                 loadComponent: () => import('./components/home/home.component').then((m) => m.HomeComponent),
                 resolve: {
                     financial: resolveFinancialData,

@@ -1,13 +1,14 @@
 import { inject, Injectable } from '@angular/core';
 import { Optional } from 'apps/common-lib/src/lib/utilities/optional.type';
 import { SearchUtilsService } from 'apps/common-lib/src/lib/services/search-utils.service';
-import { CentreCouts, TypeCategorieJuridique } from '../models/financial/common.models';
+import { TypeCategorieJuridique } from '../models/financial/common.models';
 import { BopModel } from '../models/refs/bop.models';
 import { GeoModel, TypeLocalisation } from 'apps/common-lib/src/public-api';
 import { RefSiret } from 'apps/common-lib/src/lib/models/refs/RefSiret';
 import { ThemeModel } from '../models/refs/bop.models';
 import { RefQpvWithCommune } from '../models/refs/qpv.model';
 import { V3QueryParams, V3QueryParamsService } from './query-params.service';
+import { CentreCouts } from 'apps/clients/v3/referentiels';
 
 
 export enum OtherTypeCategorieJuridique {

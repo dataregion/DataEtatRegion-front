@@ -37,7 +37,7 @@ export class App {
     const codeRegion = this._sessionService.regionCode();
     if (authenticated && codeRegion) {
       const region = this._multiregions.getRegionByHostname();
-      return 'Data QPV ' + region;
+      return 'Data QPV - ' + region;
     }
     return 'Data QPV';
   });

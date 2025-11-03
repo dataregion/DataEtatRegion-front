@@ -18,6 +18,8 @@ import { Observable }                                        from 'rxjs';
 
 // @ts-ignore
 import { APIError } from '../model/aPIError';
+// @ts-ignore
+import { ProgrammeResponse } from '../model/programmeResponse';
 
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
@@ -51,9 +53,9 @@ export class ProgrammesService extends BaseService implements ProgrammesServiceI
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getByCodeProgrammesCodeGet(code: string, colonnes?: string, page?: number, pageSize?: number, sortBy?: string, sortOrder?: 'asc' | 'desc', search?: string, fieldsSearch?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any>;
-    public getByCodeProgrammesCodeGet(code: string, colonnes?: string, page?: number, pageSize?: number, sortBy?: string, sortOrder?: 'asc' | 'desc', search?: string, fieldsSearch?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<any>>;
-    public getByCodeProgrammesCodeGet(code: string, colonnes?: string, page?: number, pageSize?: number, sortBy?: string, sortOrder?: 'asc' | 'desc', search?: string, fieldsSearch?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<any>>;
+    public getByCodeProgrammesCodeGet(code: string, colonnes?: string, page?: number, pageSize?: number, sortBy?: string, sortOrder?: 'asc' | 'desc', search?: string, fieldsSearch?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<ProgrammeResponse>;
+    public getByCodeProgrammesCodeGet(code: string, colonnes?: string, page?: number, pageSize?: number, sortBy?: string, sortOrder?: 'asc' | 'desc', search?: string, fieldsSearch?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<ProgrammeResponse>>;
+    public getByCodeProgrammesCodeGet(code: string, colonnes?: string, page?: number, pageSize?: number, sortBy?: string, sortOrder?: 'asc' | 'desc', search?: string, fieldsSearch?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<ProgrammeResponse>>;
     public getByCodeProgrammesCodeGet(code: string, colonnes?: string, page?: number, pageSize?: number, sortBy?: string, sortOrder?: 'asc' | 'desc', search?: string, fieldsSearch?: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
         if (code === null || code === undefined) {
             throw new Error('Required parameter code was null or undefined when calling getByCodeProgrammesCodeGet.');
@@ -101,7 +103,7 @@ export class ProgrammesService extends BaseService implements ProgrammesServiceI
         }
 
         let localVarPath = `/programmes/${this.configuration.encodeParam({name: "code", value: code, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`;
-        return this.httpClient.request<any>('get', `${this.configuration.basePath}${localVarPath}`,
+        return this.httpClient.request<ProgrammeResponse>('get', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
                 params: localVarQueryParameters,
@@ -127,9 +129,9 @@ export class ProgrammesService extends BaseService implements ProgrammesServiceI
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public listAllProgrammesGet(colonnes?: string, page?: number, pageSize?: number, sortBy?: string, sortOrder?: 'asc' | 'desc', search?: string, fieldsSearch?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any>;
-    public listAllProgrammesGet(colonnes?: string, page?: number, pageSize?: number, sortBy?: string, sortOrder?: 'asc' | 'desc', search?: string, fieldsSearch?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<any>>;
-    public listAllProgrammesGet(colonnes?: string, page?: number, pageSize?: number, sortBy?: string, sortOrder?: 'asc' | 'desc', search?: string, fieldsSearch?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<any>>;
+    public listAllProgrammesGet(colonnes?: string, page?: number, pageSize?: number, sortBy?: string, sortOrder?: 'asc' | 'desc', search?: string, fieldsSearch?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<ProgrammeResponse>;
+    public listAllProgrammesGet(colonnes?: string, page?: number, pageSize?: number, sortBy?: string, sortOrder?: 'asc' | 'desc', search?: string, fieldsSearch?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<ProgrammeResponse>>;
+    public listAllProgrammesGet(colonnes?: string, page?: number, pageSize?: number, sortBy?: string, sortOrder?: 'asc' | 'desc', search?: string, fieldsSearch?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<ProgrammeResponse>>;
     public listAllProgrammesGet(colonnes?: string, page?: number, pageSize?: number, sortBy?: string, sortOrder?: 'asc' | 'desc', search?: string, fieldsSearch?: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
 
         let localVarQueryParameters = new HttpParams({encoder: this.encoder});
@@ -174,7 +176,7 @@ export class ProgrammesService extends BaseService implements ProgrammesServiceI
         }
 
         let localVarPath = `/programmes`;
-        return this.httpClient.request<any>('get', `${this.configuration.basePath}${localVarPath}`,
+        return this.httpClient.request<ProgrammeResponse>('get', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
                 params: localVarQueryParameters,

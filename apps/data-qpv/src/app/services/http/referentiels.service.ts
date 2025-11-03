@@ -6,12 +6,8 @@ import { HttpClient } from '@angular/common/http';
 import { DataPagination } from 'apps/common-lib/src/lib/models/pagination/pagination.models';
 
 import { RefSiret } from 'apps/common-lib/src/lib/models/refs/RefSiret';
-import { CentreCouts } from '../../models/financial/common.models';
 import { explodeQpvList, RefGeoQpv, RefQpvWithCommune } from '../../models/refs/qpv.model';
 import { SessionService } from 'apps/common-lib/src/public-api';
-import { CentreCoutsService } from 'apps/clients/v3/referentiels';
-import { V3QueryParamsService } from '../query-params.service';
-
 
 
 @Injectable({ providedIn: 'root' })
@@ -20,9 +16,6 @@ export class ReferentielsService {
   private http = inject(HttpClient);
   readonly settings = inject(SettingsDataQPVService);
   private _sessionService = inject(SessionService);
-
-  private _queryParamsService = inject(V3QueryParamsService);
-  private _centreCoutsService = inject(CentreCoutsService);
 
   private _apiRef!: string;
 
@@ -75,21 +68,6 @@ export class ReferentielsService {
     return this.http
       .get<DataPagination<BopModel>>(`${this._apiRef}/programme?${params}`)
       .pipe(map((response) => response.items));
-  }
-
-  public getCentreCouts(query: string | null): Observable<CentreCouts[]> {
-    const params = this._queryParamsService.getEmpty()
-    if (query !== null) {
-      params.search = query ?? undefined
-      params.fields_search = ['code', 'description']
-    }
-    const sanitized = this._queryParamsService.getSanitizedParams(params)
-    return this._centreCoutsService.listAllCentreCoutsGet(...sanitized, 'body')
-      .pipe(
-        map(response => {
-          return response != null ? response.data as CentreCouts[] : []
-        })
-      );
   }
 
   private _filterByCode(nomOuSiret: string): Observable<RefSiret[]> {

@@ -1,5 +1,4 @@
 import {
-  CentreCouts,
   Commune,
   DomaineFonctionnel,
   GroupeMarchandise,
@@ -17,6 +16,7 @@ import { JSONObject } from 'apps/common-lib/src/lib/models/jsonobject';
 import { inject, Injectable } from '@angular/core';
 import { ColonnesMapperService } from './colonnes-mapper.service';
 import { FlattenFinancialLinesDataQPV } from 'apps/clients/v3/data-qpv';
+import { CentreCouts } from 'apps/clients/v3/referentiels';
 
 @Injectable({
   providedIn: 'root'

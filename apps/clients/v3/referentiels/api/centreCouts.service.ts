@@ -18,6 +18,8 @@ import { Observable }                                        from 'rxjs';
 
 // @ts-ignore
 import { APIError } from '../model/aPIError';
+// @ts-ignore
+import { CentreCoutsResponse } from '../model/centreCoutsResponse';
 
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
@@ -51,9 +53,9 @@ export class CentreCoutsService extends BaseService implements CentreCoutsServic
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getByCodeCentreCoutsCodeGet(code: string, colonnes?: string, page?: number, pageSize?: number, sortBy?: string, sortOrder?: 'asc' | 'desc', search?: string, fieldsSearch?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any>;
-    public getByCodeCentreCoutsCodeGet(code: string, colonnes?: string, page?: number, pageSize?: number, sortBy?: string, sortOrder?: 'asc' | 'desc', search?: string, fieldsSearch?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<any>>;
-    public getByCodeCentreCoutsCodeGet(code: string, colonnes?: string, page?: number, pageSize?: number, sortBy?: string, sortOrder?: 'asc' | 'desc', search?: string, fieldsSearch?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<any>>;
+    public getByCodeCentreCoutsCodeGet(code: string, colonnes?: string, page?: number, pageSize?: number, sortBy?: string, sortOrder?: 'asc' | 'desc', search?: string, fieldsSearch?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<CentreCoutsResponse>;
+    public getByCodeCentreCoutsCodeGet(code: string, colonnes?: string, page?: number, pageSize?: number, sortBy?: string, sortOrder?: 'asc' | 'desc', search?: string, fieldsSearch?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<CentreCoutsResponse>>;
+    public getByCodeCentreCoutsCodeGet(code: string, colonnes?: string, page?: number, pageSize?: number, sortBy?: string, sortOrder?: 'asc' | 'desc', search?: string, fieldsSearch?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<CentreCoutsResponse>>;
     public getByCodeCentreCoutsCodeGet(code: string, colonnes?: string, page?: number, pageSize?: number, sortBy?: string, sortOrder?: 'asc' | 'desc', search?: string, fieldsSearch?: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
         if (code === null || code === undefined) {
             throw new Error('Required parameter code was null or undefined when calling getByCodeCentreCoutsCodeGet.');
@@ -101,7 +103,7 @@ export class CentreCoutsService extends BaseService implements CentreCoutsServic
         }
 
         let localVarPath = `/centre-couts/${this.configuration.encodeParam({name: "code", value: code, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`;
-        return this.httpClient.request<any>('get', `${this.configuration.basePath}${localVarPath}`,
+        return this.httpClient.request<CentreCoutsResponse>('get', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
                 params: localVarQueryParameters,
@@ -127,9 +129,9 @@ export class CentreCoutsService extends BaseService implements CentreCoutsServic
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public listAllCentreCoutsGet(colonnes?: string, page?: number, pageSize?: number, sortBy?: string, sortOrder?: 'asc' | 'desc', search?: string, fieldsSearch?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any>;
-    public listAllCentreCoutsGet(colonnes?: string, page?: number, pageSize?: number, sortBy?: string, sortOrder?: 'asc' | 'desc', search?: string, fieldsSearch?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<any>>;
-    public listAllCentreCoutsGet(colonnes?: string, page?: number, pageSize?: number, sortBy?: string, sortOrder?: 'asc' | 'desc', search?: string, fieldsSearch?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<any>>;
+    public listAllCentreCoutsGet(colonnes?: string, page?: number, pageSize?: number, sortBy?: string, sortOrder?: 'asc' | 'desc', search?: string, fieldsSearch?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<CentreCoutsResponse>;
+    public listAllCentreCoutsGet(colonnes?: string, page?: number, pageSize?: number, sortBy?: string, sortOrder?: 'asc' | 'desc', search?: string, fieldsSearch?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<CentreCoutsResponse>>;
+    public listAllCentreCoutsGet(colonnes?: string, page?: number, pageSize?: number, sortBy?: string, sortOrder?: 'asc' | 'desc', search?: string, fieldsSearch?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<CentreCoutsResponse>>;
     public listAllCentreCoutsGet(colonnes?: string, page?: number, pageSize?: number, sortBy?: string, sortOrder?: 'asc' | 'desc', search?: string, fieldsSearch?: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
 
         let localVarQueryParameters = new HttpParams({encoder: this.encoder});
@@ -174,7 +176,7 @@ export class CentreCoutsService extends BaseService implements CentreCoutsServic
         }
 
         let localVarPath = `/centre-couts`;
-        return this.httpClient.request<any>('get', `${this.configuration.basePath}${localVarPath}`,
+        return this.httpClient.request<CentreCoutsResponse>('get', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
                 params: localVarQueryParameters,

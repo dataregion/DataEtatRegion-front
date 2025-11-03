@@ -12,6 +12,7 @@ import { HttpHeaders }                                       from '@angular/comm
 import { Observable }                                        from 'rxjs';
 
 import { APIError } from '../model/models';
+import { ProgrammeResponse } from '../model/models';
 
 
 import { referentielsV3Configuration }                                     from '../configuration';
@@ -34,7 +35,7 @@ export interface ProgrammesServiceInterface {
      * @param search 
      * @param fieldsSearch 
      */
-    getByCodeProgrammesCodeGet(code: string, colonnes?: string, page?: number, pageSize?: number, sortBy?: string, sortOrder?: 'asc' | 'desc', search?: string, fieldsSearch?: string, extraHttpRequestParams?: any): Observable<any>;
+    getByCodeProgrammesCodeGet(code: string, colonnes?: string, page?: number, pageSize?: number, sortBy?: string, sortOrder?: 'asc' | 'desc', search?: string, fieldsSearch?: string, extraHttpRequestParams?: any): Observable<ProgrammeResponse>;
 
     /**
      * Liste de tous les programmes
@@ -47,6 +48,6 @@ export interface ProgrammesServiceInterface {
      * @param search 
      * @param fieldsSearch 
      */
-    listAllProgrammesGet(colonnes?: string, page?: number, pageSize?: number, sortBy?: string, sortOrder?: 'asc' | 'desc', search?: string, fieldsSearch?: string, extraHttpRequestParams?: any): Observable<any>;
+    listAllProgrammesGet(colonnes?: string, page?: number, pageSize?: number, sortBy?: string, sortOrder?: 'asc' | 'desc', search?: string, fieldsSearch?: string, extraHttpRequestParams?: any): Observable<ProgrammeResponse>;
 
 }
