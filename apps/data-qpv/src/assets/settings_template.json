@@ -16,7 +16,8 @@
     "administration": "<url api administration>",
     "geo": "url api geo",
     "referentiel": "url api referentiel",
-    "apis_externes": "url api externes"
+    "apis_externes": "url api externes",
+    "apis_externes_v3": "url api externes v3"
   },
   "superset": {
     "baseDashboardUrl": "<url superset>",

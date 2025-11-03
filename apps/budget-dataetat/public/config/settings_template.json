@@ -19,6 +19,7 @@
     "geo": "url api geo",
     "referentiel": "url api referentiel",
     "apis_externes": "url api externes",
+    "apis_externes_v3": "url api externes v3",
     "demarches": "http://localhost:5000/data-demarches",
     "ressource": "http://localhost:5000/ressource/liste"
   },
