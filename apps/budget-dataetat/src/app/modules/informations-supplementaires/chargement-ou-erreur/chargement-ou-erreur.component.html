@@ -3,9 +3,12 @@
     @case('REMOTE_CALL_FAILED') {
       <span class="fr-icon-info-fill info-main-525"></span>
       <span #erreur_projetee><ng-content select="span.message-erreur-api-distante" /></span>
-      @if (!erreur_projetee.hasChildNodes()) {
+      @if (!erreur_projetee.hasChildNodes() && !erreur.message) {
         Le service distant « {{ nom_service_distant() }} » (API) ne répond pas correctement. Veuillez réessayer
         ultérieurement.
+      }
+      @if (!erreur_projetee.hasChildNodes() && erreur.message) {
+        {{erreur.message}}
       }
     }
     @case('LIMIT_HIT') {
@@ -16,7 +19,7 @@
         ultérieurement.
       }
     }
-    @case('NOT_FOUND') {
+    @case('DEMARCHE_NOT_FOUND') {
       <span class="fr-icon-warning-fill warning-main-525"></span>
       {{ erreur.message }}
     }
