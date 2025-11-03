@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
+import { catchError } from 'rxjs/operators';
 import { ReferentielsService } from 'apps/appcommon/src/lib/services/referentiels-v3.service';
 import { CentreCouts } from 'apps/clients/v3/referentiels';
 
