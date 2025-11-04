@@ -11,16 +11,10 @@ import {
 } from 'apps/common-lib/src/public-api';
 
 class Api implements IApi {
-  financial_data = '';
-  financial_data_v2 = '';
-  financial_data_v3 = '';
   data_qpv_v3 = '';
   referentiels_v3 = '';
-  administration = '';
-  geo = '';
   referentiel = '';
-  apis_externes = '';
-  demarches = '';
+  geo = '';
 }
 
 class DataQPVSettings extends Settings {
@@ -69,28 +63,8 @@ export class SettingsDataQPVService implements ISettingsService {
     return this.settings.ressources as Ressources;
   }
 
-  public get apiGeo(): string {
-    return (this.settings.apis as Api).geo;
-  }
-
   public get apiReferentiel(): string {
     return (this.settings.apis as Api).referentiel;
-  }
-
-  public get apiExternes(): string {
-    return (this.settings.apis as Api).apis_externes;
-  }
-
-  public get apiFinancialData(): string {
-    return (this.settings.apis as Api).financial_data;
-  }
-
-  public get apiFinancialDataV2(): string {
-    return (this.settings.apis as Api).financial_data_v2;
-  }
-
-  public get apiFinancialDataV3(): string {
-    return (this.settings.apis as Api).financial_data_v3;
   }
 
   public get apiDataQpvV3(): string {
@@ -101,8 +75,8 @@ export class SettingsDataQPVService implements ISettingsService {
     return (this.settings.apis as Api).referentiels_v3;
   }
 
-  public get apiAdministration(): string {
-    return (this.settings.apis as Api).administration;
+  public get apiGeo(): string {
+    return (this.settings.apis as Api).geo;
   }
 
 }

@@ -33,14 +33,9 @@ export function provideKeycloakAngularDynamic(settingsService: SettingsDataQPVSe
 
 
   const urls = [
-    settingsService.apiExternes,
-    settingsService.apiFinancialData,
-    settingsService.apiFinancialDataV2,
-    settingsService.apiFinancialDataV3,
     settingsService.apiDataQpvV3,
     settingsService.apiReferentiel,
     settingsService.apiReferentielsV3,
-    settingsService.apiAdministration,
   ];
   
   const regexPattern = new RegExp(urls.map(url => escapeRegex(url)).join('|'), 'i');

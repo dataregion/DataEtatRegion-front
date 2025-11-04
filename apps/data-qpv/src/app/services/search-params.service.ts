@@ -7,8 +7,9 @@ import { GeoModel, TypeLocalisation } from 'apps/common-lib/src/public-api';
 import { RefSiret } from 'apps/common-lib/src/lib/models/refs/RefSiret';
 import { ThemeModel } from '../models/refs/bop.models';
 import { RefQpvWithCommune } from '../models/refs/qpv.model';
-import { V3QueryParams, V3QueryParamsService } from './query-params.service';
 import { CentreCouts } from 'apps/clients/v3/referentiels';
+import { V3QueryParams } from 'apps/appcommon/src/lib/models/query-params.model';
+import { V3QueryParamsService } from 'apps/appcommon/src/lib/services/query-params.service';
 
 
 export enum OtherTypeCategorieJuridique {

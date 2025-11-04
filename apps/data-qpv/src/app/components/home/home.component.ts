@@ -5,7 +5,6 @@ import { ActivatedRoute } from '@angular/router';
 import { FinancialDataResolverModel } from '../../models/financial/financial-data-resolvers.models';
 import { CommonModule } from '@angular/common';
 import { SearchDataComponent } from './search-data/search-data.component';
-import { ColonnesService } from '@services/colonnes.service';
 import { MarqueBlancheParsedParamsResolverModel } from '../../resolvers/marqueblanche-parsed-params.resolver';
 import { SearchDataService } from '../../services/search-data.service';
 import { LoggerService } from 'apps/common-lib/src/lib/services/logger.service';
@@ -38,9 +37,6 @@ export class HomeComponent implements OnInit {
   /** Service pour accéder aux données de route et aux resolvers */
   private _route = inject(ActivatedRoute);
   
-  /** Service de gestion des colonnes (sélection, configuration) */
-  private _colonnesService = inject(ColonnesService);
-  
   /** Service central de gestion de la recherche de données */
   private _searchDataService = inject(SearchDataService);
   
@@ -57,24 +53,6 @@ export class HomeComponent implements OnInit {
   /** Date du dernier import des données financières */
   lastImportDate: string | null = null;
 
-  // --- Getters pour le template ---
-
-  /** 
-   * Indique si les résultats sont affichés en mode groupé 
-   * @returns true si les colonnes de grouping sont sélectionnées
-   */
-  get grouped(): boolean {
-    return this._colonnesService.grouped();
-  }
-
-  /**
-   * Indique si une recherche groupée est en cours
-   * @returns true si une recherche groupée est en cours
-   */
-  // get searchGroupingInProgress(): boolean {
-  //   return this._searchDataService.searchGroupingInProgress();
-  // }
-  
   // --- Signals du service de recherche ---
   
   /** Signal indiquant si une recherche a déjà été effectuée */
@@ -102,10 +80,7 @@ export class HomeComponent implements OnInit {
    * @returns true si on n'est pas en plein écran et qu'aucune ligne n'est sélectionnée
    */
   public readonly showSearchForm = computed(() => {
-    const gridFullscreen = this.grid_fullscreen();
-    // const selectedLine = this.selectedLine();
-    // return !gridFullscreen && selectedLine === undefined;
-    return !gridFullscreen
+    return !this.grid_fullscreen()
   });
 
   // --- Gestion des erreurs ---
@@ -129,10 +104,6 @@ export class HomeComponent implements OnInit {
    * Cette méthode :
    * 1. Récupère les données des resolvers (référentiels, colonnes, marque blanche)
    * 2. Vérifie s'il y a des erreurs et les affiche le cas échéant
-   * 3. Initialise les services de mapping et de colonnes
-   * 4. Applique les paramètres de marque blanche (grouping, plein écran)
-   * 5. Écoute les paramètres de query pour appliquer des préférences
-   * 6. Récupère la date du dernier import des données
    */
   ngOnInit() {
     // --- 1. Récupération des données des resolvers ---
@@ -149,27 +120,6 @@ export class HomeComponent implements OnInit {
       this.error = error;
       return;
     }
-
-    // // --- 3. Initialisation des services de mapping et de colonnes ---
-    
-    // // Initialisation du service de mapper avec les colonnes résolues
-    // this._colonnesMapperService.initService(
-    //   resolvedColonnes?.data?.colonnesTable ?? [],
-    //   resolvedColonnes?.data?.colonnesGrouping ?? []
-    // );
-    
-    // // Sauvegarde des colonnes disponibles dans le service de colonnes
-    // this._colonnesService.allColonnesTable.set(this._colonnesMapperService.colonnes);
-    // this._colonnesService.allColonnesGrouping.set(this._colonnesMapperService.colonnes.filter(c => c.grouping !== undefined));
-
-    // // --- 4. Initialisation du service de mapping des préfiltres ---
-    
-    // const themes: string[] = resolvedFinancial.data?.themes ?? [];
-    // const programmes: Bop[] = resolvedFinancial.data?.bop ?? [];
-    // const referentiels: ReferentielProgrammation[] = resolvedFinancial.data?.referentiels_programmation ?? [];
-    // const annees: number[] = resolvedFinancial.data?.annees ?? [];
-    // this._prefilterMapperService.initService(themes, programmes, referentiels, annees);
-
   }
 
   public searchParametersToText() {

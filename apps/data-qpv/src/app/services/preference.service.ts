@@ -24,15 +24,6 @@ export class PreferenceService {
   public readonly currentPreference = this._currentPreference.asReadonly();
 
   /**
-   * Met à jour les préférences courantes
-   * Met automatiquement à jour les filtres associés
-   */
-  public setCurrentPreference(pref: Preference | null): void {
-    this.currentPrefilter.set(pref ? pref.filters as PreFilters : null);
-    this._currentPreference.set(pref);
-  }
-
-  /**
    * Met à jour uniquement les filtres
    */
   public setCurrentPrefilter(pref: PreFilters | null): void {

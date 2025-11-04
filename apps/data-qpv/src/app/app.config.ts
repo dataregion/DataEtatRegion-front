@@ -5,46 +5,25 @@ import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { includeBearerTokenInterceptor } from 'keycloak-angular';
 import { DatePipe } from '@angular/common';
 import { SettingsDataQPVService } from './environments/settings-qpv.service';
-import { budgetConfiguration, budgetConfigurationParameters } from 'apps/clients/budget';
-import { API_PREFERENCE_PATH } from 'apps/preference-users/src/public-api';
 import { SETTINGS } from 'apps/common-lib/src/lib/environments/settings.http.service';
 import { dataQPVHttpInterceptorInterceptor } from './interceptors/data-qpv-http-interceptor.interceptor';
 import { API_GEO_PATH, API_REF_PATH } from 'apps/common-lib/src/public-api';
 
-import { BASE_PATH as FINANCIAL_DATA_V3_BASE_PATH } from 'apps/clients/v3/financial-data';
 import { BASE_PATH as DATA_QPV_V3_BASE_PATH } from 'apps/clients/v3/data-qpv';
 import { BASE_PATH as REFERENTIELS_V3_BASE_PATH } from 'apps/clients/v3/referentiels';
 
 
 export function providerBugdetConfiguration(settingsService: SettingsDataQPVService): Provider[] {
   return [
-    // pour rester compatible avec les anciens composants
     {
       provide: SETTINGS,
       useValue: settingsService
-    },
-    {
-      provide: budgetConfiguration,
-      useFactory: () => {
-        const params: budgetConfigurationParameters = {
-          withCredentials: false,
-          basePath: settingsService.apiFinancialDataV2
-        };
-        return new budgetConfiguration(params);
-      },
-      multi: false
-    }, {
-      provide: FINANCIAL_DATA_V3_BASE_PATH,
-      useValue: settingsService.apiFinancialDataV3
     }, {
       provide: DATA_QPV_V3_BASE_PATH,
       useValue: settingsService.apiDataQpvV3
     }, {
       provide: REFERENTIELS_V3_BASE_PATH,
       useValue: settingsService.apiReferentielsV3
-    }, {
-      provide: API_PREFERENCE_PATH,
-      useValue: settingsService.apiAdministration
     },{
       provide: API_GEO_PATH,
       useValue: settingsService.apiGeo
@@ -52,10 +31,6 @@ export function providerBugdetConfiguration(settingsService: SettingsDataQPVServ
       provide: API_REF_PATH,
       useValue: settingsService.apiReferentiel
     },
-    // {
-    //   provide: DATA_HTTP_SERVICE,
-    //   useClass: BudgetDataHttpService
-    // },
   ]
 }
 

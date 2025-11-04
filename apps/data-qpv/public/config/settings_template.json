@@ -4,23 +4,16 @@
     "url": "<URL KC>",
     "realm": "realm",
     "clientId": "client",
-    "comment": "Le client ID n'est pas nécessaire dans le cas des multi-regions",
     "hostname_client_id_mappings": {
       "comment": "Liste de mapping entre le hostname de la page et le client ID.",
       "localhost": "bretagne.budget"
     }
   },
   "apis": {
-    "financial_data": "<url api financial pour import>",
-    "financial_data_v2": "<url api financial pour import>",
-    "financial_data_v3": "<url api financial pour import>",
     "data_qpv_v3": "<url api qpv v3>",
     "referentiels_v3": "<url api referentiel_v3 pour import>",
-    "administration": "<url api administration>",
     "geo": "url api geo",
-    "referentiel": "url api referentiel",
-    "apis_externes": "url api externes",
-    "apis_externes_v3": "url api externes v3"
+    "referentiel": "url api referentiel"
   },
   "contact": "http://contact.fr",
   "help_pdf": "https://www.africau.edu/images/default/sample.pdf"

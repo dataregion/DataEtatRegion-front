@@ -95,7 +95,6 @@ export class SearchDataComponent implements OnInit {
     types_porteur: new FormControl<SearchTypeCategorieJuridique[] | null>(null),
   });
 
-  // public bops: BopModel[] = [];
   public thematiques: ThemeModel[] = [];
   public annees: number[] = [];
   public qpvs: RefQpvWithCommune[] = [];
@@ -104,9 +103,6 @@ export class SearchDataComponent implements OnInit {
   public filteredPorteurs: RefSiret[] = []
 
   public refGeo: RefGeoQpv | undefined;
-  // public filteredBops: BopModel[] = [];
-  // public filteredReferentiels: ReferentielProgrammation[] = [];
-  // public searchFinish: boolean = false;
 
 
   /**
@@ -379,9 +375,6 @@ export class SearchDataComponent implements OnInit {
     // Sauvegarde des référentiels dans les listes
     this.thematiques = resolvedFinancial.data?.thematiques ?? [];
     this.filteredThematiques = this.thematiques
-    // this.bops = resolvedFinancial.data?.bop ?? [];
-    // this.filteredBops = this.bops ?? []
-    // this.filteredReferentiels = resolvedFinancial.data?.referentiels_programmation ?? [];
     this.annees = resolvedFinancial.data?.annees ?? [];
     this.refGeo = resolvedFinancial.data?.refGeo;
     this.qpvs = this.refGeo?.qpvs ?? [];

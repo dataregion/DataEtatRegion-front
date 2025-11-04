@@ -14,9 +14,9 @@ import { ReferentielProgrammation } from '../models/refs/referentiel_programmati
 import { Optional } from 'apps/common-lib/src/lib/utilities/optional.type';
 import { JSONObject } from 'apps/common-lib/src/lib/models/jsonobject';
 import { inject, Injectable } from '@angular/core';
-import { ColonnesMapperService } from './colonnes-mapper.service';
 import { FlattenFinancialLinesDataQPV } from 'apps/clients/v3/data-qpv';
 import { CentreCouts } from 'apps/clients/v3/referentiels';
+import { ColonnesMapperService } from './colonnes-mapper.service';
 
 @Injectable({
   providedIn: 'root'
