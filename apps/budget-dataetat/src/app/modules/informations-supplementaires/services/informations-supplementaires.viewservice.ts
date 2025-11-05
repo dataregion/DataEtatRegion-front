@@ -1,4 +1,4 @@
-import { FinancialDataModel } from '@models/financial/financial-data.models';
+import { BudgetFinancialDataModel } from '@models/financial/financial-data.models';
 import {
   ExternalAPIsService,
   ModelError,
@@ -12,11 +12,11 @@ import { EtablissementLight } from '../models/EtablissementLight';
 import { SubventionLight } from '../models/SubventionLight';
 import { HttpContext, HttpErrorResponse } from '@angular/common/http';
 import { BYPASS_ALERT_INTERCEPTOR } from 'apps/common-lib/src/public-api';
-import { SourceFinancialData } from '@models/financial/common.models';
 import { fromInfoApiEntreprise } from './informations-supplementaires.service';
 import { AffichageDossier } from '@models/demarche_simplifie/demarche.model';
 import { CompagnonDSService } from '../../compagnon-ds/compagnon-ds.service';
 import { ApiExterneError, EntrepriseService, InfoApiEntreprise, InfoApiSubvention, RepresentantLegal, Subvention, SubventionService } from 'apps/clients/apis-externes-v3';
+import { SourceFinancialData } from 'apps/common-lib/src/lib/models/refs/common.models';
 
 export class InformationSupplementairesViewService {
   private _options = {
@@ -33,7 +33,7 @@ export class InformationSupplementairesViewService {
     private _aev3_entreprise: EntrepriseService,
     private _aev3_subvention: SubventionService,
     private _compagnonDS: CompagnonDSService,
-    private _financial: FinancialDataModel
+    private _financial: BudgetFinancialDataModel
   ) {}
 
   openInNewtab() {

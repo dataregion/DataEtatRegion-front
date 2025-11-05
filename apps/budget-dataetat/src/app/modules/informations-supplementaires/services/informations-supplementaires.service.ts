@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { FinancialDataModel } from '@models/financial/financial-data.models';
+import { BudgetFinancialDataModel } from '@models/financial/financial-data.models';
 import { ExternalAPIsService } from 'apps/clients/apis-externes';
 import { EntrepriseFull } from '../models/EntrepriseFull';
 import { PersonneMoraleAttributsCorrige } from '../models/correction-api-externes/PersonneMoraleAttributsCorrige';
@@ -40,7 +40,7 @@ export class InformationsSupplementairesService {
     return this._viewService!;
   }
 
-  setupViewModelService(financial_data: FinancialDataModel) {
+  setupViewModelService(financial_data: BudgetFinancialDataModel) {
     this._viewService = new InformationSupplementairesViewService(
       this._ea,
       this._aev3_entreprise,

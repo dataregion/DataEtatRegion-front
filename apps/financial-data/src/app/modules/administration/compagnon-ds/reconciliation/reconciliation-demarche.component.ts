@@ -15,7 +15,8 @@ import { combineLatest, Observable } from 'rxjs';
 import { GeoLocalisationComponentService } from '../../../../../../../common-lib/src/lib/components/localisation/geo.localisation.componentservice';
 import { BudgetDataHttpService } from '../../../../services/http/budget-lines-http.service';
 import { ReferentielProgrammation } from '../../../../models/refs/referentiel_programmation.model';
-import { CentreCouts, CodeLabel, DomaineFonctionnel } from '../../../../models/financial/common.models';
+import { CodeLabel, DomaineFonctionnel } from '../../../../models/financial/common.models';
+import { CentreCouts } from 'apps/clients/v3/referentiels';
 
 @Component({
     selector: 'financial-reconciliation-demarche.component',

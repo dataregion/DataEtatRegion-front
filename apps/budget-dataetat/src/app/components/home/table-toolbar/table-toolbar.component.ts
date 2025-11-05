@@ -10,7 +10,7 @@ import { ModalGroupingComponent } from './modal-grouping/modal-grouping.componen
 import { ModalColonnesComponent } from "./modal-colonnes/modal-colonnes.component";
 import { ModalSauvegardeComponent } from "./modal-sauvegarde/modal-sauvegarde.component";
 import { ModalTelechargementComponent } from "./modal-telechargement/modal-telechargement.component";
-import { FinancialDataModel } from '@models/financial/financial-data.models';
+import { BudgetFinancialDataModel } from '@models/financial/financial-data.models';
 import { ColonnesService } from '@services/colonnes.service';
 import { ColonneTableau } from '@services/colonnes-mapper.service';
 import { SearchDataService } from '@services/search-data.service';
@@ -36,7 +36,7 @@ export class TableToolbarComponent {
 
   public readonly grouped = input<boolean>(false);
 
-  public readonly searchData = input<FinancialDataModel[]>([]);
+  public readonly searchData = input<BudgetFinancialDataModel[]>([]);
   
   public searchFinish: boolean = true
   public searchInProgress: boolean = false
@@ -73,7 +73,7 @@ export class TableToolbarComponent {
     return this._colonnesService.grouped();
   }
 
-  get selectedGrouping(): ColonneTableau<FinancialDataModel>[] {
+  get selectedGrouping(): ColonneTableau<BudgetFinancialDataModel>[] {
     return this._colonnesService.selectedColonnesGrouping();
   }
 

@@ -3,7 +3,7 @@ import { MaterialModule } from "apps/common-lib/src/public-api";
 import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
 import { ColonneTableau } from '@services/colonnes-mapper.service';
 import { ColonnesService } from '@services/colonnes.service';
-import { FinancialDataModel } from '@models/financial/financial-data.models';
+import { BudgetFinancialDataModel } from '@models/financial/financial-data.models';
 import { FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { LoggerService } from 'apps/common-lib/src/lib/services/logger.service';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
@@ -37,9 +37,9 @@ export class ModalGroupingComponent implements OnInit {
   public searchDataService = inject(SearchDataService);
   
 
-  public colonnes: ColonneTableau<FinancialDataModel>[] = [];
-  public selectedColonnes: ColonneTableau<FinancialDataModel>[] = [];
-  public remainingColonnes: ColonneTableau<FinancialDataModel>[] = [];
+  public colonnes: ColonneTableau<BudgetFinancialDataModel>[] = [];
+  public selectedColonnes: ColonneTableau<BudgetFinancialDataModel>[] = [];
+  public remainingColonnes: ColonneTableau<BudgetFinancialDataModel>[] = [];
 
   constructor() {
     // Effect pour réagir aux changements des colonnes de grouping sélectionnées

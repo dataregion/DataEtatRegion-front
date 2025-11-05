@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { Observable } from 'rxjs';
 
-import { FinancialDataModel } from '@models/financial/financial-data.models';
+import { BudgetFinancialDataModel } from '@models/financial/financial-data.models';
 import { EtablissementLight } from '../../modules/informations-supplementaires/models/EtablissementLight';
 import { SubventionLight } from '../../modules/informations-supplementaires/models/SubventionLight';
 import { AffichageDossier } from '@models/demarche_simplifie/demarche.model';
@@ -67,7 +67,7 @@ export class InfosLigneComponent implements OnInit {
   private readonly _infoSupplementaireService = inject(InformationsSupplementairesService);
 
 
-  public readonly financialLine = input<FinancialDataModel>();
+  public readonly financialLine = input<BudgetFinancialDataModel>();
 
   // ========================================
   // PROPRIÉTÉS PUBLIQUES
@@ -94,13 +94,13 @@ export class InfosLigneComponent implements OnInit {
   // ========================================
   
   /** Données financières actuellement affichées */
-  private _financial: FinancialDataModel | undefined = undefined;
+  private _financial: BudgetFinancialDataModel | undefined = undefined;
 
   /**
    * Getter pour accéder aux données financières de façon sécurisée
    * @returns Les données financières courantes
    */
-  get financial(): FinancialDataModel {
+  get financial(): BudgetFinancialDataModel {
     return this._financial!;
   }
 
@@ -124,7 +124,7 @@ export class InfosLigneComponent implements OnInit {
     
     // Priorité 2: données du resolver (route directe)
     if (!financialData) {
-      const resolverData: FinancialDataModel = this._route.snapshot.data['infos_supplementaires'];
+      const resolverData: BudgetFinancialDataModel = this._route.snapshot.data['infos_supplementaires'];
       if (resolverData) { 
         financialData = resolverData;
         this.linkedToTable = false; // Pas de lien au tableau car vient de l'URL

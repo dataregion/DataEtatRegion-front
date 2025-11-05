@@ -3,17 +3,18 @@ import { GeoModel, TypeLocalisation } from 'apps/common-lib/src/public-api';
 import { FormSearch } from './search-data.component';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { PreFilters, TagFieldData } from '@models/search/prefilters.model';
-import { ReferentielProgrammation } from '@models/refs/referentiel_programmation.model';
 import { Bop } from '@models/search/bop.model';
-import { BopModel } from '@models/refs/bop.models';
-import { SearchParameters, SearchParamsService, SearchTypeCategorieJuridique } from '@services/search-params.service';
-import { AutocompleteBeneficiaireService, BeneficiaireFieldData } from './autocomplete/autocomplete-beneficiaire.service';
+import { SearchParameters, SearchParamsService } from '@services/search-params.service';
 import { Beneficiaire } from '@models/search/beneficiaire.model';
 import { BudgetDataHttpService } from '@services/http/budget.service';
-import { Tag } from '@models/refs/tag.model';
 import { forkJoin, map, mergeMap, Observable, of } from 'rxjs';
 import { LoggerService } from 'apps/common-lib/src/lib/services/logger.service';
 import { catchError } from 'rxjs/operators';
+import { ReferentielProgrammation } from 'apps/common-lib/src/lib/models/refs/referentiel_programmation.model';
+import { Tag } from '@models/refs/tag.model';
+import { BopModel } from 'apps/common-lib/src/lib/models/refs/bop.models';
+import { SearchTypeCategorieJuridique } from 'apps/common-lib/src/lib/models/refs/common.models';
+import { AutocompleteBeneficiaireService, BeneficiaireFieldData } from 'apps/appcommon/src/lib/autocomplete/autocomplete-beneficiaire.service';
 
 @Injectable({
   providedIn: 'root'

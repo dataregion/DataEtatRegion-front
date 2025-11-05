@@ -1,7 +1,6 @@
  
 
-import { TypeCategorieJuridique } from '@models/financial/common.models';
-import { OtherTypeCategorieJuridique, SearchTypeCategorieJuridique } from '@models/search/prefilters.model';
+import { OtherTypeCategorieJuridique, SearchTypeCategorieJuridique, TypeCategorieJuridique } from '../../models/refs/common.models';
 
 const synonymes: { [key in SearchTypeCategorieJuridique]: string[] } = {
   [TypeCategorieJuridique.ASSOCIATION]: ['Association', 'association'],

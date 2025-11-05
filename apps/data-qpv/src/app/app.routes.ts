@@ -1,9 +1,9 @@
 import { CanActivateFn, Routes } from '@angular/router';
-import { authConnected } from './guards/auth-role.guard';
 import { resolveFinancialData } from './resolvers/financial-data.resolver';
 import { resolveMarqueBlancheParsedParams } from './resolvers/marqueblanche-parsed-params.resolver';
 import { inject } from '@angular/core';
 import Keycloak from 'keycloak-js';
+import { authConnected } from 'apps/appcommon/src/lib/guards/auth-role.guard';
 
 
 const registerRedirect: CanActivateFn = () => {

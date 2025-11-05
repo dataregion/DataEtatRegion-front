@@ -1,5 +1,4 @@
 import { Injectable, inject } from '@angular/core';
-import { BopModel, ThemeModel } from 'apps/data-qpv/src/app/models/refs/bop.models';
 import { Observable, forkJoin, map } from 'rxjs';
 import { SettingsDataQPVService } from '../../environments/settings-qpv.service';
 import { HttpClient } from '@angular/common/http';
@@ -8,6 +7,7 @@ import { DataPagination } from 'apps/common-lib/src/lib/models/pagination/pagina
 import { RefSiret } from 'apps/common-lib/src/lib/models/refs/RefSiret';
 import { explodeQpvList, RefGeoQpv, RefQpvWithCommune } from '../../models/refs/qpv.model';
 import { SessionService } from 'apps/common-lib/src/public-api';
+import { BopModel, ThemeModel } from 'apps/common-lib/src/lib/models/refs/bop.models';
 
 
 @Injectable({ providedIn: 'root' })

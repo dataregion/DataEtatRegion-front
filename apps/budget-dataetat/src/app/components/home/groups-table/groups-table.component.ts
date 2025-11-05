@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, ViewEncapsulation, computed, signal, DestroyRef, OnDestroy } from '@angular/core';
-import { FinancialDataModel } from '@models/financial/financial-data.models';
+import { BudgetFinancialDataModel } from '@models/financial/financial-data.models';
 import { ColonneTableau } from '@services/colonnes-mapper.service';
 import { ColonnesService } from '@services/colonnes.service';
 import { SearchDataService, SearchResults } from '@services/search-data.service';
@@ -225,8 +225,8 @@ export class GroupsTableComponent implements OnDestroy {
   }
 
 
-  getGroupingColumnByCode(code: string): ColonneTableau<FinancialDataModel> {
-    return this._colonnesService.allColonnesGrouping().filter(c => c.grouping?.code === code)[0] as ColonneTableau<FinancialDataModel>
+  getGroupingColumnByCode(code: string): ColonneTableau<BudgetFinancialDataModel> {
+    return this._colonnesService.allColonnesGrouping().filter(c => c.grouping?.code === code)[0] as ColonneTableau<BudgetFinancialDataModel>
   }
 
   getGroupingLabel(code: string): string {
@@ -239,7 +239,7 @@ export class GroupsTableComponent implements OnDestroy {
   searchFromGroup(node: Group) {
 
     const gd: GroupedData[] = this._recGetPathFromNode(node)
-    const newGrouping: ColonneTableau<FinancialDataModel>[] = []
+    const newGrouping: ColonneTableau<BudgetFinancialDataModel>[] = []
     const newGrouped: string[] = []
     gd.forEach((g) => {
       if (g.colonne)

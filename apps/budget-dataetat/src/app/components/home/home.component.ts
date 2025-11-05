@@ -10,7 +10,7 @@ import { FinancialDataResolverModel } from '../../models/financial/financial-dat
 import { CommonModule } from '@angular/common';
 import { SearchDataComponent } from './search-data/search-data.component';
 import { ColonnesService } from '@services/colonnes.service';
-import { FinancialDataModel } from '@models/financial/financial-data.models';
+import { BudgetFinancialDataModel } from '@models/financial/financial-data.models';
 import { AuditHttpService } from '@services/http/audit.service';
 import { MarqueBlancheParsedParamsResolverModel } from '../../resolvers/marqueblanche-parsed-params.resolver';
 import { SearchDataService } from '@services/search-data.service';
@@ -200,7 +200,7 @@ export class HomeComponent implements OnInit {
    * 
    * @param line - La ligne financière sélectionnée
    */
-  onLineClicked(line: FinancialDataModel): void {
+  onLineClicked(line: BudgetFinancialDataModel): void {
     this._logger.debug("==> Ouverture du modal pour la ligne", line);
     this.modalLigne.open();
   }

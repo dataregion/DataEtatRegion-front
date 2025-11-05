@@ -5,20 +5,20 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
 import { forkJoin, Observable, of, tap } from 'rxjs';
 import { SearchParameters } from './search-params.service';
-import { FinancialDataModel } from '../models/financial/financial-data.models';
+import { DataQpvFinancialDataModel } from '../models/financial/financial-data.models';
 import { SearchDataMapper } from './search-data-mapper.service';
 import { SearchParamsService } from './search-params.service';
 import { LoggerService } from 'apps/common-lib/src/lib/services/logger.service';
 import { DashboardData, DashboardResponse, DashboardsService, FlattenFinancialLinesDataQPV, LignesFinancieresService, LignesResponse, MapResponse, MapService, PaginationMeta, QpvData } from 'apps/clients/v3/data-qpv';
-import { BopModel } from '../models/refs/bop.models';
+import { BopModel } from 'apps/common-lib/src/lib/models/refs/bop.models';
 
 
-export type SearchResults = FinancialDataModel[]
+export type SearchResults = DataQpvFinancialDataModel[]
 export interface TabData {
   codeProgramme: string | undefined;
   notCodeProgramme: string | undefined;
   dashboardData: DashboardData | null;
-  lignesData: FinancialDataModel[] | null;
+  lignesData: DataQpvFinancialDataModel[] | null;
   pagination: PaginationMeta | null;
   mapData: QpvData[] | null;
 }
@@ -261,7 +261,7 @@ export class SearchDataService {
    * @param object Ligne à transformer
    * @returns FinancialDataModel
    */
-  public unflatten(object: FlattenFinancialLinesDataQPV): FinancialDataModel {
+  public unflatten(object: FlattenFinancialLinesDataQPV): DataQpvFinancialDataModel {
     return this._mapper.map(object);
   }
 

@@ -8,15 +8,15 @@ import {
   Siret,
   SourceFinancialData,
   TypeCategorieJuridique
-} from '../models/financial/common.models';
-import { FinancialDataModel } from '../models/financial/financial-data.models';
-import { ReferentielProgrammation } from '../models/refs/referentiel_programmation.model';
+} from 'apps/common-lib/src/lib/models/refs/common.models';
+import { DataQpvFinancialDataModel } from '../models/financial/financial-data.models';
 import { Optional } from 'apps/common-lib/src/lib/utilities/optional.type';
 import { JSONObject } from 'apps/common-lib/src/lib/models/jsonobject';
 import { inject, Injectable } from '@angular/core';
 import { FlattenFinancialLinesDataQPV } from 'apps/clients/v3/data-qpv';
 import { CentreCouts } from 'apps/clients/v3/referentiels';
 import { ColonnesMapperService } from './colonnes-mapper.service';
+import { ReferentielProgrammation } from 'apps/common-lib/src/lib/models/refs/referentiel_programmation.model';
 
 @Injectable({
   providedIn: 'root'
@@ -30,7 +30,7 @@ export class SearchDataMapper {
    * @param object 
    * @returns 
    */
-  map(object: FlattenFinancialLinesDataQPV): FinancialDataModel {
+  map(object: FlattenFinancialLinesDataQPV): DataQpvFinancialDataModel {
     // eslint-disable-next-line @typescript-eslint/no-this-alias
     const that = this
     return {
@@ -56,7 +56,6 @@ export class SearchDataMapper {
       lieu_action: this._mapLieuAction(object),
       date_cp: object.dateDeDernierPaiement,
       date_replication: object.dateDeCreation,
-      tags: [],
       exportAsJson(): JSONObject {
         return {
           [that._colonnesMapperService.getColonneByKey("SOURCE").label]: this.source,

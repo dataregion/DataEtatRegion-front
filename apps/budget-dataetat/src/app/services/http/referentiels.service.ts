@@ -3,10 +3,10 @@ import { map, Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { DataPagination } from 'apps/common-lib/src/lib/models/pagination/pagination.models';
 import { SettingsBudgetService } from '../../environments/settings-budget.service';
-import { ReferentielProgrammation } from '@models/refs/referentiel_programmation.model';
-import { BopModel } from '@models/refs/bop.models';
 import { RefSiret } from 'apps/common-lib/src/lib/models/refs/RefSiret';
 import { Tag } from '@models/refs/tag.model';
+import { BopModel } from 'apps/common-lib/src/lib/models/refs/bop.models';
+import { ReferentielProgrammation } from 'apps/common-lib/src/lib/models/refs/referentiel_programmation.model';
 
 
 @Injectable({ providedIn: 'root' })

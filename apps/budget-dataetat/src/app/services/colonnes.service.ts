@@ -1,5 +1,5 @@
 import { Injectable, signal, computed } from '@angular/core';
-import { FinancialDataModel } from '@models/financial/financial-data.models';
+import { BudgetFinancialDataModel } from '@models/financial/financial-data.models';
 import { ColonneTableau } from '@services/colonnes-mapper.service';
 
 /**
@@ -27,7 +27,7 @@ export class ColonnesService {
    * Compare les contenus indépendamment de l'ordre des éléments.
    * Seules les propriétés 'colonne' et 'label' sont comparées.
    */
-  private readonly compareColonnesArrays = (a: ColonneTableau<FinancialDataModel>[], b: ColonneTableau<FinancialDataModel>[]): boolean => {
+  private readonly compareColonnesArrays = (a: ColonneTableau<BudgetFinancialDataModel>[], b: ColonneTableau<BudgetFinancialDataModel>[]): boolean => {
     if (a === b) return true;
     if (a.length !== b.length) return false;
     
@@ -61,12 +61,12 @@ export class ColonnesService {
   /**
    * Signal contenant toutes les colonnes disponibles pour le tableau
    */
-  public readonly allColonnesTable = signal<ColonneTableau<FinancialDataModel>[]>([]);
+  public readonly allColonnesTable = signal<ColonneTableau<BudgetFinancialDataModel>[]>([]);
 
   /**
    * Signal contenant les colonnes actuellement affichées dans le tableau
    */
-  public readonly selectedColonnesTable = signal<ColonneTableau<FinancialDataModel>[]>([], {
+  public readonly selectedColonnesTable = signal<ColonneTableau<BudgetFinancialDataModel>[]>([], {
     equal: this.compareColonnesArrays
   });
 
@@ -77,12 +77,12 @@ export class ColonnesService {
   /**
    * Signal contenant toutes les colonnes disponibles pour le groupement
    */
-  public readonly allColonnesGrouping = signal<ColonneTableau<FinancialDataModel>[]>([]);
+  public readonly allColonnesGrouping = signal<ColonneTableau<BudgetFinancialDataModel>[]>([]);
   
   /**
    * Signal contenant les colonnes actuellement utilisées pour le groupement
    */
-  public readonly selectedColonnesGrouping = signal<ColonneTableau<FinancialDataModel>[]>([], {
+  public readonly selectedColonnesGrouping = signal<ColonneTableau<BudgetFinancialDataModel>[]>([], {
     equal: this.compareColonnesArrays
   });
   

@@ -2,11 +2,11 @@ import { ActivatedRouteSnapshot, ResolveFn } from '@angular/router';
 import { inject } from '@angular/core';
 import { BudgetDataHttpService } from '../services/http/budget.service';
 import { catchError, forkJoin, map, of } from 'rxjs';
-import { FinancialDataModel } from '@models/financial/financial-data.models';
+import { BudgetFinancialDataModel } from '@models/financial/financial-data.models';
 import { EnrichedFlattenFinancialLines2 } from 'apps/clients/v3/financial-data';
 import { SearchDataMapper } from '@services/search-data-mapper.service';
 
-export const resolveInfosSupplementaires: ResolveFn<FinancialDataModel | Error> =(
+export const resolveInfosSupplementaires: ResolveFn<BudgetFinancialDataModel | Error> =(
   route: ActivatedRouteSnapshot
 ) => {
   const source = route.params['source'];

@@ -6,14 +6,9 @@ export type ThemePreFilter = string | null;
 export type BopsPreFilter = Bop | BopCode | null;
 
 import { SelectedData } from 'apps/common-lib/src/lib/components/advanced-chips-multiselect/advanced-chips-multiselect.component';
-import { Tag } from '../refs/tag.model';
-import { ReferentielProgrammation } from '../refs/referentiel_programmation.model';
-import { TypeCategorieJuridique } from '../financial/common.models';
-
-export enum OtherTypeCategorieJuridique {
-  AUTRES = 'autres'
-}
-export type SearchTypeCategorieJuridique = TypeCategorieJuridique | OtherTypeCategorieJuridique;
+import { ReferentielProgrammation } from 'apps/common-lib/src/lib/models/refs/referentiel_programmation.model';
+import { Tag } from '@models/refs/tag.model';
+import { SearchTypeCategorieJuridique } from 'apps/common-lib/src/lib/models/refs/common.models';
 
 export type TagFieldData = SelectedData & Tag;
 

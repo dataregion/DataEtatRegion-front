@@ -1,5 +1,4 @@
 import { CanActivateFn, Routes } from '@angular/router';
-import { authConnected, canAccess } from './guards/auth-role.guard';
 import { resolveFinancialData } from './resolvers/financial-data.resolver';
 import { resolveMarqueBlancheParsedParams } from './resolvers/marqueblanche-parsed-params.resolver';
 import { preferenceResolver } from './resolvers/preference.resolver';
@@ -8,6 +7,7 @@ import { inject } from '@angular/core';
 import Keycloak from 'keycloak-js';
 import { resolveInfosSupplementaires } from './resolvers/informations-supplementaires-resolver';
 import { _path_full } from './modules/informations-supplementaires/routes';
+import { authConnected, canAccess } from 'apps/appcommon/src/lib/guards/auth-role.guard';
 
 export const profiles_required_for_upload_financial_page = [Profil.ADMIN, Profil.COMPTABLE];
 export const profiles_required_for_tags_page = [Profil.USERS];

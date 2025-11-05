@@ -5,11 +5,12 @@ import { forkJoin, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { API_REF_PATH } from '../../public-api';
 
-import { ReferentielProgrammation } from '@models/refs/referentiel_programmation.model';
-import { BopModel } from '@models/refs/bop.models';
 import { DataPagination } from '../models/pagination/pagination.models';
-import { CentreCouts, DomaineFonctionnel } from '@models/financial/common.models';
 import { RefSiret } from '../models/refs/RefSiret';
+import { BopModel } from '../models/refs/bop.models';
+import { ReferentielProgrammation } from '../models/refs/referentiel_programmation.model';
+import { CentreCouts } from 'apps/clients/v3/referentiels';
+import { DomaineFonctionnel } from '../models/refs/common.models';
 
 @Injectable({
   providedIn: 'root'

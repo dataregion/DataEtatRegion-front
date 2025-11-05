@@ -29,9 +29,9 @@ import { FinancialQueryParam } from '../models/marqueblanche/query-params.enum';
 import { PreFilters } from '../models/search/prefilters.model';
 import { assert_is_a_GroupByFieldname } from '../models/marqueblanche/groupby-fieldname.enum';
 import { groupby_mapping } from '../models/marqueblanche/groupby-mapping.model';
-import { ReferentielProgrammation } from '../models/refs/referentiel_programmation.model';
 import { Beneficiaire } from '../models/search/beneficiaire.model';
 import { LoggerService } from 'apps/common-lib/src/lib/services/logger.service';
+import { ReferentielProgrammation } from 'apps/common-lib/src/lib/models/refs/referentiel_programmation.model';
 
 export interface MarqueBlancheParsedParams extends Params {
   preFilters: PreFilters;

@@ -1,6 +1,6 @@
 import { CurrencyPipe } from '@angular/common';
 import { Component, input, computed } from '@angular/core';
-import { FinancialDataModel } from '@models/financial/financial-data.models';
+import { BudgetFinancialDataModel } from '@models/financial/financial-data.models';
 
 @Component({
     selector: 'budget-informations-supplementaires-detail-cp',
@@ -13,7 +13,7 @@ export class DetailCpComponent {
   /**
    * Signal d'entrée contenant les données financières à afficher
    */
-  financial = input.required<FinancialDataModel>();
+  financial = input.required<BudgetFinancialDataModel>();
 
   /**
    * Signal calculé qui détermine si des crédits de paiement sont disponibles

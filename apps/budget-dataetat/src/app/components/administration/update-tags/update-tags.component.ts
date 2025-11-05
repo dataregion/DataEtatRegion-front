@@ -6,10 +6,10 @@ import { BehaviorSubject, finalize } from 'rxjs';
 import { Clipboard } from '@angular/cdk/clipboard';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
-import { Tag, tag_fullname } from '../../../models/refs/tag.model';
 import { ColonnesService } from '../../../services/colonnes.service';
 import { MatButtonModule } from '@angular/material/button';
 import { BudgetDataHttpService } from '@services/http/budget.service';
+import { Tag, tag_fullname } from '@models/refs/tag.model';
 
 @Component({
   selector: 'budget-update-tags',

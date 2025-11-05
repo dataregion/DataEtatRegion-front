@@ -1,21 +1,15 @@
 import { inject, Injectable } from '@angular/core';
 import { Optional } from 'apps/common-lib/src/lib/utilities/optional.type';
 import { SearchUtilsService } from 'apps/common-lib/src/lib/services/search-utils.service';
-import { TypeCategorieJuridique } from '../models/financial/common.models';
-import { BopModel } from '../models/refs/bop.models';
 import { GeoModel, TypeLocalisation } from 'apps/common-lib/src/public-api';
 import { RefSiret } from 'apps/common-lib/src/lib/models/refs/RefSiret';
-import { ThemeModel } from '../models/refs/bop.models';
 import { RefQpvWithCommune } from '../models/refs/qpv.model';
 import { CentreCouts } from 'apps/clients/v3/referentiels';
 import { V3QueryParams } from 'apps/appcommon/src/lib/models/query-params.model';
 import { V3QueryParamsService } from 'apps/appcommon/src/lib/services/query-params.service';
+import { SearchTypeCategorieJuridique } from 'apps/common-lib/src/lib/models/refs/common.models';
+import { BopModel, ThemeModel } from 'apps/common-lib/src/lib/models/refs/bop.models';
 
-
-export enum OtherTypeCategorieJuridique {
-    AUTRES = 'autres'
-}
-export type SearchTypeCategorieJuridique = TypeCategorieJuridique | OtherTypeCategorieJuridique;
 
 export interface SearchParameters extends V3QueryParams {
   // SourceQueryParams

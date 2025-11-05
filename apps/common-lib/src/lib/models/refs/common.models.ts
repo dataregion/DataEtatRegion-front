@@ -1,15 +1,21 @@
+ 
 
+import { DataType } from "@models/audit/audit-update-data.models";
+import { Optional } from "apps/common-lib/src/lib/utilities/optional.type";
 
-import { Optional } from 'apps/common-lib/src/lib/utilities/optional.type';
-import { DataType } from '../audit/audit-update-data.models';
 
 export enum TypeCategorieJuridique {
   ENTREPRISE = 'Entreprise',
   COLLECTIVITE = 'Collectivité',
   ASSOCIATION = 'Association',
-  ETAT = 'Etat'
+  ETAT = 'Etat',
 }
 
+export enum OtherTypeCategorieJuridique {
+    AUTRES = 'autres'
+}
+export type SearchTypeCategorieJuridique = TypeCategorieJuridique | OtherTypeCategorieJuridique;
+  
 export interface Code {
   code: string;
 }
@@ -18,15 +24,23 @@ export interface CodeLabel extends Code {
   label: string;
 }
 
+
 export interface Programme extends CodeLabel {
   theme: Optional<string>;
 }
 
 export interface Siret extends Code {
-  nom_beneficiaire: Optional<string>;
-  categorie_juridique: Optional<TypeCategorieJuridique>;
-  code_qpv: Optional<string>;
-  label_qpv: Optional<string>;
+  nom_beneficiaire: Optional<string>,
+  categorie_juridique: Optional<TypeCategorieJuridique>
+  code_qpv: Optional<string>
+  label_qpv: Optional<string>
+  code_qpv24: Optional<string>
+  label_qpv24: Optional<string>
+}
+
+export interface LieuAction {
+  code_qpv: Optional<string>
+  label_qpv: Optional<string>
 }
 
 export interface Commune extends CodeLabel {
@@ -41,29 +55,24 @@ export interface Commune extends CodeLabel {
   arrondissement: Optional<Arrondissement>;
 }
 
-export type Arrondissement = CodeLabel;
-
-export type GroupeMarchandise = CodeLabel;
-
+export type Arrondissement = CodeLabel
+export type GroupeMarchandise = CodeLabel
 export interface LocalisationInterministerielle extends CodeLabel {
-  code_departement: Optional<string>;
-  commune: Optional<Commune>;
+  code_departement: Optional<string>
+  commune: Optional<Commune>
 }
-
 export type DomaineFonctionnel = CodeLabel
 
-export interface CentreCouts extends CodeLabel {
-  description: string;
-}
 
 // XXX: sous ensemble de DataType
 export enum SourceFinancialData {
   ADEME = DataType.ADEME,
   FINANCIAL_AE = DataType.FINANCIAL_DATA_AE,
-  FINANCIAL_CP = DataType.FINANCIAL_DATA_CP
+  FINANCIAL_CP = DataType.FINANCIAL_DATA_CP,
 }
 
 /** Vrai pour les CP et AE */
 export function sourceIsFromChorus(source: SourceFinancialData) {
   return source == SourceFinancialData.FINANCIAL_AE || source == SourceFinancialData.FINANCIAL_CP;
 }
+

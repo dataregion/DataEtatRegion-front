@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, computed, ElementRef, EventEmitter, inject, OnDestroy, Output, ViewChild, ViewEncapsulation } from '@angular/core';
-import { FinancialDataModel } from '@models/financial/financial-data.models';
+import { BudgetFinancialDataModel } from '@models/financial/financial-data.models';
 import { ColonnesService } from '@services/colonnes.service';
 import { SearchDataService } from '@services/search-data.service';
 import { NumberFormatPipe } from "./number-format.pipe";
@@ -50,7 +50,7 @@ export class LinesTableComponent implements OnDestroy {
   // --- Events vers le parent ---
   
   /** Événement émis quand une ligne est cliquée pour ouvrir le modal */
-  @Output() lineClicked = new EventEmitter<FinancialDataModel>();
+  @Output() lineClicked = new EventEmitter<BudgetFinancialDataModel>();
 
   // --- ViewChild et observateurs ---
   
@@ -74,7 +74,7 @@ export class LinesTableComponent implements OnDestroy {
   
   /** Lignes financières actuellement affichées */
   readonly currentLignes = computed(() => { 
-    const searchResults = this.searchDataService.searchResults() as FinancialDataModel[];
+    const searchResults = this.searchDataService.searchResults() as BudgetFinancialDataModel[];
     return searchResults
   });
   
@@ -138,7 +138,7 @@ export class LinesTableComponent implements OnDestroy {
    * 
    * @param line - La ligne financière sélectionnée
    */
-  onRowClick(line: FinancialDataModel) {
+  onRowClick(line: BudgetFinancialDataModel) {
     this._logger.debug("==> Clic sur ligne du tableau", line);
     
     // Délégation au service pour gérer la sélection de ligne

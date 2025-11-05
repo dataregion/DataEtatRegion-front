@@ -2,7 +2,7 @@ import { Injectable, inject, DestroyRef, signal, computed } from '@angular/core'
 import { DatePipe } from '@angular/common';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
-import { FinancialDataModel } from '@models/financial/financial-data.models';
+import { BudgetFinancialDataModel } from '@models/financial/financial-data.models';
 import { ColonnesService } from '@services/colonnes.service';
 import { DisplayedOrderedColumn, ExportDataService } from 'apps/appcommon/src/lib/export-data.service';
 import { SearchDataService } from '@services/search-data.service';
@@ -40,7 +40,7 @@ export class TableExportService {
   });
 
   public readonly currentResultsCount = computed(() => {
-    const current_results = this._searchDataService.searchResults() as FinancialDataModel[];
+    const current_results = this._searchDataService.searchResults() as BudgetFinancialDataModel[];
     return current_results?.length ?? 0;
   });
 
@@ -88,7 +88,7 @@ export class TableExportService {
 
   private _loadMoreIfNecessary(callback: () => void): boolean {
     let notifyDoEarlyReturn = false;
-    const current_results = this._searchDataService.searchResults() as FinancialDataModel[];
+    const current_results = this._searchDataService.searchResults() as BudgetFinancialDataModel[];
     const pagination = this._searchDataService.pagination();
 
     if (current_results.length < LIMITE_EXPORT && pagination?.has_next) {
@@ -115,7 +115,7 @@ export class TableExportService {
   }
   
   private _initExporting() {
-    const current_results = this._searchDataService.searchResults() as FinancialDataModel[];
+    const current_results = this._searchDataService.searchResults() as BudgetFinancialDataModel[];
     const totaux = this._searchDataService.total();
 
     this._isExporting.set(true);
@@ -127,7 +127,7 @@ export class TableExportService {
    * Télécharge les données au format spécifié
    */
   public downloadData(format: string, allColumns: boolean): void {
-    const current_results = this._searchDataService.searchResults() as FinancialDataModel[];
+    const current_results = this._searchDataService.searchResults() as BudgetFinancialDataModel[];
 
     this._initExporting();
 
@@ -173,7 +173,7 @@ export class TableExportService {
       this._tracker.trackEvent('Export', 'Click', 'grist', undefined, { allColumns: allColumns });
 
       const export_colonnes = this.exportColumns(allColumns);
-      const current_results = this._searchDataService.searchResults() as FinancialDataModel[];
+      const current_results = this._searchDataService.searchResults() as BudgetFinancialDataModel[];
       const data_to_export = this._exportDataService.getDataToExport(current_results, export_colonnes);
 
       const data = {data: data_to_export} as GristDataModel;

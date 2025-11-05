@@ -1,5 +1,5 @@
 import { Component, ElementRef, inject, signal, ViewChild } from "@angular/core";
-import { FinancialDataModel } from "../../../models/financial/financial-data.models";
+import { DataQpvFinancialDataModel } from "../../../models/financial/financial-data.models";
 import { DsfrTabsComponent, DsfrTabComponent } from "@edugouvfr/ngx-dsfr";
 import { MapComponent } from "./map/map.component";
 import { SpinnerComponent } from "apps/common-lib/src/lib/components/spinner/spinner.component";
@@ -35,7 +35,7 @@ export class TabsMapTableComponent {
   /** Observateur d'intersection pour détecter la visibilité du spinner */
   private observer!: IntersectionObserver;
 
-  currentTableData = signal<FinancialDataModel[] | null>(null);
+  currentTableData = signal<DataQpvFinancialDataModel[] | null>(null);
   currentPagination = signal<PaginationMeta | null>(null);
 
 

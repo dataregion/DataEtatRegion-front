@@ -13,16 +13,9 @@ import {
 } from 'rxjs';
 import { AlertService, GeoModel, TypeLocalisation } from 'apps/common-lib/src/public-api';
 import { MarqueBlancheParsedParamsResolverModel } from '../../../resolvers/marqueblanche-parsed-params.resolver';
-import { BeneficiaireFieldData } from './autocomplete/autocomplete-beneficiaire.service';
-import { AutocompleteBeneficiaireService } from './autocomplete/autocomplete-beneficiaire.service';
 import { AdvancedChipsMultiselectComponent, SelectedData } from 'apps/common-lib/src/lib/components/advanced-chips-multiselect/advanced-chips-multiselect.component';
-import { TagFieldData } from './autocomplete/autocomplete-tags.service';
-import { AutocompleteTagsService } from './autocomplete/autocomplete-tags.service';
 import { LoggerService } from 'apps/common-lib/src/lib/services/logger.service';
-import { BopModel } from '../../../models/refs/bop.models';
-import { ReferentielProgrammation } from '../../../models/refs/referentiel_programmation.model';
-import { OtherTypeCategorieJuridique, SearchParameters, SearchParamsService, SearchTypeCategorieJuridique } from '../../../services/search-params.service';
-import { TypeCategorieJuridique } from '../../../models/financial/common.models';
+import { SearchParameters, SearchParamsService } from '../../../services/search-params.service';
 import { Beneficiaire } from '../../../models/search/beneficiaire.model';
 import { Bop } from '../../../models/search/bop.model';
 import { MatIconModule } from '@angular/material/icon';
@@ -32,13 +25,18 @@ import { LocalisationComponent } from 'apps/common-lib/src/lib/components/locali
 import { BopsReferentielsComponent } from 'apps/common-lib/src/lib/components/bops-referentiels/bops-referentiels.component';
 import { FinancialDataResolverModel } from '../../../models/financial/financial-data-resolvers.models';
 import { MatButtonModule } from '@angular/material/button';
-import { tag_fullname } from '@models/refs/tag.model';
 import { PrefilterMapperService } from './prefilter-mapper.services';
 
 import { SearchDataService } from '@services/search-data.service';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { GridInFullscreenStateService } from 'apps/common-lib/src/lib/services/grid-in-fullscreen-state.service';
 import { PreferenceResolverModel } from '@models/preference/preference-resolver.models';
+import { AutocompleteTagsService, TagFieldData } from 'apps/budget-dataetat/src/app/components/home/search-data/autocomplete/autocomplete-tags.service';
+import { AutocompleteBeneficiaireService, BeneficiaireFieldData } from 'apps/appcommon/src/lib/autocomplete/autocomplete-beneficiaire.service';
+import { ReferentielProgrammation } from 'apps/common-lib/src/lib/models/refs/referentiel_programmation.model';
+import { OtherTypeCategorieJuridique, SearchTypeCategorieJuridique, TypeCategorieJuridique } from 'apps/common-lib/src/lib/models/refs/common.models';
+import { BopModel } from 'apps/common-lib/src/lib/models/refs/bop.models';
+import { tag_fullname } from '@models/refs/tag.model';
 
 
 /**

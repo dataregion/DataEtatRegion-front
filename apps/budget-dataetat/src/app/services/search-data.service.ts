@@ -5,7 +5,7 @@
 import { inject, Injectable, signal } from '@angular/core';
 import { mergeMap, Observable, of, tap } from 'rxjs';
 import { SearchParameters } from '@services/search-params.service';
-import { FinancialDataModel } from '@models/financial/financial-data.models';
+import { BudgetFinancialDataModel } from '@models/financial/financial-data.models';
 import { SearchDataMapper } from './search-data-mapper.service';
 import { EnrichedFlattenFinancialLines2, GroupedData, LignesFinancieresService, LignesResponse, PaginationMeta, Total } from 'apps/clients/v3/financial-data';
 import { ColonnesService } from '@services/colonnes.service';
@@ -19,7 +19,7 @@ import { PreFilters } from '@models/search/prefilters.model';
 import { MarqueBlancheParsedParams } from '../resolvers/marqueblanche-parsed-params.resolver';
 
 
-export type SearchResults = GroupedData[] | FinancialDataModel[]
+export type SearchResults = GroupedData[] | BudgetFinancialDataModel[]
 
 @Injectable({
   providedIn: 'root'
@@ -50,7 +50,7 @@ export class SearchDataService {
   /**
    * Ligne sélectionnée (détail consulté par l'utilisateur).
    */
-  public readonly selectedLine = signal<FinancialDataModel | undefined>(undefined);
+  public readonly selectedLine = signal<BudgetFinancialDataModel | undefined>(undefined);
 
   /**
    * Indique si la recherche est terminée.
@@ -95,14 +95,14 @@ export class SearchDataService {
 
     // Application des préférences de grouping des colonnes
     const groupings = (preference.options && preference.options['grouping']) ? preference.options['grouping'] : [];
-    const mappedGrouping: ColonneTableau<FinancialDataModel>[] =
+    const mappedGrouping: ColonneTableau<BudgetFinancialDataModel>[] =
       this._colonnesMapperService.mapNamesFromPreferences(
         groupings as ColonneFromPreference[]
       );
 
     // Application des préférences d'ordre et d'affichage des colonnes
     const displayOrder = (preference.options && preference.options['displayOrder']) ? preference.options['displayOrder'] : [];
-    const mappedDisplayOrder: ColonneTableau<FinancialDataModel>[] =
+    const mappedDisplayOrder: ColonneTableau<BudgetFinancialDataModel>[] =
       this._colonnesMapperService.mapLabelsFromPreferences(
         displayOrder as ColonneFromPreference[]
       );
@@ -144,7 +144,7 @@ export class SearchDataService {
           const mb_group_by = mqb.group_by;
           // Application du grouping par défaut si spécifié par la marque blanche
           if (mb_group_by && mb_group_by?.length > 0) {
-            const mappedGrouping: ColonneTableau<FinancialDataModel>[] = this._colonnesMapperService.mapNamesFromPreferences(mb_group_by as ColonneFromPreference[]);
+            const mappedGrouping: ColonneTableau<BudgetFinancialDataModel>[] = this._colonnesMapperService.mapNamesFromPreferences(mb_group_by as ColonneFromPreference[]);
             this._colonnesService.selectedColonnesGrouping.set(mappedGrouping);
             this._logger.debug("==> Grouping appliqué dans searchFromPreference", mappedGrouping);
           }
@@ -160,7 +160,7 @@ export class SearchDataService {
    * Change la selection des colonnes
    * @param selectedColonnes 
    */
-  public doSelectColumn(selectedColonnes: ColonneTableau<FinancialDataModel>[]) {
+  public doSelectColumn(selectedColonnes: ColonneTableau<BudgetFinancialDataModel>[]) {
     this._logger.debug('==> Début de la méthode doSelectColumn', { selectedColonnes });
 
     // set les grouping;
@@ -175,7 +175,7 @@ export class SearchDataService {
    * @param selectedColonnes 
    * @returns 
    */
-  public doSearchGrouping(selectedColonnes: ColonneTableau<FinancialDataModel>[]): Observable<LignesResponse> {
+  public doSearchGrouping(selectedColonnes: ColonneTableau<BudgetFinancialDataModel>[]): Observable<LignesResponse> {
     this._logger.debug('==> Début de la méthode doSearchGrouping', { selectedColonnes });
 
     // Vérifications préalables
@@ -205,7 +205,7 @@ export class SearchDataService {
    * @param newGrouped 
    * @returns 
    */
-  public searchFromGrouping(newGrouping: ColonneTableau<FinancialDataModel>[], newGrouped: string[]) {
+  public searchFromGrouping(newGrouping: ColonneTableau<BudgetFinancialDataModel>[], newGrouped: string[]) {
     this._logger.debug('==> Début de la méthode searchFromGrouping', { newGrouping, newGrouped });
     this._colonnesService.selectedColonnesGrouping.set(newGrouping);
     this._colonnesService.selectedColonnesGrouped.set(newGrouped);
@@ -293,7 +293,7 @@ export class SearchDataService {
   *
   * @param line - La ligne financière à sélectionner
   */
-  public selectLine(line: FinancialDataModel): void {
+  public selectLine(line: BudgetFinancialDataModel): void {
     this._logger.debug("==> Sélection d'une ligne financière", {
       lineId: line.id,
       programme: line.programme?.label,
@@ -308,9 +308,9 @@ export class SearchDataService {
   /**
    * Transforme une ligne "aplatie" (issue de l'API) en objet métier structuré.
    * @param object Ligne à transformer
-   * @returns FinancialDataModel
+   * @returns BudgetFinancialDataModel
    */
-  public unflatten(object: EnrichedFlattenFinancialLines2): FinancialDataModel {
+  public unflatten(object: EnrichedFlattenFinancialLines2): BudgetFinancialDataModel {
     return this._mapper.map(object);
   }
 
@@ -462,7 +462,7 @@ export class SearchDataService {
       const newSearch =
         response.pagination?.current_page == 1
           ? newData
-          : (this.searchResults() as FinancialDataModel[]).concat(newData);
+          : (this.searchResults() as BudgetFinancialDataModel[]).concat(newData);
       this.searchResults.set(newSearch);
     }
 

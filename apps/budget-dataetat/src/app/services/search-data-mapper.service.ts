@@ -1,5 +1,4 @@
 import {
-  CentreCouts,
   Commune,
   DomaineFonctionnel,
   GroupeMarchandise,
@@ -8,16 +7,17 @@ import {
   Siret,
   SourceFinancialData,
   TypeCategorieJuridique
-} from '@models/financial/common.models';
-import { FinancialDataModel } from '@models/financial/financial-data.models';
-import { ReferentielProgrammation } from '@models/refs/referentiel_programmation.model';
-import { Tag, tag_fullname } from '@models/refs/tag.model';
+} from 'apps/common-lib/src/lib/models/refs/common.models';
+import { BudgetFinancialDataModel } from '@models/financial/financial-data.models';
 import { TagsSchema } from 'apps/clients/budget';
 import { Optional } from 'apps/common-lib/src/lib/utilities/optional.type';
 import { JSONObject } from 'apps/common-lib/src/lib/models/jsonobject';
 import { inject, Injectable } from '@angular/core';
 import { ColonnesMapperService } from './colonnes-mapper.service';
 import { EnrichedFlattenFinancialLines2, Tags } from 'apps/clients/v3/financial-data';
+import { ReferentielProgrammation } from 'apps/common-lib/src/lib/models/refs/referentiel_programmation.model';
+import { Tag, tag_fullname } from '@models/refs/tag.model';
+import { CentreCouts } from 'apps/clients/v3/referentiels';
 
 @Injectable({
   providedIn: 'root'
@@ -31,7 +31,7 @@ export class SearchDataMapper {
    * @param object 
    * @returns 
    */
-  map(object: EnrichedFlattenFinancialLines2): FinancialDataModel {
+  map(object: EnrichedFlattenFinancialLines2): BudgetFinancialDataModel {
     // eslint-disable-next-line @typescript-eslint/no-this-alias
     const that = this
     return {
@@ -118,7 +118,9 @@ export class SearchDataMapper {
       nom_beneficiaire: object.beneficiaire_denomination,
       categorie_juridique: this._mapBeneficiaireCategorieJuridique(object),
       code_qpv: object.beneficiaire_qpv_code,
-      label_qpv: object.beneficiaire_qpv_label
+      label_qpv: object.beneficiaire_qpv_label,
+      code_qpv24: object.beneficiaire_qpv24_code,
+      label_qpv24: object.beneficiaire_qpv24_label
     };
   }
 

@@ -13,9 +13,10 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { combineLatest, Observable } from 'rxjs';
 import { GeoLocalisationComponentService } from 'apps/common-lib/src/lib/components/localisation/geo.localisation.componentservice';
 import { Demarche, Donnee } from '../../../models/demarche_simplifie/demarche.model';
-import { CentreCouts, CodeLabel, DomaineFonctionnel } from '../../../models/financial/common.models';
-import { ReferentielProgrammation } from '../../../models/refs/referentiel_programmation.model';
 import { BudgetDataHttpService } from '../../../services/http/budget.service';
+import { CentreCouts } from 'apps/clients/v3/referentiels';
+import { CodeLabel, DomaineFonctionnel } from 'apps/common-lib/src/lib/models/refs/common.models';
+import { ReferentielProgrammation } from 'apps/common-lib/src/lib/models/refs/referentiel_programmation.model';
 
 @Component({
   selector: 'budget-reconciliation-demarche.component',

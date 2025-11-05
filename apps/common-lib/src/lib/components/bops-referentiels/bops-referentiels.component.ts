@@ -13,8 +13,9 @@ import { SelectMultipleComponent } from '../select-multiple/select-multiple.comp
 
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { debounceTime, Subject, Subscription } from 'rxjs';
-import { ReferentielProgrammation } from '@models/refs/referentiel_programmation.model';
-import { BopModel } from '@models/refs/bop.models';
+import { ReferentielProgrammation } from '../../models/refs/referentiel_programmation.model';
+import { BopModel } from '../../models/refs/bop.models';
+
 
 @Component({
     selector: 'lib-bops-referentiels',

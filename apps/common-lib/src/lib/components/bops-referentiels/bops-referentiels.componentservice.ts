@@ -1,8 +1,8 @@
 import { inject } from '@angular/core';
 import { ReferentielsHttpService } from '../../services/referentiels.service';
 import { Observable } from 'rxjs';
-import { ReferentielProgrammation } from '@models/refs/referentiel_programmation.model';
-import { BopModel } from '@models/refs/bop.models';
+import { BopModel } from '../../models/refs/bop.models';
+import { ReferentielProgrammation } from '../../models/refs/referentiel_programmation.model';
 
 export class BopsReferentielsComponentService {
   private refs = inject(ReferentielsHttpService);

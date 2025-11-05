@@ -14,11 +14,8 @@ import {
 } from 'rxjs';
 import { GeoModel, TypeLocalisation } from 'apps/common-lib/src/public-api';
 import { MarqueBlancheParsedParamsResolverModel } from '../../../resolvers/marqueblanche-parsed-params.resolver';
-import { AutocompleteBeneficiaireService } from './autocomplete/autocomplete-beneficiaire.service';
 import { LoggerService } from 'apps/common-lib/src/lib/services/logger.service';
-import { BopModel } from '../../../models/refs/bop.models';
-import { OtherTypeCategorieJuridique, SearchParameters, SearchParamsService, SearchTypeCategorieJuridique } from '../../../services/search-params.service';
-import { TypeCategorieJuridique } from '../../../models/financial/common.models';
+import { SearchParameters, SearchParamsService } from '../../../services/search-params.service';
 import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
 import { SelectMultipleComponent } from 'apps/common-lib/src/lib/components/select-multiple/select-multiple.component';
@@ -34,9 +31,11 @@ import { PreFilters } from '../../../models/search/prefilters.model';
 import { RefGeoQpv, RefQpvWithCommune } from '../../../models/refs/qpv.model';
 import { ModalAdditionalParamsComponent } from './modal-additional-params/modal-additional-params.component';
 import { RefSiret } from 'apps/common-lib/src/lib/models/refs/RefSiret';
-import { AutocompleteCentreCoutsService } from './autocomplete/autocomplete-centre-couts.service';
-import { ThemeModel } from '@models/refs/bop.models';
 import { CentreCouts } from 'apps/clients/v3/referentiels';
+import { AutocompleteCentreCoutsService } from 'apps/appcommon/src/lib/autocomplete/autocomplete-centre-couts.service';
+import { AutocompleteBeneficiaireService } from 'apps/appcommon/src/lib/autocomplete/autocomplete-beneficiaire.service';
+import { OtherTypeCategorieJuridique, SearchTypeCategorieJuridique, TypeCategorieJuridique } from 'apps/common-lib/src/lib/models/refs/common.models';
+import { BopModel, ThemeModel } from 'apps/common-lib/src/lib/models/refs/bop.models';
 
 
 /**

@@ -1,45 +1,8 @@
-import { Commune, Programme, Siret, GroupeMarchandise, LocalisationInterministerielle, SourceFinancialData, DomaineFonctionnel, LieuAction } from "./common.models";
-import { Tag } from "../refs/tag.model";
-import { ReferentielProgrammation } from "apps/data-qpv/src/app/models/refs/referentiel_programmation.model";
+import { FinancialDataModel } from "apps/common-lib/src/lib/models/financial/financial-data.models";
+import { LieuAction } from "apps/common-lib/src/lib/models/refs/common.models";
 import { Optional } from "apps/common-lib/src/lib/utilities/optional.type";
-import { ExportableAsJson } from "apps/common-lib/src/lib/models/exportable-as-json.model";
-import { CentreCouts } from "apps/clients/v3/referentiels";
 
 
-export interface FinancialDataModel extends ExportableAsJson {
-
-  id: number;
-  source: SourceFinancialData;
-
-  n_ej: Optional<string>;
-  n_poste_ej: Optional<number>;
-
-  montant_ae: Optional<number>;
-  montant_cp: Optional<number>;
-  
-  // Commune du bénérficiaire
-  commune: Optional<Commune>;
-
-  domaine_fonctionnel: Optional<DomaineFonctionnel>;
-  programme: Optional<Programme>;
-  referentiel_programmation: Optional<ReferentielProgrammation>;
-
-  centre_couts: Optional<CentreCouts>;
-
-  compte_budgetaire: Optional<string>;
-  contrat_etat_region: Optional<string>;
-  groupe_marchandise: Optional<GroupeMarchandise>;
-  localisation_interministerielle: Optional<LocalisationInterministerielle>;
-
-  annee: number;
-
-  siret: Optional<Siret>;
+export interface DataQpvFinancialDataModel extends FinancialDataModel {
   lieu_action: Optional<LieuAction>;
-  date_cp: Optional<string>;
-  date_replication: Optional<string>;
-  date_modification: Optional<string>;
-
-  tags: Tag[];
-
-  data_source: Optional<string>
 }
