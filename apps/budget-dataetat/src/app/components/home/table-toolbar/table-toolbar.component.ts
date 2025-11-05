@@ -105,5 +105,13 @@ export class TableToolbarComponent {
   onExportToGristRequested(event: {allColumns: boolean}): void {
     this.exportToGrist(event.allColumns);
   }
+  
+  onRetourClick(): void {
+    // XXX: important que ce soit du fire and forget 
+    // puisque le composant est tué en cours de route.
+    this._searchDataService
+      .doSearchFromCurrentGrouping()
+      .subscribe() 
+  }
 
 }

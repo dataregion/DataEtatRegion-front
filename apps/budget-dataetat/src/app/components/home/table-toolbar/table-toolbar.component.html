@@ -24,6 +24,11 @@
           }
         </button>
         @if (selectedGrouping.length !== 0 && selectedGrouping.length === selectedGrouped.length) {
+        
+          <button type="button" 
+            class="fr-btn fr-btn--sm fr-icon-arrow-up-s-line fr-btn--icon-left fr-btn--secondary"
+            (click)="onRetourClick()">Retour</button>
+          
           @for (grouping of selectedGrouping; track grouping.label; let i = $index) {
             <span class="fr-badge fr-badge--sm fr-badge--info" style="padding:10px; border: 1px solid #0063cb;">{{grouping.label}} : {{selectedGrouped[i]}}</span>
           }

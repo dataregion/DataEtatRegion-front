@@ -169,6 +169,15 @@ export class SearchDataService {
     this._colonnesService.selectedColonnesGrouped.set([]);
     this.searchGroupingInProgress.set(false);
   }
+  
+  /**
+   * @returns Lance la recherche avec les colonnes de grouping actuellement selectionnées.
+   */
+  public doSearchFromCurrentGrouping() {
+      const grouping = this._colonnesService.selectedColonnesGrouping();
+      
+      return this.doSearchGrouping(grouping)
+  }
 
   /**
    * Lance la recherche avec des colonnes de grouping sélectionnées.
