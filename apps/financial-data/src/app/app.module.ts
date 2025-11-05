@@ -44,6 +44,7 @@ import { MultiregionsService } from './services/multiregions.service';
 import { MatomoModule, MatomoRouteDataInterceptor, MatomoRouterModule } from 'ngx-matomo-client';
 import { PocComponent } from './pages/poc/poc.component';
 import { FooterComponent } from 'apps/common-lib/src/lib/components/footer/footer.component';
+import { aev3Configuration } from 'apps/clients/apis-externes-v3';
 
 export function apiExternesConfigFactory(settingsService: SettingsService): aeConfiguration {
   const params: aeConfigurationParameters = {
@@ -52,6 +53,15 @@ export function apiExternesConfigFactory(settingsService: SettingsService): aeCo
   };
 
   return new aeConfiguration(params);
+}
+
+export function apiExternesV3ConfigFactory(settingsService: SettingsService): aev3Configuration {
+  const params: aeConfigurationParameters = {
+    withCredentials: false,
+    basePath: settingsService.apiExternesV3
+  };
+
+  return new aev3Configuration(params);
 }
 
 export function apiBudgetConfigFactory(settingsService: SettingsService): aeConfiguration {
@@ -146,6 +156,12 @@ registerLocaleData(localeFr);
     {
       provide: aeConfiguration,
       useFactory: apiExternesConfigFactory,
+      deps: [SETTINGS],
+      multi: false
+    },
+    {
+      provide: aev3Configuration,
+      useFactory: apiExternesV3ConfigFactory,
       deps: [SETTINGS],
       multi: false
     },

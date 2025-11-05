@@ -18,6 +18,7 @@ class Api implements IApi {
   geo = '';
   referentiel = '';
   apis_externes = '';
+  apis_externes_v3 = '';
   demarches = '';
   ressource = '';
 }
@@ -78,6 +79,10 @@ export class SettingsService implements ISettingsService {
 
   public get apiExternes(): string {
     return (this.settings.apis as Api).apis_externes;
+  }
+
+  public get apiExternesV3(): string {
+    return (this.settings.apis as Api).apis_externes_v3;
   }
 
   public get apiLaureatsData(): string {
