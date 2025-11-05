@@ -1,6 +1,6 @@
 import { ApplicationRef } from '@angular/core';
 import { ListeDesColonnesService } from 'apps/clients/v3/financial-data';
-import { ColonnesMapperService } from './services/colonnes-mapper.service';
+import { ColonnesMapperService } from 'apps/appcommon/src/lib/mappers/colonnes-mapper.service';
 import { ColonnesService } from './services/colonnes.service';
 import { LoggerService } from 'apps/common-lib/src/lib/services/logger.service';
 import { forkJoin, firstValueFrom } from 'rxjs';

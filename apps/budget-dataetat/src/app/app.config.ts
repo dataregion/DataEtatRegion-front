@@ -8,7 +8,7 @@ import { SettingsBudgetService } from './environments/settings-budget.service';
 import { budgetConfiguration, budgetConfigurationParameters } from 'apps/clients/budget';
 import { API_PREFERENCE_PATH } from 'apps/preference-users/src/public-api';
 import { SETTINGS } from 'apps/common-lib/src/lib/environments/settings.http.service';
-import { budgetHttpInterceptorInterceptor } from './interceptors/budget-http-interceptor.interceptor';
+import { errorsInterceptor } from 'apps/appcommon/src/lib/interceptors/errors.interceptor';
 import { API_GEO_PATH, API_REF_PATH } from 'apps/common-lib/src/public-api';
 
 import { BASE_PATH as FINANCIAL_DATA_V3_BASE_PATH } from 'apps/clients/v3/financial-data';
@@ -84,7 +84,7 @@ export const configApp: ApplicationConfig = {
     provideZonelessChangeDetection(),
     provideRouter(routes),
     provideHttpClient(
-      withInterceptors([includeBearerTokenInterceptor, budgetHttpInterceptorInterceptor])
+      withInterceptors([includeBearerTokenInterceptor, errorsInterceptor])
     ),
   ]
 };

@@ -328,8 +328,8 @@ export class SearchDataComponent implements OnInit {
       types_beneficiaires: formValue.types_beneficiaires || undefined,
       tags: formValue.tags?.map((tag) => tag_fullname(tag)) ?? undefined,
       domaines_fonctionnels: formValue.domaines_fonctionnels || undefined,
-      source_region: formValue.sources_region || undefined,
     };
+    search_parameters.source_region = formValue.sources_region || undefined,
     // Lancement de la recherche - le service traite automatiquement la réponse
     this.searchDataService.flatSearchFromScratch(search_parameters).subscribe();
   }

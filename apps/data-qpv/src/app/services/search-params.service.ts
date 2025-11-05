@@ -5,18 +5,14 @@ import { GeoModel, TypeLocalisation } from 'apps/common-lib/src/public-api';
 import { RefSiret } from 'apps/common-lib/src/lib/models/refs/RefSiret';
 import { RefQpvWithCommune } from '../models/refs/qpv.model';
 import { CentreCouts } from 'apps/clients/v3/referentiels';
-import { V3QueryParams } from 'apps/appcommon/src/lib/models/query-params.model';
-import { V3QueryParamsService } from 'apps/appcommon/src/lib/services/query-params.service';
 import { SearchTypeCategorieJuridique } from 'apps/common-lib/src/lib/models/refs/common.models';
 import { BopModel, ThemeModel } from 'apps/common-lib/src/lib/models/refs/bop.models';
+import { SanitizedSourceParams, SourceQueryParams } from 'apps/appcommon/src/lib/models/source-query-params.model';
+import { SourceQueryParamsService } from 'apps/appcommon/src/lib/services/source-query-params.service';
+import { SanitizedV3Params } from 'apps/appcommon/src/lib/models/query-params.model';
 
 
-export interface SearchParameters extends V3QueryParams {
-  // SourceQueryParams
-  source_region: string[] | undefined;
-  data_source: string | undefined;
-  source: string | undefined;
-  // FinancialLineQueryParams
+export interface SearchParameters extends SourceQueryParams {
   bops: BopModel[] | undefined;
   notBops: BopModel[] | undefined;
   years: number[] | undefined;
@@ -29,6 +25,27 @@ export interface SearchParameters extends V3QueryParams {
   beneficiaires: RefSiret[] | undefined;
   types_beneficiaires: SearchTypeCategorieJuridique[] | undefined;
 }
+
+export type SanitizedSearchParams = [
+  string | undefined,               // bops
+  string | undefined,               // notBops
+  string | undefined,               // years
+  string | undefined,               // niveau
+  string | undefined,               // locations
+  "2015" | "2024" | undefined,      // ref_qpv
+  string | undefined,               // code_qpv
+  string | undefined,               // centres_couts
+  string | undefined,               // themes
+  string | undefined,               // beneficiaires
+  string | undefined,               // types_beneficiaires
+];
+
+export type SanitizedSearchFullParams = [
+  ...SanitizedSourceParams,
+  ...SanitizedSearchParams,
+  ...SanitizedV3Params
+];
+
 
 // eslint-disable-next-line @typescript-eslint/no-namespace
 export namespace SearchParameters {
@@ -55,89 +72,76 @@ export namespace SearchParameters {
 @Injectable({
   providedIn: 'root'
 })
-export class SearchParamsService {
+export class SearchParamsService extends SourceQueryParamsService {
 
   private _searchUtils: SearchUtilsService = inject(SearchUtilsService);
-  private _queryParamsService: V3QueryParamsService = inject(V3QueryParamsService);
 
-  private _empty: SearchParameters = {
-    // V3QueryParams
-    colonnes: undefined,
-    page: 1,
-    page_size: 100,
-    sort_by: undefined,
-    sort_order: undefined,
-    search: undefined,
-    fields_search: undefined,
-    // SourceQueryParams
-    source_region: undefined,
-    data_source: undefined,
-    source: undefined,
-    // FinancialLineQueryParams
-    bops: undefined,
-    notBops: undefined,
-    years: undefined,
-    niveau: undefined,
-    locations: undefined,
-    ref_qpv: "2024",
-    code_qpv: undefined,
-    centres_couts: undefined,
-    themes: undefined,
-    beneficiaires: undefined,
-    types_beneficiaires: undefined,
-  };
-
-  getEmpty() {
-    return this._empty;
+  override getEmpty(): SearchParameters {
+    return {
+      ...super.getEmpty(),
+      bops: undefined,
+      notBops: undefined,
+      years: undefined,
+      niveau: undefined,
+      locations: undefined,
+      ref_qpv: "2024",
+      code_qpv: undefined,
+      centres_couts: undefined,
+      themes: undefined,
+      beneficiaires: undefined,
+      types_beneficiaires: undefined,
+    };
   }
 
-  isEmpty(searchParams: SearchParameters): boolean {
-    return Object.entries(searchParams).every(([key, value]) => {
-      if (key === "page") return value === 1;
-      if (key === "page_size") return value === 100;
-      return value === undefined;
-    });
+  override isEmpty(params: SearchParameters): boolean {
+    return (
+      super.isEmpty(params) &&
+      params.bops == undefined &&
+      params.notBops == undefined &&
+      params.years == undefined &&
+      params.niveau == undefined &&
+      params.locations == undefined &&
+      params.ref_qpv == "2024" &&
+      params.code_qpv == undefined &&
+      params.centres_couts == undefined &&
+      params.themes == undefined &&
+      params.beneficiaires == undefined &&
+      params.types_beneficiaires == undefined
+    );
   }
 
-  getSanitizedParams(searchParams: SearchParameters) {
+  getSanitizedSearchParams(params: SearchParameters): SanitizedSearchFullParams {
     // Récupération des codes et sanitize
-    const sanitized_codes_programme = this._sanitizeReqArg(searchParams.bops?.filter((bop) => bop.code).map((bop) => bop.code))
-    const sanitized_not_codes_programme = this._sanitizeReqArg(searchParams.notBops?.filter((bop) => bop.code).map((bop) => bop.code))
-    const sanitized_annees = this._sanitizeReqArg(searchParams.years?.map((a) => a.toString()));
-    const sanitized_niveau_geo = this._sanitizeReqArg(this._searchUtils.normalize_type_geo(searchParams.niveau));
-    const sanitized_codes_geo = this._sanitizeReqArg(searchParams.locations?.map((l) => l.code));
-    const sanitized_codes_qpv = this._sanitizeReqArg(searchParams.code_qpv?.map((l) => l.code));
-    const sanitized_themes = this._sanitizeReqArg(searchParams.themes?.map((t) => t.label));
-    const sanitized_beneficiaire_siret: string[] | undefined = this._sanitizeReqArg(searchParams.beneficiaires?.map((x) => x.siret));
-    const sanitized_financeurs = this._sanitizeReqArg(searchParams.centres_couts?.map((t) => t.code));
+    const sanitized_codes_programme = this._sanitizeReqArg(params.bops?.filter((bop) => bop.code).map((bop) => bop.code))
+    const sanitized_not_codes_programme = this._sanitizeReqArg(params.notBops?.filter((bop) => bop.code).map((bop) => bop.code))
+    const sanitized_annees = this._sanitizeReqArg(params.years?.map((a) => a.toString()));
+    const sanitized_niveau_geo = this._sanitizeReqArg(this._searchUtils.normalize_type_geo(params.niveau));
+    const sanitized_codes_geo = this._sanitizeReqArg(params.locations?.map((l) => l.code));
+    const sanitized_codes_qpv = this._sanitizeReqArg(params.code_qpv?.map((l) => l.code));
+    const sanitized_themes = this._sanitizeReqArg(params.themes?.map((t) => t.label));
+    const sanitized_beneficiaire_siret: string[] | undefined = this._sanitizeReqArg(params.beneficiaires?.map((x) => x.siret));
+    const sanitized_financeurs = this._sanitizeReqArg(params.centres_couts?.map((t) => t.code));
 
-    // Respect de l'ordre pour le client généré : getLignesFinancieresLignesGet
-    // Pourquoi cet ordre là à la génération ? ¯\_(ツ)_/¯
-    return [
-      // SourceQueryParams
-      searchParams.source_region?.join(','),
-      searchParams.data_source,
-      searchParams.source,
-      // FinancialLineQueryParams
+    const sanitizedSearchParams: SanitizedSearchParams = [
       sanitized_codes_programme?.join(','),
       sanitized_not_codes_programme?.join(','),
       sanitized_annees?.join(','),
       sanitized_niveau_geo,
       sanitized_codes_geo?.join(','),
-      searchParams.ref_qpv,
+      params.ref_qpv,
       sanitized_codes_qpv?.join(','),
       sanitized_themes?.join('|'),
       sanitized_beneficiaire_siret?.join(','),
-      searchParams.types_beneficiaires?.join(','),
+      params.types_beneficiaires?.join(','),
       sanitized_financeurs?.join(','),
-      // V3QueryParams
-      searchParams.colonnes?.join(','),
-      searchParams.page,
-      searchParams.page_size,
-      searchParams.sort_by,
-      searchParams.sort_order,
-      searchParams.search,
-      searchParams.fields_search?.join(','),
+    ]
+    
+    // Respect de l'ordre pour le client généré : getLignesFinancieresLignesGet
+    // Pourquoi cet ordre là à la génération ? ¯\_(ツ)_/¯
+    return [
+      ...this.getSanitizedSourceParams(params),
+      ...sanitizedSearchParams,
+      ...this.getSanitizedV3Params(params),
     ] as const;
   }
     

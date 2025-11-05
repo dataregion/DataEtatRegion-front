@@ -6,11 +6,11 @@ import { computed, inject, Injectable, signal } from '@angular/core';
 import { forkJoin, Observable, of, tap } from 'rxjs';
 import { SearchParameters } from './search-params.service';
 import { DataQpvFinancialDataModel } from '../models/financial/financial-data.models';
-import { SearchDataMapper } from './search-data-mapper.service';
 import { SearchParamsService } from './search-params.service';
 import { LoggerService } from 'apps/common-lib/src/lib/services/logger.service';
 import { DashboardData, DashboardResponse, DashboardsService, FlattenFinancialLinesDataQPV, LignesFinancieresService, LignesResponse, MapResponse, MapService, PaginationMeta, QpvData } from 'apps/clients/v3/data-qpv';
 import { BopModel } from 'apps/common-lib/src/lib/models/refs/bop.models';
+import { SearchDataMapper } from 'apps/appcommon/src/lib/mappers/search-data-mapper.service';
 
 
 export type SearchResults = DataQpvFinancialDataModel[]
@@ -202,7 +202,7 @@ export class SearchDataService {
 
     this._logger.debug('==> Paramètres validés, démarrage de la recherche');
 
-    const sanitized = this._searchParamsService.getSanitizedParams(searchParams);
+    const sanitized = this._searchParamsService.getSanitizedSearchParams(searchParams);
 
     const dashboard$ = this._dashboardsService.getDashboardDashboardsGet(...sanitized, 'body');
     const lignes$ = this._lignesFinanciereService.getLignesFinancieresLignesGet(...sanitized, 'body');
@@ -262,7 +262,7 @@ export class SearchDataService {
    * @returns FinancialDataModel
    */
   public unflatten(object: FlattenFinancialLinesDataQPV): DataQpvFinancialDataModel {
-    return this._mapper.map(object);
+    return this._mapper.mapToDataQpv(object);
   }
 
   /**

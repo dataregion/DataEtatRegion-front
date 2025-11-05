@@ -6,7 +6,7 @@ import { includeBearerTokenInterceptor } from 'keycloak-angular';
 import { DatePipe } from '@angular/common';
 import { SettingsDataQPVService } from './environments/settings-qpv.service';
 import { SETTINGS } from 'apps/common-lib/src/lib/environments/settings.http.service';
-import { dataQPVHttpInterceptorInterceptor } from './interceptors/data-qpv-http-interceptor.interceptor';
+import { errorsInterceptor } from 'apps/appcommon/src/lib/interceptors/errors.interceptor';
 import { API_GEO_PATH, API_REF_PATH } from 'apps/common-lib/src/public-api';
 
 import { BASE_PATH as DATA_QPV_V3_BASE_PATH } from 'apps/clients/v3/data-qpv';
@@ -42,7 +42,7 @@ export const configApp: ApplicationConfig = {
     provideZonelessChangeDetection(),
     provideRouter(routes),
     provideHttpClient(
-      withInterceptors([includeBearerTokenInterceptor, dataQPVHttpInterceptorInterceptor])
+      withInterceptors([includeBearerTokenInterceptor, errorsInterceptor])
     ),
   ]
 };

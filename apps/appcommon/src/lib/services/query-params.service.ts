@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { V3QueryParams, V3SanitizedParams } from "../models/query-params.model";
+import { V3QueryParams, SanitizedV3Params } from "../models/query-params.model";
 
 @Injectable({
   providedIn: 'root'
@@ -28,7 +28,7 @@ export class V3QueryParamsService {
     });
   }
 
-  getSanitizedParams(params: V3QueryParams): V3SanitizedParams {
+  getSanitizedV3Params(params: V3QueryParams): SanitizedV3Params {
     return [
       params.colonnes?.join(','),
       params.page,

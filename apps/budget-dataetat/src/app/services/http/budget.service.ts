@@ -6,8 +6,8 @@ import { map, Observable } from 'rxjs';
 import { SettingsBudgetService } from '../../environments/settings-budget.service';
 import { FinancialCp } from '@models/financial/financial-data.models';
 import { APISuccessAnnotatedEnrichedFlattenFinancialLinesPydanticFromMarshmallowSchemaAnnotationTSchema, LignesFinancieresService } from 'apps/clients/v3/financial-data';
-import { SearchDataMapper } from '@services/search-data-mapper.service';
 import { Tag } from '@models/refs/tag.model';
+
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +15,6 @@ import { Tag } from '@models/refs/tag.model';
 export class BudgetDataHttpService {
   private http = inject(HttpClient);
   readonly settings: SettingsBudgetService = inject(SettingsBudgetService);
-  private _mapper: SearchDataMapper = inject(SearchDataMapper);
 
   private _apiRef!: string;
   private _apiAdministration!: string;

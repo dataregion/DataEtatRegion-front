@@ -1,7 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, ViewEncapsulation, computed, signal, DestroyRef, OnDestroy } from '@angular/core';
 import { BudgetFinancialDataModel } from '@models/financial/financial-data.models';
-import { ColonneTableau } from '@services/colonnes-mapper.service';
 import { ColonnesService } from '@services/colonnes.service';
 import { SearchDataService, SearchResults } from '@services/search-data.service';
 import { GroupedData, LignesResponse } from 'apps/clients/v3/financial-data';
@@ -10,6 +9,7 @@ import { NumberFormatPipe } from '../lines-tables/number-format.pipe';
 import { LoggerService } from 'apps/common-lib/src/lib/services/logger.service';
 import { distinctUntilChanged, filter } from 'rxjs';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
+import { ColonneTableau } from 'apps/appcommon/src/lib/mappers/colonnes-mapper.service';
 
 export interface Group {
   parent?: Group;

@@ -12,10 +12,11 @@ import { ModalSauvegardeComponent } from "./modal-sauvegarde/modal-sauvegarde.co
 import { ModalTelechargementComponent } from "./modal-telechargement/modal-telechargement.component";
 import { BudgetFinancialDataModel } from '@models/financial/financial-data.models';
 import { ColonnesService } from '@services/colonnes.service';
-import { ColonneTableau } from '@services/colonnes-mapper.service';
 import { SearchDataService } from '@services/search-data.service';
 import { MaterialModule } from "apps/common-lib/src/public-api";
 import { TableExportService } from './services/table-export.service';
+import { ColonneTableau } from 'apps/appcommon/src/lib/mappers/colonnes-mapper.service';
+
 
 @Component({
   selector: 'budget-table-toolbar',

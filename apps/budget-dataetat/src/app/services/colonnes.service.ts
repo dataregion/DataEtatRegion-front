@@ -1,6 +1,7 @@
 import { Injectable, signal, computed } from '@angular/core';
 import { BudgetFinancialDataModel } from '@models/financial/financial-data.models';
-import { ColonneTableau } from '@services/colonnes-mapper.service';
+import { ColonneTableau } from 'apps/appcommon/src/lib/mappers/colonnes-mapper.service';
+
 
 /**
  * Service de gestion des colonnes pour les tableaux de données financières.

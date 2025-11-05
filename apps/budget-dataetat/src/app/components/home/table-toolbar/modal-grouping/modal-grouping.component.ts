@@ -1,13 +1,13 @@
 import { Component, inject, OnInit, ViewEncapsulation } from '@angular/core';
 import { MaterialModule } from "apps/common-lib/src/public-api";
 import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
-import { ColonneTableau } from '@services/colonnes-mapper.service';
 import { ColonnesService } from '@services/colonnes.service';
 import { BudgetFinancialDataModel } from '@models/financial/financial-data.models';
 import { FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { LoggerService } from 'apps/common-lib/src/lib/services/logger.service';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { SearchDataService } from '@services/search-data.service';
+import { ColonneTableau } from 'apps/appcommon/src/lib/mappers/colonnes-mapper.service';
 
 
 export interface ColonneFormValues {

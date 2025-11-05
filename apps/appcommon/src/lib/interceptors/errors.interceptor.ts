@@ -4,7 +4,7 @@ import { inject } from '@angular/core';
 import { finalize, tap } from 'rxjs';
 
 
-export const budgetHttpInterceptorInterceptor: HttpInterceptorFn = (req, next: HttpHandlerFn) => {
+export const errorsInterceptor: HttpInterceptorFn = (req, next: HttpHandlerFn) => {
 
   const loader = inject(LoaderService);
   const alertService = inject(AlertService);

@@ -4,7 +4,8 @@ import { BudgetDataHttpService } from '../services/http/budget.service';
 import { catchError, forkJoin, map, of } from 'rxjs';
 import { BudgetFinancialDataModel } from '@models/financial/financial-data.models';
 import { EnrichedFlattenFinancialLines2 } from 'apps/clients/v3/financial-data';
-import { SearchDataMapper } from '@services/search-data-mapper.service';
+import { SearchDataMapper } from 'apps/appcommon/src/lib/mappers/search-data-mapper.service';
+
 
 export const resolveInfosSupplementaires: ResolveFn<BudgetFinancialDataModel | Error> =(
   route: ActivatedRouteSnapshot
@@ -18,7 +19,7 @@ export const resolveInfosSupplementaires: ResolveFn<BudgetFinancialDataModel | E
     _budgetService.getById(id, source),
   ]).pipe(
     map(([fetchedLigne]) => {
-      return _searchDataMapper.map(fetchedLigne.data as EnrichedFlattenFinancialLines2);
+      return _searchDataMapper.mapToBudget(fetchedLigne.data as EnrichedFlattenFinancialLines2);
     }),
     catchError((_error) => {
       return of({

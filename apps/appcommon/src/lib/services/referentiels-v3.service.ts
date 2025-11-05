@@ -44,7 +44,7 @@ export class ReferentielsService {
       params.search = query;
       params.fields_search = this.modelFields<CodeProgramme>()('code', 'label');
     }
-    const sanitized = this._queryParamsService.getSanitizedParams(params)
+    const sanitized = this._queryParamsService.getSanitizedV3Params(params)
     return this._programmesService.listAllProgrammesGet(...sanitized, 'body')
       .pipe(
         map(response => {
@@ -75,7 +75,7 @@ export class ReferentielsService {
       params = arg1 ?? this._queryParamsService.getEmpty();
     }
 
-    const sanitized = this._queryParamsService.getSanitizedParams(params);
+    const sanitized = this._queryParamsService.getSanitizedV3Params(params);
     const request$ = decoupage != null
       ? this._qpvsService.findAllByAnneeDecoupageQpvDecoupageAnneeGet(decoupage.toString(), ...sanitized, 'body')
       : this._qpvsService.listAllQpvGet(...sanitized, 'body');
@@ -110,7 +110,7 @@ export class ReferentielsService {
       params.search = query;
       params.fields_search = this.modelFields<CentreCouts>()('code', 'description');
     }
-    const sanitized = this._queryParamsService.getSanitizedParams(params)
+    const sanitized = this._queryParamsService.getSanitizedV3Params(params)
     return this._centreCoutsService.listAllCentreCoutsGet(...sanitized, 'body')
       .pipe(
         map(response => {

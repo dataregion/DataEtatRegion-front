@@ -8,7 +8,7 @@ export interface V3QueryParams {
   fields_search: string[] | undefined;
 }
 
-export type V3SanitizedParams = [
+export type SanitizedV3Params = [
   string | undefined,               // colonnes
   number,                           // page
   number,                           // page_size

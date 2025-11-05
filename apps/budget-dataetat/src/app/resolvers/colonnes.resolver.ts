@@ -4,7 +4,8 @@ import { forkJoin } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ColonnesResolved, ColonnesResolvedModel } from '@models/financial/colonnes.models';
 import { ListeDesColonnesService } from 'apps/clients/v3/financial-data';
-import { ColonnesMapperService } from '@services/colonnes-mapper.service';
+import { ColonnesMapperService } from 'apps/appcommon/src/lib/mappers/colonnes-mapper.service';
+
 
 export const resolveColonnes: ResolveFn<ColonnesResolvedModel> = () => {
   

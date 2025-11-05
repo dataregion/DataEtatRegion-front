@@ -6,17 +6,17 @@ import { inject, Injectable, signal } from '@angular/core';
 import { mergeMap, Observable, of, tap } from 'rxjs';
 import { SearchParameters } from '@services/search-params.service';
 import { BudgetFinancialDataModel } from '@models/financial/financial-data.models';
-import { SearchDataMapper } from './search-data-mapper.service';
-import { EnrichedFlattenFinancialLines2, GroupedData, LignesFinancieresService, LignesResponse, PaginationMeta, Total } from 'apps/clients/v3/financial-data';
+import { Colonne, EnrichedFlattenFinancialLines2, GroupedData, LignesFinancieresService, LignesResponse, PaginationMeta, Total } from 'apps/clients/v3/financial-data';
 import { ColonnesService } from '@services/colonnes.service';
 import { SearchParamsService } from './search-params.service';
 import { LoggerService } from 'apps/common-lib/src/lib/services/logger.service';
-import { ColonneFromPreference, ColonnesMapperService, ColonneTableau } from './colonnes-mapper.service';
 import { Optional } from 'apps/common-lib/src/lib/utilities/optional.type';
 import { Preference } from 'apps/preference-users/src/lib/models/preference.models';
 import { PrefilterMapperService } from '../components/home/search-data/prefilter-mapper.services';
 import { PreFilters } from '@models/search/prefilters.model';
 import { MarqueBlancheParsedParams } from '../resolvers/marqueblanche-parsed-params.resolver';
+import { SearchDataMapper } from 'apps/appcommon/src/lib/mappers/search-data-mapper.service';
+import { ColonneFromPreference, ColonnesMapperService, ColonneTableau } from 'apps/appcommon/src/lib/mappers/colonnes-mapper.service';
 
 
 export type SearchResults = GroupedData[] | BudgetFinancialDataModel[]
@@ -311,7 +311,7 @@ export class SearchDataService {
    * @returns BudgetFinancialDataModel
    */
   public unflatten(object: EnrichedFlattenFinancialLines2): BudgetFinancialDataModel {
-    return this._mapper.map(object);
+    return this._mapper.mapToBudget(object);
   }
 
   // --- Méthodes privées ---
@@ -341,7 +341,7 @@ export class SearchDataService {
     });
     if (colonnesTable.length) {
       this._logger.debug('    ==> Préparation des colonnes de table');
-      const fieldsBack = colonnesTable.map((c) => c.back.map((b) => b.code)).flat();
+      const fieldsBack = colonnesTable.map((c) => c.back.map((b: Colonne) => b.code)).flat();
       searchParamsCopy.colonnes = fieldsBack.filter((v): v is string => v != null);
       this._logger.debug('    ==> Colonnes préparées', { colonnes: searchParamsCopy.colonnes });
     }
@@ -424,7 +424,7 @@ export class SearchDataService {
 
     this._logger.debug('==> Paramètres validés, démarrage de la recherche');
     const req$ = this._lignesFinanciereService.getLignesFinancieresLignesGet(
-      ...this._searchParamsService.getSanitizedParams(searchParams),
+      ...this._searchParamsService.getSanitizedSearchParams(searchParams),
       'body'
     );
     return req$;
