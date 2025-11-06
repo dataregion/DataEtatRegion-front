@@ -57,13 +57,7 @@ test.describe('Recherche sur deux critères Année/Type et grouping', () => {
     await waitForSearchResultsLine(page);
 
     // 3. Cliquer sur le bouton de grouping
-    await page.getByTestId("group-by-btn").click();
-
-    await selectGroupingOption(page, 'Année Exercice comptable');
-    // 7. Sélectionner le deuxième élément de grouping (par exemple "Programme")
-    await selectGroupingOption(page, 'Programme');
-
-    await page.getByTestId("modal-grouping-validate-btn").click();
+    await makeGroupingAnneeProgramme(page);
 
     await verifyGroupingIsApplied(page);
 
@@ -110,7 +104,57 @@ test.describe('Recherche sur deux critères Année/Type et grouping', () => {
     // 1. Effectuer une recherche simple
     await performBasicSearch(page);
 
-    //TODO
+    // 2. Attendre que les résultats soient affichés
+    await waitForSearchResultsLine(page);
+
+    // on a pas le bouton de retour
+    await expect(page.getByRole('button', { name: 'Retour' })).not.toBeVisible()
+
+    await makeGroupingAnneeProgramme(page);
+
+    // Vérifier l'état initial : 2 nœuds fermés
+    await verifyCollapsedNodesCount(page, 2);  
+    
+
+    // on replie le premier noeud
+    await page.locator(".accordion-header.clickable td.td-group span.collapse-arrow").first().click();
+
+    // affichage d'un champ de recherche temporaire
+    await expect(page.getByRole('status', { name: 'Chargement…' })).toBeVisible();
+    await expect(page.getByRole('status', { name: 'Chargement…' })).not.toBeVisible();
+
+     // Vérifier que les sous-groupes de niveau 1 (Programme) sont maintenant visibles
+    const boutton = page.locator('tr.accordion-header[data-lvl="1"] td button.fr-icon-search-line');
+    await expect(boutton).toHaveCount(await boutton.count());
+    const level1Count = await boutton.count();
+    expect(level1Count).toBeGreaterThan(0);
+
+
+    //clic sur un bouton voir les données du groupe
+    await page.locator('tr.accordion-header[data-lvl="1"] td button.fr-icon-search-line').first().click();
+    
+    // mise sur la page de ligne
+    await waitForSearchResultsLine(page);
+
+     // Vérifier que le bouton affiche le nombre de critères sélectionnés
+    await expect(page.getByTestId('group-by-btn')).toContainText('2');
+
+    // bouton de retour présent
+    await expect(page.getByRole('button', { name: 'Retour' })).toBeVisible()
+
+
+    const boutonAnnee = await page.getByText('Année Exercice comptable :').textContent();
+    const boutonProgramme = await page.getByText('Programme :').textContent();
+
+    expect(boutonAnnee).toMatch(/^Année Exercice comptable : (2023|2024)$/);
+
+    expect(boutonProgramme).toMatch(/^Programme : .{2,5}$/);
+    //click sur le bouton retour
+
+    await page.getByRole('button', { name: 'Retour' }).click();
+
+    // on revient au grouping initiale
+    await verifyGroupingIsApplied(page);
   })
 
 
@@ -210,6 +254,16 @@ async function verifyGroupingIsAppliedSingleCriteria(page: Page): Promise<void> 
   await expect(page.locator('budget-lines-table')).not.toBeVisible();
   // bouton pour revenir à l'affichage non groupé
   await expect(page.getByRole('button', { name: 'Revenir à l\'affichage non-groupé' })).toBeVisible();
+}
+
+async function makeGroupingAnneeProgramme(page: Page): Promise<void> {
+  
+    await page.getByTestId("group-by-btn").click();
+
+    await selectGroupingOption(page, 'Année Exercice comptable');
+    await selectGroupingOption(page, 'Programme');
+
+    await page.getByTestId("modal-grouping-validate-btn").click();
 }
 
 /**
