@@ -33,27 +33,27 @@ test.describe('Recherche sur deux critères Année/Type et grouping', () => {
     await verifyGroupingIsApplied(page);
 
     // Vérifications spécifiques au grouping à 2 niveaux
-    await verifyGroupingStructure(page, 2, true);
+    await verifyGroupingStructure(page, 2, true, /^Année Exercice comptable/);
     await verifyTableColumns(page);
     await verifyTotalCellContent(page);
   })
 
-  test("Effectue une recherche et groupe uniquement par Année", async ({page})=> {
+  test("Effectue une recherche et groupe uniquement par Année", async ({ page }) => {
     // Setup grouping avec 1 critère
     await setupGroupingTest(page, ['Année Exercice comptable']);
     await verifyGroupingIsAppliedSingleCriteria(page);
 
     // Vérifications spécifiques au grouping à 1 niveau
-    await verifyGroupingStructure(page, 2, false);
+    await verifyGroupingStructure(page, 2, false, /^Année Exercice comptable/);
     await verifyTableColumns(page);
   })
 
 
-  test("Effectue la recherche, groupe par Année/programme et navigue dans les nœuds du grouping", async ({page})=> {
+  test("Effectue la recherche, groupe par Année/programme et navigue dans les nœuds du grouping", async ({ page }) => {
     // 1. Effectuer une recherche simple
     await performBasicSearch(page);
 
-     // 2. Attendre que les résultats soient affichés
+    // 2. Attendre que les résultats soient affichés
     await waitForSearchResultsLine(page);
 
     // 3. Cliquer sur le bouton de grouping
@@ -63,7 +63,7 @@ test.describe('Recherche sur deux critères Année/Type et grouping', () => {
 
     // Vérifier l'état initial : 2 nœuds fermés
     await verifyCollapsedNodesCount(page, 2);
-    await verifyTotalClickableNodesCount(page,2);
+    await verifyTotalClickableNodesCount(page, 2);
     await verifyExpandedNodesCount(page, 0);
 
     // Déplier le premier nœud
@@ -78,29 +78,29 @@ test.describe('Recherche sur deux critères Année/Type et grouping', () => {
     await expect(level1Headers).toHaveCount(await level1Headers.count());
     const level1Count = await level1Headers.count();
     expect(level1Count).toBeGreaterThan(0);
-    
+
     // Vérifier que chaque sous-groupe contient "Programme"
     for (let i = 0; i < level1Count; i++) {
       const headerText = await level1Headers.nth(i).textContent();
       await expect(headerText).toMatch(/^Programme/);
     }
 
-     // Vérifier l'état après dépliage : 1 nœud fermé, 1 nœud ouvert
+    // Vérifier l'état après dépliage : 1 nœud fermé, 1 nœud ouvert
     await verifyCollapsedNodesCount(page, 1);
     await verifyExpandedNodesCount(page, 1);
-    await verifyTotalClickableNodesCount(page,2);
+    await verifyTotalClickableNodesCount(page, 2);
 
     // on replie le premier noeud
     await page.locator(".accordion-header.clickable td.td-group span.collapse-arrow").first().click();
-    
+
     // Vérifier l'état initial : 2 nœuds fermés
     await verifyCollapsedNodesCount(page, 2);
-    await verifyTotalClickableNodesCount(page,2);
+    await verifyTotalClickableNodesCount(page, 2);
     await verifyExpandedNodesCount(page, 0);
   })
 
 
-  test("Effectue la recherche, groupe par Année/programme et rentre dans les données du groupe", async ({page})=> {
+  test("Effectue la recherche, groupe par Année/programme et rentre dans les données du groupe", async ({ page }) => {
     // 1. Effectuer une recherche simple
     await performBasicSearch(page);
 
@@ -113,8 +113,8 @@ test.describe('Recherche sur deux critères Année/Type et grouping', () => {
     await makeGroupingAnneeProgramme(page);
 
     // Vérifier l'état initial : 2 nœuds fermés
-    await verifyCollapsedNodesCount(page, 2);  
-    
+    await verifyCollapsedNodesCount(page, 2);
+
 
     // on replie le premier noeud
     await page.locator(".accordion-header.clickable td.td-group span.collapse-arrow").first().click();
@@ -123,7 +123,7 @@ test.describe('Recherche sur deux critères Année/Type et grouping', () => {
     await expect(page.getByRole('status', { name: 'Chargement…' })).toBeVisible();
     await expect(page.getByRole('status', { name: 'Chargement…' })).not.toBeVisible();
 
-     // Vérifier que les sous-groupes de niveau 1 (Programme) sont maintenant visibles
+    // Vérifier que les sous-groupes de niveau 1 (Programme) sont maintenant visibles
     const boutton = page.locator('tr.accordion-header[data-lvl="1"] td button.fr-icon-search-line');
     await expect(boutton).toHaveCount(await boutton.count());
     const level1Count = await boutton.count();
@@ -132,11 +132,11 @@ test.describe('Recherche sur deux critères Année/Type et grouping', () => {
 
     //clic sur un bouton voir les données du groupe
     await page.locator('tr.accordion-header[data-lvl="1"] td button.fr-icon-search-line').first().click();
-    
+
     // mise sur la page de ligne
     await waitForSearchResultsLine(page);
 
-     // Vérifier que le bouton affiche le nombre de critères sélectionnés
+    // Vérifier que le bouton affiche le nombre de critères sélectionnés
     await expect(page.getByTestId('group-by-btn')).toContainText('2');
 
     // bouton de retour présent
@@ -158,18 +158,47 @@ test.describe('Recherche sur deux critères Année/Type et grouping', () => {
   })
 
 
-  test("Effectue la recherche, groupe par Année/programme et annule le grouping", async ({page})=> {
+  test("Effectue la recherche, groupe par Année/programme et annule le grouping", async ({ page }) => {
     // 1. Effectuer une recherche simple
     await performBasicSearch(page);
 
-    //TODO
+    // 2. Attendre que les résultats soient affichés
+    await waitForSearchResultsLine(page);
+
+    // 3. Cliquer sur le bouton de grouping
+    await makeGroupingAnneeProgramme(page);
+
+    await verifyGroupingIsApplied(page);
+
+    // annule le grouping sur le bouton "revenir à l'afficha non groupé"
+    await page.getByRole('button', { name: 'Revenir à l\'affichage non-' }).click();
+
+    // 2. Attendre que les résultats soient affichés
+    await waitForSearchResultsLine(page);
+
   })
 
-  test("Effectue la recherche, groupe par Année/programme et change le grouping pour passer en Programme/Année", async ({page})=> {
-    // 1. Effectuer une recherche simple
-    await performBasicSearch(page);
+  test("Effectue la recherche, groupe par Année/programme et change le grouping pour passer en Programme/Année", async ({ page }) => {
+    // Setup grouping avec 2 critères
+    await setupGroupingTest(page, ['Année Exercice comptable', 'Programme']);
+    await verifyGroupingIsApplied(page);
 
-    //TODO
+    await verifyGroupingStructure(page, 2, true, /^Année Exercice comptable/);
+
+    // changement du grouping
+     // 3. Ouvrir le modal de grouping
+    await page.getByTestId("group-by-btn").click();
+    await expect(page.locator('#modalGrouping')).toBeVisible();
+
+    // delete du grouping Annee
+
+    await page.locator("button.fr-btn.fr-icon-delete-fill").first().click();
+
+    selectGroupingOption(page,'Année Exercice comptable');
+
+    await page.getByTestId("modal-grouping-validate-btn").click();
+
+    await verifyGroupingStructure(page, 2, true, /^Programme/);
   })
 });
 
@@ -199,10 +228,10 @@ async function performBasicSearch(page: Page): Promise<void> {
 async function waitForSearchResultsLine(page: Page): Promise<void> {
   // Attendre que le message "Recherche en cours" apparaisse
   await expect(page.getByText('Recherche en cours')).toBeVisible();
-  
+
   // Puis attendre qu'il disparaisse (recherche terminée)
   await expect(page.getByText('Recherche en cours')).not.toBeVisible({ timeout: 15000 });
-  
+
   // Vérifier que le composant d'affiche des lignes apparait ainsi que la toolbar
   await expect(page.locator('budget-table-toolbar')).toBeVisible();
   await expect(page.locator('budget-lines-table')).toBeVisible();
@@ -222,10 +251,10 @@ async function selectGroupingOption(page: Page, optionName: string): Promise<voi
 async function verifyGroupingIsApplied(page: Page): Promise<void> {
   // Vérifier que le bouton de grouping est en mode "primary" (actif)
   await expect(page.getByTestId('group-by-btn')).toHaveClass(/fr-btn--primary/);
-  
+
   // Vérifier que le bouton affiche le nombre de critères sélectionnés
   await expect(page.getByTestId('group-by-btn')).toContainText('2');
-  
+
   // Vérifier que le texte change pour indiquer le grouping actif
   await expect(page.getByTestId('group-by-btn')).toContainText('Grouper les lignes par');
 
@@ -242,10 +271,10 @@ async function verifyGroupingIsApplied(page: Page): Promise<void> {
 async function verifyGroupingIsAppliedSingleCriteria(page: Page): Promise<void> {
   // Vérifier que le bouton de grouping est en mode "primary" (actif)
   await expect(page.getByTestId('group-by-btn')).toHaveClass(/fr-btn--primary/);
-  
+
   // Vérifier que le bouton affiche 1 critère sélectionné
   await expect(page.getByTestId('group-by-btn')).toContainText('1');
-  
+
   // Vérifier que le texte change pour indiquer le grouping actif
   await expect(page.getByTestId('group-by-btn')).toContainText('Grouper les lignes par');
 
@@ -257,13 +286,14 @@ async function verifyGroupingIsAppliedSingleCriteria(page: Page): Promise<void> 
 }
 
 async function makeGroupingAnneeProgramme(page: Page): Promise<void> {
+
+  await page.getByTestId("group-by-btn").click();
+
+  await selectGroupingOption(page, 'Année Exercice comptable');
+  await selectGroupingOption(page, 'Programme');
+
+  await page.getByTestId("modal-grouping-validate-btn").click();
   
-    await page.getByTestId("group-by-btn").click();
-
-    await selectGroupingOption(page, 'Année Exercice comptable');
-    await selectGroupingOption(page, 'Programme');
-
-    await page.getByTestId("modal-grouping-validate-btn").click();
 }
 
 /**
@@ -317,18 +347,18 @@ async function setupGroupingTest(page: Page, groupingOptions: string[]): Promise
 /**
  * Vérifie la structure du tableau groupé
  */
-async function verifyGroupingStructure(page: Page, expectedHeaderCount: number, isClickable: boolean): Promise<void> {
+async function verifyGroupingStructure(page: Page, expectedHeaderCount: number, isClickable: boolean, textPaternLevelOne: RegExp): Promise<void> {
   await expect(page.locator("#table-10")).toBeVisible();
-  
+
   const headerSelector = isClickable ? ".accordion-header.clickable" : ".accordion-header";
   await expect(page.locator(headerSelector)).toHaveCount(expectedHeaderCount);
-  
+
   const groupHeaders = page.locator(`${headerSelector} td.td-group`);
   const groupHeadersCount = await groupHeaders.count();
-  
+
   for (let i = 0; i < groupHeadersCount; i++) {
     const textExpected = await groupHeaders.nth(i).textContent();
-    await expect(textExpected).toMatch(/^Année Exercice comptable/);
+    await expect(textExpected).toMatch(textPaternLevelOne);
 
     const arrowSpan = groupHeaders.nth(i).locator('span.collapse-arrow');
     if (isClickable) {
