@@ -12,10 +12,7 @@ test.describe('Recherche sur deux critères Année/Type et grouping', () => {
   });
 
   test('Effectue la recherche et affiche le composant de résultat sans grouping', async ({ page }) => {
-    // 1. Vérifier que la page est chargée
-    await expect(page).toHaveTitle(/^Données financières de l'état*/);
-
-    // 2. Effectuer une recherche simple
+    // 1. Effectuer une recherche simple
     await performBasicSearch(page);
 
     // 3. Attendre que les résultats soient affichés
@@ -196,9 +193,29 @@ test.describe('Recherche sur deux critères Année/Type et grouping', () => {
 
     selectGroupingOption(page,'Année Exercice comptable');
 
-    await page.getByTestId("modal-grouping-validate-btn").click();
+     // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    let capturedResponse: any = null;
 
-    await verifyGroupingStructure(page, 2, true, /^Programme/);
+    await page.route('**/financial-data/api/v3/lignes*', async (route) => {
+      const response = await route.fetch();
+      capturedResponse = {
+        url: response.url(),
+        json: await response.json()
+      };
+      await route.fulfill({ response });
+    });
+
+    await page.getByTestId("modal-grouping-validate-btn").click();
+    // Attendre que la réponse soit capturée
+    await page.waitForTimeout(3000); // ou mieux, attendre un élément qui confirme le chargement
+
+    expect(capturedResponse).not.toBeNull();
+    const url = new URL(capturedResponse.url);
+    const grouping = url.searchParams.get('grouping');
+    expect(grouping).toContain('programme_code');
+
+    // on récupère le nombre de ligne retourné par l'api pour avoir le nombre de grouping
+    await verifyGroupingStructure(page, capturedResponse.json.data.groupings.length, true, /^Programme/);
   })
 });
 
@@ -206,6 +223,8 @@ test.describe('Recherche sur deux critères Année/Type et grouping', () => {
  * Effectue une recherche simple en sélectionnant des critères de base
  */
 async function performBasicSearch(page: Page): Promise<void> {
+  await expect(page).toHaveTitle(/^Données financières de l'état*/);
+
   // Sélectionner les types de bénéficiaires : Collectivité et Entreprise
   await page.getByTestId('types-beneficiaires-form-field').click();
   await page.getByRole('option', { name: 'Collectivité' }).click();
