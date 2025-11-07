@@ -31,11 +31,10 @@ export class ColonnesService {
   private readonly compareColonnesArrays = (a: ColonneTableau<BudgetFinancialDataModel>[], b: ColonneTableau<BudgetFinancialDataModel>[]): boolean => {
     if (a === b) return true;
     if (a.length !== b.length) return false;
-    
-    const e =  a.every(colA => 
-      b.some(colB => colA.colonne === colB.colonne && colA.label === colB.label)
+
+    return a.every((colA, index) => 
+      colA.colonne === b[index].colonne && colA.label === b[index].label
     );
-    return e;
   };
 
   // ========================================
