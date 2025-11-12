@@ -3,6 +3,10 @@
   "extends": [
      "local>csm/Renovate"
     ],
+  "lockFileMaintenance": {
+    "enabled": true
+  },
+  "recreateWhen": "always",
   "ignorePaths": [
     "apps/clients/**"
   ]
