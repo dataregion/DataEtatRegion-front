@@ -107,5 +107,12 @@ Le dossier [apps/clients](./apps/clients/) contient des clients d'api, ces derni
   - url api: [http://api.databretagne.fr/financial-data/api/v2/swagger.json](http://api.databretagne.fr/financial-data/api/v2/swagger.json)
 
 ```
-./generate_openapi_client.sh -p budget -s "http://api.databretagne.fr/financial-data/api/v2/swagger.json" -t $(pwd)/apps/clients/ -n budget
+./generate_openapi_client.sh -p budget -s "https://api.databretagne.fr/financial-data/api/v2/swagger.json" -t $(pwd)/apps/clients/ -n budget
+```
+
+## API v3
+
+```
+./generate_openapi_client.sh -p referentielsV3 -s "https://api.databretagne.fr/referentiels/api/v3/admin/openapi.json" -t $(pwd)/apps/clients/v3/ -n referentiels
+./generate_openapi_client.sh -p financialDataV3 -s "https://api.databretagne.fr/financial-data/api/v3/admin/openapi.json" -t $(pwd)/apps/clients/v3/ -n financial-data
 ```
