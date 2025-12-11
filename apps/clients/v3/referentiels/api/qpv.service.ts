@@ -26,7 +26,10 @@ import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables'
 import { referentielsV3Configuration }                                     from '../configuration';
 import { BaseService } from '../api.base.service';
 import {
-    QpvServiceInterface
+    QpvServiceInterface,
+    FindAllByAnneeDecoupageQpvDecoupageAnneeGetRequestParams,
+    GetByCodeQpvCodeGetRequestParams,
+    ListAllQpvGetRequestParams
 } from './qpv.serviceInterface';
 
 
@@ -42,24 +45,25 @@ export class QpvService extends BaseService implements QpvServiceInterface {
 
     /**
      * Find all QPV by annee
-     * @param annee 
-     * @param colonnes 
-     * @param page 
-     * @param pageSize 
-     * @param sortBy 
-     * @param sortOrder 
-     * @param search 
-     * @param fieldsSearch 
+     * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public findAllByAnneeDecoupageQpvDecoupageAnneeGet(annee: string, colonnes?: string, page?: number, pageSize?: number, sortBy?: string, sortOrder?: 'asc' | 'desc', search?: string, fieldsSearch?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<QpvResponse>;
-    public findAllByAnneeDecoupageQpvDecoupageAnneeGet(annee: string, colonnes?: string, page?: number, pageSize?: number, sortBy?: string, sortOrder?: 'asc' | 'desc', search?: string, fieldsSearch?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<QpvResponse>>;
-    public findAllByAnneeDecoupageQpvDecoupageAnneeGet(annee: string, colonnes?: string, page?: number, pageSize?: number, sortBy?: string, sortOrder?: 'asc' | 'desc', search?: string, fieldsSearch?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<QpvResponse>>;
-    public findAllByAnneeDecoupageQpvDecoupageAnneeGet(annee: string, colonnes?: string, page?: number, pageSize?: number, sortBy?: string, sortOrder?: 'asc' | 'desc', search?: string, fieldsSearch?: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public findAllByAnneeDecoupageQpvDecoupageAnneeGet(requestParameters: FindAllByAnneeDecoupageQpvDecoupageAnneeGetRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<QpvResponse>;
+    public findAllByAnneeDecoupageQpvDecoupageAnneeGet(requestParameters: FindAllByAnneeDecoupageQpvDecoupageAnneeGetRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<QpvResponse>>;
+    public findAllByAnneeDecoupageQpvDecoupageAnneeGet(requestParameters: FindAllByAnneeDecoupageQpvDecoupageAnneeGetRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<QpvResponse>>;
+    public findAllByAnneeDecoupageQpvDecoupageAnneeGet(requestParameters: FindAllByAnneeDecoupageQpvDecoupageAnneeGetRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+        const annee = requestParameters?.annee;
         if (annee === null || annee === undefined) {
             throw new Error('Required parameter annee was null or undefined when calling findAllByAnneeDecoupageQpvDecoupageAnneeGet.');
         }
+        const colonnes = requestParameters?.colonnes;
+        const page = requestParameters?.page;
+        const pageSize = requestParameters?.pageSize;
+        const sortBy = requestParameters?.sortBy;
+        const sortOrder = requestParameters?.sortOrder;
+        const search = requestParameters?.search;
+        const fieldsSearch = requestParameters?.fieldsSearch;
 
         let localVarQueryParameters = new HttpParams({encoder: this.encoder});
         localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
@@ -122,24 +126,25 @@ export class QpvService extends BaseService implements QpvServiceInterface {
 
     /**
      * Get qpv by code
-     * @param code 
-     * @param colonnes 
-     * @param page 
-     * @param pageSize 
-     * @param sortBy 
-     * @param sortOrder 
-     * @param search 
-     * @param fieldsSearch 
+     * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getByCodeQpvCodeGet(code: string, colonnes?: string, page?: number, pageSize?: number, sortBy?: string, sortOrder?: 'asc' | 'desc', search?: string, fieldsSearch?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<QpvResponse>;
-    public getByCodeQpvCodeGet(code: string, colonnes?: string, page?: number, pageSize?: number, sortBy?: string, sortOrder?: 'asc' | 'desc', search?: string, fieldsSearch?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<QpvResponse>>;
-    public getByCodeQpvCodeGet(code: string, colonnes?: string, page?: number, pageSize?: number, sortBy?: string, sortOrder?: 'asc' | 'desc', search?: string, fieldsSearch?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<QpvResponse>>;
-    public getByCodeQpvCodeGet(code: string, colonnes?: string, page?: number, pageSize?: number, sortBy?: string, sortOrder?: 'asc' | 'desc', search?: string, fieldsSearch?: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public getByCodeQpvCodeGet(requestParameters: GetByCodeQpvCodeGetRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<QpvResponse>;
+    public getByCodeQpvCodeGet(requestParameters: GetByCodeQpvCodeGetRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<QpvResponse>>;
+    public getByCodeQpvCodeGet(requestParameters: GetByCodeQpvCodeGetRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<QpvResponse>>;
+    public getByCodeQpvCodeGet(requestParameters: GetByCodeQpvCodeGetRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+        const code = requestParameters?.code;
         if (code === null || code === undefined) {
             throw new Error('Required parameter code was null or undefined when calling getByCodeQpvCodeGet.');
         }
+        const colonnes = requestParameters?.colonnes;
+        const page = requestParameters?.page;
+        const pageSize = requestParameters?.pageSize;
+        const sortBy = requestParameters?.sortBy;
+        const sortOrder = requestParameters?.sortOrder;
+        const search = requestParameters?.search;
+        const fieldsSearch = requestParameters?.fieldsSearch;
 
         let localVarQueryParameters = new HttpParams({encoder: this.encoder});
         localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
@@ -202,20 +207,21 @@ export class QpvService extends BaseService implements QpvServiceInterface {
 
     /**
      * Liste de tous les qpv
-     * @param colonnes 
-     * @param page 
-     * @param pageSize 
-     * @param sortBy 
-     * @param sortOrder 
-     * @param search 
-     * @param fieldsSearch 
+     * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public listAllQpvGet(colonnes?: string, page?: number, pageSize?: number, sortBy?: string, sortOrder?: 'asc' | 'desc', search?: string, fieldsSearch?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<QpvResponse>;
-    public listAllQpvGet(colonnes?: string, page?: number, pageSize?: number, sortBy?: string, sortOrder?: 'asc' | 'desc', search?: string, fieldsSearch?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<QpvResponse>>;
-    public listAllQpvGet(colonnes?: string, page?: number, pageSize?: number, sortBy?: string, sortOrder?: 'asc' | 'desc', search?: string, fieldsSearch?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<QpvResponse>>;
-    public listAllQpvGet(colonnes?: string, page?: number, pageSize?: number, sortBy?: string, sortOrder?: 'asc' | 'desc', search?: string, fieldsSearch?: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public listAllQpvGet(requestParameters?: ListAllQpvGetRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<QpvResponse>;
+    public listAllQpvGet(requestParameters?: ListAllQpvGetRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<QpvResponse>>;
+    public listAllQpvGet(requestParameters?: ListAllQpvGetRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<QpvResponse>>;
+    public listAllQpvGet(requestParameters?: ListAllQpvGetRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+        const colonnes = requestParameters?.colonnes;
+        const page = requestParameters?.page;
+        const pageSize = requestParameters?.pageSize;
+        const sortBy = requestParameters?.sortBy;
+        const sortOrder = requestParameters?.sortOrder;
+        const search = requestParameters?.search;
+        const fieldsSearch = requestParameters?.fieldsSearch;
 
         let localVarQueryParameters = new HttpParams({encoder: this.encoder});
         localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,

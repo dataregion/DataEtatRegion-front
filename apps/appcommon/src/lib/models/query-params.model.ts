@@ -7,13 +7,3 @@ export interface V3QueryParams {
   search: string | undefined;
   fields_search: string[] | undefined;
 }
-
-export type SanitizedV3Params = [
-  string | undefined,               // colonnes
-  number,                           // page
-  number,                           // page_size
-  string | undefined,               // sort_by
-  "asc" | "desc" | undefined,       // sort_order
-  string | undefined,               // search
-  string | undefined                // fields_search
-];

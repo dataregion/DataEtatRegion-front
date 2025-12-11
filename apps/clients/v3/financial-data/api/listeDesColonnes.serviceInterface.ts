@@ -26,13 +26,13 @@ export interface ListeDesColonnesServiceInterface {
     /**
      * Liste des colonnes possibles pour le grouping
      * 
-     */
+*/
     getColonnesGroupingColonnesGroupingGet(extraHttpRequestParams?: any): Observable<APISuccessListColonne>;
 
     /**
      * Liste des colonnes possibles pour le tableau
      * 
-     */
+*/
     getColonnesTableauColonnesTableauGet(extraHttpRequestParams?: any): Observable<APISuccessListColonne>;
 
 }

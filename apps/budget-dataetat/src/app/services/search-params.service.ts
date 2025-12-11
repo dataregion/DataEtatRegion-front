@@ -6,9 +6,9 @@ import { RefSiret } from 'apps/common-lib/src/lib/models/refs/RefSiret';
 import { SearchTypeCategorieJuridique } from 'apps/common-lib/src/lib/models/refs/common.models';
 import { BopModel } from 'apps/common-lib/src/lib/models/refs/bop.models';
 import { ReferentielProgrammation } from 'apps/common-lib/src/lib/models/refs/referentiel_programmation.model';
-import { SanitizedSourceParams, SourceQueryParams } from 'apps/appcommon/src/lib/models/source-query-params.model';
-import { SanitizedV3Params } from 'apps/appcommon/src/lib/models/query-params.model';
+import { SourceQueryParams } from 'apps/appcommon/src/lib/models/source-query-params.model';
 import { SourceQueryParamsService } from 'apps/appcommon/src/lib/services/source-query-params.service';
+import { GetLignesFinancieresLignesGetRequestParams } from 'apps/clients/v3/financial-data';
 
 
 export interface SearchParameters extends SourceQueryParams {
@@ -33,30 +33,7 @@ export interface SearchParameters extends SourceQueryParams {
   grouped: (string | undefined)[] | undefined;
 }
 
-export type SanitizedSearchParams = [
-  string | undefined,               // n_ej
-  string | undefined,               // bops
-  string | undefined,               // niveau
-  string | undefined,               // locations
-  2015 | 2024 | undefined,          // ref_qpv
-  string | undefined,               // code_qpv
-  string | undefined,               // themes
-  string | undefined,               // beneficiaires
-  string | undefined,               // types_beneficiaires
-  string | undefined,               // years
-  string | undefined,               // centres_couts
-  string | undefined,               // domaines_fonctionnels
-  string | undefined,               // referentiels_programmation
-  string | undefined,               // tags
-  string | undefined,               // grouping
-  string | undefined,               // grouped
-];
-
-export type SanitizedSearchFullParams = [
-  ...SanitizedSourceParams,
-  ...SanitizedSearchParams,
-  ...SanitizedV3Params
-];
+export type SanitizedSearchFullParams = GetLignesFinancieresLignesGetRequestParams;
 
 
 // eslint-disable-next-line @typescript-eslint/no-namespace
@@ -148,32 +125,30 @@ export class SearchParamsService extends SourceQueryParamsService {
     const sanitized_domaines_fonctionnels: string[] | undefined = this._sanitizeReqArg(params.domaines_fonctionnels);
     const sanitized_codes_referentiels: string[] | undefined = this._sanitizeReqArg(params.referentiels_programmation?.map((rp) => rp.code));
 
-    const sanitizedSearchParams: SanitizedSearchParams = [
-      params.n_ej?.join(','),
-      sanitized_codes_programme?.join(','),
-      sanitized_niveau_geo,
-      sanitized_codes_geo?.join(','),
-      params.ref_qpv,
-      params.code_qpv?.join(','),
-      params.themes?.join('|'),
-      sanitized_beneficiaire_siret?.join(','),
-      params.types_beneficiaires?.join(','),
-      sanitized_annees?.join(','),
-      params.centres_couts?.join(','),
-      sanitized_domaines_fonctionnels?.join(','),
-      sanitized_codes_referentiels?.join(','),
-      params.tags?.join(','),
-      params.grouping?.join(','),
-      params.grouped?.join(','),
-    ]
+    const sanitizedSearchParams: SanitizedSearchFullParams = {
+      nEj: params.n_ej?.join(','),
+      codeProgramme: sanitized_codes_programme?.join(','),
+      niveauGeo: sanitized_niveau_geo,
+      codeGeo: sanitized_codes_geo?.join(','),
+      refQpv: params.ref_qpv,
+      codeQpv: params.code_qpv?.join(','),
+      theme: params.themes?.join('|'),
+      beneficiaireCode: sanitized_beneficiaire_siret?.join(','),
+      beneficiaireCategorieJuridiqueType: params.types_beneficiaires?.join(','),
+      annee: sanitized_annees?.join(','),
+      centresCouts: params.centres_couts?.join(','),
+      domaineFonctionnel: sanitized_domaines_fonctionnels?.join(','),
+      referentielProgrammation: sanitized_codes_referentiels?.join(','),
+      tags: params.tags?.join(','),
+      grouping: params.grouping?.join(','),
+      grouped: params.grouped?.join(','),
+    }
     
-    // Respect de l'ordre pour le client généré : getLignesFinancieresLignesGet
-    // Pourquoi cet ordre là à la génération ? ¯\_(ツ)_/¯
-    return [
+    return { 
       ...this.getSanitizedSourceParams(params),
       ...sanitizedSearchParams,
       ...this.getSanitizedV3Params(params),
-    ] as const;
+    }
   }
     
   private _sanitizeReqArg<T>(arg: Optional<T>): T | undefined {

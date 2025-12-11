@@ -28,7 +28,9 @@ import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables'
 import { dataQpvV3Configuration }                                     from '../configuration';
 import { BaseService } from '../api.base.service';
 import {
-    LignesFinancieresServiceInterface
+    LignesFinancieresServiceInterface,
+    GetAnneesLignesAnneesGetRequestParams,
+    GetLignesFinancieresLignesGetRequestParams
 } from './lignesFinancieres.serviceInterface';
 
 
@@ -44,23 +46,24 @@ export class LignesFinancieresService extends BaseService implements LignesFinan
 
     /**
      * Recupère la plage des années pour lesquelles les données QPV courent.
-     * @param sourceRegion 
-     * @param dataSource 
-     * @param source 
-     * @param colonnes 
-     * @param page 
-     * @param pageSize 
-     * @param sortBy 
-     * @param sortOrder 
-     * @param search 
-     * @param fieldsSearch 
+     * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getAnneesLignesAnneesGet(sourceRegion?: string, dataSource?: string, source?: string, colonnes?: string, page?: number, pageSize?: number, sortBy?: string, sortOrder?: 'asc' | 'desc', search?: string, fieldsSearch?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<APISuccessListInt>;
-    public getAnneesLignesAnneesGet(sourceRegion?: string, dataSource?: string, source?: string, colonnes?: string, page?: number, pageSize?: number, sortBy?: string, sortOrder?: 'asc' | 'desc', search?: string, fieldsSearch?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<APISuccessListInt>>;
-    public getAnneesLignesAnneesGet(sourceRegion?: string, dataSource?: string, source?: string, colonnes?: string, page?: number, pageSize?: number, sortBy?: string, sortOrder?: 'asc' | 'desc', search?: string, fieldsSearch?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<APISuccessListInt>>;
-    public getAnneesLignesAnneesGet(sourceRegion?: string, dataSource?: string, source?: string, colonnes?: string, page?: number, pageSize?: number, sortBy?: string, sortOrder?: 'asc' | 'desc', search?: string, fieldsSearch?: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public getAnneesLignesAnneesGet(requestParameters?: GetAnneesLignesAnneesGetRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<APISuccessListInt>;
+    public getAnneesLignesAnneesGet(requestParameters?: GetAnneesLignesAnneesGetRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<APISuccessListInt>>;
+    public getAnneesLignesAnneesGet(requestParameters?: GetAnneesLignesAnneesGetRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<APISuccessListInt>>;
+    public getAnneesLignesAnneesGet(requestParameters?: GetAnneesLignesAnneesGetRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+        const sourceRegion = requestParameters?.sourceRegion;
+        const dataSource = requestParameters?.dataSource;
+        const source = requestParameters?.source;
+        const colonnes = requestParameters?.colonnes;
+        const page = requestParameters?.page;
+        const pageSize = requestParameters?.pageSize;
+        const sortBy = requestParameters?.sortBy;
+        const sortOrder = requestParameters?.sortOrder;
+        const search = requestParameters?.search;
+        const fieldsSearch = requestParameters?.fieldsSearch;
 
         let localVarQueryParameters = new HttpParams({encoder: this.encoder});
         localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
@@ -85,6 +88,9 @@ export class LignesFinancieresService extends BaseService implements LignesFinan
           <any>fieldsSearch, 'fields_search');
 
         let localVarHeaders = this.defaultHeaders;
+
+        // authentication (OAuth2PasswordBearer) required
+        localVarHeaders = this.configuration.addCredentialToHeaders('OAuth2PasswordBearer', 'Authorization', localVarHeaders, 'Bearer ');
 
         const localVarHttpHeaderAcceptSelected: string | undefined = options?.httpHeaderAccept ?? this.configuration.selectHeaderAccept([
             'application/json'
@@ -126,34 +132,35 @@ export class LignesFinancieresService extends BaseService implements LignesFinan
 
     /**
      * Récupére les lignes QPV
-     * @param sourceRegion 
-     * @param dataSource 
-     * @param source 
-     * @param codeProgramme 
-     * @param notCodeProgramme 
-     * @param annee 
-     * @param niveauGeo 
-     * @param codeGeo 
-     * @param refQpv 
-     * @param codeQpv 
-     * @param theme 
-     * @param beneficiaireCode Siret du bénéficiaire
-     * @param beneficiaireCategorieJuridiqueType Type de la catégorie juridique du bénéficiaire
-     * @param centresCouts 
-     * @param colonnes 
-     * @param page 
-     * @param pageSize 
-     * @param sortBy 
-     * @param sortOrder 
-     * @param search 
-     * @param fieldsSearch 
+     * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getLignesFinancieresLignesGet(sourceRegion?: string, dataSource?: string, source?: string, codeProgramme?: string, notCodeProgramme?: string, annee?: string, niveauGeo?: string, codeGeo?: string, refQpv?: '2015' | '2024', codeQpv?: string, theme?: string, beneficiaireCode?: string, beneficiaireCategorieJuridiqueType?: string, centresCouts?: string, colonnes?: string, page?: number, pageSize?: number, sortBy?: string, sortOrder?: 'asc' | 'desc', search?: string, fieldsSearch?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<LignesResponse>;
-    public getLignesFinancieresLignesGet(sourceRegion?: string, dataSource?: string, source?: string, codeProgramme?: string, notCodeProgramme?: string, annee?: string, niveauGeo?: string, codeGeo?: string, refQpv?: '2015' | '2024', codeQpv?: string, theme?: string, beneficiaireCode?: string, beneficiaireCategorieJuridiqueType?: string, centresCouts?: string, colonnes?: string, page?: number, pageSize?: number, sortBy?: string, sortOrder?: 'asc' | 'desc', search?: string, fieldsSearch?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<LignesResponse>>;
-    public getLignesFinancieresLignesGet(sourceRegion?: string, dataSource?: string, source?: string, codeProgramme?: string, notCodeProgramme?: string, annee?: string, niveauGeo?: string, codeGeo?: string, refQpv?: '2015' | '2024', codeQpv?: string, theme?: string, beneficiaireCode?: string, beneficiaireCategorieJuridiqueType?: string, centresCouts?: string, colonnes?: string, page?: number, pageSize?: number, sortBy?: string, sortOrder?: 'asc' | 'desc', search?: string, fieldsSearch?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<LignesResponse>>;
-    public getLignesFinancieresLignesGet(sourceRegion?: string, dataSource?: string, source?: string, codeProgramme?: string, notCodeProgramme?: string, annee?: string, niveauGeo?: string, codeGeo?: string, refQpv?: '2015' | '2024', codeQpv?: string, theme?: string, beneficiaireCode?: string, beneficiaireCategorieJuridiqueType?: string, centresCouts?: string, colonnes?: string, page?: number, pageSize?: number, sortBy?: string, sortOrder?: 'asc' | 'desc', search?: string, fieldsSearch?: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public getLignesFinancieresLignesGet(requestParameters?: GetLignesFinancieresLignesGetRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<LignesResponse>;
+    public getLignesFinancieresLignesGet(requestParameters?: GetLignesFinancieresLignesGetRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<LignesResponse>>;
+    public getLignesFinancieresLignesGet(requestParameters?: GetLignesFinancieresLignesGetRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<LignesResponse>>;
+    public getLignesFinancieresLignesGet(requestParameters?: GetLignesFinancieresLignesGetRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+        const sourceRegion = requestParameters?.sourceRegion;
+        const dataSource = requestParameters?.dataSource;
+        const source = requestParameters?.source;
+        const codeProgramme = requestParameters?.codeProgramme;
+        const notCodeProgramme = requestParameters?.notCodeProgramme;
+        const annee = requestParameters?.annee;
+        const niveauGeo = requestParameters?.niveauGeo;
+        const codeGeo = requestParameters?.codeGeo;
+        const refQpv = requestParameters?.refQpv;
+        const codeQpv = requestParameters?.codeQpv;
+        const theme = requestParameters?.theme;
+        const beneficiaireCode = requestParameters?.beneficiaireCode;
+        const beneficiaireCategorieJuridiqueType = requestParameters?.beneficiaireCategorieJuridiqueType;
+        const centresCouts = requestParameters?.centresCouts;
+        const colonnes = requestParameters?.colonnes;
+        const page = requestParameters?.page;
+        const pageSize = requestParameters?.pageSize;
+        const sortBy = requestParameters?.sortBy;
+        const sortOrder = requestParameters?.sortOrder;
+        const search = requestParameters?.search;
+        const fieldsSearch = requestParameters?.fieldsSearch;
 
         let localVarQueryParameters = new HttpParams({encoder: this.encoder});
         localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
@@ -200,6 +207,9 @@ export class LignesFinancieresService extends BaseService implements LignesFinan
           <any>fieldsSearch, 'fields_search');
 
         let localVarHeaders = this.defaultHeaders;
+
+        // authentication (OAuth2PasswordBearer) required
+        localVarHeaders = this.configuration.addCredentialToHeaders('OAuth2PasswordBearer', 'Authorization', localVarHeaders, 'Bearer ');
 
         const localVarHttpHeaderAcceptSelected: string | undefined = options?.httpHeaderAccept ?? this.configuration.selectHeaderAccept([
             'application/json'

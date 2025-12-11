@@ -11,7 +11,7 @@ import { PaginationMeta } from './paginationMeta';
 import { EnrichedFlattenFinancialLines1 } from './enrichedFlattenFinancialLines1';
 
 
-export interface APISuccessAnnotatedEnrichedFlattenFinancialLinesPydanticFromMarshmallowSchemaAnnotationTSchema { 
+export interface LigneResponse { 
     code: number;
     success?: boolean | null;
     timestamp?: string;

@@ -26,7 +26,7 @@ export interface HealthcheckServiceInterface {
     /**
      * Healthcheck
      * 
-     */
+*/
     healthcheckHealthcheckGet(extraHttpRequestParams?: any): Observable<APISuccess>;
 
 }

@@ -17,6 +17,35 @@ import { APIError } from '../model/models';
 import { financialDataV3Configuration }                                     from '../configuration';
 
 
+export interface HealthcheckHealthcheckGetRequestParams {
+    sourceRegion?: string | null;
+    dataSource?: string | null;
+    source?: string | null;
+    nEj?: string | null;
+    codeProgramme?: string | null;
+    niveauGeo?: string | null;
+    codeGeo?: string | null;
+    refQpv?: 2015 | 2024 | null;
+    codeQpv?: string | null;
+    theme?: string | null;
+    beneficiaireCode?: string | null;
+    beneficiaireCategorieJuridiqueType?: string | null;
+    annee?: string | null;
+    centresCouts?: string | null;
+    domaineFonctionnel?: string | null;
+    referentielProgrammation?: string | null;
+    tags?: string | null;
+    grouping?: string | null;
+    grouped?: string | null;
+    colonnes?: string | null;
+    page?: number;
+    pageSize?: number;
+    sortBy?: string | null;
+    sortOrder?: 'asc' | 'desc' | null;
+    search?: string | null;
+    fieldsSearch?: string | null;
+}
+
 
 export interface HealthcheckServiceInterface {
     defaultHeaders: HttpHeaders;
@@ -25,33 +54,8 @@ export interface HealthcheckServiceInterface {
     /**
      * Vérification de la disponibilité de l\&#39;API des lignes budgetaires
      * 
-     * @param sourceRegion 
-     * @param dataSource 
-     * @param source 
-     * @param nEj 
-     * @param codeProgramme 
-     * @param niveauGeo 
-     * @param codeGeo 
-     * @param refQpv 
-     * @param codeQpv 
-     * @param theme 
-     * @param beneficiaireCode Siret du bénéficiaire
-     * @param beneficiaireCategorieJuridiqueType Type de la catégorie juridique du bénéficiaire
-     * @param annee 
-     * @param centresCouts 
-     * @param domaineFonctionnel 
-     * @param referentielProgrammation 
-     * @param tags 
-     * @param grouping 
-     * @param grouped 
-     * @param colonnes 
-     * @param page 
-     * @param pageSize 
-     * @param sortBy 
-     * @param sortOrder 
-     * @param search 
-     * @param fieldsSearch 
+* @param requestParameters
      */
-    healthcheckHealthcheckGet(sourceRegion?: string, dataSource?: string, source?: string, nEj?: string, codeProgramme?: string, niveauGeo?: string, codeGeo?: string, refQpv?: 2015 | 2024, codeQpv?: string, theme?: string, beneficiaireCode?: string, beneficiaireCategorieJuridiqueType?: string, annee?: string, centresCouts?: string, domaineFonctionnel?: string, referentielProgrammation?: string, tags?: string, grouping?: string, grouped?: string, colonnes?: string, page?: number, pageSize?: number, sortBy?: string, sortOrder?: 'asc' | 'desc', search?: string, fieldsSearch?: string, extraHttpRequestParams?: any): Observable<any>;
+    healthcheckHealthcheckGet(requestParameters: HealthcheckHealthcheckGetRequestParams, extraHttpRequestParams?: any): Observable<any>;
 
 }

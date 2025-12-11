@@ -26,7 +26,7 @@ export interface ListeDesColonnesServiceInterface {
     /**
      * Liste des colonnes à utiliser pour la recherche et le tableau
      * 
-     */
+*/
     getColonnesTableauColonnesTableauGet(extraHttpRequestParams?: any): Observable<APISuccessListColonne>;
 
 }

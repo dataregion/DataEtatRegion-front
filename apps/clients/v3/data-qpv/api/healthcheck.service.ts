@@ -24,7 +24,8 @@ import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables'
 import { dataQpvV3Configuration }                                     from '../configuration';
 import { BaseService } from '../api.base.service';
 import {
-    HealthcheckServiceInterface
+    HealthcheckServiceInterface,
+    HealthcheckHealthcheckGetRequestParams
 } from './healthcheck.serviceInterface';
 
 
@@ -40,34 +41,35 @@ export class HealthcheckService extends BaseService implements HealthcheckServic
 
     /**
      * Vérification de la disponibilité de l\&#39;API des lignes QPV
-     * @param sourceRegion 
-     * @param dataSource 
-     * @param source 
-     * @param codeProgramme 
-     * @param notCodeProgramme 
-     * @param annee 
-     * @param niveauGeo 
-     * @param codeGeo 
-     * @param refQpv 
-     * @param codeQpv 
-     * @param theme 
-     * @param beneficiaireCode Siret du bénéficiaire
-     * @param beneficiaireCategorieJuridiqueType Type de la catégorie juridique du bénéficiaire
-     * @param centresCouts 
-     * @param colonnes 
-     * @param page 
-     * @param pageSize 
-     * @param sortBy 
-     * @param sortOrder 
-     * @param search 
-     * @param fieldsSearch 
+     * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public healthcheckHealthcheckGet(sourceRegion?: string, dataSource?: string, source?: string, codeProgramme?: string, notCodeProgramme?: string, annee?: string, niveauGeo?: string, codeGeo?: string, refQpv?: '2015' | '2024', codeQpv?: string, theme?: string, beneficiaireCode?: string, beneficiaireCategorieJuridiqueType?: string, centresCouts?: string, colonnes?: string, page?: number, pageSize?: number, sortBy?: string, sortOrder?: 'asc' | 'desc', search?: string, fieldsSearch?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any>;
-    public healthcheckHealthcheckGet(sourceRegion?: string, dataSource?: string, source?: string, codeProgramme?: string, notCodeProgramme?: string, annee?: string, niveauGeo?: string, codeGeo?: string, refQpv?: '2015' | '2024', codeQpv?: string, theme?: string, beneficiaireCode?: string, beneficiaireCategorieJuridiqueType?: string, centresCouts?: string, colonnes?: string, page?: number, pageSize?: number, sortBy?: string, sortOrder?: 'asc' | 'desc', search?: string, fieldsSearch?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<any>>;
-    public healthcheckHealthcheckGet(sourceRegion?: string, dataSource?: string, source?: string, codeProgramme?: string, notCodeProgramme?: string, annee?: string, niveauGeo?: string, codeGeo?: string, refQpv?: '2015' | '2024', codeQpv?: string, theme?: string, beneficiaireCode?: string, beneficiaireCategorieJuridiqueType?: string, centresCouts?: string, colonnes?: string, page?: number, pageSize?: number, sortBy?: string, sortOrder?: 'asc' | 'desc', search?: string, fieldsSearch?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<any>>;
-    public healthcheckHealthcheckGet(sourceRegion?: string, dataSource?: string, source?: string, codeProgramme?: string, notCodeProgramme?: string, annee?: string, niveauGeo?: string, codeGeo?: string, refQpv?: '2015' | '2024', codeQpv?: string, theme?: string, beneficiaireCode?: string, beneficiaireCategorieJuridiqueType?: string, centresCouts?: string, colonnes?: string, page?: number, pageSize?: number, sortBy?: string, sortOrder?: 'asc' | 'desc', search?: string, fieldsSearch?: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public healthcheckHealthcheckGet(requestParameters?: HealthcheckHealthcheckGetRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any>;
+    public healthcheckHealthcheckGet(requestParameters?: HealthcheckHealthcheckGetRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<any>>;
+    public healthcheckHealthcheckGet(requestParameters?: HealthcheckHealthcheckGetRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<any>>;
+    public healthcheckHealthcheckGet(requestParameters?: HealthcheckHealthcheckGetRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+        const sourceRegion = requestParameters?.sourceRegion;
+        const dataSource = requestParameters?.dataSource;
+        const source = requestParameters?.source;
+        const codeProgramme = requestParameters?.codeProgramme;
+        const notCodeProgramme = requestParameters?.notCodeProgramme;
+        const annee = requestParameters?.annee;
+        const niveauGeo = requestParameters?.niveauGeo;
+        const codeGeo = requestParameters?.codeGeo;
+        const refQpv = requestParameters?.refQpv;
+        const codeQpv = requestParameters?.codeQpv;
+        const theme = requestParameters?.theme;
+        const beneficiaireCode = requestParameters?.beneficiaireCode;
+        const beneficiaireCategorieJuridiqueType = requestParameters?.beneficiaireCategorieJuridiqueType;
+        const centresCouts = requestParameters?.centresCouts;
+        const colonnes = requestParameters?.colonnes;
+        const page = requestParameters?.page;
+        const pageSize = requestParameters?.pageSize;
+        const sortBy = requestParameters?.sortBy;
+        const sortOrder = requestParameters?.sortOrder;
+        const search = requestParameters?.search;
+        const fieldsSearch = requestParameters?.fieldsSearch;
 
         let localVarQueryParameters = new HttpParams({encoder: this.encoder});
         localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,

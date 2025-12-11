@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { Observable, map } from 'rxjs';
 
-import { CentreCouts, CentreCoutsService, CodeProgramme, ProgrammesService, QpvService } from 'apps/clients/v3/referentiels';
+import { CentreCouts, CentreCoutsService, CodeProgramme, FindAllByAnneeDecoupageQpvDecoupageAnneeGetRequestParams, ProgrammesService, QpvService } from 'apps/clients/v3/referentiels';
 import { V3QueryParamsService } from './query-params.service';
 import { V3QueryParams } from '../models/query-params.model';
 
@@ -45,7 +45,7 @@ export class ReferentielsService {
       params.fields_search = this.modelFields<CodeProgramme>()('code', 'label');
     }
     const sanitized = this._queryParamsService.getSanitizedV3Params(params)
-    return this._programmesService.listAllProgrammesGet(...sanitized, 'body')
+    return this._programmesService.listAllProgrammesGet(sanitized, 'body')
       .pipe(
         map(response => {
           return response != null ? response.data as CodeProgramme[] : []
@@ -76,9 +76,16 @@ export class ReferentielsService {
     }
 
     const sanitized = this._queryParamsService.getSanitizedV3Params(params);
-    const request$ = decoupage != null
-      ? this._qpvsService.findAllByAnneeDecoupageQpvDecoupageAnneeGet(decoupage.toString(), ...sanitized, 'body')
-      : this._qpvsService.listAllQpvGet(...sanitized, 'body');
+    let request$ = null
+    if (decoupage == null) {
+      request$ = this._qpvsService.listAllQpvGet(sanitized, 'body')
+    } else {
+      const params: FindAllByAnneeDecoupageQpvDecoupageAnneeGetRequestParams = {
+        ...sanitized,
+        annee: decoupage.toString(),
+      }
+      request$ = this._qpvsService.findAllByAnneeDecoupageQpvDecoupageAnneeGet(params, 'body')
+    }
 
     return request$.pipe(
       map(response => response?.data as CodeProgramme[] ?? [])
@@ -111,7 +118,7 @@ export class ReferentielsService {
       params.fields_search = this.modelFields<CentreCouts>()('code', 'description');
     }
     const sanitized = this._queryParamsService.getSanitizedV3Params(params)
-    return this._centreCoutsService.listAllCentreCoutsGet(...sanitized, 'body')
+    return this._centreCoutsService.listAllCentreCoutsGet(sanitized, 'body')
       .pipe(
         map(response => {
           return response != null ? response.data as CentreCouts[] : []

@@ -1,5 +1,6 @@
 import { Injectable } from "@angular/core";
-import { V3QueryParams, SanitizedV3Params } from "../models/query-params.model";
+import { V3QueryParams } from "../models/query-params.model";
+import { GetLignesFinancieresLignesGetRequestParams } from "apps/clients/v3/financial-data/api/api";
 
 @Injectable({
   providedIn: 'root'
@@ -28,16 +29,16 @@ export class V3QueryParamsService {
     });
   }
 
-  getSanitizedV3Params(params: V3QueryParams): SanitizedV3Params {
-    return [
-      params.colonnes?.join(','),
-      params.page,
-      params.page_size,
-      params.sort_by,
-      params.sort_order,
-      params.search,
-      params.fields_search?.join(','),
-    ] as const;
+  getSanitizedV3Params(params: V3QueryParams): GetLignesFinancieresLignesGetRequestParams {
+    return { 
+      colonnes: params.colonnes?.join(','),
+      page: params.page,
+      pageSize: params.page_size,
+      sortBy: params.sort_by,
+      sortOrder: params.sort_order,
+      search: params.search,
+      fieldsSearch: params.fields_search?.join(','),
+    };
   }
 
 }

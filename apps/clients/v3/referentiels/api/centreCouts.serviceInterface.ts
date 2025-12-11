@@ -18,6 +18,27 @@ import { CentreCoutsResponse } from '../model/models';
 import { referentielsV3Configuration }                                     from '../configuration';
 
 
+export interface GetByCodeCentreCoutsCodeGetRequestParams {
+    code: string;
+    colonnes?: string | null;
+    page?: number;
+    pageSize?: number;
+    sortBy?: string | null;
+    sortOrder?: 'asc' | 'desc' | null;
+    search?: string | null;
+    fieldsSearch?: string | null;
+}
+
+export interface ListAllCentreCoutsGetRequestParams {
+    colonnes?: string | null;
+    page?: number;
+    pageSize?: number;
+    sortBy?: string | null;
+    sortOrder?: 'asc' | 'desc' | null;
+    search?: string | null;
+    fieldsSearch?: string | null;
+}
+
 
 export interface CentreCoutsServiceInterface {
     defaultHeaders: HttpHeaders;
@@ -26,28 +47,15 @@ export interface CentreCoutsServiceInterface {
     /**
      * Get centre-couts by code
      * 
-     * @param code 
-     * @param colonnes 
-     * @param page 
-     * @param pageSize 
-     * @param sortBy 
-     * @param sortOrder 
-     * @param search 
-     * @param fieldsSearch 
+* @param requestParameters
      */
-    getByCodeCentreCoutsCodeGet(code: string, colonnes?: string, page?: number, pageSize?: number, sortBy?: string, sortOrder?: 'asc' | 'desc', search?: string, fieldsSearch?: string, extraHttpRequestParams?: any): Observable<CentreCoutsResponse>;
+    getByCodeCentreCoutsCodeGet(requestParameters: GetByCodeCentreCoutsCodeGetRequestParams, extraHttpRequestParams?: any): Observable<CentreCoutsResponse>;
 
     /**
      * Liste de tous les centre-couts
      * 
-     * @param colonnes 
-     * @param page 
-     * @param pageSize 
-     * @param sortBy 
-     * @param sortOrder 
-     * @param search 
-     * @param fieldsSearch 
+* @param requestParameters
      */
-    listAllCentreCoutsGet(colonnes?: string, page?: number, pageSize?: number, sortBy?: string, sortOrder?: 'asc' | 'desc', search?: string, fieldsSearch?: string, extraHttpRequestParams?: any): Observable<CentreCoutsResponse>;
+    listAllCentreCoutsGet(requestParameters: ListAllCentreCoutsGetRequestParams, extraHttpRequestParams?: any): Observable<CentreCoutsResponse>;
 
 }

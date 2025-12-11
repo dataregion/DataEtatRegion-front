@@ -12,13 +12,70 @@ import { HttpHeaders }                                       from '@angular/comm
 import { Observable }                                        from 'rxjs';
 
 import { APIError } from '../model/models';
-import { APISuccessAnnotatedEnrichedFlattenFinancialLinesPydanticFromMarshmallowSchemaAnnotationTSchema } from '../model/models';
 import { APISuccessListInt } from '../model/models';
+import { LigneResponse } from '../model/models';
 import { LignesResponse } from '../model/models';
 
 
 import { financialDataV3Configuration }                                     from '../configuration';
 
+
+export interface GetAnneesLignesAnneesGetRequestParams {
+    sourceRegion?: string | null;
+    dataSource?: string | null;
+    source?: string | null;
+    colonnes?: string | null;
+    page?: number;
+    pageSize?: number;
+    sortBy?: string | null;
+    sortOrder?: 'asc' | 'desc' | null;
+    search?: string | null;
+    fieldsSearch?: string | null;
+}
+
+export interface GetLignesFinancieresBySourceLignesIdGetRequestParams {
+    id: number;
+    sourceRegion?: string | null;
+    dataSource?: string | null;
+    source?: string | null;
+    colonnes?: string | null;
+    page?: number;
+    pageSize?: number;
+    sortBy?: string | null;
+    sortOrder?: 'asc' | 'desc' | null;
+    search?: string | null;
+    fieldsSearch?: string | null;
+}
+
+export interface GetLignesFinancieresLignesGetRequestParams {
+    forceNoCache?: boolean;
+    sourceRegion?: string | null;
+    dataSource?: string | null;
+    source?: string | null;
+    nEj?: string | null;
+    codeProgramme?: string | null;
+    niveauGeo?: string | null;
+    codeGeo?: string | null;
+    refQpv?: 2015 | 2024 | null;
+    codeQpv?: string | null;
+    theme?: string | null;
+    beneficiaireCode?: string | null;
+    beneficiaireCategorieJuridiqueType?: string | null;
+    annee?: string | null;
+    centresCouts?: string | null;
+    domaineFonctionnel?: string | null;
+    referentielProgrammation?: string | null;
+    tags?: string | null;
+    grouping?: string | null;
+    grouped?: string | null;
+    colonnes?: string | null;
+    page?: number;
+    pageSize?: number;
+    sortBy?: string | null;
+    sortOrder?: 'asc' | 'desc' | null;
+    search?: string | null;
+    fieldsSearch?: string | null;
+}
 
 
 export interface LignesFinancieresServiceInterface {
@@ -28,66 +85,22 @@ export interface LignesFinancieresServiceInterface {
     /**
      * Recupère la plage des années pour lesquelles les données budgetaires courent.
      * 
-     * @param sourceRegion 
-     * @param dataSource 
-     * @param source 
-     * @param colonnes 
-     * @param page 
-     * @param pageSize 
-     * @param sortBy 
-     * @param sortOrder 
-     * @param search 
-     * @param fieldsSearch 
+* @param requestParameters
      */
-    getAnneesLignesAnneesGet(sourceRegion?: string, dataSource?: string, source?: string, colonnes?: string, page?: number, pageSize?: number, sortBy?: string, sortOrder?: 'asc' | 'desc', search?: string, fieldsSearch?: string, extraHttpRequestParams?: any): Observable<APISuccessListInt>;
+    getAnneesLignesAnneesGet(requestParameters: GetAnneesLignesAnneesGetRequestParams, extraHttpRequestParams?: any): Observable<APISuccessListInt>;
 
     /**
      * Récupére les infos budgetaires en fonction de son identifiant technique
      * 
-     * @param id 
-     * @param sourceRegion 
-     * @param dataSource 
-     * @param source 
-     * @param colonnes 
-     * @param page 
-     * @param pageSize 
-     * @param sortBy 
-     * @param sortOrder 
-     * @param search 
-     * @param fieldsSearch 
+* @param requestParameters
      */
-    getLignesFinancieresBySourceLignesIdGet(id: number, sourceRegion?: string, dataSource?: string, source?: string, colonnes?: string, page?: number, pageSize?: number, sortBy?: string, sortOrder?: 'asc' | 'desc', search?: string, fieldsSearch?: string, extraHttpRequestParams?: any): Observable<APISuccessAnnotatedEnrichedFlattenFinancialLinesPydanticFromMarshmallowSchemaAnnotationTSchema>;
+    getLignesFinancieresBySourceLignesIdGet(requestParameters: GetLignesFinancieresBySourceLignesIdGetRequestParams, extraHttpRequestParams?: any): Observable<LigneResponse>;
 
     /**
      * Récupére les lignes financières, mécanisme de grouping pour récupérer les montants agrégés
      * 
-     * @param sourceRegion 
-     * @param dataSource 
-     * @param source 
-     * @param nEj 
-     * @param codeProgramme 
-     * @param niveauGeo 
-     * @param codeGeo 
-     * @param refQpv 
-     * @param codeQpv 
-     * @param theme 
-     * @param beneficiaireCode Siret du bénéficiaire
-     * @param beneficiaireCategorieJuridiqueType Type de la catégorie juridique du bénéficiaire
-     * @param annee 
-     * @param centresCouts 
-     * @param domaineFonctionnel 
-     * @param referentielProgrammation 
-     * @param tags 
-     * @param grouping 
-     * @param grouped 
-     * @param colonnes 
-     * @param page 
-     * @param pageSize 
-     * @param sortBy 
-     * @param sortOrder 
-     * @param search 
-     * @param fieldsSearch 
+* @param requestParameters
      */
-    getLignesFinancieresLignesGet(sourceRegion?: string, dataSource?: string, source?: string, nEj?: string, codeProgramme?: string, niveauGeo?: string, codeGeo?: string, refQpv?: 2015 | 2024, codeQpv?: string, theme?: string, beneficiaireCode?: string, beneficiaireCategorieJuridiqueType?: string, annee?: string, centresCouts?: string, domaineFonctionnel?: string, referentielProgrammation?: string, tags?: string, grouping?: string, grouped?: string, colonnes?: string, page?: number, pageSize?: number, sortBy?: string, sortOrder?: 'asc' | 'desc', search?: string, fieldsSearch?: string, extraHttpRequestParams?: any): Observable<LignesResponse>;
+    getLignesFinancieresLignesGet(requestParameters: GetLignesFinancieresLignesGetRequestParams, extraHttpRequestParams?: any): Observable<LignesResponse>;
 
 }

@@ -18,6 +18,30 @@ import { MapResponse } from '../model/models';
 import { dataQpvV3Configuration }                                     from '../configuration';
 
 
+export interface GetMapMapGetRequestParams {
+    sourceRegion?: string | null;
+    dataSource?: string | null;
+    source?: string | null;
+    codeProgramme?: string | null;
+    notCodeProgramme?: string | null;
+    annee?: string | null;
+    niveauGeo?: string | null;
+    codeGeo?: string | null;
+    refQpv?: '2015' | '2024' | null;
+    codeQpv?: string | null;
+    theme?: string | null;
+    beneficiaireCode?: string | null;
+    beneficiaireCategorieJuridiqueType?: string | null;
+    centresCouts?: string | null;
+    colonnes?: string | null;
+    page?: number;
+    pageSize?: number;
+    sortBy?: string | null;
+    sortOrder?: 'asc' | 'desc' | null;
+    search?: string | null;
+    fieldsSearch?: string | null;
+}
+
 
 export interface MapServiceInterface {
     defaultHeaders: HttpHeaders;
@@ -26,28 +50,8 @@ export interface MapServiceInterface {
     /**
      * Récupére les lignes QPV agrégées pour la cartographie
      * 
-     * @param sourceRegion 
-     * @param dataSource 
-     * @param source 
-     * @param codeProgramme 
-     * @param notCodeProgramme 
-     * @param annee 
-     * @param niveauGeo 
-     * @param codeGeo 
-     * @param refQpv 
-     * @param codeQpv 
-     * @param theme 
-     * @param beneficiaireCode Siret du bénéficiaire
-     * @param beneficiaireCategorieJuridiqueType Type de la catégorie juridique du bénéficiaire
-     * @param centresCouts 
-     * @param colonnes 
-     * @param page 
-     * @param pageSize 
-     * @param sortBy 
-     * @param sortOrder 
-     * @param search 
-     * @param fieldsSearch 
+* @param requestParameters
      */
-    getMapMapGet(sourceRegion?: string, dataSource?: string, source?: string, codeProgramme?: string, notCodeProgramme?: string, annee?: string, niveauGeo?: string, codeGeo?: string, refQpv?: '2015' | '2024', codeQpv?: string, theme?: string, beneficiaireCode?: string, beneficiaireCategorieJuridiqueType?: string, centresCouts?: string, colonnes?: string, page?: number, pageSize?: number, sortBy?: string, sortOrder?: 'asc' | 'desc', search?: string, fieldsSearch?: string, extraHttpRequestParams?: any): Observable<MapResponse>;
+    getMapMapGet(requestParameters: GetMapMapGetRequestParams, extraHttpRequestParams?: any): Observable<MapResponse>;
 
 }

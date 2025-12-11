@@ -1,5 +1,4 @@
 export * from './aPIError';
-export * from './aPISuccessAnnotatedEnrichedFlattenFinancialLinesPydanticFromMarshmallowSchemaAnnotationTSchema';
 export * from './aPISuccessListColonne';
 export * from './aPISuccessListInt';
 export * from './colonne';
@@ -10,6 +9,7 @@ export * from './enrichedFlattenFinancialLines2';
 export * from './groupedData';
 export * from './groupings';
 export * from './label';
+export * from './ligneResponse';
 export * from './lignesFinancieres';
 export * from './lignesResponse';
 export * from './paginationMeta';

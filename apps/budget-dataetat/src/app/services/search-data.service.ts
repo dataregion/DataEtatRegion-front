@@ -433,7 +433,7 @@ export class SearchDataService {
 
     this._logger.debug('==> Paramètres validés, démarrage de la recherche');
     const req$ = this._lignesFinanciereService.getLignesFinancieresLignesGet(
-      ...this._searchParamsService.getSanitizedSearchParams(searchParams),
+      this._searchParamsService.getSanitizedSearchParams(searchParams),
       'body'
     );
     return req$;

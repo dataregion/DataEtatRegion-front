@@ -18,6 +18,38 @@ import { QpvResponse } from '../model/models';
 import { referentielsV3Configuration }                                     from '../configuration';
 
 
+export interface FindAllByAnneeDecoupageQpvDecoupageAnneeGetRequestParams {
+    annee: string;
+    colonnes?: string | null;
+    page?: number;
+    pageSize?: number;
+    sortBy?: string | null;
+    sortOrder?: 'asc' | 'desc' | null;
+    search?: string | null;
+    fieldsSearch?: string | null;
+}
+
+export interface GetByCodeQpvCodeGetRequestParams {
+    code: string;
+    colonnes?: string | null;
+    page?: number;
+    pageSize?: number;
+    sortBy?: string | null;
+    sortOrder?: 'asc' | 'desc' | null;
+    search?: string | null;
+    fieldsSearch?: string | null;
+}
+
+export interface ListAllQpvGetRequestParams {
+    colonnes?: string | null;
+    page?: number;
+    pageSize?: number;
+    sortBy?: string | null;
+    sortOrder?: 'asc' | 'desc' | null;
+    search?: string | null;
+    fieldsSearch?: string | null;
+}
+
 
 export interface QpvServiceInterface {
     defaultHeaders: HttpHeaders;
@@ -26,42 +58,22 @@ export interface QpvServiceInterface {
     /**
      * Find all QPV by annee
      * 
-     * @param annee 
-     * @param colonnes 
-     * @param page 
-     * @param pageSize 
-     * @param sortBy 
-     * @param sortOrder 
-     * @param search 
-     * @param fieldsSearch 
+* @param requestParameters
      */
-    findAllByAnneeDecoupageQpvDecoupageAnneeGet(annee: string, colonnes?: string, page?: number, pageSize?: number, sortBy?: string, sortOrder?: 'asc' | 'desc', search?: string, fieldsSearch?: string, extraHttpRequestParams?: any): Observable<QpvResponse>;
+    findAllByAnneeDecoupageQpvDecoupageAnneeGet(requestParameters: FindAllByAnneeDecoupageQpvDecoupageAnneeGetRequestParams, extraHttpRequestParams?: any): Observable<QpvResponse>;
 
     /**
      * Get qpv by code
      * 
-     * @param code 
-     * @param colonnes 
-     * @param page 
-     * @param pageSize 
-     * @param sortBy 
-     * @param sortOrder 
-     * @param search 
-     * @param fieldsSearch 
+* @param requestParameters
      */
-    getByCodeQpvCodeGet(code: string, colonnes?: string, page?: number, pageSize?: number, sortBy?: string, sortOrder?: 'asc' | 'desc', search?: string, fieldsSearch?: string, extraHttpRequestParams?: any): Observable<QpvResponse>;
+    getByCodeQpvCodeGet(requestParameters: GetByCodeQpvCodeGetRequestParams, extraHttpRequestParams?: any): Observable<QpvResponse>;
 
     /**
      * Liste de tous les qpv
      * 
-     * @param colonnes 
-     * @param page 
-     * @param pageSize 
-     * @param sortBy 
-     * @param sortOrder 
-     * @param search 
-     * @param fieldsSearch 
+* @param requestParameters
      */
-    listAllQpvGet(colonnes?: string, page?: number, pageSize?: number, sortBy?: string, sortOrder?: 'asc' | 'desc', search?: string, fieldsSearch?: string, extraHttpRequestParams?: any): Observable<QpvResponse>;
+    listAllQpvGet(requestParameters: ListAllQpvGetRequestParams, extraHttpRequestParams?: any): Observable<QpvResponse>;
 
 }

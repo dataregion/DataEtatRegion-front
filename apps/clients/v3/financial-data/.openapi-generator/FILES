@@ -15,7 +15,6 @@ encoder.ts
 git_push.sh
 index.ts
 model/aPIError.ts
-model/aPISuccessAnnotatedEnrichedFlattenFinancialLinesPydanticFromMarshmallowSchemaAnnotationTSchema.ts
 model/aPISuccessListColonne.ts
 model/aPISuccessListInt.ts
 model/colonne.ts
@@ -26,6 +25,7 @@ model/enrichedFlattenFinancialLines2.ts
 model/groupedData.ts
 model/groupings.ts
 model/label.ts
+model/ligneResponse.ts
 model/lignesFinancieres.ts
 model/lignesResponse.ts
 model/models.ts

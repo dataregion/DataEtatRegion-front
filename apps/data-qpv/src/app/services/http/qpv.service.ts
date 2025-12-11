@@ -18,7 +18,7 @@ export class QpvDataService {
             params = this._sourceQueryParamsService.getEmpty()
 
         const sanitized = this._sourceQueryParamsService.getSanitizedFullSourceParams(params)
-        return this._qpvApi.getAnneesLignesAnneesGet(...sanitized, "body").pipe(
+        return this._qpvApi.getAnneesLignesAnneesGet(sanitized, "body").pipe(
             map(response => response.data ?? [])
         )
     }

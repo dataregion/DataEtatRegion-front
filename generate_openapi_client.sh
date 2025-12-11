@@ -1,5 +1,8 @@
 #!/bin/bash
 
+_DO_USE_SINGLE_REQUEST_PARAMETER="${DO_USE_SINGLE_REQUEST_PARAMETER:-false}"
+
+
 # Fonction pour afficher le message d'aide
 display_help() {
   echo "Usage: $0 [-s swagger_url] [-p prefix] [-t target] [argument]"
@@ -184,4 +187,4 @@ docker run \
   -i "/tmp/swagger.json" \
   -g typescript-angular \
   -o "/local/$nom_api" \
-  --additional-properties npmName=$nom_api,npmVersion=1.0.0,snapshot=false,ngVersion="19.0.0",rxjsVersion="7.5.5",tsVersion="<5.7.4",apiModulePrefix="$prefix",configurationPrefix="$prefix,withInterfaces=true"
+  --additional-properties useSingleRequestParameter=$_DO_USE_SINGLE_REQUEST_PARAMETER,npmName=$nom_api,npmVersion=1.0.0,snapshot=false,ngVersion="19.0.0",rxjsVersion="7.5.5",tsVersion="<5.7.4",apiModulePrefix="$prefix",configurationPrefix="$prefix,withInterfaces=true"

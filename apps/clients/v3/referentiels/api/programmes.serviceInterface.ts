@@ -18,6 +18,27 @@ import { ProgrammeResponse } from '../model/models';
 import { referentielsV3Configuration }                                     from '../configuration';
 
 
+export interface GetByCodeProgrammesCodeGetRequestParams {
+    code: string;
+    colonnes?: string | null;
+    page?: number;
+    pageSize?: number;
+    sortBy?: string | null;
+    sortOrder?: 'asc' | 'desc' | null;
+    search?: string | null;
+    fieldsSearch?: string | null;
+}
+
+export interface ListAllProgrammesGetRequestParams {
+    colonnes?: string | null;
+    page?: number;
+    pageSize?: number;
+    sortBy?: string | null;
+    sortOrder?: 'asc' | 'desc' | null;
+    search?: string | null;
+    fieldsSearch?: string | null;
+}
+
 
 export interface ProgrammesServiceInterface {
     defaultHeaders: HttpHeaders;
@@ -26,28 +47,15 @@ export interface ProgrammesServiceInterface {
     /**
      * Get programmes by code
      * 
-     * @param code 
-     * @param colonnes 
-     * @param page 
-     * @param pageSize 
-     * @param sortBy 
-     * @param sortOrder 
-     * @param search 
-     * @param fieldsSearch 
+* @param requestParameters
      */
-    getByCodeProgrammesCodeGet(code: string, colonnes?: string, page?: number, pageSize?: number, sortBy?: string, sortOrder?: 'asc' | 'desc', search?: string, fieldsSearch?: string, extraHttpRequestParams?: any): Observable<ProgrammeResponse>;
+    getByCodeProgrammesCodeGet(requestParameters: GetByCodeProgrammesCodeGetRequestParams, extraHttpRequestParams?: any): Observable<ProgrammeResponse>;
 
     /**
      * Liste de tous les programmes
      * 
-     * @param colonnes 
-     * @param page 
-     * @param pageSize 
-     * @param sortBy 
-     * @param sortOrder 
-     * @param search 
-     * @param fieldsSearch 
+* @param requestParameters
      */
-    listAllProgrammesGet(colonnes?: string, page?: number, pageSize?: number, sortBy?: string, sortOrder?: 'asc' | 'desc', search?: string, fieldsSearch?: string, extraHttpRequestParams?: any): Observable<ProgrammeResponse>;
+    listAllProgrammesGet(requestParameters: ListAllProgrammesGetRequestParams, extraHttpRequestParams?: any): Observable<ProgrammeResponse>;
 
 }

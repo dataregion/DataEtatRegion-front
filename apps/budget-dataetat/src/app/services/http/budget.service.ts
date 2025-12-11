@@ -5,7 +5,7 @@ import { BudgetService } from 'apps/clients/budget';
 import { map, Observable } from 'rxjs';
 import { SettingsBudgetService } from '../../environments/settings-budget.service';
 import { FinancialCp } from '@models/financial/financial-data.models';
-import { APISuccessAnnotatedEnrichedFlattenFinancialLinesPydanticFromMarshmallowSchemaAnnotationTSchema, LignesFinancieresService } from 'apps/clients/v3/financial-data';
+import { LigneResponse, LignesFinancieresService } from 'apps/clients/v3/financial-data';
 import { Tag } from '@models/refs/tag.model';
 
 
@@ -70,8 +70,10 @@ export class BudgetDataHttpService {
     return this.http.get<FinancialCp[]>(`${this._financialApiUrl}/ae/${id}/cp`);
   }
   
-  public getById(id: number, source:string): Observable<APISuccessAnnotatedEnrichedFlattenFinancialLinesPydanticFromMarshmallowSchemaAnnotationTSchema> {
-    return this._lignesFinancieresApi.getLignesFinancieresBySourceLignesIdGet(id, undefined, undefined, source)
+  public getById(id: number, source:string): Observable<LigneResponse> {
+    return this._lignesFinancieresApi.getLignesFinancieresBySourceLignesIdGet(
+      { id, source,}
+    )
   }
 
   public allTags$(): Observable<Tag[]> {
