@@ -51,20 +51,6 @@ export class MapService extends BaseService implements MapServiceInterface {
     public getMapMapGet(requestParameters?: GetMapMapGetRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<MapResponse>>;
     public getMapMapGet(requestParameters?: GetMapMapGetRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<MapResponse>>;
     public getMapMapGet(requestParameters?: GetMapMapGetRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
-        const sourceRegion = requestParameters?.sourceRegion;
-        const dataSource = requestParameters?.dataSource;
-        const source = requestParameters?.source;
-        const codeProgramme = requestParameters?.codeProgramme;
-        const notCodeProgramme = requestParameters?.notCodeProgramme;
-        const annee = requestParameters?.annee;
-        const niveauGeo = requestParameters?.niveauGeo;
-        const codeGeo = requestParameters?.codeGeo;
-        const refQpv = requestParameters?.refQpv;
-        const codeQpv = requestParameters?.codeQpv;
-        const theme = requestParameters?.theme;
-        const beneficiaireCode = requestParameters?.beneficiaireCode;
-        const beneficiaireCategorieJuridiqueType = requestParameters?.beneficiaireCategorieJuridiqueType;
-        const centresCouts = requestParameters?.centresCouts;
         const colonnes = requestParameters?.colonnes;
         const page = requestParameters?.page;
         const pageSize = requestParameters?.pageSize;
@@ -72,8 +58,36 @@ export class MapService extends BaseService implements MapServiceInterface {
         const sortOrder = requestParameters?.sortOrder;
         const search = requestParameters?.search;
         const fieldsSearch = requestParameters?.fieldsSearch;
+        const sourceRegion = requestParameters?.sourceRegion;
+        const dataSource = requestParameters?.dataSource;
+        const source = requestParameters?.source;
+        const codeProgramme = requestParameters?.codeProgramme;
+        const niveauGeo = requestParameters?.niveauGeo;
+        const codeGeo = requestParameters?.codeGeo;
+        const refQpv = requestParameters?.refQpv;
+        const codeQpv = requestParameters?.codeQpv;
+        const theme = requestParameters?.theme;
+        const beneficiaireCode = requestParameters?.beneficiaireCode;
+        const beneficiaireCategorieJuridiqueType = requestParameters?.beneficiaireCategorieJuridiqueType;
+        const annee = requestParameters?.annee;
+        const centresCouts = requestParameters?.centresCouts;
+        const notCodeProgramme = requestParameters?.notCodeProgramme;
 
         let localVarQueryParameters = new HttpParams({encoder: this.encoder});
+        localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+          <any>colonnes, 'colonnes');
+        localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+          <any>page, 'page');
+        localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+          <any>pageSize, 'page_size');
+        localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+          <any>sortBy, 'sort_by');
+        localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+          <any>sortOrder, 'sort_order');
+        localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+          <any>search, 'search');
+        localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+          <any>fieldsSearch, 'fields_search');
         localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
           <any>sourceRegion, 'source_region');
         localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
@@ -82,10 +96,6 @@ export class MapService extends BaseService implements MapServiceInterface {
           <any>source, 'source');
         localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
           <any>codeProgramme, 'code_programme');
-        localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
-          <any>notCodeProgramme, 'not_code_programme');
-        localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
-          <any>annee, 'annee');
         localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
           <any>niveauGeo, 'niveau_geo');
         localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
@@ -101,21 +111,11 @@ export class MapService extends BaseService implements MapServiceInterface {
         localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
           <any>beneficiaireCategorieJuridiqueType, 'beneficiaire_categorieJuridique_type');
         localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+          <any>annee, 'annee');
+        localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
           <any>centresCouts, 'centres_couts');
         localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
-          <any>colonnes, 'colonnes');
-        localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
-          <any>page, 'page');
-        localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
-          <any>pageSize, 'page_size');
-        localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
-          <any>sortBy, 'sort_by');
-        localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
-          <any>sortOrder, 'sort_order');
-        localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
-          <any>search, 'search');
-        localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
-          <any>fieldsSearch, 'fields_search');
+          <any>notCodeProgramme, 'not_code_programme');
 
         let localVarHeaders = this.defaultHeaders;
 

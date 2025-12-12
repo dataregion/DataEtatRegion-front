@@ -204,9 +204,9 @@ export class SearchDataService {
 
     const sanitized = this._searchParamsService.getSanitizedSearchParams(searchParams);
 
-    const dashboard$ = this._dashboardsService.getDashboardDashboardsGet(...sanitized, 'body');
-    const lignes$ = this._lignesFinanciereService.getLignesFinancieresLignesGet(...sanitized, 'body');
-    const map$ = this._mapService.getMapMapGet(...sanitized, 'body');
+    const dashboard$ = this._dashboardsService.getDashboardDashboardsGet(sanitized, 'body');
+    const lignes$ = this._lignesFinanciereService.getLignesFinancieresLignesGet(sanitized, 'body');
+    const map$ = this._mapService.getMapMapGet(sanitized, 'body');
     
     return forkJoin({
       dashboard: dashboard$,

@@ -7,9 +7,9 @@ import { RefQpvWithCommune } from '../models/refs/qpv.model';
 import { CentreCouts } from 'apps/clients/v3/referentiels';
 import { SearchTypeCategorieJuridique } from 'apps/common-lib/src/lib/models/refs/common.models';
 import { BopModel, ThemeModel } from 'apps/common-lib/src/lib/models/refs/bop.models';
-import { SanitizedSourceParams, SourceQueryParams } from 'apps/appcommon/src/lib/models/source-query-params.model';
+import { SourceQueryParams } from 'apps/appcommon/src/lib/models/source-query-params.model';
 import { SourceQueryParamsService } from 'apps/appcommon/src/lib/services/source-query-params.service';
-import { SanitizedV3Params } from 'apps/appcommon/src/lib/models/query-params.model';
+import { GetDashboardDashboardsGetRequestParams, GetLignesFinancieresLignesGetRequestParams, GetMapMapGetRequestParams } from 'apps/clients/v3/data-qpv';
 
 
 export interface SearchParameters extends SourceQueryParams {
@@ -26,25 +26,7 @@ export interface SearchParameters extends SourceQueryParams {
   types_beneficiaires: SearchTypeCategorieJuridique[] | undefined;
 }
 
-export type SanitizedSearchParams = [
-  string | undefined,               // bops
-  string | undefined,               // notBops
-  string | undefined,               // years
-  string | undefined,               // niveau
-  string | undefined,               // locations
-  "2015" | "2024" | undefined,      // ref_qpv
-  string | undefined,               // code_qpv
-  string | undefined,               // centres_couts
-  string | undefined,               // themes
-  string | undefined,               // beneficiaires
-  string | undefined,               // types_beneficiaires
-];
-
-export type SanitizedSearchFullParams = [
-  ...SanitizedSourceParams,
-  ...SanitizedSearchParams,
-  ...SanitizedV3Params
-];
+export type SanitizedSearchFullParams = GetLignesFinancieresLignesGetRequestParams | GetDashboardDashboardsGetRequestParams | GetMapMapGetRequestParams;
 
 
 // eslint-disable-next-line @typescript-eslint/no-namespace
@@ -122,27 +104,25 @@ export class SearchParamsService extends SourceQueryParamsService {
     const sanitized_beneficiaire_siret: string[] | undefined = this._sanitizeReqArg(params.beneficiaires?.map((x) => x.siret));
     const sanitized_financeurs = this._sanitizeReqArg(params.centres_couts?.map((t) => t.code));
 
-    const sanitizedSearchParams: SanitizedSearchParams = [
-      sanitized_codes_programme?.join(','),
-      sanitized_not_codes_programme?.join(','),
-      sanitized_annees?.join(','),
-      sanitized_niveau_geo,
-      sanitized_codes_geo?.join(','),
-      params.ref_qpv,
-      sanitized_codes_qpv?.join(','),
-      sanitized_themes?.join('|'),
-      sanitized_beneficiaire_siret?.join(','),
-      params.types_beneficiaires?.join(','),
-      sanitized_financeurs?.join(','),
-    ]
+    const sanitizedSearchParams: SanitizedSearchFullParams = {
+      codeProgramme: sanitized_codes_programme?.join(','),
+      notCodeProgramme: sanitized_not_codes_programme?.join(','),
+      annee: sanitized_annees?.join(','),
+      niveauGeo: sanitized_niveau_geo,
+      codeGeo: sanitized_codes_geo?.join(','),
+      refQpv: params.ref_qpv,
+      codeQpv: sanitized_codes_qpv?.join(','),
+      theme: sanitized_themes?.join('|'),
+      beneficiaireCode: sanitized_beneficiaire_siret?.join(','),
+      beneficiaireCategorieJuridiqueType: params.types_beneficiaires?.join(','),
+      centresCouts: sanitized_financeurs?.join(','),
+    }
     
-    // Respect de l'ordre pour le client généré : getLignesFinancieresLignesGet
-    // Pourquoi cet ordre là à la génération ? ¯\_(ツ)_/¯
-    return [
+    return {
       ...this.getSanitizedSourceParams(params),
       ...sanitizedSearchParams,
       ...this.getSanitizedV3Params(params),
-    ] as const;
+    };
   }
     
   private _sanitizeReqArg<T>(arg: Optional<T>): T | undefined {

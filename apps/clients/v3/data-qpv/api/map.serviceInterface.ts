@@ -19,20 +19,6 @@ import { dataQpvV3Configuration }                                     from '../c
 
 
 export interface GetMapMapGetRequestParams {
-    sourceRegion?: string | null;
-    dataSource?: string | null;
-    source?: string | null;
-    codeProgramme?: string | null;
-    notCodeProgramme?: string | null;
-    annee?: string | null;
-    niveauGeo?: string | null;
-    codeGeo?: string | null;
-    refQpv?: '2015' | '2024' | null;
-    codeQpv?: string | null;
-    theme?: string | null;
-    beneficiaireCode?: string | null;
-    beneficiaireCategorieJuridiqueType?: string | null;
-    centresCouts?: string | null;
     colonnes?: string | null;
     page?: number;
     pageSize?: number;
@@ -40,6 +26,20 @@ export interface GetMapMapGetRequestParams {
     sortOrder?: 'asc' | 'desc' | null;
     search?: string | null;
     fieldsSearch?: string | null;
+    sourceRegion?: string | null;
+    dataSource?: string | null;
+    source?: string | null;
+    codeProgramme?: string | null;
+    niveauGeo?: string | null;
+    codeGeo?: string | null;
+    refQpv?: '2015' | '2024' | null;
+    codeQpv?: string | null;
+    theme?: string | null;
+    beneficiaireCode?: string | null;
+    beneficiaireCategorieJuridiqueType?: string | null;
+    annee?: string | null;
+    centresCouts?: string | null;
+    notCodeProgramme?: string | null;
 }
 
 
