@@ -1,7 +1,6 @@
 import { HttpClient } from "@angular/common/http";
 import { Component, inject, OnInit } from "@angular/core";
 import { ExportFinancialTask, LignesFinancieresService } from "apps/clients/v3/financial-data";
-import { BarElement } from "chart.js";
 
 @Component({
     selector: 'budget-exports',
