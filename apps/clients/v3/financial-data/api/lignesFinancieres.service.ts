@@ -33,7 +33,7 @@ import { financialDataV3Configuration }                                     from
 import { BaseService } from '../api.base.service';
 import {
     LignesFinancieresServiceInterface,
-    DownloadExportLignesDownloadUuidPostRequestParams,
+    DownloadExportLignesDownloadUuidGetRequestParams,
     GetAnneesLignesAnneesGetRequestParams,
     GetLignesFinancieresBySourceLignesIdGetRequestParams,
     GetLignesFinancieresLignesGetRequestParams,
@@ -57,13 +57,13 @@ export class LignesFinancieresService extends BaseService implements LignesFinan
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public downloadExportLignesDownloadUuidPost(requestParameters: DownloadExportLignesDownloadUuidPostRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any>;
-    public downloadExportLignesDownloadUuidPost(requestParameters: DownloadExportLignesDownloadUuidPostRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<any>>;
-    public downloadExportLignesDownloadUuidPost(requestParameters: DownloadExportLignesDownloadUuidPostRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<any>>;
-    public downloadExportLignesDownloadUuidPost(requestParameters: DownloadExportLignesDownloadUuidPostRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public downloadExportLignesDownloadUuidGet(requestParameters: DownloadExportLignesDownloadUuidGetRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any>;
+    public downloadExportLignesDownloadUuidGet(requestParameters: DownloadExportLignesDownloadUuidGetRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<any>>;
+    public downloadExportLignesDownloadUuidGet(requestParameters: DownloadExportLignesDownloadUuidGetRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<any>>;
+    public downloadExportLignesDownloadUuidGet(requestParameters: DownloadExportLignesDownloadUuidGetRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
         const uuid = requestParameters?.uuid;
         if (uuid === null || uuid === undefined) {
-            throw new Error('Required parameter uuid was null or undefined when calling downloadExportLignesDownloadUuidPost.');
+            throw new Error('Required parameter uuid was null or undefined when calling downloadExportLignesDownloadUuidGet.');
         }
 
         let localVarHeaders = this.defaultHeaders;
@@ -95,7 +95,7 @@ export class LignesFinancieresService extends BaseService implements LignesFinan
         }
 
         let localVarPath = `/lignes/download/${this.configuration.encodeParam({name: "uuid", value: uuid, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`;
-        return this.httpClient.request<any>('post', `${this.configuration.basePath}${localVarPath}`,
+        return this.httpClient.request<any>('get', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
                 responseType: <any>responseType_,

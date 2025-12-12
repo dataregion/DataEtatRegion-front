@@ -21,7 +21,7 @@ import { LignesResponse } from '../model/models';
 import { financialDataV3Configuration }                                     from '../configuration';
 
 
-export interface DownloadExportLignesDownloadUuidPostRequestParams {
+export interface DownloadExportLignesDownloadUuidGetRequestParams {
     uuid: string;
 }
 
@@ -122,7 +122,7 @@ export interface LignesFinancieresServiceInterface {
      * 
 * @param requestParameters
      */
-    downloadExportLignesDownloadUuidPost(requestParameters: DownloadExportLignesDownloadUuidPostRequestParams, extraHttpRequestParams?: any): Observable<any>;
+    downloadExportLignesDownloadUuidGet(requestParameters: DownloadExportLignesDownloadUuidGetRequestParams, extraHttpRequestParams?: any): Observable<{}>;
 
     /**
      * Recupère la plage des années pour lesquelles les données budgetaires courent.
