@@ -9,29 +9,25 @@ import {
 import { ModalGroupingComponent } from './modal-grouping/modal-grouping.component';
 import { ModalColonnesComponent } from "./modal-colonnes/modal-colonnes.component";
 import { ModalSauvegardeComponent } from "./modal-sauvegarde/modal-sauvegarde.component";
-import { ModalTelechargementComponent } from "./modal-telechargement/modal-telechargement.component";
+import { ModalExportComponent } from "./modal-export/modal-export.component";
 import { BudgetFinancialDataModel } from '@models/financial/financial-data.models';
 import { ColonnesService } from '@services/colonnes.service';
 import { SearchDataService } from '@services/search-data.service';
 import { MaterialModule } from "apps/common-lib/src/public-api";
-import { TableExportService } from './services/table-export.service';
 import { ColonneTableau } from 'apps/appcommon/src/lib/mappers/colonnes-mapper.service';
 
 
 @Component({
   selector: 'budget-table-toolbar',
   templateUrl: './table-toolbar.component.html',
-  imports: [CommonModule, ModalGroupingComponent, ModalColonnesComponent, ModalSauvegardeComponent, ModalTelechargementComponent, MaterialModule],
+  imports: [CommonModule, ModalGroupingComponent, ModalColonnesComponent, ModalSauvegardeComponent, ModalExportComponent, MaterialModule],
   styleUrls: ['./table-toolbar.component.scss'],
   encapsulation: ViewEncapsulation.None,
-  providers: [TableExportService]
 })
 export class TableToolbarComponent {
   
   private _gridFullscreen = inject(GridInFullscreenStateService);
   private _colonnesService = inject(ColonnesService);
-
-  private _tableExportService = inject(TableExportService);
 
   public _searchDataService = inject(SearchDataService);
 
@@ -59,15 +55,18 @@ export class TableToolbarComponent {
   
   // Délégation vers le service d'export
   public get is_export_disabled(): boolean {
-    return this._tableExportService.isExportDisabled();
+    // TODO: remplacer
+    return false;
   }
   
   public get export_tooltip(): string {
-    return this._tableExportService.exportTooltip();
+    // TODO: remplacer
+    return '';
   }
 
   public get isExporting(): boolean {
-    return this._tableExportService.isExporting();
+    // TODO: remplacer
+    return false;
   }
 
   isGrouped() {
@@ -82,30 +81,6 @@ export class TableToolbarComponent {
     return this._colonnesService.selectedColonnesGrouped();
   }
 
-
-
-  public exportToGrist(allColumns: boolean): void {
-    this._tableExportService.exportToGrist(allColumns);
-  }
-
-  public downloadData(extension: string, allColumns: boolean): void {
-    this._tableExportService.downloadData(extension, allColumns);
-  }
-
-  /**
-   * Gestionnaire d'événement pour le téléchargement depuis la modale
-   */
-  onDownloadRequested(event: {format: string, allColumns: boolean}): void {
-    this.downloadData(event.format, event.allColumns);
-  }
-
-  /**
-   * Gestionnaire d'événement pour l'export vers Grist depuis la modale
-   */
-  onExportToGristRequested(event: {allColumns: boolean}): void {
-    this.exportToGrist(event.allColumns);
-  }
-  
   onRetourClick(): void {
     // XXX: important que ce soit du fire and forget 
     // puisque le composant est tué en cours de route.

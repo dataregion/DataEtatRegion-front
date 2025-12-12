@@ -49,7 +49,7 @@
             [disabled]="is_export_disabled"
             [matTooltip]="export_tooltip"
             data-fr-opened="false" 
-            aria-controls="modalTelechargement" 
+            aria-controls="modalExport" 
             type="button" 
             aria-label="Télécharger les données"
             class="fr-btn fr-btn fr-btn--secondary fr-btn--icon-left fr-icon-download-fill"
@@ -70,7 +70,5 @@
   <budget-modal-grouping />
   <budget-modal-colonnes />
   <budget-modal-sauvegarde />
-  <budget-modal-telechargement 
-    (downloadRequested)="onDownloadRequested($event)"
-    (exportToGristRequested)="onExportToGristRequested($event)" />
+  <budget-modal-export  />
 </div>
