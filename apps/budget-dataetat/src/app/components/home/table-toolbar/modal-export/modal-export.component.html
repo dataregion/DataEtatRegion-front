@@ -6,9 +6,11 @@
           <!-- Overlay de loading -->
           
           @if (isOnError) {
-          <p class="fr-error-text">
-            Une erreur est survenue lors du chargement des données.
-          </p>
+            <div class="loading-overlay">
+              <p class="fr-error-text">
+                Une erreur est survenue lors du chargement des données. Veuillez contacter un administrateur.
+              </p>
+            </div>
           }
 
           @if (isProcessing) {
@@ -35,7 +37,7 @@
 
   <!-- Boutons de téléchargement -->
   <div>
-    Voyez l'export ici: ...
+    Vous pouvez retrouver tous vos exports <a href="./exports">ici</a>
   </div>
   
 </div>

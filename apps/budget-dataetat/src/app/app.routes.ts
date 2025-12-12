@@ -49,6 +49,12 @@ export const routes: Routes = [
                     import('./components/preferences/preferences.component').then(m => m.PreferencesComponent)
             },
             {
+                path: 'exports',
+                title: "Mes Exports",
+                loadComponent: () =>
+                    import('./components/exports/exports.component').then(m => m.ExportsComponent)
+            },
+            {
                 path: 'cgu',
                 title: "Conditions générales d'utilisation",
                 loadComponent: () =>

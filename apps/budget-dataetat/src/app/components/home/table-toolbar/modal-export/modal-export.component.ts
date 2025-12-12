@@ -1,8 +1,14 @@
-import { Component, ViewEncapsulation, inject, output, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ViewEncapsulation, inject, output, ChangeDetectionStrategy, ViewChild, ElementRef, OnInit, AfterViewInit, ChangeDetectorRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { SearchDataService } from '@services/search-data.service';
 import { SearchParamsService } from '@services/search-params.service';
 import { LignesFinancieresService, PrepareExportLignesExportPostRequestParams } from 'apps/clients/v3/financial-data';
+
+interface ModaleViewState {
+  isOnError: boolean
+  isExportLaunched: boolean
+  isProcessing: boolean
+}
 
 @Component({
   selector: 'budget-modal-export',
@@ -12,21 +18,56 @@ import { LignesFinancieresService, PrepareExportLignesExportPostRequestParams } 
   changeDetection: ChangeDetectionStrategy.Default,
   imports: [FormsModule]
 })
-export class ModalExportComponent {
+export class ModalExportComponent implements AfterViewInit, ModaleViewState {
   
+  @ViewChild('modalExport') modalElement!: ElementRef;
+  
+  private cdr = inject(ChangeDetectorRef);
   private _searchDataService = inject(SearchDataService);
   private _searchParamsService = inject(SearchParamsService);
   private _lignesFinanciereService: LignesFinancieresService = inject(LignesFinancieresService);
+
   
+  // region : view state
+  // XXX: On gère le viewstate correctement pour éviter les changed after check
   public isOnError = false;
   public isExportLaunched = false;
   public isProcessing = false;
+
+  public resetViewState() {
+    this.updateViewState(
+      {
+        isOnError: false,
+        isExportLaunched: false,
+        isProcessing: false,
+      }
+    )
+  }
+  public updateViewState(state: ModaleViewState) {
+    setTimeout(() => {
+      this.isOnError = state.isOnError;
+      this.isExportLaunched = state.isExportLaunched;
+      this.isProcessing = state.isProcessing;
+      this.cdr.markForCheck();
+    })
+  }
+  // endregion
 
   
   public allColumnsSelected: boolean = false;
   
   downloadRequested = output<{format: string, allColumns: boolean}>();
   exportToGristRequested = output<{allColumns: boolean}>();
+
+  ngAfterViewInit(): void {
+    const modaleEl = this.modalElement.nativeElement
+
+    modaleEl.addEventListener('dsfr.disclose', this.onOpen.bind(this));
+  }
+
+  private onOpen() {
+    this.resetViewState();
+  }
 
 
   /**
@@ -46,16 +87,17 @@ export class ModalExportComponent {
       params.colonnes = undefined
     }
 
-    this.isOnError = false;
-    this.isProcessing = true;
+    this.updateViewState({isOnError: false, isProcessing: true, isExportLaunched: false})
     this._lignesFinanciereService.prepareExportLignesExportPost(params).subscribe(
       {
         error: () => {
-          this.isOnError = true;
+          this.updateViewState({isOnError: true, isProcessing: false, isExportLaunched: this.isExportLaunched})
         },
         complete: () => {
+          this.updateViewState({isOnError: false, isProcessing: false, isExportLaunched: true})
           this.isExportLaunched = true;
           this.isProcessing = false;
+          this.cdr.markForCheck();
         }
       }
     )

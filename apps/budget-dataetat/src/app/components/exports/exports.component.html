@@ -1,0 +1,44 @@
+<div class="fr-container--fluid">
+  <div class="fr-grid-row">
+    <div class="fr-col-12">
+      @if (exports.length === 0) {
+
+      <div>
+        <p class="fr-info-text">Vous n'avez aucun export diponible.</p>
+      </div>
+
+      } @else {
+      <div class="fr-table">
+        <table>
+          <caption>
+            Liste de vos exports
+          </caption>
+          <thead>
+            <tr>
+              <!-- <th scope="col">ID</th> -->
+              <th scope="col">Nom</th>
+              <th scope="col">Status</th>
+              <th scope="col">Télécharger</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (export of exports; track export.prefect_run_id) {
+
+            <tr>
+              <td>{{ export.name }}</td>
+              <td>{{ export.status }}</td>
+              <td>
+                @if (export.status === 'DONE') {
+                <a href="#" class="fr-link" (click)="onExportDownload($event, export)">Télécharger</a>
+                }
+              </td>
+            </tr>
+
+            }
+          </tbody>
+        </table>
+      </div>
+      }
+    </div>
+  </div>
+</div>
