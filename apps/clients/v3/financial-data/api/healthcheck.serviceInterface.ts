@@ -18,25 +18,6 @@ import { financialDataV3Configuration }                                     from
 
 
 export interface HealthcheckHealthcheckGetRequestParams {
-    sourceRegion?: string | null;
-    dataSource?: string | null;
-    source?: string | null;
-    nEj?: string | null;
-    codeProgramme?: string | null;
-    niveauGeo?: string | null;
-    codeGeo?: string | null;
-    refQpv?: 2015 | 2024 | null;
-    codeQpv?: string | null;
-    theme?: string | null;
-    beneficiaireCode?: string | null;
-    beneficiaireCategorieJuridiqueType?: string | null;
-    annee?: string | null;
-    centresCouts?: string | null;
-    domaineFonctionnel?: string | null;
-    referentielProgrammation?: string | null;
-    tags?: string | null;
-    grouping?: string | null;
-    grouped?: string | null;
     colonnes?: string | null;
     page?: number;
     pageSize?: number;
@@ -44,6 +25,25 @@ export interface HealthcheckHealthcheckGetRequestParams {
     sortOrder?: 'asc' | 'desc' | null;
     search?: string | null;
     fieldsSearch?: string | null;
+    sourceRegion?: string | null;
+    dataSource?: string | null;
+    source?: string | null;
+    codeProgramme?: string | null;
+    niveauGeo?: string | null;
+    codeGeo?: string | null;
+    refQpv?: '2015' | '2024' | null;
+    codeQpv?: string | null;
+    theme?: string | null;
+    beneficiaireCode?: string | null;
+    beneficiaireCategorieJuridiqueType?: string | null;
+    annee?: string | null;
+    centresCouts?: string | null;
+    nEj?: string | null;
+    domaineFonctionnel?: string | null;
+    referentielProgrammation?: string | null;
+    tags?: string | null;
+    grouping?: string | null;
+    grouped?: string | null;
 }
 
 

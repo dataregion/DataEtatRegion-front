@@ -49,10 +49,16 @@ export class HealthcheckService extends BaseService implements HealthcheckServic
     public healthcheckHealthcheckGet(requestParameters?: HealthcheckHealthcheckGetRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<any>>;
     public healthcheckHealthcheckGet(requestParameters?: HealthcheckHealthcheckGetRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<any>>;
     public healthcheckHealthcheckGet(requestParameters?: HealthcheckHealthcheckGetRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+        const colonnes = requestParameters?.colonnes;
+        const page = requestParameters?.page;
+        const pageSize = requestParameters?.pageSize;
+        const sortBy = requestParameters?.sortBy;
+        const sortOrder = requestParameters?.sortOrder;
+        const search = requestParameters?.search;
+        const fieldsSearch = requestParameters?.fieldsSearch;
         const sourceRegion = requestParameters?.sourceRegion;
         const dataSource = requestParameters?.dataSource;
         const source = requestParameters?.source;
-        const nEj = requestParameters?.nEj;
         const codeProgramme = requestParameters?.codeProgramme;
         const niveauGeo = requestParameters?.niveauGeo;
         const codeGeo = requestParameters?.codeGeo;
@@ -63,28 +69,34 @@ export class HealthcheckService extends BaseService implements HealthcheckServic
         const beneficiaireCategorieJuridiqueType = requestParameters?.beneficiaireCategorieJuridiqueType;
         const annee = requestParameters?.annee;
         const centresCouts = requestParameters?.centresCouts;
+        const nEj = requestParameters?.nEj;
         const domaineFonctionnel = requestParameters?.domaineFonctionnel;
         const referentielProgrammation = requestParameters?.referentielProgrammation;
         const tags = requestParameters?.tags;
         const grouping = requestParameters?.grouping;
         const grouped = requestParameters?.grouped;
-        const colonnes = requestParameters?.colonnes;
-        const page = requestParameters?.page;
-        const pageSize = requestParameters?.pageSize;
-        const sortBy = requestParameters?.sortBy;
-        const sortOrder = requestParameters?.sortOrder;
-        const search = requestParameters?.search;
-        const fieldsSearch = requestParameters?.fieldsSearch;
 
         let localVarQueryParameters = new HttpParams({encoder: this.encoder});
+        localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+          <any>colonnes, 'colonnes');
+        localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+          <any>page, 'page');
+        localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+          <any>pageSize, 'page_size');
+        localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+          <any>sortBy, 'sort_by');
+        localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+          <any>sortOrder, 'sort_order');
+        localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+          <any>search, 'search');
+        localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+          <any>fieldsSearch, 'fields_search');
         localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
           <any>sourceRegion, 'source_region');
         localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
           <any>dataSource, 'data_source');
         localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
           <any>source, 'source');
-        localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
-          <any>nEj, 'n_ej');
         localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
           <any>codeProgramme, 'code_programme');
         localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
@@ -106,6 +118,8 @@ export class HealthcheckService extends BaseService implements HealthcheckServic
         localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
           <any>centresCouts, 'centres_couts');
         localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+          <any>nEj, 'n_ej');
+        localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
           <any>domaineFonctionnel, 'domaine_fonctionnel');
         localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
           <any>referentielProgrammation, 'referentiel_programmation');
@@ -115,20 +129,6 @@ export class HealthcheckService extends BaseService implements HealthcheckServic
           <any>grouping, 'grouping');
         localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
           <any>grouped, 'grouped');
-        localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
-          <any>colonnes, 'colonnes');
-        localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
-          <any>page, 'page');
-        localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
-          <any>pageSize, 'page_size');
-        localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
-          <any>sortBy, 'sort_by');
-        localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
-          <any>sortOrder, 'sort_order');
-        localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
-          <any>search, 'search');
-        localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
-          <any>fieldsSearch, 'fields_search');
 
         let localVarHeaders = this.defaultHeaders;
 

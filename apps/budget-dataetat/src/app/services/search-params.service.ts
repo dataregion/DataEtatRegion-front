@@ -130,7 +130,7 @@ export class SearchParamsService extends SourceQueryParamsService {
       codeProgramme: sanitized_codes_programme?.join(','),
       niveauGeo: sanitized_niveau_geo,
       codeGeo: sanitized_codes_geo?.join(','),
-      refQpv: params.ref_qpv,
+      refQpv: this._sanitizeQpv(params.ref_qpv),
       codeQpv: params.code_qpv?.join(','),
       theme: params.themes?.join('|'),
       beneficiaireCode: sanitized_beneficiaire_siret?.join(','),
@@ -157,6 +157,14 @@ export class SearchParamsService extends SourceQueryParamsService {
     if (Array.isArray(arg) && arg.length == 0)
       return undefined;
     return arg;
+  }
+  
+  private _sanitizeQpv(qpv: 2015 | 2024 | undefined): "2015" | "2024" | undefined {
+    if (qpv == 2015)
+      return "2015"
+    if (qpv == 2024)
+      return "2024"
+    return undefined
   }
 
 }

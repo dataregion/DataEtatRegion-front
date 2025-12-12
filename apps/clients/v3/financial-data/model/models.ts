@@ -6,6 +6,8 @@ export * from './data';
 export * from './enrichedFlattenFinancialLines';
 export * from './enrichedFlattenFinancialLines1';
 export * from './enrichedFlattenFinancialLines2';
+export * from './exportFinancialTask';
+export * from './exportsResponse';
 export * from './groupedData';
 export * from './groupings';
 export * from './label';

@@ -13,6 +13,7 @@ import { Observable }                                        from 'rxjs';
 
 import { APIError } from '../model/models';
 import { APISuccessListInt } from '../model/models';
+import { ExportsResponse } from '../model/models';
 import { LigneResponse } from '../model/models';
 import { LignesResponse } from '../model/models';
 
@@ -20,10 +21,11 @@ import { LignesResponse } from '../model/models';
 import { financialDataV3Configuration }                                     from '../configuration';
 
 
+export interface DownloadExportLignesDownloadUuidPostRequestParams {
+    uuid: string;
+}
+
 export interface GetAnneesLignesAnneesGetRequestParams {
-    sourceRegion?: string | null;
-    dataSource?: string | null;
-    source?: string | null;
     colonnes?: string | null;
     page?: number;
     pageSize?: number;
@@ -31,13 +33,13 @@ export interface GetAnneesLignesAnneesGetRequestParams {
     sortOrder?: 'asc' | 'desc' | null;
     search?: string | null;
     fieldsSearch?: string | null;
+    sourceRegion?: string | null;
+    dataSource?: string | null;
+    source?: string | null;
 }
 
 export interface GetLignesFinancieresBySourceLignesIdGetRequestParams {
     id: number;
-    sourceRegion?: string | null;
-    dataSource?: string | null;
-    source?: string | null;
     colonnes?: string | null;
     page?: number;
     pageSize?: number;
@@ -45,29 +47,43 @@ export interface GetLignesFinancieresBySourceLignesIdGetRequestParams {
     sortOrder?: 'asc' | 'desc' | null;
     search?: string | null;
     fieldsSearch?: string | null;
+    sourceRegion?: string | null;
+    dataSource?: string | null;
+    source?: string | null;
 }
 
 export interface GetLignesFinancieresLignesGetRequestParams {
     forceNoCache?: boolean;
+    colonnes?: string | null;
+    page?: number;
+    pageSize?: number;
+    sortBy?: string | null;
+    sortOrder?: 'asc' | 'desc' | null;
+    search?: string | null;
+    fieldsSearch?: string | null;
     sourceRegion?: string | null;
     dataSource?: string | null;
     source?: string | null;
-    nEj?: string | null;
     codeProgramme?: string | null;
     niveauGeo?: string | null;
     codeGeo?: string | null;
-    refQpv?: 2015 | 2024 | null;
+    refQpv?: '2015' | '2024' | null;
     codeQpv?: string | null;
     theme?: string | null;
     beneficiaireCode?: string | null;
     beneficiaireCategorieJuridiqueType?: string | null;
     annee?: string | null;
     centresCouts?: string | null;
+    nEj?: string | null;
     domaineFonctionnel?: string | null;
     referentielProgrammation?: string | null;
     tags?: string | null;
     grouping?: string | null;
     grouped?: string | null;
+}
+
+export interface PrepareExportLignesExportPostRequestParams {
+    format?: 'csv' | 'xlsx' | 'ods' | 'to-grist';
     colonnes?: string | null;
     page?: number;
     pageSize?: number;
@@ -75,12 +91,38 @@ export interface GetLignesFinancieresLignesGetRequestParams {
     sortOrder?: 'asc' | 'desc' | null;
     search?: string | null;
     fieldsSearch?: string | null;
+    sourceRegion?: string | null;
+    dataSource?: string | null;
+    source?: string | null;
+    codeProgramme?: string | null;
+    niveauGeo?: string | null;
+    codeGeo?: string | null;
+    refQpv?: '2015' | '2024' | null;
+    codeQpv?: string | null;
+    theme?: string | null;
+    beneficiaireCode?: string | null;
+    beneficiaireCategorieJuridiqueType?: string | null;
+    annee?: string | null;
+    centresCouts?: string | null;
+    nEj?: string | null;
+    domaineFonctionnel?: string | null;
+    referentielProgrammation?: string | null;
+    tags?: string | null;
+    grouping?: string | null;
+    grouped?: string | null;
 }
 
 
 export interface LignesFinancieresServiceInterface {
     defaultHeaders: HttpHeaders;
     configuration: financialDataV3Configuration;
+
+    /**
+     * Enregistre une tâche d\&#39;export des lignes financières
+     * 
+* @param requestParameters
+     */
+    downloadExportLignesDownloadUuidPost(requestParameters: DownloadExportLignesDownloadUuidPostRequestParams, extraHttpRequestParams?: any): Observable<any>;
 
     /**
      * Recupère la plage des années pour lesquelles les données budgetaires courent.
@@ -102,5 +144,18 @@ export interface LignesFinancieresServiceInterface {
 * @param requestParameters
      */
     getLignesFinancieresLignesGet(requestParameters: GetLignesFinancieresLignesGetRequestParams, extraHttpRequestParams?: any): Observable<LignesResponse>;
+
+    /**
+     * Liste les tâches d\&#39;export des lignes financières
+     * 
+*/
+    listExportsLignesExportsGet(extraHttpRequestParams?: any): Observable<ExportsResponse>;
+
+    /**
+     * Enregistre une tâche d\&#39;export des lignes financières
+     * 
+* @param requestParameters
+     */
+    prepareExportLignesExportPost(requestParameters: PrepareExportLignesExportPostRequestParams, extraHttpRequestParams?: any): Observable<any>;
 
 }

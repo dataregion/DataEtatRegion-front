@@ -22,6 +22,8 @@ model/data.ts
 model/enrichedFlattenFinancialLines.ts
 model/enrichedFlattenFinancialLines1.ts
 model/enrichedFlattenFinancialLines2.ts
+model/exportFinancialTask.ts
+model/exportsResponse.ts
 model/groupedData.ts
 model/groupings.ts
 model/label.ts
