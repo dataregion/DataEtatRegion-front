@@ -1,14 +1,8 @@
-import { Component, ViewEncapsulation, inject, output, ChangeDetectionStrategy, ViewChild, ElementRef, AfterViewInit, ChangeDetectorRef } from '@angular/core';
+import { Component, ViewEncapsulation, inject, output, ChangeDetectionStrategy, ViewChild, ElementRef, AfterViewInit, ChangeDetectorRef, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { SearchDataService } from '@services/search-data.service';
 import { SearchParamsService } from '@services/search-params.service';
 import { DoExportLignesExportPostRequestParams, LignesFinancieresService } from 'apps/clients/v3/financial-data';
-
-interface ModaleViewState {
-  isOnError: boolean
-  isExportLaunched: boolean
-  isProcessing: boolean
-}
 
 @Component({
   selector: 'budget-modal-export',
@@ -18,38 +12,23 @@ interface ModaleViewState {
   changeDetection: ChangeDetectionStrategy.Default,
   imports: [FormsModule]
 })
-export class ModalExportComponent implements AfterViewInit, ModaleViewState {
+export class ModalExportComponent implements AfterViewInit {
   
   @ViewChild('modalExport') modalElement!: ElementRef;
   
-  private cdr = inject(ChangeDetectorRef);
   private _searchDataService = inject(SearchDataService);
   private _searchParamsService = inject(SearchParamsService);
   private _lignesFinanciereService: LignesFinancieresService = inject(LignesFinancieresService);
 
   
-  // region : view state
-  // XXX: On gère le viewstate correctement pour éviter les changed after check
-  public isOnError = false;
-  public isExportLaunched = false;
-  public isProcessing = false;
+  public isOnError = signal(false);
+  public isExportLaunched = signal(false);
+  public isProcessing = signal(false);
 
-  public resetViewState() {
-    this.updateViewState(
-      {
-        isOnError: false,
-        isExportLaunched: false,
-        isProcessing: false,
-      }
-    )
-  }
-  public updateViewState(state: ModaleViewState) {
-    setTimeout(() => {
-      this.isOnError = state.isOnError;
-      this.isExportLaunched = state.isExportLaunched;
-      this.isProcessing = state.isProcessing;
-      this.cdr.markForCheck();
-    })
+  public reset() {
+    this.isOnError.set(false);
+    this.isExportLaunched.set(false);
+    this.isProcessing.set(false);
   }
   // endregion
 
@@ -66,14 +45,10 @@ export class ModalExportComponent implements AfterViewInit, ModaleViewState {
   }
 
   private onOpen() {
-    this.resetViewState();
+    this.reset();
   }
 
-
-  /**
-   * Demande de téléchargement des données
-   */
-  downloadData(format: 'csv' | 'xlsx' | 'ods' | 'to-grist', allColumns: boolean): void {
+  doLaunchExport(format: 'csv' | 'xlsx' | 'ods' | 'to-grist', allColumns: boolean): void {
 
     const sp = this._searchDataService.searchParams()
     const sanitized = this._searchParamsService.getSanitizedSearchParams(sp!)
@@ -87,17 +62,16 @@ export class ModalExportComponent implements AfterViewInit, ModaleViewState {
       params.colonnes = undefined
     }
 
-    this.updateViewState({isOnError: false, isProcessing: true, isExportLaunched: false})
+    this.isProcessing.set(true);
     this._lignesFinanciereService.doExportLignesExportPost(params).subscribe(
       {
         error: () => {
-          this.updateViewState({isOnError: true, isProcessing: false, isExportLaunched: this.isExportLaunched})
+          this.reset();
+          this.isOnError.set(true)
         },
         complete: () => {
-          this.updateViewState({isOnError: false, isProcessing: false, isExportLaunched: true})
-          this.isExportLaunched = true;
-          this.isProcessing = false;
-          this.cdr.markForCheck();
+          this.reset()
+          this.isExportLaunched.set(true)
         }
       }
     )
@@ -107,6 +81,6 @@ export class ModalExportComponent implements AfterViewInit, ModaleViewState {
    * Demande d'export vers Grist
    */
   exportToGrist(allColumns: boolean): void {
-    this.downloadData('to-grist', allColumns)
+    this.doLaunchExport('to-grist', allColumns)
   }
 }

@@ -1,11 +1,11 @@
-<dialog #modalExport id="modalExport" class="fr-modal" [class.loading-mode]="isProcessing" [attr.data-fr-concealing-backdrop]="isProcessing ? 'false' : null" aria-labelledby="modal-title" aria-modal="true">
+<dialog #modalExport id="modalExport" class="fr-modal" [class.loading-mode]="isProcessing()" [attr.data-fr-concealing-backdrop]="isProcessing() ? 'false' : null" aria-labelledby="modal-title" aria-modal="true">
   <div class="fr-container fr-container--fluid fr-container-sm">
     <div class="fr-grid-row fr-grid-row--center">
       <div class="fr-col-12 fr-col-md-8 fr-col-lg-6">
         <div class="fr-modal__body">
           <!-- Overlay de loading -->
           
-          @if (isOnError) {
+          @if (isOnError()) {
             <div class="loading-overlay">
               <p class="fr-error-text">
                 Une erreur est survenue lors du chargement des données. Veuillez contacter un administrateur.
@@ -13,7 +13,7 @@
             </div>
           }
 
-          @if (isProcessing) {
+          @if (isProcessing()) {
             <div class="loading-overlay">
               <div class="loading-spinner">
                 <div class="fr-icon-refresh-line fr-icon--lg spinning"></div>
@@ -24,10 +24,10 @@
 
 <div class="fr-modal__header">
   <button aria-controls="modalExport" title="Fermer" type="button"
-    class="fr-btn--close fr-btn" [disabled]="isProcessing">Fermer</button>
+    class="fr-btn--close fr-btn" [disabled]="isProcessing()">Fermer</button>
 </div>
           
-          @if (isExportLaunched) {
+          @if (isExportLaunched()) {
           
 <div class="fr-modal__content">
   <h2 id="modal-title" class="fr-modal__title">
@@ -53,7 +53,7 @@
             <!-- Option pour toutes les colonnes -->
             <div class="fr-fieldset__element">
               <div class="fr-checkbox-group">
-                <input id="allColumns" [(ngModel)]="allColumnsSelected" type="checkbox" [disabled]="isProcessing"
+                <input id="allColumns" [(ngModel)]="allColumnsSelected" type="checkbox" [disabled]="isProcessing()"
                   aria-describedby="all-columns-messages">
                 <label class="fr-label" for="allColumns">
                   Exporter toutes les colonnes (sinon seules les colonnes affichées seront exportées)
@@ -68,19 +68,19 @@
               <h3 class="fr-h6">Choisir le format de téléchargement :</h3>
               <div class="fr-btns-group fr-btns-group--icon-left">
                 <button type="button" class="fr-btn fr-btn--secondary fr-btn--icon-left fr-icon-file-text-line"
-                  [disabled]="isProcessing" (click)="downloadData('csv', allColumnsSelected)" data-test-id="download-csv">
+                  [disabled]="isProcessing()" (click)="doLaunchExport('csv', allColumnsSelected)" data-test-id="download-csv">
                   <span>Télécharger au format CSV</span>
                 </button>
                 <button type="button" class="fr-btn fr-btn--secondary fr-btn--icon-left fr-icon-file-excel-2-line"
-                  [disabled]="isProcessing" (click)="downloadData('xlsx', allColumnsSelected)" data-test-id="download-xlsx">
+                  (click)="doLaunchExport('xlsx', allColumnsSelected)" data-test-id="download-xlsx" disabled="true">
                   <span>Télécharger au format Excel</span>
                 </button>
                 <button type="button" class="fr-btn fr-btn--secondary fr-btn--icon-left fr-icon-file-line"
-                  [disabled]="isProcessing" (click)="downloadData('ods', allColumnsSelected)" data-test-id="download-ods">
+                  (click)="doLaunchExport('ods', allColumnsSelected)" data-test-id="download-ods" disabled="true">
                   <span>Télécharger au format LibreOffice</span>
                 </button>
                 <button type="button" class="fr-btn fr-btn--secondary fr-btn--icon-left fr-icon-external-link-line"
-                  [disabled]="isProcessing" (click)="exportToGrist(allColumnsSelected)" data-test-id="export-grist">
+                  (click)="doLaunchExport('to-grist', allColumnsSelected)" data-test-id="export-grist" disabled="true">
                   <span>Transférer vers Grist</span>
                 </button>
               </div>
@@ -90,7 +90,7 @@
 
 <div class="fr-modal__footer">
   <div class="fr-btns-group fr-btns-group--right">
-    <button type="button" aria-controls="modalExport" class="fr-btn fr-btn--secondary" [disabled]="isProcessing">
+    <button type="button" aria-controls="modalExport" class="fr-btn fr-btn--secondary" [disabled]="isProcessing()">
       Fermer
     </button>
   </div>
