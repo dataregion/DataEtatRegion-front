@@ -18,7 +18,7 @@ export interface ExportFinancialTask {
     target_format: string;
     status: string;
     name: string;
-    started_at: string;
-    completed_at: string;
+    started_at: string | null;
+    completed_at: string | null;
 }
 

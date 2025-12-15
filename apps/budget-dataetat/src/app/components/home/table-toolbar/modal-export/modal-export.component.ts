@@ -2,7 +2,7 @@ import { Component, ViewEncapsulation, inject, output, ChangeDetectionStrategy, 
 import { FormsModule } from '@angular/forms';
 import { SearchDataService } from '@services/search-data.service';
 import { SearchParamsService } from '@services/search-params.service';
-import { LignesFinancieresService, PrepareExportLignesExportPostRequestParams } from 'apps/clients/v3/financial-data';
+import { DoExportLignesExportPostRequestParams, LignesFinancieresService } from 'apps/clients/v3/financial-data';
 
 interface ModaleViewState {
   isOnError: boolean
@@ -79,7 +79,7 @@ export class ModalExportComponent implements AfterViewInit, ModaleViewState {
     const sanitized = this._searchParamsService.getSanitizedSearchParams(sp!)
     
     // Ici, c'est du fire and forget
-    const params : PrepareExportLignesExportPostRequestParams = {
+    const params : DoExportLignesExportPostRequestParams = {
       ...sanitized,
       format: format,
     }
@@ -88,7 +88,7 @@ export class ModalExportComponent implements AfterViewInit, ModaleViewState {
     }
 
     this.updateViewState({isOnError: false, isProcessing: true, isExportLaunched: false})
-    this._lignesFinanciereService.prepareExportLignesExportPost(params).subscribe(
+    this._lignesFinanciereService.doExportLignesExportPost(params).subscribe(
       {
         error: () => {
           this.updateViewState({isOnError: true, isProcessing: false, isExportLaunched: this.isExportLaunched})

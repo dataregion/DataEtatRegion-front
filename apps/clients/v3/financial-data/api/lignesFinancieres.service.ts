@@ -33,11 +33,12 @@ import { financialDataV3Configuration }                                     from
 import { BaseService } from '../api.base.service';
 import {
     LignesFinancieresServiceInterface,
+    DoExportLignesExportPostRequestParams,
     DownloadExportLignesDownloadUuidGetRequestParams,
     GetAnneesLignesAnneesGetRequestParams,
+    GetExportLignesExportUuidGetRequestParams,
     GetLignesFinancieresBySourceLignesIdGetRequestParams,
-    GetLignesFinancieresLignesGetRequestParams,
-    PrepareExportLignesExportPostRequestParams
+    GetLignesFinancieresLignesGetRequestParams
 } from './lignesFinancieres.serviceInterface';
 
 
@@ -49,6 +50,143 @@ export class LignesFinancieresService extends BaseService implements LignesFinan
 
     constructor(protected httpClient: HttpClient, @Optional() @Inject(BASE_PATH) basePath: string|string[], @Optional() configuration?: financialDataV3Configuration) {
         super(basePath, configuration);
+    }
+
+    /**
+     * Enregistre une tâche d\&#39;export des lignes financières
+     * @param requestParameters
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public doExportLignesExportPost(requestParameters?: DoExportLignesExportPostRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any>;
+    public doExportLignesExportPost(requestParameters?: DoExportLignesExportPostRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<any>>;
+    public doExportLignesExportPost(requestParameters?: DoExportLignesExportPostRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<any>>;
+    public doExportLignesExportPost(requestParameters?: DoExportLignesExportPostRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+        const format = requestParameters?.format;
+        const colonnes = requestParameters?.colonnes;
+        const page = requestParameters?.page;
+        const pageSize = requestParameters?.pageSize;
+        const sortBy = requestParameters?.sortBy;
+        const sortOrder = requestParameters?.sortOrder;
+        const search = requestParameters?.search;
+        const fieldsSearch = requestParameters?.fieldsSearch;
+        const sourceRegion = requestParameters?.sourceRegion;
+        const dataSource = requestParameters?.dataSource;
+        const source = requestParameters?.source;
+        const codeProgramme = requestParameters?.codeProgramme;
+        const niveauGeo = requestParameters?.niveauGeo;
+        const codeGeo = requestParameters?.codeGeo;
+        const refQpv = requestParameters?.refQpv;
+        const codeQpv = requestParameters?.codeQpv;
+        const theme = requestParameters?.theme;
+        const beneficiaireCode = requestParameters?.beneficiaireCode;
+        const beneficiaireCategorieJuridiqueType = requestParameters?.beneficiaireCategorieJuridiqueType;
+        const annee = requestParameters?.annee;
+        const centresCouts = requestParameters?.centresCouts;
+        const nEj = requestParameters?.nEj;
+        const domaineFonctionnel = requestParameters?.domaineFonctionnel;
+        const referentielProgrammation = requestParameters?.referentielProgrammation;
+        const tags = requestParameters?.tags;
+        const grouping = requestParameters?.grouping;
+        const grouped = requestParameters?.grouped;
+
+        let localVarQueryParameters = new HttpParams({encoder: this.encoder});
+        localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+          <any>format, 'format');
+        localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+          <any>colonnes, 'colonnes');
+        localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+          <any>page, 'page');
+        localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+          <any>pageSize, 'page_size');
+        localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+          <any>sortBy, 'sort_by');
+        localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+          <any>sortOrder, 'sort_order');
+        localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+          <any>search, 'search');
+        localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+          <any>fieldsSearch, 'fields_search');
+        localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+          <any>sourceRegion, 'source_region');
+        localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+          <any>dataSource, 'data_source');
+        localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+          <any>source, 'source');
+        localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+          <any>codeProgramme, 'code_programme');
+        localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+          <any>niveauGeo, 'niveau_geo');
+        localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+          <any>codeGeo, 'code_geo');
+        localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+          <any>refQpv, 'ref_qpv');
+        localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+          <any>codeQpv, 'code_qpv');
+        localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+          <any>theme, 'theme');
+        localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+          <any>beneficiaireCode, 'beneficiaire_code');
+        localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+          <any>beneficiaireCategorieJuridiqueType, 'beneficiaire_categorieJuridique_type');
+        localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+          <any>annee, 'annee');
+        localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+          <any>centresCouts, 'centres_couts');
+        localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+          <any>nEj, 'n_ej');
+        localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+          <any>domaineFonctionnel, 'domaine_fonctionnel');
+        localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+          <any>referentielProgrammation, 'referentiel_programmation');
+        localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+          <any>tags, 'tags');
+        localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+          <any>grouping, 'grouping');
+        localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+          <any>grouped, 'grouped');
+
+        let localVarHeaders = this.defaultHeaders;
+
+        // authentication (OAuth2PasswordBearer) required
+        localVarHeaders = this.configuration.addCredentialToHeaders('OAuth2PasswordBearer', 'Authorization', localVarHeaders, 'Bearer ');
+
+        const localVarHttpHeaderAcceptSelected: string | undefined = options?.httpHeaderAccept ?? this.configuration.selectHeaderAccept([
+            'application/json'
+        ]);
+        if (localVarHttpHeaderAcceptSelected !== undefined) {
+            localVarHeaders = localVarHeaders.set('Accept', localVarHttpHeaderAcceptSelected);
+        }
+
+        const localVarHttpContext: HttpContext = options?.context ?? new HttpContext();
+
+        const localVarTransferCache: boolean = options?.transferCache ?? true;
+
+
+        let responseType_: 'text' | 'json' | 'blob' = 'json';
+        if (localVarHttpHeaderAcceptSelected) {
+            if (localVarHttpHeaderAcceptSelected.startsWith('text')) {
+                responseType_ = 'text';
+            } else if (this.configuration.isJsonMime(localVarHttpHeaderAcceptSelected)) {
+                responseType_ = 'json';
+            } else {
+                responseType_ = 'blob';
+            }
+        }
+
+        let localVarPath = `/lignes/export`;
+        return this.httpClient.request<any>('post', `${this.configuration.basePath}${localVarPath}`,
+            {
+                context: localVarHttpContext,
+                params: localVarQueryParameters,
+                responseType: <any>responseType_,
+                withCredentials: this.configuration.withCredentials,
+                headers: localVarHeaders,
+                observe: observe,
+                transferCache: localVarTransferCache,
+                reportProgress: reportProgress
+            }
+        );
     }
 
     /**
@@ -184,6 +322,63 @@ export class LignesFinancieresService extends BaseService implements LignesFinan
             {
                 context: localVarHttpContext,
                 params: localVarQueryParameters,
+                responseType: <any>responseType_,
+                withCredentials: this.configuration.withCredentials,
+                headers: localVarHeaders,
+                observe: observe,
+                transferCache: localVarTransferCache,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * Récupère les informations d\&#39;un export
+     * @param requestParameters
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public getExportLignesExportUuidGet(requestParameters: GetExportLignesExportUuidGetRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any>;
+    public getExportLignesExportUuidGet(requestParameters: GetExportLignesExportUuidGetRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<any>>;
+    public getExportLignesExportUuidGet(requestParameters: GetExportLignesExportUuidGetRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<any>>;
+    public getExportLignesExportUuidGet(requestParameters: GetExportLignesExportUuidGetRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+        const uuid = requestParameters?.uuid;
+        if (uuid === null || uuid === undefined) {
+            throw new Error('Required parameter uuid was null or undefined when calling getExportLignesExportUuidGet.');
+        }
+
+        let localVarHeaders = this.defaultHeaders;
+
+        // authentication (OAuth2PasswordBearer) required
+        localVarHeaders = this.configuration.addCredentialToHeaders('OAuth2PasswordBearer', 'Authorization', localVarHeaders, 'Bearer ');
+
+        const localVarHttpHeaderAcceptSelected: string | undefined = options?.httpHeaderAccept ?? this.configuration.selectHeaderAccept([
+            'application/json'
+        ]);
+        if (localVarHttpHeaderAcceptSelected !== undefined) {
+            localVarHeaders = localVarHeaders.set('Accept', localVarHttpHeaderAcceptSelected);
+        }
+
+        const localVarHttpContext: HttpContext = options?.context ?? new HttpContext();
+
+        const localVarTransferCache: boolean = options?.transferCache ?? true;
+
+
+        let responseType_: 'text' | 'json' | 'blob' = 'json';
+        if (localVarHttpHeaderAcceptSelected) {
+            if (localVarHttpHeaderAcceptSelected.startsWith('text')) {
+                responseType_ = 'text';
+            } else if (this.configuration.isJsonMime(localVarHttpHeaderAcceptSelected)) {
+                responseType_ = 'json';
+            } else {
+                responseType_ = 'blob';
+            }
+        }
+
+        let localVarPath = `/lignes/export/${this.configuration.encodeParam({name: "uuid", value: uuid, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`;
+        return this.httpClient.request<any>('get', `${this.configuration.basePath}${localVarPath}`,
+            {
+                context: localVarHttpContext,
                 responseType: <any>responseType_,
                 withCredentials: this.configuration.withCredentials,
                 headers: localVarHeaders,
@@ -463,143 +658,6 @@ export class LignesFinancieresService extends BaseService implements LignesFinan
         return this.httpClient.request<ExportsResponse>('get', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
-                responseType: <any>responseType_,
-                withCredentials: this.configuration.withCredentials,
-                headers: localVarHeaders,
-                observe: observe,
-                transferCache: localVarTransferCache,
-                reportProgress: reportProgress
-            }
-        );
-    }
-
-    /**
-     * Enregistre une tâche d\&#39;export des lignes financières
-     * @param requestParameters
-     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
-     * @param reportProgress flag to report request and response progress.
-     */
-    public prepareExportLignesExportPost(requestParameters?: PrepareExportLignesExportPostRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any>;
-    public prepareExportLignesExportPost(requestParameters?: PrepareExportLignesExportPostRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<any>>;
-    public prepareExportLignesExportPost(requestParameters?: PrepareExportLignesExportPostRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<any>>;
-    public prepareExportLignesExportPost(requestParameters?: PrepareExportLignesExportPostRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
-        const format = requestParameters?.format;
-        const colonnes = requestParameters?.colonnes;
-        const page = requestParameters?.page;
-        const pageSize = requestParameters?.pageSize;
-        const sortBy = requestParameters?.sortBy;
-        const sortOrder = requestParameters?.sortOrder;
-        const search = requestParameters?.search;
-        const fieldsSearch = requestParameters?.fieldsSearch;
-        const sourceRegion = requestParameters?.sourceRegion;
-        const dataSource = requestParameters?.dataSource;
-        const source = requestParameters?.source;
-        const codeProgramme = requestParameters?.codeProgramme;
-        const niveauGeo = requestParameters?.niveauGeo;
-        const codeGeo = requestParameters?.codeGeo;
-        const refQpv = requestParameters?.refQpv;
-        const codeQpv = requestParameters?.codeQpv;
-        const theme = requestParameters?.theme;
-        const beneficiaireCode = requestParameters?.beneficiaireCode;
-        const beneficiaireCategorieJuridiqueType = requestParameters?.beneficiaireCategorieJuridiqueType;
-        const annee = requestParameters?.annee;
-        const centresCouts = requestParameters?.centresCouts;
-        const nEj = requestParameters?.nEj;
-        const domaineFonctionnel = requestParameters?.domaineFonctionnel;
-        const referentielProgrammation = requestParameters?.referentielProgrammation;
-        const tags = requestParameters?.tags;
-        const grouping = requestParameters?.grouping;
-        const grouped = requestParameters?.grouped;
-
-        let localVarQueryParameters = new HttpParams({encoder: this.encoder});
-        localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
-          <any>format, 'format');
-        localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
-          <any>colonnes, 'colonnes');
-        localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
-          <any>page, 'page');
-        localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
-          <any>pageSize, 'page_size');
-        localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
-          <any>sortBy, 'sort_by');
-        localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
-          <any>sortOrder, 'sort_order');
-        localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
-          <any>search, 'search');
-        localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
-          <any>fieldsSearch, 'fields_search');
-        localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
-          <any>sourceRegion, 'source_region');
-        localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
-          <any>dataSource, 'data_source');
-        localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
-          <any>source, 'source');
-        localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
-          <any>codeProgramme, 'code_programme');
-        localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
-          <any>niveauGeo, 'niveau_geo');
-        localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
-          <any>codeGeo, 'code_geo');
-        localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
-          <any>refQpv, 'ref_qpv');
-        localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
-          <any>codeQpv, 'code_qpv');
-        localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
-          <any>theme, 'theme');
-        localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
-          <any>beneficiaireCode, 'beneficiaire_code');
-        localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
-          <any>beneficiaireCategorieJuridiqueType, 'beneficiaire_categorieJuridique_type');
-        localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
-          <any>annee, 'annee');
-        localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
-          <any>centresCouts, 'centres_couts');
-        localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
-          <any>nEj, 'n_ej');
-        localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
-          <any>domaineFonctionnel, 'domaine_fonctionnel');
-        localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
-          <any>referentielProgrammation, 'referentiel_programmation');
-        localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
-          <any>tags, 'tags');
-        localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
-          <any>grouping, 'grouping');
-        localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
-          <any>grouped, 'grouped');
-
-        let localVarHeaders = this.defaultHeaders;
-
-        // authentication (OAuth2PasswordBearer) required
-        localVarHeaders = this.configuration.addCredentialToHeaders('OAuth2PasswordBearer', 'Authorization', localVarHeaders, 'Bearer ');
-
-        const localVarHttpHeaderAcceptSelected: string | undefined = options?.httpHeaderAccept ?? this.configuration.selectHeaderAccept([
-            'application/json'
-        ]);
-        if (localVarHttpHeaderAcceptSelected !== undefined) {
-            localVarHeaders = localVarHeaders.set('Accept', localVarHttpHeaderAcceptSelected);
-        }
-
-        const localVarHttpContext: HttpContext = options?.context ?? new HttpContext();
-
-        const localVarTransferCache: boolean = options?.transferCache ?? true;
-
-
-        let responseType_: 'text' | 'json' | 'blob' = 'json';
-        if (localVarHttpHeaderAcceptSelected) {
-            if (localVarHttpHeaderAcceptSelected.startsWith('text')) {
-                responseType_ = 'text';
-            } else if (this.configuration.isJsonMime(localVarHttpHeaderAcceptSelected)) {
-                responseType_ = 'json';
-            } else {
-                responseType_ = 'blob';
-            }
-        }
-
-        let localVarPath = `/lignes/export`;
-        return this.httpClient.request<any>('post', `${this.configuration.basePath}${localVarPath}`,
-            {
-                context: localVarHttpContext,
-                params: localVarQueryParameters,
                 responseType: <any>responseType_,
                 withCredentials: this.configuration.withCredentials,
                 headers: localVarHeaders,
