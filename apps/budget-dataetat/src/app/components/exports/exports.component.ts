@@ -1,5 +1,5 @@
-import { HttpClient } from "@angular/common/http";
 import { Component, inject, OnInit } from "@angular/core";
+import { DownloadExportService } from "@services/download-export.service";
 import { ExportFinancialTask, LignesFinancieresService } from "apps/clients/v3/financial-data";
 
 @Component({
@@ -10,7 +10,7 @@ import { ExportFinancialTask, LignesFinancieresService } from "apps/clients/v3/f
 })
 export class ExportsComponent implements OnInit {
 
-    private _httpClient = inject(HttpClient)
+    private downloadExportService = inject(DownloadExportService)
     private _lignesFinancieresService = inject(LignesFinancieresService)
 
     public loading = true;
@@ -31,31 +31,7 @@ export class ExportsComponent implements OnInit {
     }
 
     public onExportDownload(event: Event, task: ExportFinancialTask) {
-        event?.preventDefault();
-        
-        // XXX: Ici, le client généré fait de la !$@%!#$%, on passe sur un httpClient plus manuel
-        const baseP = this._lignesFinancieresService.configuration.basePath
-        const full_url = `${baseP}/lignes/download/${task.prefect_run_id}`
-
-        this._httpClient.get(
-            full_url, 
-            {
-                responseType: 'blob',
-            }
-        )
-        .subscribe(
-            {
-                next: (blob) => {
-                    const url = window.URL.createObjectURL(blob);
-                    const link = document.createElement('a');
-                    
-                    link.href = url;
-                    link.download = `export`;
-                    link.click();
-                },
-                error: (err) => console.log(err)
-            }
-        )
+        this.downloadExportService.downloadExport(event, task.prefect_run_id)
     }
     
 }

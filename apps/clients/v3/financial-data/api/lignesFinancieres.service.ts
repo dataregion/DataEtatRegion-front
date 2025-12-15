@@ -21,6 +21,8 @@ import { APIError } from '../model/aPIError';
 // @ts-ignore
 import { APISuccessListInt } from '../model/aPISuccessListInt';
 // @ts-ignore
+import { DoExportResponse } from '../model/doExportResponse';
+// @ts-ignore
 import { ExportsResponse } from '../model/exportsResponse';
 // @ts-ignore
 import { LigneResponse } from '../model/ligneResponse';
@@ -58,9 +60,9 @@ export class LignesFinancieresService extends BaseService implements LignesFinan
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public doExportLignesExportPost(requestParameters?: DoExportLignesExportPostRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any>;
-    public doExportLignesExportPost(requestParameters?: DoExportLignesExportPostRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<any>>;
-    public doExportLignesExportPost(requestParameters?: DoExportLignesExportPostRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<any>>;
+    public doExportLignesExportPost(requestParameters?: DoExportLignesExportPostRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<DoExportResponse>;
+    public doExportLignesExportPost(requestParameters?: DoExportLignesExportPostRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<DoExportResponse>>;
+    public doExportLignesExportPost(requestParameters?: DoExportLignesExportPostRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<DoExportResponse>>;
     public doExportLignesExportPost(requestParameters?: DoExportLignesExportPostRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
         const format = requestParameters?.format;
         const colonnes = requestParameters?.colonnes;
@@ -175,7 +177,7 @@ export class LignesFinancieresService extends BaseService implements LignesFinan
         }
 
         let localVarPath = `/lignes/export`;
-        return this.httpClient.request<any>('post', `${this.configuration.basePath}${localVarPath}`,
+        return this.httpClient.request<DoExportResponse>('post', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
                 params: localVarQueryParameters,
@@ -338,9 +340,9 @@ export class LignesFinancieresService extends BaseService implements LignesFinan
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getExportLignesExportUuidGet(requestParameters: GetExportLignesExportUuidGetRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any>;
-    public getExportLignesExportUuidGet(requestParameters: GetExportLignesExportUuidGetRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<any>>;
-    public getExportLignesExportUuidGet(requestParameters: GetExportLignesExportUuidGetRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<any>>;
+    public getExportLignesExportUuidGet(requestParameters: GetExportLignesExportUuidGetRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<DoExportResponse>;
+    public getExportLignesExportUuidGet(requestParameters: GetExportLignesExportUuidGetRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<DoExportResponse>>;
+    public getExportLignesExportUuidGet(requestParameters: GetExportLignesExportUuidGetRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<DoExportResponse>>;
     public getExportLignesExportUuidGet(requestParameters: GetExportLignesExportUuidGetRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
         const uuid = requestParameters?.uuid;
         if (uuid === null || uuid === undefined) {
@@ -376,7 +378,7 @@ export class LignesFinancieresService extends BaseService implements LignesFinan
         }
 
         let localVarPath = `/lignes/export/${this.configuration.encodeParam({name: "uuid", value: uuid, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`;
-        return this.httpClient.request<any>('get', `${this.configuration.basePath}${localVarPath}`,
+        return this.httpClient.request<DoExportResponse>('get', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
                 responseType: <any>responseType_,

@@ -19,6 +19,7 @@ model/aPISuccessListColonne.ts
 model/aPISuccessListInt.ts
 model/colonne.ts
 model/data.ts
+model/doExportResponse.ts
 model/enrichedFlattenFinancialLines.ts
 model/enrichedFlattenFinancialLines1.ts
 model/enrichedFlattenFinancialLines2.ts

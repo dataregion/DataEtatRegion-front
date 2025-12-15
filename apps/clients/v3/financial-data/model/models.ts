@@ -3,6 +3,7 @@ export * from './aPISuccessListColonne';
 export * from './aPISuccessListInt';
 export * from './colonne';
 export * from './data';
+export * from './doExportResponse';
 export * from './enrichedFlattenFinancialLines';
 export * from './enrichedFlattenFinancialLines1';
 export * from './enrichedFlattenFinancialLines2';

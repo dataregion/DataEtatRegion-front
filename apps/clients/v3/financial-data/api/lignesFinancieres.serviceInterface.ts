@@ -13,6 +13,7 @@ import { Observable }                                        from 'rxjs';
 
 import { APIError } from '../model/models';
 import { APISuccessListInt } from '../model/models';
+import { DoExportResponse } from '../model/models';
 import { ExportsResponse } from '../model/models';
 import { LigneResponse } from '../model/models';
 import { LignesResponse } from '../model/models';
@@ -126,7 +127,7 @@ export interface LignesFinancieresServiceInterface {
      * 
 * @param requestParameters
      */
-    doExportLignesExportPost(requestParameters: DoExportLignesExportPostRequestParams, extraHttpRequestParams?: any): Observable<any>;
+    doExportLignesExportPost(requestParameters: DoExportLignesExportPostRequestParams, extraHttpRequestParams?: any): Observable<DoExportResponse>;
 
     /**
      * Enregistre une tâche d\&#39;export des lignes financières
@@ -147,7 +148,7 @@ export interface LignesFinancieresServiceInterface {
      * 
 * @param requestParameters
      */
-    getExportLignesExportUuidGet(requestParameters: GetExportLignesExportUuidGetRequestParams, extraHttpRequestParams?: any): Observable<any>;
+    getExportLignesExportUuidGet(requestParameters: GetExportLignesExportUuidGetRequestParams, extraHttpRequestParams?: any): Observable<DoExportResponse>;
 
     /**
      * Récupére les infos budgetaires en fonction de son identifiant technique
