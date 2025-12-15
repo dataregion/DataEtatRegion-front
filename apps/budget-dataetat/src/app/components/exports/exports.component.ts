@@ -13,13 +13,16 @@ export class ExportsComponent implements OnInit {
     private _httpClient = inject(HttpClient)
     private _lignesFinancieresService = inject(LignesFinancieresService)
 
+    public loading = true;
     public exports: ExportFinancialTask[] = []
 
     ngOnInit(): void {
+        this.loading = true;
         this._lignesFinancieresService.listExportsLignesExportsGet()
         .subscribe(
             {
                 next: (response) => {
+                    this.loading = false;
                     const exports = response.data;
                     this.exports = exports || [];
                 }

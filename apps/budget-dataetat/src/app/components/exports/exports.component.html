@@ -1,7 +1,10 @@
 <div class="fr-container--fluid">
   <div class="fr-grid-row">
     <div class="fr-col-12">
-      @if (exports.length === 0) {
+      @if (this.loading) {
+      <!--  -->
+      } 
+      @else if (exports.length === 0) {
 
       <div>
         <p class="fr-info-text">Vous n'avez aucun export diponible.</p>
@@ -29,7 +32,9 @@
               <td>{{ export.status }}</td>
               <td>
                 @if (export.status === 'DONE') {
-                <a href="#" class="fr-link" (click)="onExportDownload($event, export)">Télécharger</a>
+                <a href="#" class="fr-link" (click)="onExportDownload($event, export)"
+                  >Télécharger</a
+                >
                 }
               </td>
             </tr>
