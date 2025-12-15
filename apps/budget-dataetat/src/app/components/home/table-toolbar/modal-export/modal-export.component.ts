@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation, inject, output, ChangeDetectionStrategy, ViewChild, ElementRef, AfterViewInit, ChangeDetectorRef, signal } from '@angular/core';
+import { Component, ViewEncapsulation, inject, output, ChangeDetectionStrategy, ViewChild, ElementRef, AfterViewInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { SearchDataService } from '@services/search-data.service';
 import { SearchParamsService } from '@services/search-params.service';
