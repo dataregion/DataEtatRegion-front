@@ -45,24 +45,6 @@ const config: PlaywrightTestConfig = {
   },
   
   projects: [
-    // Page de login
-    {
-      name: 'no-login-chrome',
-      testDir: './tests/no-login',
-      use: {
-        ...devices['Desktop Chrome'],
-        baseURL: process.env['BUDGET_BRETAGNE_BASE_URL'],
-      }
-    },
-    {
-      name: 'no-login-firefox',
-      testDir: './tests/no-login',
-      use: {
-        ...devices['Desktop Firefox'],
-        baseURL: process.env['BUDGET_BRETAGNE_BASE_URL'],
-      }
-    },
-
     // Tests de non reg
     {
       name: 'budget-dataetat-nonreg-chrome',
@@ -70,31 +52,11 @@ const config: PlaywrightTestConfig = {
       use: {
         storageState: 'storage-state/storageState-simple.json',
         ...devices['Desktop Chrome'],
-        baseURL: process.env['NEW_BUDGET_BRETAGNE_BASE_URL'],
+        baseURL: process.env['BUDGET_BRETAGNE_BASE_URL'],
       }
     },
 
     // Tests simples
-    {
-      name: 'financial-data-simple-chrome',
-      testDir: './tests/financial-data',
-      testIgnore: ['**/admin/**'],
-      use: {
-        storageState: 'storage-state/storageState-simple.json',
-        ...devices['Desktop Chrome'],
-        baseURL: process.env['BUDGET_BRETAGNE_BASE_URL'],
-      }
-    },
-    {
-      name: 'financial-data-simple-firefox',
-      testDir: './tests/financial-data',
-      testIgnore: ['**/admin/**'],
-      use: {
-        storageState: 'storage-state/storageState-simple.json',
-        ...devices['Desktop Firefox'],
-        baseURL: process.env['BUDGET_BRETAGNE_BASE_URL'],
-      }
-    },
     {
       name: 'budget-dataetat-simple-profile-firefox',
       testDir: './tests/budget-dataetat/',
@@ -102,7 +64,7 @@ const config: PlaywrightTestConfig = {
       use: {
         storageState: 'storage-state/storageState-simple.json',
         ...devices['Desktop Firefox'],
-        baseURL: process.env['NEW_BUDGET_BRETAGNE_BASE_URL'],
+        baseURL: process.env['BUDGET_BRETAGNE_BASE_URL'],
       }
     },
     {
@@ -112,35 +74,17 @@ const config: PlaywrightTestConfig = {
       use: {
         storageState: 'storage-state/storageState-simple.json',
         ...devices['Desktop Chrome'],
-        baseURL: process.env['NEW_BUDGET_BRETAGNE_BASE_URL'],
+        baseURL: process.env['BUDGET_BRETAGNE_BASE_URL'],
       }
     },
     // tests profil ADMIN
-    {
-      name: 'financial-data-admin-profile-chrome',
-      testDir: './tests/financial-data/admin/',
-      use: {
-        storageState: 'storage-state/storageState-admin.json',
-        ...devices['Desktop Chrome'],
-        baseURL: process.env['BUDGET_BRETAGNE_BASE_URL'],
-      }
-    },
-    {
-      name: 'financial-data-admin-profile-firefox',
-      testDir: './tests/financial-data/admin/',
-      use: {
-        storageState: 'storage-state/storageState-admin.json',
-        ...devices['Desktop Firefox'],
-        baseURL: process.env['BUDGET_BRETAGNE_BASE_URL'],
-      }
-    },
     {
       name: 'budget-dataetat-admin-profile-chrome',
       testDir: './tests/budget-dataetat/admin/',
       use: {
         storageState: 'storage-state/storageState-admin.json',
         ...devices['Desktop Chrome'],
-        baseURL: process.env['NEW_BUDGET_BRETAGNE_BASE_URL'],
+        baseURL: process.env['BUDGET_BRETAGNE_BASE_URL'],
       }
     },
     {
@@ -149,7 +93,7 @@ const config: PlaywrightTestConfig = {
       use: {
         storageState: 'storage-state/storageState-admin.json',
         ...devices['Desktop Firefox'],
-        baseURL: process.env['NEW_BUDGET_BRETAGNE_BASE_URL'],
+        baseURL: process.env['BUDGET_BRETAGNE_BASE_URL'],
       }
     },
   ]
