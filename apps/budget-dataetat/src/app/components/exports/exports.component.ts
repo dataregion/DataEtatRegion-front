@@ -5,7 +5,6 @@ import { ExportFinancialTask, LignesFinancieresService } from "apps/clients/v3/f
 @Component({
     selector: 'budget-exports',
     templateUrl: './exports.component.html',
-    styleUrls: [ 'exports.component.scss' ],
     standalone: true,
 })
 export class ExportsComponent implements OnInit {
