@@ -4,10 +4,8 @@ import {
   inject,
   output,
   ChangeDetectionStrategy,
-  ViewChild,
-  ElementRef,
-  AfterViewInit,
-  signal} from '@angular/core';
+  signal
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { DownloadExportService } from '@services/download-export.service';
 import { SearchDataService } from '@services/search-data.service';
@@ -27,10 +25,8 @@ import { exhaustMap, Subscription, timer } from 'rxjs';
   changeDetection: ChangeDetectionStrategy.Default,
   imports: [FormsModule]
 })
-export class ModalExportComponent implements AfterViewInit {
-  @ViewChild('modalExport') modalElement!: ElementRef;
-
-  private _downloadExportService = inject(DownloadExportService)
+export class ModalExportComponent {
+  private _downloadExportService = inject(DownloadExportService);
   private _searchDataService = inject(SearchDataService);
   private _searchParamsService = inject(SearchParamsService);
   private _lignesFinanciereService: LignesFinancieresService = inject(LignesFinancieresService);
@@ -41,7 +37,7 @@ export class ModalExportComponent implements AfterViewInit {
   public isExportLaunched = signal(false);
   public isProcessing = signal(false);
   public isExportAvailable = signal(false);
-  
+
   public availableExportId?: string;
 
   public reset() {
@@ -59,16 +55,6 @@ export class ModalExportComponent implements AfterViewInit {
 
   downloadRequested = output<{ format: string; allColumns: boolean }>();
   exportToGristRequested = output<{ allColumns: boolean }>();
-
-  ngAfterViewInit(): void {
-    const modaleEl = this.modalElement.nativeElement;
-
-    modaleEl.addEventListener('dsfr.disclose', this.onOpen.bind(this));
-  }
-
-  private onOpen() {
-    // this.reset();
-  }
 
   doLaunchExport(format: 'csv' | 'xlsx' | 'ods' | 'to-grist', allColumns: boolean): void {
     const sp = this._searchDataService.searchParams();
@@ -126,11 +112,11 @@ export class ModalExportComponent implements AfterViewInit {
     this.isExportAvailable.set(true);
     this.availableExportId = task.prefect_run_id;
     this._downloadExportService.downloadExport(undefined, this.availableExportId);
-    this.reset()
+    this.reset();
   }
-  
+
   onExportDownload(event: Event, export_id: string) {
     this._downloadExportService.downloadExport(event, export_id);
-    this.reset()
+    this.reset();
   }
 }
