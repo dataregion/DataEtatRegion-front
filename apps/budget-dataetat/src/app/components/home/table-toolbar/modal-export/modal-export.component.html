@@ -139,8 +139,8 @@
                   type="button"
                   class="fr-btn fr-btn--secondary fr-btn--icon-left fr-icon-file-excel-2-line"
                   (click)="doLaunchExport('xlsx', allColumnsSelected)"
+                  [disabled]="isProcessing()"
                   data-test-id="download-xlsx"
-                  disabled="true"
                 >
                   <span>Télécharger au format Excel</span>
                 </button>
@@ -148,8 +148,8 @@
                   type="button"
                   class="fr-btn fr-btn--secondary fr-btn--icon-left fr-icon-file-line"
                   (click)="doLaunchExport('ods', allColumnsSelected)"
+                  [disabled]="isProcessing()"
                   data-test-id="download-ods"
-                  disabled="true"
                 >
                   <span>Télécharger au format LibreOffice</span>
                 </button>
