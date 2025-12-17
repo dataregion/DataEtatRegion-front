@@ -16,6 +16,7 @@ import { SearchDataService } from '@services/search-data.service';
 import { MaterialModule } from "apps/common-lib/src/public-api";
 import { ColonneTableau } from 'apps/appcommon/src/lib/mappers/colonnes-mapper.service';
 
+const LIMITE_DL_LIGNES = 100_000;
 
 @Component({
   selector: 'budget-table-toolbar',
@@ -55,18 +56,18 @@ export class TableToolbarComponent {
   
   // Délégation vers le service d'export
   public get is_export_disabled(): boolean {
-    // TODO: remplacer
+    const total = this._searchDataService.total()?.total || 0
+    if (total > LIMITE_DL_LIGNES)
+      return true;
     return false;
   }
   
   public get export_tooltip(): string {
-    // TODO: remplacer
+    if (this.is_export_disabled) {
+      const pretty_nb = LIMITE_DL_LIGNES.toLocaleString('fr-FR', { useGrouping: true })
+      return `Le téléchargement est limité à ${pretty_nb} lignes. Veuillez affiner votre recherche.`
+    }
     return '';
-  }
-
-  public get isExporting(): boolean {
-    // TODO: remplacer
-    return false;
   }
 
   isGrouped() {
