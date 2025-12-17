@@ -476,7 +476,10 @@ export class SearchDataService {
     }
 
     // Mise à jour des autres signaux
-    this.total.set(response.data?.total);
+
+    // Mise à jour du total si : pas en mode grouping OU niveau racine de la vue groupée
+    if (response.data?.type !== 'groupings' || !this.searchParams()?.grouping)
+      this.total.set(response.data?.total);
     this.pagination.set(response.pagination);
     this.searchFinish.set(true);
     this.searchInProgress.set(false);
