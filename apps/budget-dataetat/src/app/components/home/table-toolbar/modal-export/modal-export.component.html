@@ -155,10 +155,10 @@
                 </button>
                 <button
                   type="button"
-                  [disabled]="isProcessing()"
                   class="fr-btn fr-btn--secondary fr-btn--icon-left fr-icon-external-link-line"
                   (click)="doLaunchExport('to-grist', allColumnsSelected)"
                   data-test-id="export-grist"
+                  disabled="true"
                 >
                   <span>Transférer vers Grist</span>
                 </button>
