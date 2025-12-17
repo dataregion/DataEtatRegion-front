@@ -4,7 +4,8 @@ import {
   inject,
   output,
   ChangeDetectionStrategy,
-  signal
+  signal,
+  WritableSignal
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { DownloadExportService } from '@services/download-export.service';
@@ -33,6 +34,8 @@ export class ModalExportComponent {
   private _watcherSubscription?: Subscription;
   private _doExportSubscription?: Subscription;
 
+  public requested_format: WritableSignal<string | undefined> = signal(undefined) 
+
   public isOnError = signal(false);
   public isExportLaunched = signal(false);
   public isProcessing = signal(false);
@@ -43,6 +46,7 @@ export class ModalExportComponent {
   public reset() {
     this.isOnError.set(false);
     this.isExportLaunched.set(false);
+    this.requested_format.set(undefined);
     this.isProcessing.set(false);
     this.isExportAvailable.set(false);
 
@@ -77,6 +81,7 @@ export class ModalExportComponent {
         next: (response) => {
           this.reset();
           this.isExportLaunched.set(true);
+          this.requested_format.set(format);
           this.watchCurrentExportTask(response.data!);
         },
         error: () => {
@@ -111,7 +116,9 @@ export class ModalExportComponent {
 
     this.isExportAvailable.set(true);
     this.availableExportId = task.prefect_run_id;
-    this._downloadExportService.downloadExport(undefined, this.availableExportId);
+    if (this.requested_format() !== 'to-grist') {
+      this._downloadExportService.downloadExport(undefined, this.availableExportId);
+    }
     this.reset();
   }
 

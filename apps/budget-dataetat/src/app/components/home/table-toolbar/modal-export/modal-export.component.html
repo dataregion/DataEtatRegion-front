@@ -41,37 +41,60 @@
             </button>
           </div>
 
-          @if (isExportLaunched() && isExportAvailable()) {
+          @if (isExportLaunched() && requested_format() === 'to-grist') {
+
+          <div class="loading-overlay">
+            <div class="loading-spinner">
+              <div class="fr-icon-refresh-line fr-icon--lg spinning"></div>
+
+              <div class="loading-text">
+                <p>Votre recherche est en train d'être exportée sur grist</p>
+                <p>Cela peut prendre du temps.</p>
+              </div>
+            </div>
+          </div>
+          <div style="min-height: 300px"></div>
+
+          } @else if (isExportLaunched() && isExportAvailable() && requested_format() === 'to-grist') {
 
           <div class="fr-modal__content">
             <h2 id="modal-title" class="fr-modal__title">
-                <span class="fr-icon-download-fill fr-icon--lg" aria-hidden="true"></span>
-                Votre export est prêt
+              <span class="fr-icon-download-fill fr-icon--lg" aria-hidden="true"></span>
+              Votre export est prêt
             </h2>
             <div>
-              Voici votre fichier : 
-                <a href="#" class="fr-link" (click)="onExportDownload($event, availableExportId!)"
-                  >Télécharger</a
-                >
+              Merci de consulter votre espace grist.
             </div>
           </div>
-          
+
+          } @else if (isExportLaunched() && isExportAvailable()) {
+
+          <div class="fr-modal__content">
+            <h2 id="modal-title" class="fr-modal__title">
+              <span class="fr-icon-download-fill fr-icon--lg" aria-hidden="true"></span>
+              Votre export est prêt
+            </h2>
+            <div>
+              Voici votre fichier :
+              <a href="#" class="fr-link" (click)="onExportDownload($event, availableExportId!)"
+                >Télécharger</a
+              >
+            </div>
+          </div>
+
           } @else if (isExportLaunched() && !isExportAvailable()) {
 
-                <div class="loading-overlay">
-                  <div class="loading-spinner">
-                    <div class="fr-icon-refresh-line fr-icon--lg spinning"></div>
+          <div class="loading-overlay">
+            <div class="loading-spinner">
+              <div class="fr-icon-refresh-line fr-icon--lg spinning"></div>
 
-                    <div class="loading-text">
-                      <p>Téléchargement en cours...</p>
-                      <p>
-                        Cela peut prendre du temps.
-                      </p>
-                    </div>
-
-                  </div>
-                </div>
-                <div style="min-height: 300px;"></div>
+              <div class="loading-text">
+                <p>Téléchargement en cours...</p>
+                <p>Cela peut prendre du temps.</p>
+              </div>
+            </div>
+          </div>
+          <div style="min-height: 300px"></div>
 
           } @else {
 
@@ -132,10 +155,10 @@
                 </button>
                 <button
                   type="button"
+                  [disabled]="isProcessing()"
                   class="fr-btn fr-btn--secondary fr-btn--icon-left fr-icon-external-link-line"
                   (click)="doLaunchExport('to-grist', allColumnsSelected)"
                   data-test-id="export-grist"
-                  disabled="true"
                 >
                   <span>Transférer vers Grist</span>
                 </button>
