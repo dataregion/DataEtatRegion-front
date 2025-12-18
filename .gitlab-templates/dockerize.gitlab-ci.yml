@@ -1,18 +1,6 @@
 include:
   - component: $CI_SERVER_FQDN/csm/gitlab-components/docker-build@4.0.4
     inputs:
-      image-name: ${REGISTRY}nocode/financial-data
-      image-tag: ${FRONTS_VER}
-      build-context: ./
-      dockerfile-name: ./apps/financial-data/Dockerfile
-      do-login: true
-      registry: ${REGISTRY}
-      registry-login: ${REGISTRY_USER}
-      do-push: true
-      # enable-debug: true
-
-  - component: $CI_SERVER_FQDN/csm/gitlab-components/docker-build@4.0.4
-    inputs:
       image-name: ${REGISTRY}nocode/france-relance
       image-tag: ${FRONTS_VER}
       build-context: ./
@@ -61,13 +49,6 @@ include:
   needs:
     - job: "🔨 build angular apps"
 
-
-"🐳 dockerizing financial-data":
-  <<: *default-dockerize
-  extends: ".dockerize-${REGISTRY}nocode/financial-data"
-  stage: 🐳 dockerize
-  needs:
-    - job: "🔨 build angular apps"
 
 "🐳 dockerizing france-relance":
   <<: *default-dockerize
