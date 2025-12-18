@@ -162,5 +162,5 @@ test.describe("Lorsque l'on spécifie des regions source", () => {
 
 async function _navigate(page: Page, url: string) {
   await mockRefApi(page);
-  await page.goto(url);
+  await page.goto(url, { waitUntil: 'networkidle' });
 }

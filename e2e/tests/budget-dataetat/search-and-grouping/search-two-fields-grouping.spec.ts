@@ -197,7 +197,7 @@ test.describe('Recherche sur deux critères Année/Type et grouping', () => {
     let capturedResponse: any = null;
 
     await page.route('**/financial-data/api/v3/lignes*', async (route) => {
-      const response = await route.fetch();
+      const response = await route.fetch();     
       capturedResponse = {
         url: response.url(),
         json: await response.json()
@@ -207,7 +207,7 @@ test.describe('Recherche sur deux critères Année/Type et grouping', () => {
 
     await page.getByTestId("modal-grouping-validate-btn").click();
     // Attendre que la réponse soit capturée
-    await page.waitForTimeout(3000); // ou mieux, attendre un élément qui confirme le chargement
+    await page.waitForResponse('**/financial-data/api/v3/lignes*');
 
     expect(capturedResponse).not.toBeNull();
     const url = new URL(capturedResponse.url);

@@ -45,6 +45,24 @@ const config: PlaywrightTestConfig = {
   },
   
   projects: [
+    // // Page de login
+    {
+      name: 'no-login-chrome',
+      testDir: './tests/no-login',
+      use: {
+        ...devices['Desktop Chrome'],
+        baseURL: process.env['BUDGET_BRETAGNE_BASE_URL'],
+      }
+    },
+    {
+      name: 'no-login-firefox',
+      testDir: './tests/no-login',
+      use: {
+        ...devices['Desktop Firefox'],
+        baseURL: process.env['BUDGET_BRETAGNE_BASE_URL'],
+      }
+    },
+
     // Tests de non reg
     {
       name: 'budget-dataetat-nonreg-chrome',
