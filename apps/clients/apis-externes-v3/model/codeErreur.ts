@@ -9,7 +9,7 @@
  */
 
 
-export type CodeErreur = 'UNKNOWN' | 'REMOTE_CALL_FAILED' | 'LIMIT_HIT' | 'INVALID_TOKEN' | 'UNAUTHORIZED_ON_DEMARCHE' | 'DEMARCHE_NOT_FOUND';
+export type CodeErreur = 'UNKNOWN' | 'REMOTE_CALL_FAILED' | 'LIMIT_HIT' | 'INVALID_TOKEN' | 'UNAUTHORIZED_ON_DEMARCHE' | 'DEMARCHE_NOT_FOUND' | 'DATA_SUBVENTION_NOT_AN_ASSOCIATION';
 
 export const CodeErreur = {
 
@@ -23,6 +23,8 @@ export const CodeErreur = {
 
     UnauthorizedOnDemarche: 'UNAUTHORIZED_ON_DEMARCHE' as CodeErreur,
 
-    DemarcheNotFound: 'DEMARCHE_NOT_FOUND' as CodeErreur
+    DemarcheNotFound: 'DEMARCHE_NOT_FOUND' as CodeErreur,
+
+    DataSubventionNotAnAssociation: 'DATA_SUBVENTION_NOT_AN_ASSOCIATION' as CodeErreur
 };
 
