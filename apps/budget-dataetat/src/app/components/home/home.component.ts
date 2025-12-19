@@ -129,6 +129,7 @@ export class HomeComponent implements OnInit {
     const hasResults = results && results.length > 0;
     const selectedLine = this.selectedLine();
     return hasResults || selectedLine !== undefined;
+    
   });
 
   /** 
@@ -137,8 +138,8 @@ export class HomeComponent implements OnInit {
    */
   public readonly showSearchForm = computed(() => {
     const gridFullscreen = this.grid_fullscreen();
-    const selectedLine = this.selectedLine();
-    return !gridFullscreen && selectedLine === undefined;
+    const show = !gridFullscreen;
+    return show
   });
 
   // --- Gestion des erreurs ---
