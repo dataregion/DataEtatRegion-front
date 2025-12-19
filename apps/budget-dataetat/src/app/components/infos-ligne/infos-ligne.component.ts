@@ -1,4 +1,4 @@
-import { Component, inject, input, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, DestroyRef, inject, input, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { Observable } from 'rxjs';
@@ -19,6 +19,7 @@ import { InformationsSupplementairesService } from '../../modules/informations-s
 import { SearchDataService } from '@services/search-data.service';
 
 import { OuNonRenseignePipe } from 'apps/common-lib/src/public-api';
+import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 
 /**
  * Énumération des différents modes d'affichage pour les informations supplémentaires
@@ -56,7 +57,7 @@ export enum View {
   styleUrls: ['./infos-ligne.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
-export class InfosLigneComponent implements OnInit {
+export class InfosLigneComponent {
   
   // ========================================
   // SERVICES INJECTÉS
@@ -65,6 +66,7 @@ export class InfosLigneComponent implements OnInit {
   private readonly _route = inject(ActivatedRoute);
   private readonly _searchDataService = inject(SearchDataService);
   private readonly _infoSupplementaireService = inject(InformationsSupplementairesService);
+  private readonly _destroyRef = inject(DestroyRef)
 
 
   public readonly financialLine = input<BudgetFinancialDataModel>();
@@ -112,32 +114,40 @@ export class InfosLigneComponent implements OnInit {
     return this._infoSupplementaireService.viewService;
   }
 
-  // ========================================
-  // CYCLE DE VIE ANGULAR
-  // ========================================
-  
+  /**
+   *
+   */
+  constructor() {
+    toObservable(this.financialLine)
+    .pipe(
+      takeUntilDestroyed(this._destroyRef)
+    )
+    .subscribe(
+      {
+        next: (line) => {
+          // Priorité 1: données passées via l'input
+          let financialData = line;
+          this.view = View.light;
+          
+          // Priorité 2: données du resolver (route directe)
+          if (!financialData) {
+            const resolverData: BudgetFinancialDataModel = this._route.snapshot.data['infos_supplementaires'];
+            if (resolverData) { 
+              financialData = resolverData;
+              this.linkedToTable = false; // Pas de lien au tableau car vient de l'URL
+              this.view = View.full; // Vue complète par défaut pour les accès directs
+            }
+          }
 
-  ngOnInit(): void {
-    // Priorité 1: données passées via l'input
-    let financialData = this.financialLine();
-    this.view = View.light;
-    
-    // Priorité 2: données du resolver (route directe)
-    if (!financialData) {
-      const resolverData: BudgetFinancialDataModel = this._route.snapshot.data['infos_supplementaires'];
-      if (resolverData) { 
-        financialData = resolverData;
-        this.linkedToTable = false; // Pas de lien au tableau car vient de l'URL
-        this.view = View.full; // Vue complète par défaut pour les accès directs
+          if (!financialData) {
+            return;
+          }
+
+          this._financial = financialData;
+          this._setupViewServices();
+        }
       }
-    }
-
-    if (!financialData) {
-      return;
-    }
-
-    this._financial = financialData;
-    this._setupViewServices();
+    )
   }
 
   // ========================================
