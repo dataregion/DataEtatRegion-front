@@ -22,12 +22,19 @@
   script:
     - |
       npm run lint
+
+      echo >&2 "🔨 Building budget-dataetat-dev"
+      npm run build:budget-dev
+
       echo >&2 "🔨 Building budget-dataetat"
       npm run build:budget
+
       echo >&2 "🔨 Building france-relance"
       npm run build:france-relance
+
       echo >&2 "🔨 Building data-qpv"
       npm run build:data-qpv
+
       set +x
 
   artifacts:

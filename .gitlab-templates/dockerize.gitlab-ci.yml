@@ -34,6 +34,17 @@ include:
       registry-login: ${REGISTRY_USER}
       do-push: true
       # enable-debug: true
+  - component: $CI_SERVER_FQDN/csm/gitlab-components/docker-build@4.0.4
+    inputs:
+      image-name: ${REGISTRY}nocode/budget-dataetat-dev
+      image-tag: ${FRONTS_VER}
+      build-context: ./
+      dockerfile-name: ./apps/budget-dataetat/Dockerfile.dev
+      do-login: true
+      registry: ${REGISTRY}
+      registry-login: ${REGISTRY_USER}
+      do-push: true
+      # enable-debug: true
 
 .default-dockerize: &default-dockerize
   rules:
@@ -41,6 +52,13 @@ include:
     - if: '$DO_DOCKERIZE == "⚙️"'
       when: manual
     - when: never
+
+"🐳 dockerizing budget-dataetat-dev":
+  <<: *default-dockerize
+  extends: ".dockerize-${REGISTRY}nocode/budget-dataetat-dev"
+  stage: 🐳 dockerize
+  needs:
+    - job: "🔨 build angular apps"
 
 "🐳 dockerizing budget-dataetat":
   <<: *default-dockerize
