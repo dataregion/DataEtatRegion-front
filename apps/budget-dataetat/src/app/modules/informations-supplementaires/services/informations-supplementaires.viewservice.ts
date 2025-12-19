@@ -17,6 +17,7 @@ import { AffichageDossier } from '@models/demarche_simplifie/demarche.model';
 import { CompagnonDSService } from '../../compagnon-ds/compagnon-ds.service';
 import { ApiExterneError, EntrepriseService, InfoApiEntreprise, InfoApiSubvention, RepresentantLegal, Subvention, SubventionService } from 'apps/clients/apis-externes-v3';
 import { SourceFinancialData } from 'apps/common-lib/src/lib/models/refs/common.models';
+import { LoggerService } from 'apps/common-lib/src/lib/services/logger.service';
 
 export class InformationSupplementairesViewService {
   private _options = {
@@ -33,7 +34,8 @@ export class InformationSupplementairesViewService {
     private _aev3_entreprise: EntrepriseService,
     private _aev3_subvention: SubventionService,
     private _compagnonDS: CompagnonDSService,
-    private _financial: BudgetFinancialDataModel
+    private _financial: BudgetFinancialDataModel,
+    private _logger: LoggerService,
   ) {}
 
   openInNewtab() {
@@ -179,6 +181,7 @@ export class InformationSupplementairesViewService {
         })
       );
     }
+    this._logger.debug("La ligne financière n'est pas une AE. On ignore la requête vers l'API subvention.")
     return of(null);
   }
 
@@ -190,6 +193,7 @@ export class InformationSupplementairesViewService {
         })
       );
     }
+    this._logger.debug("La ligne financière n'est pas une AE. On ignore la requête vers l'API subvention - représentants légaux.")
     return of([]);
   }
 

@@ -8,6 +8,7 @@ import { TrancheEffectifCorrige } from '../models/correction-api-externes/Tranch
 import { InformationSupplementairesViewService } from './informations-supplementaires.viewservice';
 import { CompagnonDSService } from '../../compagnon-ds/compagnon-ds.service';
 import { EntrepriseService, InfoApiEntreprise, SubventionService } from 'apps/clients/apis-externes-v3';
+import { LoggerService } from 'apps/common-lib/src/lib/services/logger.service';
 
 export function fromInfoApiEntreprise(info: InfoApiEntreprise): EntrepriseFull {
   return {
@@ -29,6 +30,7 @@ export function fromInfoApiEntreprise(info: InfoApiEntreprise): EntrepriseFull {
   providedIn: 'root'
 })
 export class InformationsSupplementairesService {
+  private _logger = inject(LoggerService);
   private _ea = inject(ExternalAPIsService);
   private _aev3_entreprise = inject(EntrepriseService);
   private _aev3_subvention = inject(SubventionService);
@@ -46,7 +48,8 @@ export class InformationsSupplementairesService {
       this._aev3_entreprise,
       this._aev3_subvention,
       this._compagnonDS,
-      financial_data
+      financial_data,
+      this._logger,
     );
   }
 }
