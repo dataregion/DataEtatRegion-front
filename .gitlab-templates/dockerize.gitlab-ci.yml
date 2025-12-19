@@ -1,7 +1,7 @@
 include:
-  - component: $CI_SERVER_FQDN/csm/gitlab-components/docker-build@4.0.4
+  - component: $CI_SERVER_FQDN/csm/gitlab-components/docker-build@5.0.5
     inputs:
-      image-name: ${REGISTRY}nocode/france-relance
+      image-name: nocode/france-relance
       image-tag: ${FRONTS_VER}
       build-context: ./
       dockerfile-name: ./apps/france-relance/Dockerfile
@@ -11,9 +11,9 @@ include:
       do-push: true
       # enable-debug: true
 
-  - component: $CI_SERVER_FQDN/csm/gitlab-components/docker-build@4.0.4
+  - component: $CI_SERVER_FQDN/csm/gitlab-components/docker-build@5.0.5
     inputs:
-      image-name: ${REGISTRY}nocode/data-qpv
+      image-name: nocode/data-qpv
       image-tag: ${FRONTS_VER}
       build-context: ./
       dockerfile-name: ./apps/data-qpv/Dockerfile
@@ -23,9 +23,9 @@ include:
       do-push: true
       # enable-debug: true
 
-  - component: $CI_SERVER_FQDN/csm/gitlab-components/docker-build@4.0.4
+  - component: $CI_SERVER_FQDN/csm/gitlab-components/docker-build@5.0.5
     inputs:
-      image-name: ${REGISTRY}nocode/budget-dataetat
+      image-name: nocode/budget-dataetat
       image-tag: ${FRONTS_VER}
       build-context: ./
       dockerfile-name: ./apps/budget-dataetat/Dockerfile
@@ -34,9 +34,9 @@ include:
       registry-login: ${REGISTRY_USER}
       do-push: true
       # enable-debug: true
-  - component: $CI_SERVER_FQDN/csm/gitlab-components/docker-build@4.0.4
+  - component: $CI_SERVER_FQDN/csm/gitlab-components/docker-build@5.0.5
     inputs:
-      image-name: ${REGISTRY}nocode/budget-dataetat-dev
+      image-name: nocode/budget-dataetat-dev
       image-tag: ${FRONTS_VER}
       build-context: ./
       dockerfile-name: ./apps/budget-dataetat/Dockerfile.dev
@@ -55,14 +55,14 @@ include:
 
 "🐳 dockerizing budget-dataetat-dev":
   <<: *default-dockerize
-  extends: ".dockerize-${REGISTRY}nocode/budget-dataetat-dev"
+  extends: ".dockerize-nocode/budget-dataetat-dev"
   stage: 🐳 dockerize
   needs:
     - job: "🔨 build angular apps"
 
 "🐳 dockerizing budget-dataetat":
   <<: *default-dockerize
-  extends: ".dockerize-${REGISTRY}nocode/budget-dataetat"
+  extends: ".dockerize-nocode/budget-dataetat"
   stage: 🐳 dockerize
   needs:
     - job: "🔨 build angular apps"
@@ -70,14 +70,14 @@ include:
 
 "🐳 dockerizing france-relance":
   <<: *default-dockerize
-  extends: ".dockerize-${REGISTRY}nocode/france-relance"
+  extends: ".dockerize-nocode/france-relance"
   stage: 🐳 dockerize
   needs:
     - job: "🔨 build angular apps"
 
 "🐳 dockerizing data-qpv":
   <<: *default-dockerize
-  extends: ".dockerize-${REGISTRY}nocode/data-qpv"
+  extends: ".dockerize-nocode/data-qpv"
   stage: 🐳 dockerize
   needs:
     - job: "🔨 build angular apps"
