@@ -33,6 +33,7 @@ run-tests-e2e:
       - playwright-report/*
   needs:
     - job: "🐣 deploy fronts on integration"
+      optional: true
   rules:
     - if: '$DO_INTEG_TESTS == "✅"'
     - if: '$DO_INTEG_TESTS == "⚙️"'
