@@ -149,6 +149,7 @@ test.describe('Recherche sur deux critères Année/Type et grouping', () => {
     //click sur le bouton retour
 
     await page.getByRole('button', { name: 'Retour' }).click();
+    await waitResponseFetchApiV3(page);
 
     // on revient au grouping initiale
     await verifyGroupingIsApplied(page);
@@ -207,7 +208,7 @@ test.describe('Recherche sur deux critères Année/Type et grouping', () => {
 
     await page.getByTestId("modal-grouping-validate-btn").click();
     // Attendre que la réponse soit capturée
-    await page.waitForResponse('**/financial-data/api/v3/lignes*');
+    await waitResponseFetchApiV3(page);
 
     expect(capturedResponse).not.toBeNull();
     const url = new URL(capturedResponse.url);
@@ -269,8 +270,6 @@ async function selectGroupingOption(page: Page, optionName: string): Promise<voi
  */
 async function verifyGroupingIsApplied(page: Page): Promise<void> {
   // Vérifier que le bouton de grouping est en mode "primary" (actif)
-  // await page.getByTestId('group-by-btn').waitFor({ state: 'visible' });
-  await page.waitForLoadState('networkidle');
   await expect(page.getByTestId('group-by-btn')).toHaveClass(/fr-btn--primary/);
 
   // Vérifier que le bouton affiche le nombre de critères sélectionnés
@@ -314,7 +313,13 @@ async function makeGroupingAnneeProgramme(page: Page): Promise<void> {
   await selectGroupingOption(page, 'Programme');
 
   await page.getByTestId("modal-grouping-validate-btn").click();
-  
+  // attente de la réponse de l'api
+  await waitResponseFetchApiV3(page);
+}
+
+
+async function waitResponseFetchApiV3(page: Page): Promise<void> {
+  await page.waitForResponse('**/financial-data/api/v3/lignes*');
 }
 
 /**
