@@ -68,7 +68,7 @@ test.describe('Recherche sur deux critères Année/Type et grouping', () => {
 
     // affichage d'un champ de recherche temporaire
     await expect(page.getByRole('status', { name: 'Chargement…' })).toBeVisible();
-    await expect(page.getByRole('status', { name: 'Chargement…' })).not.toBeVisible();
+    await page.getByRole('status', { name: 'Chargement…' }).waitFor({ state: 'hidden', timeout: 10000 });
 
     // Vérifier que les sous-groupes de niveau 1 (Programme) sont maintenant visibles
     const level1Headers = page.locator('tr.accordion-header[data-lvl="1"]');
@@ -118,7 +118,7 @@ test.describe('Recherche sur deux critères Année/Type et grouping', () => {
 
     // affichage d'un champ de recherche temporaire
     await expect(page.getByRole('status', { name: 'Chargement…' })).toBeVisible();
-    await expect(page.getByRole('status', { name: 'Chargement…' })).not.toBeVisible();
+    await page.getByRole('status', { name: 'Chargement…' }).waitFor({ state: 'hidden', timeout: 10000 });
 
     // Vérifier que les sous-groupes de niveau 1 (Programme) sont maintenant visibles
     const boutton = page.locator('tr.accordion-header[data-lvl="1"] td button.fr-icon-search-line');
@@ -249,7 +249,7 @@ async function waitForSearchResultsLine(page: Page): Promise<void> {
   await expect(page.getByText('Recherche en cours')).toBeVisible();
 
   // Puis attendre qu'il disparaisse (recherche terminée)
-  await expect(page.getByText('Recherche en cours')).not.toBeVisible({ timeout: 15000 });
+  await page.getByText('Recherche en cours').waitFor({ state: 'hidden', timeout: 10000 });
 
   // Vérifier que le composant d'affiche des lignes apparait ainsi que la toolbar
   await expect(page.locator('budget-table-toolbar')).toBeVisible();
@@ -269,6 +269,8 @@ async function selectGroupingOption(page: Page, optionName: string): Promise<voi
  */
 async function verifyGroupingIsApplied(page: Page): Promise<void> {
   // Vérifier que le bouton de grouping est en mode "primary" (actif)
+  // await page.getByTestId('group-by-btn').waitFor({ state: 'visible' });
+  await page.waitForLoadState('networkidle');
   await expect(page.getByTestId('group-by-btn')).toHaveClass(/fr-btn--primary/);
 
   // Vérifier que le bouton affiche le nombre de critères sélectionnés
@@ -319,7 +321,7 @@ async function makeGroupingAnneeProgramme(page: Page): Promise<void> {
  * Vérifie le nombre de nœuds d'accordéon fermés (collapse-arrow avec icône droite)
  */
 async function verifyCollapsedNodesCount(page: Page, expectedCount: number): Promise<void> {
-  await expect(page.locator(".accordion-header.clickable td.td-group span.collapse-arrow.fr-icon-arrow-right-s-line")).toHaveCount(expectedCount);
+  await expect(page.locator("span.collapse-arrow.fr-icon-arrow-right-s-line")).toHaveCount(expectedCount);
 }
 
 /**
@@ -360,7 +362,7 @@ async function setupGroupingTest(page: Page, groupingOptions: string[]): Promise
 
   // 6. Attendre la fin de la recherche
   await expect(page.getByText('Recherche en cours')).toBeVisible();
-  await expect(page.getByText('Recherche en cours')).not.toBeVisible({ timeout: 15000 });
+  await page.getByText('Recherche en cours').waitFor({ state: 'hidden', timeout: 10000 });
 }
 
 /**
