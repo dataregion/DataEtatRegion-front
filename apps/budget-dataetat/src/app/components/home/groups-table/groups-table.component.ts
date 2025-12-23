@@ -169,21 +169,11 @@ export class GroupsTableComponent implements OnDestroy {
     }
   }
 
-  loadMore(level: number) {
-    if (!this._searchDataService.searchParams())
-      return;
-
-    const parent = this.getNodeAtLevel(level) as Group;
-    if (!parent) {
-      this.logger.warn(`Aucun nœud trouvé au niveau ${level}`);
-      return;
-    }
-
-    this.logger.debug("==> LOAD MORE", parent)
+  loadMore(level: number, node: Group) {
+    this.logger.debug("==> LOAD MORE", node)
 
     if (this._searchDataService.searchParams()) {
-      // S'il y a un parent pour les nodes, on remet le loadingMore à true
-      parent.loadingMore = true;
+      node.loadingMore = true;
 
       const load = this._searchDataService.loadMore();
       if (load) {
@@ -191,34 +181,29 @@ export class GroupsTableComponent implements OnDestroy {
           this.logger.debug("==> LOAD MORE RESPONSE", apiResponse);
 
           if (!apiResponse.data?.groupings) {
-            parent.loadingMore = false;
+            node.loadingMore = false;
             return;
           }
+          
+          if (node) {
+            // Créer une nouvelle référence du tableau avec spread operator pour déclencher la détection de changement
+            node.children = [
+              ...node.children,
+              ...apiResponse.data.groupings.map((gd: GroupedData) => ({
+                parent: node,
+                children: [],
+                groupedData: gd,
+                opened: false,
+                loaded: false,
+                loadingMore: false,
+                currentPage: 1,
+              } as Group))
+            ];
 
-          const newPage: number = parent.currentPage + 1;
-
-          const newChildren: Group[] = [
-            ...parent.children,
-            ...apiResponse.data.groupings.map((gd: GroupedData) => ({
-              parent: parent,
-              children: [],
-              groupedData: gd,
-              opened: false,
-              loaded: false,
-              loadingMore: false,
-              currentPage: 1,
-            } as Group))
-          ];
-
-          // Appliquer les changements au parent
-          parent.children = newChildren;
-          parent.loadingMore = false;
-          parent.currentPage = newPage;
-
-          // Forcer la détection de changement pour le signal
-          this.root.update(currentRoot => ({ ...currentRoot }));
-
-          this.logger.debug("Parent state updated:", parent);
+            node.currentPage = node.currentPage + 1;
+            node.loadingMore = false;
+            this.logger.debug("Node update:", node);
+          }        
         });
       }
     }
@@ -261,44 +246,6 @@ export class GroupsTableComponent implements OnDestroy {
     return Array.isArray(results) && !results.some(item => 'id' in item);
   }
 
-  /**
-   * Trouve le premier nœud ouvert au niveau spécifié dans l'arbre de groupement.
-   * Parcourt récursivement l'arbre depuis la racine pour localiser un nœud accessible au niveau donné.
-   * @param level - Le niveau recherché (0 = racine, 1 = premier niveau, etc.)
-   * @returns Le nœud trouvé ou null si aucun nœud ouvert n'existe à ce niveau
-   */
-  private getNodeAtLevel(level: number) {
-    if (level === 0) {
-      return this.root();
-    }
-
-    // Fonction récursive pour parcourir l'arbre
-    const findNodeAtLevel = (node: Group, currentLevel: number): Group | null => {
-      // Si on a atteint le niveau recherché
-      if (currentLevel === level) {
-        return node;
-      }
-
-      // Si le nœud n'est pas ouvert, on ne peut pas descendre plus
-      if (!node.opened || node.children.length === 0) {
-        return null;
-      }
-
-      // Parcourir les enfants pour trouver un nœud au bon niveau
-      for (const child of node.children) {
-        const found = findNodeAtLevel(child, currentLevel + 1);
-        if (found) {
-          return found;
-        }
-      }
-
-      return null;
-    };
-
-    // Commencer la recherche depuis la racine
-    const rootNode = this.root();
-    return findNodeAtLevel(rootNode, 0);
-  }
 
   /**
    * Récupère récursivement le chemin de groupement de la racine jusqu'au nœud donné.

@@ -10,7 +10,8 @@
                   <th>
                     <span class="fr-cell__title" style="width:40%">
                       Groupe
-                      <button type="button" (click)="removeGrouping()" class="fr-btn fr-btn--tertiary fr-btn--sm" style="margin-left: 30px;">Revenir à l'affichage non-groupé</button>
+                      <button type="button" (click)="removeGrouping()" class="fr-btn fr-btn--tertiary fr-btn--sm"
+                        style="margin-left: 30px;">Revenir à l'affichage non-groupé</button>
                     </span>
                   </th>
                   <th>
@@ -28,43 +29,61 @@
                 <tr id="table-10-row-key-0" data-row-key="0">
                   <td style="text-align: right;">
                     <b style="font-size: 16px;">TOTAL</b>
-                    <span class="fr-badge fr-badge--info badge-no-icon" style="margin-left: 30px;">{{getTotal()?.total | numberFormat}} lignes</span></td>
-                  <td style="text-align: center;">
-                    <p class="fr-mr-2v fr-badge fr-badge--success badge-no-icon">{{getTotal()?.total_montant_engage | currency:'EUR':'symbol':'1.0-2'}}</p>
+                    <span class="fr-badge fr-badge--info badge-no-icon" style="margin-left: 30px;">{{getTotal()?.total |
+                      numberFormat}} lignes</span>
                   </td>
                   <td style="text-align: center;">
-                    <p class="fr-mr-2v fr-badge fr-badge--success badge-no-icon">{{getTotal()?.total_montant_paye | currency:'EUR':'symbol':'1.0-2'}}</p>
+                    <p class="fr-mr-2v fr-badge fr-badge--success badge-no-icon">{{getTotal()?.total_montant_engage |
+                      currency:'EUR':'symbol':'1.0-2'}}</p>
+                  </td>
+                  <td style="text-align: center;">
+                    <p class="fr-mr-2v fr-badge fr-badge--success badge-no-icon">{{getTotal()?.total_montant_paye |
+                      currency:'EUR':'symbol':'1.0-2'}}</p>
                   </td>
                   <td>
                   </td>
                 </tr>
 
                 <!-- Rendu récursif de l'arbre des groupes à partir du nœud racine -->
-                <ng-container *ngTemplateOutlet="renderNode; context: { $implicit: root()?.children, level: 0 }"/>
+                <ng-container *ngTemplateOutlet="renderNode; context: { $implicit: root()?.children, level: 0 }" />
 
-                @if (root() && pageSize && root().children.length % pageSize === 0) {
+                @if (root()) {
+
+                  @if (root().children.length % pageSize === 0 && !root().loadingMore) {
                   <tr>
                     <td class="td-group" colspan="4">
-                      <button class="fr-btn fr-btn--secondary fr-icon-add-circle-fill fr-btn--icon-left" (click)="loadMore(0); $event.stopPropagation()" style="margin-left:50px;">
+                      <button class="fr-btn fr-btn--secondary fr-icon-add-circle-fill fr-btn--icon-left"
+                        data-test-id="load-more-button-root" (click)="loadMore(0, root()); $event.stopPropagation()"
+                        style="margin-left:50px;">
                         Charger plus
                       </button>
                     </td>
                   </tr>
+                  }
+                  @if (root().loadingMore) {
+                  <ng-container
+                    *ngTemplateOutlet="spinnerRow; context: { dataTestId: 'load-more-spinner-root', padding: 30 }" />
+                  }
                 }
+
+
 
                 <ng-template #renderNode let-nodes let-level="level">
                   <ng-container *budgetTreeAccordion="nodes; level: level; let node; let lvl = level">
-                    <tr class="accordion-header" (click)="toggle(node, lvl)" [attr.data-lvl]="lvl" [class.opened]="node.opened" [class.clickable]="!isLastLevel(lvl)">
+                    <tr class="accordion-header" (click)="toggle(node, lvl)" [attr.data-lvl]="lvl"
+                      [class.opened]="node.opened" [class.clickable]="!isLastLevel(lvl)">
                       <td class="td-group">
                         <div [style.padding-left.px]="lvl * 50">
-                          <span class="collapse-arrow" [ngClass]="!isLastLevel(lvl) ? 'fr-icon-arrow-' + (node.opened ? 'down' : 'right') + '-s-line': ''"></span>
+                          <span class="collapse-arrow"
+                            [ngClass]="!isLastLevel(lvl) ? 'fr-icon-arrow-' + (node.opened ? 'down' : 'right') + '-s-line': ''"></span>
                           <div style="display: flex; flex-direction: row; align-items: center; flex: 1;">
                             <div [class.fr-ml-5v]="!isLastLevel(lvl)">
                               <p>{{getGroupingLabel(node.groupedData.colonne)}}</p>
                               <b>{{node.groupedData.label ?? "N/A"}}</b>
                             </div>
                             <div style="display:flex; justify-content: right; flex: 1;">
-                              <span class="fr-badge fr-badge--info badge-no-icon">{{node.groupedData.total | numberFormat}}</span>
+                              <span class="fr-badge fr-badge--info badge-no-icon">{{node.groupedData.total |
+                                numberFormat}}</span>
                             </div>
                           </div>
                         </div>
@@ -90,40 +109,30 @@
                     </tr>
 
                     @if (node.opened) {
-                      @if (node.loaded) {
-                        <ng-container *ngTemplateOutlet="renderNode; context: { $implicit: node.children, level: lvl + 1 }" />
-                        
-                        @if (node && pageSize && node.children.length % pageSize === 0 && !node.loadingMore) {
-                          <tr>
-                            <td class="td-group" colspan="4" [style.padding-left.px]="((lvl + 1) * 50) + 30">
-                              <button class="fr-btn fr-btn--secondary fr-icon-add-circle-fill fr-btn--icon-left"
-                                (click)="loadMore(lvl); $event.stopPropagation()"
-                                [class.fr-ml-5v]="isLastLevel(lvl)">
-                                Charger plus
-                              </button>
-                            </td>
-                          </tr>
-                        }
-                      } @else {
-                        <tr>
-                          <td colspan="4" class="td-group" [style.padding-left.px]="((lvl + 1) * 50) + 30">
-                            <div class="spinner-wrapper fr-spinner--sm">
-                                <span class="fr-spinner" aria-label="Chargement…" role="status"></span>
-                                <span class="fr-spinner-message">Chargement en cours ...</span>
-                            </div>
-                          </td>
-                        </tr>
-                      }
-                      @if (node.loadingMore) {
-                        <tr>
-                          <td colspan="4" class="td-group" [style.padding-left.px]="((lvl + 1) * 50) + 30">
-                            <div class="spinner-wrapper fr-spinner--sm">
-                                <span class="fr-spinner" aria-label="Chargement…" role="status"></span>
-                                <span class="fr-spinner-message">Chargement en cours ...</span>
-                            </div>
-                          </td>
-                        </tr>
-                      }
+                    @if (node.loaded) {
+                    <ng-container
+                      *ngTemplateOutlet="renderNode; context: { $implicit: node.children, level: lvl + 1 }" />
+
+                    @if (node && node.children.length % pageSize === 0 && !node.loadingMore) {
+                    <tr>
+                      <td class="td-group" colspan="4" [style.padding-left.px]="((lvl + 1) * 50) + 30">
+                        <button class="fr-btn fr-btn--secondary fr-icon-add-circle-fill fr-btn--icon-left"
+                          (click)="loadMore(lvl,node); $event.stopPropagation()"
+                          [attr.data-test-id]="'load-more-button-node-' + (node.groupedData.colonne)"
+                          [class.fr-ml-5v]="isLastLevel(lvl)">
+                          Charger plus
+                        </button>
+                      </td>
+                    </tr>
+                    }
+                    } @else {
+                    <ng-container
+                      *ngTemplateOutlet="spinnerRow; context: { dataTestId: 'load-more-spinner-node-' + (node.groupedData.colonne), padding: ((lvl + 1) * 50) + 30 }" />
+                    }
+                    @if (node.loadingMore) {
+                    <ng-container
+                      *ngTemplateOutlet="spinnerRow; context: { dataTestId: 'load-more-spinner-node-' + (node.groupedData.colonne), padding: ((lvl + 1) * 50) + 30 }" />
+                    }
                     }
                   </ng-container>
                 </ng-template>
@@ -136,3 +145,14 @@
     </div>
   </div>
 </div>
+
+<ng-template #spinnerRow let-dataTestId="dataTestId" let-padding="padding">
+  <tr>
+    <td colspan="4" class="td-group" [style.padding-left.px]="padding" [attr.data-test-id]="dataTestId">
+      <div class="spinner-wrapper fr-spinner--sm">
+        <span class="fr-spinner" aria-label="Chargement…" role="status"></span>
+        <span class="fr-spinner-message">Chargement en cours ...</span>
+      </div>
+    </td>
+  </tr>
+</ng-template>
