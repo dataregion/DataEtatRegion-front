@@ -1,6 +1,7 @@
 import { expect, test, Page } from '@playwright/test';
 import mockRefApi from '../../utils/mock-api';
 import { financial_url_helper } from '../../utils/urls.conf';
+import { SearchAndGroupingUtils } from './utils';
 
 test.describe('Recherche sur deux critères Année/Type et grouping', () => {
   test.beforeEach(async ({ page, baseURL }) => {
@@ -16,7 +17,7 @@ test.describe('Recherche sur deux critères Année/Type et grouping', () => {
     await performBasicSearch(page);
 
     // 3. Attendre que les résultats soient affichés
-    await waitForSearchResultsLine(page);
+    await SearchAndGroupingUtils.waitForSearchResultsLine(page);
 
     await expect(page.locator('budget-table-toolbar')).toBeVisible();
     await expect(page.getByTestId("chose-columns-btn")).toBeVisible();
@@ -51,7 +52,7 @@ test.describe('Recherche sur deux critères Année/Type et grouping', () => {
     await performBasicSearch(page);
 
     // 2. Attendre que les résultats soient affichés
-    await waitForSearchResultsLine(page);
+    await SearchAndGroupingUtils.waitForSearchResultsLine(page);
 
     // 3. Cliquer sur le bouton de grouping
     await makeGroupingAnneeProgramme(page);
@@ -64,11 +65,7 @@ test.describe('Recherche sur deux critères Année/Type et grouping', () => {
     await verifyExpandedNodesCount(page, 0);
 
     // Déplier le premier nœud
-    await page.locator(".accordion-header.clickable td.td-group span.collapse-arrow").first().click();
-
-    // affichage d'un champ de recherche temporaire
-    await expect(page.getByRole('status', { name: 'Chargement…' })).toBeVisible();
-    await page.getByRole('status', { name: 'Chargement…' }).waitFor({ state: 'hidden', timeout: 10000 });
+    await SearchAndGroupingUtils.unfoldFirstNode(page);
 
     // Vérifier que les sous-groupes de niveau 1 (Programme) sont maintenant visibles
     const level1Headers = page.locator('tr.accordion-header[data-lvl="1"]');
@@ -102,7 +99,7 @@ test.describe('Recherche sur deux critères Année/Type et grouping', () => {
     await performBasicSearch(page);
 
     // 2. Attendre que les résultats soient affichés
-    await waitForSearchResultsLine(page);
+    await SearchAndGroupingUtils.waitForSearchResultsLine(page);
 
     // on a pas le bouton de retour
     await expect(page.getByRole('button', { name: 'Retour' })).not.toBeVisible()
@@ -131,7 +128,7 @@ test.describe('Recherche sur deux critères Année/Type et grouping', () => {
     await page.locator('tr.accordion-header[data-lvl="1"] td button.fr-icon-search-line').first().click();
 
     // mise sur la page de ligne
-    await waitForSearchResultsLine(page);
+    await SearchAndGroupingUtils.waitForSearchResultsLine(page);
 
     // Vérifier que le bouton affiche le nombre de critères sélectionnés
     await expect(page.getByTestId('group-by-btn')).toContainText('2');
@@ -149,7 +146,7 @@ test.describe('Recherche sur deux critères Année/Type et grouping', () => {
     //click sur le bouton retour
 
     await page.getByRole('button', { name: 'Retour' }).click();
-    await waitResponseFetchApiV3(page);
+    await SearchAndGroupingUtils.waitResponseFetchApiV3(page);
 
     // on revient au grouping initiale
     await verifyGroupingIsApplied(page);
@@ -161,7 +158,7 @@ test.describe('Recherche sur deux critères Année/Type et grouping', () => {
     await performBasicSearch(page);
 
     // 2. Attendre que les résultats soient affichés
-    await waitForSearchResultsLine(page);
+    await SearchAndGroupingUtils.waitForSearchResultsLine(page);
 
     // 3. Cliquer sur le bouton de grouping
     await makeGroupingAnneeProgramme(page);
@@ -172,7 +169,7 @@ test.describe('Recherche sur deux critères Année/Type et grouping', () => {
     await page.getByRole('button', { name: 'Revenir à l\'affichage non-' }).click();
 
     // 2. Attendre que les résultats soient affichés
-    await waitForSearchResultsLine(page);
+    await SearchAndGroupingUtils.waitForSearchResultsLine(page);
 
   })
 
@@ -208,7 +205,7 @@ test.describe('Recherche sur deux critères Année/Type et grouping', () => {
 
     await page.getByTestId("modal-grouping-validate-btn").click();
     // Attendre que la réponse soit capturée
-    await waitResponseFetchApiV3(page);
+    await SearchAndGroupingUtils.waitResponseFetchApiV3(page);
 
     expect(capturedResponse).not.toBeNull();
     const url = new URL(capturedResponse.url);
@@ -240,21 +237,6 @@ async function performBasicSearch(page: Page): Promise<void> {
 
   // Lancer la recherche
   await page.getByTestId('search').click();
-}
-
-/**
- * Attend que les résultats de recherche soient affichés
- */
-async function waitForSearchResultsLine(page: Page): Promise<void> {
-  // Attendre que le message "Recherche en cours" apparaisse
-  await expect(page.getByText('Recherche en cours')).toBeVisible();
-
-  // Puis attendre qu'il disparaisse (recherche terminée)
-  await page.getByText('Recherche en cours').waitFor({ state: 'hidden', timeout: 10000 });
-
-  // Vérifier que le composant d'affiche des lignes apparait ainsi que la toolbar
-  await expect(page.locator('budget-table-toolbar')).toBeVisible();
-  await expect(page.locator('budget-lines-table')).toBeVisible();
 }
 
 /**
@@ -314,12 +296,7 @@ async function makeGroupingAnneeProgramme(page: Page): Promise<void> {
 
   await page.getByTestId("modal-grouping-validate-btn").click();
   // attente de la réponse de l'api
-  await waitResponseFetchApiV3(page);
-}
-
-
-async function waitResponseFetchApiV3(page: Page): Promise<void> {
-  await page.waitForResponse('**/financial-data/api/v3/lignes*');
+  await SearchAndGroupingUtils.waitResponseFetchApiV3(page);
 }
 
 /**
@@ -351,23 +328,9 @@ async function setupGroupingTest(page: Page, groupingOptions: string[]): Promise
   await performBasicSearch(page);
 
   // 2. Attendre que les résultats soient affichés
-  await waitForSearchResultsLine(page);
-
-  // 3. Ouvrir le modal de grouping
-  await page.getByTestId("group-by-btn").click();
-  await expect(page.locator('#modalGrouping')).toBeVisible();
-
-  // 4. Sélectionner les critères de grouping
-  for (const option of groupingOptions) {
-    await selectGroupingOption(page, option);
-  }
-
-  // 5. Valider le grouping
-  await page.getByTestId("modal-grouping-validate-btn").click();
-
-  // 6. Attendre la fin de la recherche
-  await expect(page.getByText('Recherche en cours')).toBeVisible();
-  await page.getByText('Recherche en cours').waitFor({ state: 'hidden', timeout: 10000 });
+  await SearchAndGroupingUtils.waitForSearchResultsLine(page);
+  // 3. Cliquer sur le bouton de grouping
+  await SearchAndGroupingUtils.waitForGrouping(page, groupingOptions);
 }
 
 /**
