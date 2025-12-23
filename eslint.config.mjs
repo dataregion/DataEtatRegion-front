@@ -18,7 +18,7 @@ const compat = new FlatCompat({
 
 export default [
     {
-        ignores: ["nginx/**/*", '**/eslint.config.mjs', "apps/common-lib/.storybook/main.ts", "apps/clients/*", ".angular/*", "**/playwright-report/**"],
+        ignores: ["apps/financial-data/**", "nginx/**/*", '**/eslint.config.mjs', "apps/common-lib/.storybook/main.ts", "apps/clients/*", ".angular/*", "**/playwright-report/**"],
     },
     ...tseslint.configs.recommended,
     {

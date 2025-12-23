@@ -169,7 +169,7 @@ export class GroupsTableComponent implements OnDestroy {
     }
   }
 
-  loadMore(level: number, node: Group) {
+  loadMore(node: Group) {
     this.logger.debug("==> LOAD MORE", node)
 
     if (this._searchDataService.searchParams()) {

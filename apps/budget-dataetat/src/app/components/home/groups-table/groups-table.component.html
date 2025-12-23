@@ -53,7 +53,7 @@
                   <tr>
                     <td class="td-group" colspan="4">
                       <button class="fr-btn fr-btn--secondary fr-icon-add-circle-fill fr-btn--icon-left"
-                        data-test-id="load-more-button-root" (click)="loadMore(0, root()); $event.stopPropagation()"
+                        data-test-id="load-more-button-root" (click)="loadMore(root()); $event.stopPropagation()"
                         style="margin-left:50px;">
                         Charger plus
                       </button>
@@ -117,7 +117,7 @@
                     <tr>
                       <td class="td-group" colspan="4" [style.padding-left.px]="((lvl + 1) * 50) + 30">
                         <button class="fr-btn fr-btn--secondary fr-icon-add-circle-fill fr-btn--icon-left"
-                          (click)="loadMore(lvl,node); $event.stopPropagation()"
+                          (click)="loadMore(node); $event.stopPropagation()"
                           [attr.data-test-id]="'load-more-button-node-' + (node.groupedData.colonne)"
                           [class.fr-ml-5v]="isLastLevel(lvl)">
                           Charger plus
