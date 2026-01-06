@@ -116,7 +116,8 @@ export class GroupingTableComponent implements OnChanges, AfterViewInit {
     });
   }
 
-  @HostListener('scroll', ['$event.target']) onScroll(target: HTMLElement) {
+  @HostListener('scroll', ['$event.target']) onScroll(target: EventTarget | null) {
+    if (!target || !(target instanceof HTMLElement)) return;
     const scrollLeft = target.scrollLeft;
     // On évite de mettre à jour la propriété CSS si la position de défilement horizontal n'a pas changé.
     // Pour ce faire on garde la position sur un attribut de la classe.
