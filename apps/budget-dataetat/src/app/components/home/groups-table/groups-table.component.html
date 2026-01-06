@@ -45,7 +45,7 @@
                 </tr>
 
                 <!-- Rendu récursif de l'arbre des groupes à partir du nœud racine -->
-                <ng-container *ngTemplateOutlet="renderNode; context: { $implicit: root()?.children, level: 0 }" />
+                <ng-container *ngTemplateOutlet="renderNode; context: { $implicit: root().children, level: 0 }" />
 
                 @if (root()) {
 

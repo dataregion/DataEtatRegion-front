@@ -11,7 +11,7 @@
              type="text">
     </mat-form-field>
 
-    <mat-option *ngIf="canFilter && (filteredOptions === null || filteredOptions?.length === 0)" class="no-result"
+    <mat-option *ngIf="canFilter && (filteredOptions === null || filteredOptions.length === 0)" class="no-result"
                 disabled>Aucun résultat
     </mat-option>
     <mat-option *ngFor="let opt of filteredOptions" [value]="opt">{{ renderLabelFunction(opt) }}</mat-option>
