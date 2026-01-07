@@ -36,6 +36,31 @@ async function waitForGrouping(page: Page, groupingOptions: string[]): Promise<v
     await page.getByText('Recherche en cours').waitFor({ state: 'hidden', timeout: 10000 });
 }
 
+
+async function checkButtonEnterGroupingVisibile(page: Page): Promise<void> {
+    await expect(page.getByRole('button', { name: 'Retour' })).toBeVisible(); 
+    await expect(page.getByTestId('chose-columns-btn')).toBeVisible();
+    await expect(page.getByTestId('group-by-btn')).toBeVisible();
+}
+
+async function waitForSelectColumnsModal(page: Page, colonne: string): Promise<void> {
+    await page.getByTestId("chose-columns-btn").click();
+    await expect(page.locator('#modalColonnes')).toBeVisible();
+
+    const checkbox = page.getByTestId(colonne);
+    await checkbox.scrollIntoViewIfNeeded();
+    await checkbox.waitFor({ state: 'visible', timeout: 10000 });
+    await checkbox.evaluate(el => el.scrollIntoView({ block: 'center' }));
+
+
+    await checkbox.check({ force: true });
+    // await page.getByTestId(colonne).click();
+    
+    await page.getByTestId("modal-colonnes-validate-btn").click();  
+
+    await expect(page.locator('#modalColonnes')).not.toBeVisible();
+}
+
 async function unfoldFirstNode(page: Page): Promise<void> {
     await page.locator(".accordion-header.clickable td.td-group span.collapse-arrow").first().click();
     // affichage d'un champ de recherche temporaire
@@ -52,5 +77,7 @@ export const SearchAndGroupingUtils = {
     waitForSearchResultsLine,
     waitForGrouping,
     unfoldFirstNode,
-    waitResponseFetchApiV3
+    waitResponseFetchApiV3,
+    waitForSelectColumnsModal,
+    checkButtonEnterGroupingVisibile
 };

@@ -46,6 +46,35 @@ test.describe('Recherche sur deux critères Année/Type et grouping', () => {
     await verifyTableColumns(page);
   })
 
+  // non reg fix #396 
+  test("Effectue une recherche et groupe uniquement par Année, rentre dans un groupe et affiche une colonne supplémentaire", async ({ page }) => {
+    // Setup grouping avec 1 critère
+    await setupGroupingTest(page, ['Année Exercice comptable']);
+
+    await page.getByRole('button', { name: 'Voir les données de ce groupe' }).first().click(); // on rentre dans le premier groupe
+
+    // affichage d'un champ de recherche temporaire
+    await expect(page.getByRole('status', { name: 'Chargement…' })).toBeVisible();
+    // await page.getByRole('status', { name: 'Chargement…' }).waitFor({ state: 'hidden', timeout: 10000 });
+
+    // On check la présence des bouttons retour, grouping, choix des colonnes
+    await SearchAndGroupingUtils.checkButtonEnterGroupingVisibile(page);
+    await expect(page.getByText('Année Exercice comptable :')).toBeVisible();
+
+    // check la colonne Programme n'est pas visibile
+    await expect(page.getByRole('columnheader', { name: 'Programme' })).not.toBeVisible();
+
+    await SearchAndGroupingUtils.waitForSelectColumnsModal(page, 'Programme');
+
+    // check la colonne est visibile
+    await expect(page.getByRole('columnheader', { name: 'Programme' })).toBeVisible();
+
+    // On check que les boutons sont tjs présent
+    await SearchAndGroupingUtils.checkButtonEnterGroupingVisibile(page);
+    await expect(page.getByText('Année Exercice comptable :')).toBeVisible();
+
+  })
+
 
   test("Effectue la recherche, groupe par Année/programme et navigue dans les nœuds du grouping", async ({ page }) => {
     // 1. Effectuer une recherche simple

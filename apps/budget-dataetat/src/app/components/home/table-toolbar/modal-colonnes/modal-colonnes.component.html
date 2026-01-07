@@ -28,7 +28,7 @@
                     <span class="fr-icon-drag-move-2-line" aria-hidden="true"></span>
                     <div>{{ group.controls.label.value }}</div>
                     <div class="fr-checkbox-group" style="margin-top: -25px;">
-                      <input type="checkbox" formControlName="selected" id="colonne-{{i}}" [attr.aria-describedby]="'colonne-' + i + '-messages'">
+                      <input type="checkbox" formControlName="selected" id="colonne-{{i}}" [attr.data-test-id]="group.controls.label.value" [attr.aria-describedby]="'colonne-' + i + '-messages'">
                       <label [attr.for]="'colonne-' + i"></label>
                       <div class="fr-messages-group" id="colonne-{{i}}-messages" aria-live="polite">
                       </div>
@@ -41,7 +41,7 @@
           </div>
           <div class="fr-modal__footer">
             <div class="fr-btns-group fr-btns-group--right fr-btns-group--inline-reverse fr-btns-group--inline-lg fr-btns-group--icon-left">
-              <button (click)="validate()" aria-controls="modalColonnes" class="fr-btn fr-icon-checkbox-circle-line fr-btn--icon-left">Valider</button>
+              <button (click)="validate()" data-test-id="modal-colonnes-validate-btn" aria-controls="modalColonnes" class="fr-btn fr-icon-checkbox-circle-line fr-btn--icon-left">Valider</button>
             </div>
           </div>
         </form>
