@@ -16,10 +16,9 @@ test.describe("Page d'accueil", () => {
 
     await page.getByRole('button', { name: "Information de l'utilisateur" }).isVisible();
 
-    const clickOnBody = async () => {
-      // XXX: for closing opened select
-      // await page.locator('.cdk-overlay-backdrop').first().click();
-      await page.locator('body').click();
+    const closeSelect = async () => {
+      // Close opened select with Escape key (more reliable than clicking body)
+      await page.keyboard.press('Escape');
     };
 
     // vérification du formulaire
@@ -27,18 +26,18 @@ test.describe("Page d'accueil", () => {
     await expect(
       page.getByRole('listbox', { name: 'Thème' }).locator('.mdc-list-item__primary-text')
     ).toHaveCount(16);
-    await clickOnBody();
+    await closeSelect();
 
     await page.getByLabel('Programme').click();
     await expect(
       page.getByRole('listbox', { name: 'Programme' }).locator('.mdc-list-item__primary-text')
     ).toHaveCount(26);
-    await clickOnBody();
+    await closeSelect();
 
     // vérification des niveaux de localisation
     await page.locator('[data-test-id="localisation-select"]').click();
     await expect(page.getByText('Aucun résultat')).toBeTruthy();
-    await clickOnBody();
+    await closeSelect();
 
     await page.getByLabel('Zone géographique').click();
     await expect(
@@ -46,7 +45,7 @@ test.describe("Page d'accueil", () => {
         .getByRole('listbox', { name: 'Zone géographique' })
         .locator('.mdc-list-item__primary-text')
     ).toHaveCount(8);
-    await clickOnBody();
+    await closeSelect();
 
     await page.getByLabel('Type de bénéficiaire').click();
     await expect(
@@ -54,7 +53,7 @@ test.describe("Page d'accueil", () => {
         .getByRole('listbox', { name: 'Type de bénéficiaire' })
         .locator('.mdc-list-item__primary-text')
     ).toHaveCount(5);
-    await clickOnBody();
+    await closeSelect();
 
     await page.getByLabel('Année').isVisible();
     await page.getByLabel('Bénéficiaire', { exact: true }).isVisible();
