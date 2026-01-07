@@ -364,8 +364,8 @@ async function verifyGroupingStructure(page: Page, expectedHeaderCount: number, 
  */
 async function verifyTableColumns(page: Page): Promise<void> {
   await expect(page.locator("#table-10 thead tr th")).toHaveCount(4);
-  await expect(page.getByRole('cell', { name: 'Montant engagé' })).toBeVisible();
-  await expect(page.getByRole('cell', { name: 'Montant Payé' })).toBeVisible();
+  await expect(page.getByRole('columnheader', { name: 'Montant engagé' })).toBeVisible();
+  await expect(page.getByRole('columnheader', { name: 'Montant Payé' })).toBeVisible();
 }
 
 /**
