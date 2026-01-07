@@ -162,12 +162,7 @@ export class SearchDataService {
    */
   public doSelectColumn(selectedColonnes: ColonneTableau<BudgetFinancialDataModel>[]) {
     this._logger.debug('==> Début de la méthode doSelectColumn', { selectedColonnes });
-
-    // set les grouping;
     this._colonnesService.selectedColonnesTable.set(selectedColonnes);
-    this._colonnesService.selectedColonnesGrouping.set([]);
-    this._colonnesService.selectedColonnesGrouped.set([]);
-    this.searchGroupingInProgress.set(false);
   }
   
   /**
