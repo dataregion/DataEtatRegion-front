@@ -48,13 +48,13 @@
 
     <div class="spacer"></div>
 
-    <button (click)="doSearch()" data-test-id="search" aria-label="Bouton de recherche." color="primary" mat-fab matTooltip="Rechercher">
+    <button (click)="doSearch()" data-test-id="search" aria-label="Bouton de recherche." color="primary" matMiniFab matTooltip="Rechercher">
       <mat-icon fontIcon="search" />
     </button>
 
     @if (searchDataService.searchFinish() === true) {
       <button (click)="reset()" 
-        aria-label="Bouton de réinitialisation des critères de recherche" color="warn" mat-fab
+        aria-label="Bouton de réinitialisation des critères de recherche" color="warn" matMiniFab
         matTooltip="Effacer la recherche">
         <mat-icon fontIcon="delete" />
       </button>

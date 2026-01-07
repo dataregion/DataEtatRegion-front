@@ -3,11 +3,33 @@
 @use "apps/common-lib/fix-angular-material-chips-overflow.scss";
 @use "apps/common-lib/flex-container-common.scss";
 
+@use '@angular/material' as mat;
+
+
+// Définir une typographie avec toutes les tailles réduites de 20%
+$custom-typography: mat.m2-define-typography-config(
+  $font-family: 'Roboto, sans-serif',
+  $body-1: mat.m2-define-typography-level(12.8px, 20px, 400),
+  $body-2: mat.m2-define-typography-level(11.2px, 18px, 400),
+  $subtitle-1: mat.m2-define-typography-level(12.8px, 20px, 500),
+  $subtitle-2: mat.m2-define-typography-level(11.2px, 18px, 500),
+  $button: mat.m2-define-typography-level(11.2px, 18px, 500),
+  $caption: mat.m2-define-typography-level(9.6px, 16px, 400),
+);
+
+// Appliquer la densité pour réduire les espacements
+@include mat.all-component-densities(-2);
+
+// Appliquer la typographie personnalisée
+@include mat.all-component-typographies($custom-typography);
+
 :root {
     --base-color: #024059;
     --base-foreground-color: white;
     --background-color: white;
     --color: black;
+    --mat-fab-touch-target-size: 39px;
+    --mat-form-field-filled-label-display: block
 }
 
 html,
@@ -16,8 +38,7 @@ body {
     height: 100%;
     display: flex;
     flex-direction: column;
-
-    --mat-typography-body1-font-size: 14px
+    font-size: 80%;
 }
 
 .hidden {
