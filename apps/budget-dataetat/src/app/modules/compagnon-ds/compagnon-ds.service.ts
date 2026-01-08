@@ -2,15 +2,15 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, map, Observable } from 'rxjs';
 import { SETTINGS } from 'apps/common-lib/src/lib/environments/settings.http.service';
-import { SettingsService } from 'apps/financial-data/src/environments/settings.service';
 import { AffichageDossier, Demarche, DemarcheLight, Donnee, Reconciliation, Token, ValeurDonnee } from '../../models/demarche_simplifie/demarche.model';
+import { SettingsBudgetService } from '../../environments/settings-budget.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CompagnonDSService {
   private _http = inject(HttpClient);
-  readonly settings = inject<SettingsService>(SETTINGS);
+  readonly settings = inject<SettingsBudgetService>(SETTINGS);
 
   private _apiExternes: string;
   private _apiDemarches: string;
