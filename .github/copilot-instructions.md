@@ -3,9 +3,6 @@
 - **Démarrage local** :  
   - `npm run start:budget-dev` pour lancer le front `budget-dataetat` en mode développement
     - Accès : http://localhost:4200
-  - `npm run start:financial-dev` pour lancer le front `financial-data` en mode développement _(déprécié)_
-    - Accès : http://localhost:4200
-    - ⚠️ Ce front est déprécié. Privilégier l'usage de `budget-dataetat` pour les nouveaux développements.
 - **Build** :  
   - `npm run build:budget` (ou `build:all` pour tout builder)
 - **Tests unitaires** :  
@@ -13,7 +10,7 @@
 - **Tests E2E** :  
   - `npx playwright test` (config dans `e2e/`)
 - **Lint** :  
-  - `npm run lint` (max 170 warnings)
+  - `npm run lint` (max 55 warnings)
   - ⚠️ **OBLIGATOIRE : Toujours exécuter `npm run lint` après toute modification de code pour vérifier la conformité aux règles de style et détecter les erreurs potentielles.**
 - **Storybook** :  
   - `npm run storybook:common-lib`
@@ -23,7 +20,7 @@
 ## 🏗️ Architecture & Big Picture
 
 - **Monorepo Angular 20** multi-applications :  
-  - `budget-dataetat`, `financial-data`, `france-relance`, `data-qpv`
+  - `budget-dataetat`, `france-relance`, `data-qpv`
 - **Librairies partagées** :  
   - `common-lib`, `appcommon`, `preference-users`, `grouping-table`, `shared-assets`
 - **Clients API générés** (OpenAPI) dans `apps/clients/*` :  
@@ -38,9 +35,6 @@
 - **Démarrage local** :  
   - `npm run start:budget-dev` pour lancer le front `budget-dataetat` en mode développement
     - Accès : http://localhost:4200
-  - `npm run start:financial-dev` pour lancer le front `financial-data` en mode développement _(déprécié)_
-    - Accès : http://localhost:4200
-    - ⚠️ Ce front est déprécié. Privilégier l'usage de `budget-dataetat` pour les nouveaux développements.
 - **Build** :  
   - `npm run build:budget` (ou `build:all` pour tout builder)
 - **Tests unitaires** :  
@@ -60,8 +54,6 @@
   - `apps/[app]/src/app/{components,services,models,modules,pages,shared}`
 - **Imports** :  
   - Utiliser les alias (`@models`, `@services`, etc.) définis dans `tsconfig.json`
-- **Pas de dépendance croisée** :  
-  - `budget-dataetat` et `financial-data` ne doivent pas importer de code source l’un de l’autre (seuls les clients API générés sont partagés)
 - **Composants Angular** :  
   - Toujours `OnPush`, utiliser `trackBy` pour les listes
   - **Dans `budget-dataetat` et `data-qpv`, préférer l'usage des signals Angular (Angular 17+) pour la gestion d'état local et de flux.**
@@ -80,7 +72,7 @@
 - **API** :  
   - Les clients dans `apps/clients/*` sont la seule interface pour consommer les APIs backend
 - **Tests E2E** :  
-  - Utiliser des `data-testid` pour la robustesse des sélecteurs
+  - Utiliser des `data-test-id` pour la robustesse des sélecteurs
 
 ## 📚 Fichiers clés à consulter
 

@@ -13,7 +13,7 @@
     "build:budget-dev": "ng build --project=budget-dataetat --output-path=dist/budget-dataetat-dev/",
     "build:france-relance": "ng build --project=france-relance",
     "build:data-qpv": "ng build --project=data-qpv",
-    "build:all": "ng build --project=france-relance && ng build --project=financial-data && ng build --project=data-qpv",
+    "build:all": "ng build --project=france-relance && ng build --project=data-qpv",
     "storybook:common-lib": "ng run common-lib:storybook",
     "test-storybook": "test-storybook --config-dir=apps/common-lib/.storybook",
     "lint": "eslint --max-warnings 55"

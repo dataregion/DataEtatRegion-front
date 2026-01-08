@@ -40,7 +40,6 @@ testem.log
 # System files
 .DS_Store
 Thumbs.db
-/apps/financial-data/src/assets/settings.json*
 /test-results/
 /playwright-report/
 /playwright/.cache/
