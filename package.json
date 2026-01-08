@@ -42,7 +42,7 @@
     "keycloak-js": "^25.0.6",
     "ngx-matomo-client": "~9.0.1",
     "ol": "^10.2.1",
-    "ol-mapbox-style": "^12.3.5",
+    "ol-mapbox-style": "^13.0.0",
     "rxjs": "~7.8.0",
     "topojson-client": "^3.1.0",
     "tslib": "^2.3.0",
