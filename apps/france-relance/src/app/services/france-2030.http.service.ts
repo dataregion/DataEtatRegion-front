@@ -9,12 +9,12 @@ import { SousAxePlanRelance, SousAxePlanRelanceForFilter } from '../models/axe.m
 import { Structure } from '../models/structure.models';
 import { Territoire } from '../models/territoire.models';
 import { HttpClient, HttpContext } from '@angular/common/http';
-import { SettingsService } from 'apps/financial-data/src/environments/settings.service';
 import { SETTINGS } from 'apps/common-lib/src/lib/environments/settings.http.service';
 import { DataPagination } from 'apps/common-lib/src/lib/models/pagination/pagination.models';
 import { DO_NOT_ALERT_ON_NON_IMPLEMTENTED } from 'apps/common-lib/src/public-api';
 import { SourceLaureatsData } from '../models/common.model';
 import { SearchUtilsService } from 'apps/common-lib/src/lib/services/search-utils.service';
+import { SettingsService } from '../../environments/settings.service';
 
 @Injectable({
   providedIn: 'root'
