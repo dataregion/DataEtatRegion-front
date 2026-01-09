@@ -49,9 +49,9 @@ Thumbs.db
 /apps/france-relance/src/assets/settings.json*
 
 .tool-versions
-apps/budget-dataetat/public/config/settings.json
-apps/budget-dataetat/src/config/settings.json
+apps/budget-dataetat/public/config/settings.json*
+apps/budget-dataetat/src/config/settings.json*
 
-apps/data-qpv/public/config/settings.json
+apps/data-qpv/public/config/settings.json*
 
 .envrc
