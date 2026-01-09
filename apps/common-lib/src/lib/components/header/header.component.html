@@ -45,10 +45,8 @@
 
               <ng-content select="[ressources]" />
 
-              @if (!isNational()) {
-              <ng-content select="[administration]" />
-              }
-
+              <ng-content select="[upload]" />
+            
               <li>
                 <button (click)="logout()" class="fr-btn fr-btn--tertiary-no-outline fr-icon-logout-box-r-line"
                   mat-icon-button matTooltip="Déconnexion">

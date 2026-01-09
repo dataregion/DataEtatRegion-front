@@ -35,11 +35,6 @@ export class HeaderComponent {
     return false;
   });
 
-  public isNational = computed(() => {
-    const region = this.session.regionCode()
-    return region === "NAT";
-  });
-
   public logout() {
     this._keycloak.logout();
   }

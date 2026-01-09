@@ -74,7 +74,7 @@ export const routes: Routes = [
                 path: 'upload',
                 title: "Charger les données",
                 loadComponent: () =>
-                    import('./components/administration/upload-financial/budget-financial.component').then(m => m.BudgetFinancialComponent),
+                    import('./components/administration/upload-financial-wrapper/budget-financial-wrapper.component').then(m => m.BudgetFinancialWrapperComponent),
                 canActivate: [canAccess],
                 data: {
                     roles: profiles_required_for_upload_financial_page

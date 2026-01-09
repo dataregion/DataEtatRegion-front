@@ -113,20 +113,3 @@ export const keycloakAuthGuardCanActivate: CanActivateFn = (route, state) => {
   const guard = inject(AuthGuard);
   return guard.canActivate(route, state);
 };
-
-/**
- * 
- * @deprecated
- */
-export const guardIsNotNational: CanActivateFn = async (route, state) => {
-  
-  const guard = inject(AuthGuard);
-  const router = inject(Router);
-
-  await guard.canActivate(route, state);
-  if (guard.current_region === 'NAT' && state.url !== '/') {
-    return router.navigateByUrl('/');
-  }
-
-  return true;
-};
