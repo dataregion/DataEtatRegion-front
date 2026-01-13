@@ -1,7 +1,7 @@
 import { Component, ViewChild, ElementRef, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormGroup, FormControl } from '@angular/forms';
-import * as tus from 'tus-js-client';
+import {Upload} from 'tus-js-client';
 
 
 
@@ -80,11 +80,12 @@ export class BudgetFinancialNationalComponent {
    */
   private uploadViaTus(file: File, year: number): Promise<void> {
     return new Promise((resolve, reject) => {
-      const upload = new tus.Upload(file, {
-        endpoint: 'https://your-tus-server.com/files/', // TODO: Remplacer par votre endpoint
+      const upload = new Upload(file, {
+        endpoint: '/newapi/financial-data/api/v3/import', // TODO: Remplacer par votre endpoint
         metadata: {
           filename: file.name,
           filetype: file.type,
+          token : "toto",
           year: year.toString(),
           uploadType: 'financial-ae'
         },

@@ -4,7 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start:budget": "ng serve --project=budget-dataetat --configuration development",
-    "start:budget-dev": "ng serve --project=budget-dataetat --proxy-config proxy.conf.json --port=4210",
+    "start:budget-dev": "ng serve --project=budget-dataetat --proxy-config proxy.conf.json",
     "start:france-relance": "ng serve --project=france-relance",
     "start:france-relance-dev": "ng serve --project=france-relance --proxy-config proxy.conf.json --port=5006",
     "start:data-qpv": "ng serve --project=data-qpv",
@@ -71,6 +71,7 @@
     "@types/jasmine": "~5.1.0",
     "@types/topojson-specification": "^1.0.5",
     "@types/tus-js-client": "^1.8.0",
+    "tus-js-client": "^1.8.0",
     "@typescript-eslint/eslint-plugin": "^8.19.1",
     "@typescript-eslint/parser": "^8.19.1",
     "eslint": "^9.17.0",
