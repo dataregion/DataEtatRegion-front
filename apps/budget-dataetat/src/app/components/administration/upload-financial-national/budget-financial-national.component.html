@@ -26,7 +26,7 @@
                                 <label class="fr-label" for="fileUploadAe">
                                     Fichier Engagements (AE)
                                 </label>
-                                <input id="fileUploadAe" (change)="onFileAeChange($event)" [accept]="requiredFileType"
+                                <input #fileUploadAe id="fileUploadAe" (change)="onFileAeChange($event)" [accept]="requiredFileType"
                                     class="fr-upload" type="file" />
                                 <div class="fr-messages-group"></div>
                             </div>
@@ -37,16 +37,21 @@
                         <div class="fr-fieldset__element">
                             <div class="fr-upload-group">
                                 <label class="fr-label" for="fileUploadCp">Fichier Montants payés (CP)</label>
-                                <input id="fileUploadCp" (change)="onFileCpChange($event)" [accept]="requiredFileType"
+                                <input #fileUploadCp id="fileUploadCp" (change)="onFileCpChange($event)" [accept]="requiredFileType"
                                     class="fr-upload" type="file" />
                                 <div class="fr-messages-group"></div>
                             </div>
                         </div>
                     </fieldset>
                     <button data-fr-opened="false" aria-controls="confirmUploadModal" type="button"
-                        [disabled]="!form.valid || !fileFinancialAe || !fileFinancialCp"                
+                        [disabled]="!form.valid || !fileFinancialAe || !fileFinancialCp || uploadInProgress()"
                         aria-label="Charger les données financières nationales" class="fr-btn">
-                        Charger
+                        @if (uploadInProgress()) {
+                            <span class="fr-spinner fr-spinner--sm" aria-label="Chargement…" role="status"></span>
+                            Traitement en cours...
+                        } @else {
+                            Charger
+                        }
                     </button>
                 </form>
             </div>
@@ -62,14 +67,12 @@
         <div class="fr-grid-row fr-grid-row--center">
             <div class="fr-col-12 fr-col-md-8 fr-col-lg-6">
                 <div class="fr-modal__body">
-                    @if (!uploadInProgress()) { 
                     <div class="fr-modal__header">
                         <button aria-controls="confirmUploadModal" title="Fermer" type="button"
                             class="fr-btn--close fr-btn">
                             Fermer
                         </button>
                     </div>
-                    }
 
                     <div class="fr-modal__content">
                         <h2 id="confirm-modal-title" class="fr-modal__title">
@@ -87,38 +90,17 @@
 
                     <div class="fr-modal__footer">
                         <ul class="fr-btns-group fr-btns-group--right fr-btns-group--inline-reverse fr-btns-group--inline-lg fr-btns-group--icon-left">
-                             @if (!uploadInProgress()) { 
-                                <li> 
-                                    <button type="button" aria-controls="confirmUploadModal"
-                                        class="fr-btn fr-btn--secondary">
-                                        Annuler
-                                    </button>
-                                </li>
-                                <li>
-                                     <button type="button" (click)="uploadFiles()" class="fr-btn">
-                                        Confirmer le chargement
-                                    </button>
-                                </li>
-                            } @else {
-                                <li> 
-                                    <div class="spinner-wrapper fr-spinner--sm">
-                                        <span class="fr-spinner" aria-label="Chargement…" role="status"></span>
-                                        <span class="fr-spinner-message">Traitement en cours ...</span>
-                                    </div>
-                                </li>
-                            }
-                            <!-- <li> 
-                                @if (uploadInProgress()) { 
-                                    <div class="spinner-wrapper fr-spinner--sm">
-                                        <span class="fr-spinner" aria-label="Chargement…" role="status"></span>
-                                        <span class="fr-spinner-message">Traitement en cours ...</span>
-                                    </div>
-                                } @else {
-                                    <button type="button" (click)="uploadFiles()" class="fr-btn">
-                                        Confirmer le chargement
-                                    </button>
-                                }
-                            </li> -->
+                            <li> 
+                                <button type="button" aria-controls="confirmUploadModal"
+                                    class="fr-btn fr-btn--secondary">
+                                    Annuler
+                                </button>
+                            </li>
+                            <li>
+                                 <button type="button" (click)="uploadFiles()" aria-controls="confirmUploadModal" class="fr-btn">
+                                    Confirmer le chargement
+                                </button>
+                            </li>
                         </ul>
                     </div>
                 </div>
