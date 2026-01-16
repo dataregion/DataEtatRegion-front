@@ -57,8 +57,11 @@
 - **Composants Angular** :  
   - Toujours `OnPush`, utiliser `trackBy` pour les listes
   - **Dans `budget-dataetat` et `data-qpv`, préférer l'usage des signals Angular (Angular 17+) pour la gestion d'état local et de flux.**
-  - **N'utiliser les Observables/Subject que pour la gestion des flux issus des APIs HTTP.**
-- **Préférences utilisateurs** :  
+  - **N'utiliser les Observables/Subject que pour la gestion des flux issus des APIs HTTP.**- **Logging** :
+  - **OBLIGATOIRE : Utiliser le `LoggerService` de `apps/common-lib/src/lib/services/logger.service` pour tous les logs.**
+  - **Ne jamais utiliser `console.log`, `console.error`, `console.warn` directement.**
+  - **Injection : `private _logger = inject(LoggerService);`**
+  - **Niveaux disponibles : `this._logger.debug()`, `this._logger.info()`, `this._logger.warn()`, `this._logger.error()`**- **Préférences utilisateurs** :  
   - Utiliser `preference-users` pour la gestion centralisée
 - **Cartographie** :  
   - OpenLayers (`ol`), styles Mapbox, extensions Géoportail
