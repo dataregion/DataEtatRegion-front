@@ -62,7 +62,20 @@ export class BudgetDataHttpService {
   }
 
   public getAnnees(): Observable<number[]> {
-    return this._budgetApi.getGetPlageAnnees();
+    const annees = this._lignesFinancieresApi.getAnneesLignesAnneesGet().pipe(
+      map((response) => {
+        const ret = response?.data ?? []
+        return ret
+      }),
+      // XXX: on complète avec l'année en cours si elle n'est pas présente
+      map((annees) => {
+        const current = [new Date().getFullYear()];
+        const complete = [...annees, ...current];
+        const sorted = complete.sort((a, b) => a - b);
+        return sorted;
+      }),
+    );
+    return annees;
   }
   
   public getCp(id: number): Observable<FinancialCp[]> {
