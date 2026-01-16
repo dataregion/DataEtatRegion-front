@@ -77,16 +77,14 @@ export class BudgetDataHttpService {
     );
     return annees;
   }
-  
+
   public getCp(id: number): Observable<FinancialCp[]> {
     // XXX: ici, on requête forcement un CP rattaché à une AE.
     return this.http.get<FinancialCp[]>(`${this._financialApiUrl}/ae/${id}/cp`);
   }
-  
-  public getById(id: number, source:string): Observable<LigneResponse> {
-    return this._lignesFinancieresApi.getLignesFinancieresBySourceLignesIdGet(
-      { id, source,}
-    )
+
+  public getById(id: number, source: string): Observable<LigneResponse> {
+    return this._lignesFinancieresApi.getLignesFinancieresBySourceLignesIdGet({ id, source });
   }
 
   public allTags$(): Observable<Tag[]> {
