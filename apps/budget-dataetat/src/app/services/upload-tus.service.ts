@@ -2,6 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { Upload } from 'tus-js-client';
 import { SettingsBudgetService } from '../environments/settings-budget.service';
 import { LoggerService } from 'apps/common-lib/src/lib/services/logger.service';
+import Keycloak from 'keycloak-js';
 
 export enum UploadType {
   FINANCIAL_AE = 'financial-ae',
@@ -14,6 +15,7 @@ export enum UploadType {
 export class UploadTusService {
   private _settingsService = inject(SettingsBudgetService);
   private _logger = inject(LoggerService);
+  private _keycloak = inject(Keycloak);
 
   /**
    * Upload d'un fichier via protocole TUS
@@ -27,6 +29,9 @@ export class UploadTusService {
     return new Promise((resolve, reject) => {
       const upload = new Upload(file, {
         endpoint: `${this._settingsService.apiFinancialDataV3}/import`,
+        headers: {
+          'Authorization': `Bearer ${this._keycloak.token}`
+        },
         metadata: {
           filename: file.name,
           filetype: file.type,
