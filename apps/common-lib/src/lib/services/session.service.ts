@@ -26,7 +26,11 @@ export class SessionService {
     return user !== null && user.roles.includes(Profil.ADMIN);
   });
 
-
+  // Vérifie si la région est nationale
+  public isNational = computed(() => {
+    const region = this.regionCode();
+    return region === 'NAT';
+  });
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   public setAuthentication(info: Keycloak.KeycloakProfile, roles: any, region_code?: string): void {

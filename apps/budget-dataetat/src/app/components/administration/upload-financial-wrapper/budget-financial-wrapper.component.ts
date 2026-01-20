@@ -1,4 +1,4 @@
-import { Component, inject, computed } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SessionService } from 'apps/common-lib/src/public-api';
 import { BudgetFinancialComponent } from '../upload-financial/budget-financial.component';
@@ -13,8 +13,5 @@ import { BudgetFinancialNationalComponent } from '../upload-financial-national/b
 export class BudgetFinancialWrapperComponent {
   private _session = inject(SessionService);
 
-  public isNational = computed(() => {
-    const region = this._session.regionCode();
-    return region === 'NAT';
-  });
+  public isNational = this._session.isNational();
 }
