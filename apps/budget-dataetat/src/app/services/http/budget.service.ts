@@ -69,9 +69,10 @@ export class BudgetDataHttpService {
       }),
       // XXX: on complète avec l'année en cours si elle n'est pas présente
       map((annees) => {
-        const current = [new Date().getFullYear()];
-        const complete = [...annees, ...current];
-        const sorted = complete.sort((a, b) => a - b);
+        const current = new Date().getFullYear();
+        const hasCurrentYear = annees.includes(current);
+        const complete = hasCurrentYear ? annees : [...annees, current];
+        const sorted = complete.sort((a, b) => b - a);
         return sorted;
       }),
     );
