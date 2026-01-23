@@ -29,14 +29,12 @@ export class PrefilterMapperService {
   private _autocompleteBeneficiaireService: AutocompleteBeneficiaireService = inject(AutocompleteBeneficiaireService)
 
   public init: boolean = false
-  public themes: string[] = []
   public programmes: Bop[] = []
   public referentiels_programmation: ReferentielProgrammation[] = []
   public annees: number[] = []
   public allTags: Tag[] = []
 
-  initService(themes: string[], programmes: Bop[], referentiels_programmation : ReferentielProgrammation[], annees: number[]) {
-    this.themes = themes;
+  initService(programmes: Bop[], referentiels_programmation : ReferentielProgrammation[], annees: number[]) {
     this.programmes = programmes;
     this.referentiels_programmation = referentiels_programmation;
     this.annees = annees;
@@ -89,7 +87,6 @@ export class PrefilterMapperService {
     }
     newSearchParam.page = 1
     newSearchParam.page_size = 100
-    newSearchParam.themes = this._mapThemes(prefilter)
     newSearchParam.bops = this._mapProgrammes(prefilter)
     newSearchParam.referentiels_programmation = this._mapReferentielsProgrammation(prefilter)
     newSearchParam.niveau = this._mapNiveau(prefilter)
@@ -108,7 +105,6 @@ export class PrefilterMapperService {
 
   mapSearchParamsToForm(params: SearchParameters): FormGroup<FormSearch> {
     return this._formBuilder.group({
-      themes: this._formBuilder.control(params.themes ?? null),
       programmes: this._formBuilder.control(params.bops ?? null),
       referentiels_programmation: this._formBuilder.control(params.referentiels_programmation ?? null),
       niveau: this._formBuilder.control(params.niveau ?? null),
@@ -120,13 +116,6 @@ export class PrefilterMapperService {
       domaines_fonctionnels: this._formBuilder.control(params.domaines_fonctionnels ?? null),
       sources_region: this._formBuilder.control(params.source_region ?? null),
     });
-  }
-
-  private _mapThemes(pf: PreFilters): string[] | undefined {
-    if (!pf.theme)
-      return undefined;
-    const pfThemes: string[] = Array.isArray(pf.theme) ? (pf.theme as string[]) : ([pf.theme] as string[])
-    return this.themes?.filter((theme) => pfThemes.findIndex(t => t === theme) !== -1);
   }
 
   private _mapProgrammes(pf: PreFilters): BopModel[] | undefined {

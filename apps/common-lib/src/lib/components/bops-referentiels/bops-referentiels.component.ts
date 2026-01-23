@@ -37,14 +37,11 @@ import { BopModel } from '../../models/refs/bop.models';
 export class BopsReferentielsComponent {
   private _refs = inject(BopsReferentielsComponentService);
 
-  @Input()
-  public themes: string[] = [];
   public filteredBops: BopModel[] | null = null;
   public filteredReferentiels: ReferentielProgrammation[] | null = null;
   input: string = '';
   inputRefFilter = new Subject<string>();
   public selectedReferentielsString: string = '';
-  @Output() selectedThemesChange = new EventEmitter<string[] | null>();
   @Output() selectedBopsChange = new EventEmitter<BopModel[] | null>();
   @Output() selectedReferentielsChange = new EventEmitter<ReferentielProgrammation[] | null>();
   private _destroyRef = inject(DestroyRef);
@@ -75,39 +72,6 @@ export class BopsReferentielsComponent {
             return response;
           });
       });
-  }
-
-  private _selectedThemes: string[] | null = null;
-
-  /**
-   * Themes
-   */
-  get selectedThemes(): string[] | null {
-    return this._selectedThemes;
-  }
-
-  @Input()
-  set selectedThemes(data: string[] | null) {
-    const changed = (data != this._selectedThemes)
-
-    this._selectedThemes = data ?? null;
-    // Filtrage des bops en fonction des thèmes sélectionnés
-    this.filteredBops = [];
-    if (this.selectedThemes && this.selectedThemes.length > 0)
-      this.selectedThemes?.forEach((theme) => {
-        const filtered = this.bops
-          ? this.bops.filter((bop) => theme !== null && theme.includes(bop.label_theme))
-          : [];
-        if (this.filteredBops) this.filteredBops = this.filteredBops?.concat(filtered);
-      });
-    else {
-      this.filteredBops = this.bops;
-    }
-
-    if (changed)
-      this.selectedBops = null;
-
-    this.selectedThemesChange.emit(this._selectedThemes);
   }
 
   private _selectedBops: BopModel[] | null = null;
@@ -215,17 +179,9 @@ export class BopsReferentielsComponent {
 
   public filterBop = (value: string): BopModel[] => {
     const filterValue = value ? value.toLowerCase() : '';
-    const themes = this.selectedThemes;
 
     const filterGeo = this.bops
       ? this.bops.filter((option) => {
-          if (themes) {
-            return (
-              option.label_theme != null &&
-              themes.includes(option.label_theme) &&
-              option.label?.toLowerCase().includes(filterValue)
-            );
-          }
           return (
             option.label?.toLowerCase().includes(filterValue) || option.code.startsWith(filterValue)
           );

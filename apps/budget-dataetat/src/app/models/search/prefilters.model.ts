@@ -13,7 +13,6 @@ import { SearchTypeCategorieJuridique } from 'apps/common-lib/src/lib/models/ref
 export type TagFieldData = SelectedData & Tag;
 
 export interface PreFilters {
-  theme?: ThemePreFilter | ThemePreFilter[];
   bops?: BopsPreFilter | BopsPreFilter[];
   referentiels_programmation?: ReferentielProgrammation | ReferentielProgrammation[];
 

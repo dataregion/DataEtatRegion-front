@@ -20,15 +20,13 @@ export const resolveFinancialData: ResolveFn<FinancialDataResolverModel> = () =>
     budgetService.getAnnees()
   ]).pipe(
     map(([fetchedBop, fetchedRefs, fetchedAnnees]) => {
-      const themes = Array.from(new Set(fetchedBop.map((bop) => bop.label_theme))).sort();
       const result = {
-        themes: themes,
         bop: fetchedBop,
         referentiels_programmation: fetchedRefs,
         annees: fetchedAnnees
       } as FinancialData;
       // Initialisation du service de mapping des préfiltres ---
-      prefilterMapperService.initService(themes, fetchedBop, fetchedRefs, fetchedAnnees);
+      prefilterMapperService.initService(fetchedBop, fetchedRefs, fetchedAnnees);
       return { data: result };
     })
   );

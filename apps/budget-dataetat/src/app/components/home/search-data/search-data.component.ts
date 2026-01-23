@@ -43,7 +43,6 @@ import { tag_fullname } from '@models/refs/tag.model';
  * Interface du formulaire de recherche
  */
 export interface FormSearch {
-  themes: FormControl<string[] | null>;
   programmes: FormControl<Bop[] | null>;
   referentiels_programmation: FormControl<ReferentielProgrammation[] | null>;
   niveau: FormControl<TypeLocalisation | null>;
@@ -84,7 +83,6 @@ export class SearchDataComponent implements OnInit {
    * Formulaire de recherche
    */
   public formSearch: FormGroup<FormSearch> = new FormGroup<FormSearch>({
-    themes: new FormControl<string[] | null>(null),
     programmes: new FormControl<Bop[] | null>(null),
     referentiels_programmation: new FormControl<ReferentielProgrammation[] | null>(null),
     niveau: new FormControl<TypeLocalisation | null>(null),
@@ -100,7 +98,6 @@ export class SearchDataComponent implements OnInit {
   });
 
   public bops: BopModel[] = [];
-  public themes: string[] = [];
   public annees: number[] = [];
   public filteredBops: BopModel[] = [];
   public filteredReferentiels: ReferentielProgrammation[] = [];
@@ -109,12 +106,6 @@ export class SearchDataComponent implements OnInit {
   /**
    * Thèmes, Programmes, Référentiels programmation
    */
-  get selectedThemes(): string[] | null {
-    return this.formSearch.controls.themes.value ?? null;
-  }
-  set selectedThemes(data: string[] | null) {
-    this.formSearch.controls.themes.setValue(data ?? null);
-  }
   get selectedBops(): Bop[] | null {
     return this.formSearch.controls.programmes.value ?? null;
   }
@@ -272,7 +263,6 @@ export class SearchDataComponent implements OnInit {
     const resolvedPreference = this._route.snapshot.data['preference'] as PreferenceResolverModel;
 
     // Sauvegarde des référentiels dans les listes
-    this.themes = resolvedFinancial.data?.themes ?? [];
     this.bops = resolvedFinancial.data?.bop ?? [];
     this.filteredBops = this.bops ?? []
     this.filteredReferentiels = resolvedFinancial.data?.referentiels_programmation ?? [];
@@ -318,7 +308,6 @@ export class SearchDataComponent implements OnInit {
     const formValue = this.formSearch.value;
     const search_parameters: SearchParameters = {
       ...this._searchParamsService.getEmpty(),
-      themes: formValue.themes || undefined,
       bops: formValue.programmes || undefined,
       referentiels_programmation: formValue.referentiels_programmation || undefined,
       niveau: formValue.niveau || undefined,

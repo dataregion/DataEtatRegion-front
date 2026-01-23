@@ -1,14 +1,5 @@
 <div class="bops-referentiels-wrapper-fields">
 
-  <lib-select-multiple
-    [(selected)]="selectedThemes"
-    [canFilter]="true" [canSelectAll]="true"
-    [options]="themes"
-    [placeholder]="'Thème'"
-    class="select-multiple field-20-width"
-    data-test-id="themes-form-field"
-  />
-
   <lib-select-multiple [(selected)]="selectedBops" [canFilter]="true"
                        [canSelectAll]="true"
                        [filterFunction]="filterBop"
