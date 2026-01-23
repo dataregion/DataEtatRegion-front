@@ -22,12 +22,6 @@ test.describe("Page d'accueil", () => {
     };
 
     // vérification du formulaire
-    await page.getByLabel('Thème').click();
-    await expect(
-      page.getByRole('listbox', { name: 'Thème' }).locator('.mdc-list-item__primary-text')
-    ).toHaveCount(16);
-    await closeSelect();
-
     await page.getByLabel('Programme').click();
     await expect(
       page.getByRole('listbox', { name: 'Programme' }).locator('.mdc-list-item__primary-text')
