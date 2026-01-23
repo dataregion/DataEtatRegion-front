@@ -9,7 +9,7 @@ import { CommonModule } from '@angular/common';
 import { ResourceService } from './services/http/ressource.service';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { HeaderComponent } from 'apps/common-lib/src/lib/components/header/header.component';
-import { profiles_required_for_demarches, profiles_required_for_tags_page, profiles_required_for_upload_financial_page } from './app.routes';
+import { profiles_required_for_demarches, profiles_required_for_upload_financial_page } from './app.routes';
 import { MultiregionsService } from './services/multiregions.service';
 import { FooterComponent } from 'apps/common-lib/src/lib/components/footer/footer.component';
 import { LoggerService } from 'apps/common-lib/src/lib/services/logger.service';
