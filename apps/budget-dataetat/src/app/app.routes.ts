@@ -60,16 +60,17 @@ export const routes: Routes = [
                 loadComponent: () =>
                     import('apps/common-lib/src/lib/components/term-of-use/term-of-use.component').then(m => m.TermOfUseComponent)
             },
-            {
-                path: 'update-tags',
-                title: "Gestion des tags",
-                loadComponent: () =>
-                    import('./components/administration/update-tags/update-tags.component').then(m => m.UpdateTagsComponent),
-                canActivate: [canAccess],
-                data: {
-                    roles: profiles_required_for_tags_page
-                }
-            },
+            // XXX: désactivation temporaire de la page de gestion des tags
+            // {
+            //     path: 'update-tags',
+            //     title: "Gestion des tags",
+            //     loadComponent: () =>
+            //         import('./components/administration/update-tags/update-tags.component').then(m => m.UpdateTagsComponent),
+            //     canActivate: [canAccess],
+            //     data: {
+            //         roles: profiles_required_for_tags_page
+            //     }
+            // },
             {
                 path: 'upload',
                 title: "Charger les données",

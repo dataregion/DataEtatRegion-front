@@ -49,7 +49,9 @@ export class App {
   });
   
   readonly showUpdateTagsPage = computed(() => {
-    return this.isAuthenticated() && this._sessionService.hasOneRole(profiles_required_for_tags_page);
+    // XXX : Instruction de désactivation temporaire de la page d'insertion des tags
+    return false;
+    // this.isAuthenticated() && this._sessionService.hasOneRole(profiles_required_for_tags_page);
   });
   
   readonly showIntegrationDemarchePage = computed(() => {
