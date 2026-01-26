@@ -19,7 +19,7 @@ export const errorsInterceptor: HttpInterceptorFn = (req, next: HttpHandlerFn) =
   ).pipe(
     tap({
       error: (_error: HttpErrorResponse) => {
-        if (_error?.status === 401) {
+        if (_error?.status === 401 && !_error.error?.message) {
           alertService.openAlertError('Accès non autorisé');
         }
 
