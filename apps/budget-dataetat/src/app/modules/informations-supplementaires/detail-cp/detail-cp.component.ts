@@ -1,27 +1,66 @@
 import { CurrencyPipe } from '@angular/common';
-import { Component, input, computed } from '@angular/core';
+import { Component, input, computed, inject, signal, DestroyRef } from '@angular/core';
+import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { BudgetFinancialDataModel } from '@models/financial/financial-data.models';
+import { DetailsPaiement, DtailsPaiementService } from 'apps/clients/v3/financial-data';
+import { tap } from 'rxjs/operators';
+import { ChargementOuErreurComponent } from '../chargement-ou-erreur/chargement-ou-erreur.component';
 
 @Component({
-    selector: 'budget-informations-supplementaires-detail-cp',
-    templateUrl: './detail-cp.component.html',
-    styleUrls: ['../commun-informations-supplementaires.scss', './detail-cp.component.scss'],
-    imports: [CurrencyPipe]
+  selector: 'budget-informations-supplementaires-detail-cp',
+  templateUrl: './detail-cp.component.html',
+  styleUrls: ['../commun-informations-supplementaires.scss', './detail-cp.component.scss'],
+  imports: [
+    ChargementOuErreurComponent,
+    CurrencyPipe
+  ]
 })
 export class DetailCpComponent {
-  
   /**
    * Signal d'entrée contenant les données financières à afficher
    */
   financial = input.required<BudgetFinancialDataModel>();
+  cps = signal<DetailsPaiement[]>([]);
 
-  /**
-   * Signal calculé qui détermine si des crédits de paiement sont disponibles
-   */
   hasCp = computed(() => {
-    const financialData = this.financial();
-    return financialData.financial_cp != null && financialData.financial_cp.length > 0;
+    const cps = this.cps();
+    return ( cps?.length ?? 0 ) > 0;
   });
+  
+  public isLoading = true;
+
+  private _detailsPaiementApi: DtailsPaiementService = inject(DtailsPaiementService);
+  private _destroyRef = inject(DestroyRef);
+
+  public constructor() {
+
+    toObservable(this.financial)
+    .pipe(
+      tap(() => { 
+        this.isLoading = true;
+        this.cps.set([]);
+     }),
+      takeUntilDestroyed(this._destroyRef)
+    )
+    .subscribe({
+      next: (financial) => {
+        if (financial) {
+          this._detailsPaiementApi
+            .getDetailsPaiementPourLigneFinanciereLignesIdAeDetailsPaiementGet(
+              {
+                idAe: financial.id
+              }
+            )
+            .subscribe((cps) => {
+              console.log('Détails paiement récupérés :', cps);
+              this.cps.set(cps.data?.dps ?? []);
+              this.isLoading = false;
+            });
+        }
+      }
+    });
+  }
+
 
   private readonly _messagesErreurs = {
     FINANCIAL_DATA_AE: 'Aucun crédit de paiement',
@@ -37,7 +76,7 @@ export class DetailCpComponent {
   messageErreur(): string {
     const financialData = this.financial();
     const source = financialData.source as keyof typeof this._messagesErreurs;
-    
+
     return source in this._messagesErreurs
       ? this._messagesErreurs[source]
       : 'Détails paiement : information indisponible';

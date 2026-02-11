@@ -1,38 +1,44 @@
-<strong class="titre">Détails paiements :</strong>
-<div class="infos-cp">
-  <span><strong>N°EJ : </strong>{{ financial().n_ej }}</span>
-  <span><strong>N°Poste : </strong>{{ financial().n_poste_ej }}</span>
-</div>
-<div class="infos-cp">
-  <span><strong>Montant engagé : </strong>{{ financial().montant_ae | currency:'EUR' }}</span>
-  <span><strong>Total payé : </strong>{{ financial().montant_cp | currency:'EUR' }}</span>
-</div>
-
-@if (hasCp()) {
-  <div class="wrapper-table-detail-cp">
-    <table class="table-detail-cp">
-      <tr>
-        <th><strong>N° DP (Demande de Paiement)</strong></th>
-        @for (cp of financial().financial_cp; track cp.n_dp) {
-          <td>{{ cp.n_dp }}</td>
-        }
-      </tr>
-      <tr>
-        <th><strong>Date base de demande de paiement</strong></th>
-        @for (cp of financial().financial_cp; track cp.n_dp) {
-          <td>{{ formatDate(cp.date_base_dp) }}</td>
-        }
-      </tr>
-      <tr>
-        <th class="last"><strong>Montant payé</strong></th>
-        @for (cp of financial().financial_cp; track cp.n_dp) {
-          <td class="last">{{ cp.montant | currency:'EUR' }}</td>
-        }
-      </tr>
-    </table>
-  </div>
+@if (isLoading) {
+  <budget-informations-supplementaires-chargement-ou-erreur
+    [erreur]="null"
+    nom_service_distant="Détails paiements" />
 } @else {
-  <div style="margin-top: 15px;">
-    <strong>{{ messageErreur() }}</strong>
+  <strong class="titre">Détails paiements :</strong>
+  <div class="infos-cp">
+    <span><strong>N°EJ : </strong>{{ financial().n_ej }}</span>
+    <span><strong>N°Poste : </strong>{{ financial().n_poste_ej }}</span>
   </div>
+  <div class="infos-cp">
+    <span><strong>Montant engagé : </strong>{{ financial().montant_ae | currency:'EUR' }}</span>
+    <span><strong>Total payé : </strong>{{ financial().montant_cp | currency:'EUR' }}</span>
+  </div>
+
+  @if (hasCp()) {
+    <div class="wrapper-table-detail-cp">
+      <table class="table-detail-cp">
+        <tr>
+          <th><strong>N° DP (Demande de Paiement)</strong></th>
+          @for (cp of cps(); track cp.n_dp) {
+            <td>{{ cp.n_dp }}</td>
+          }
+        </tr>
+        <tr>
+          <th><strong>Date base de demande de paiement</strong></th>
+          @for (cp of cps(); track cp.n_dp) {
+            <td>{{ cp.date_base_dp ? formatDate(cp.date_base_dp) : 'Non renseigné.' }}</td>
+          }
+        </tr>
+        <tr>
+          <th class="last"><strong>Montant payé</strong></th>
+          @for (cp of cps(); track cp.n_dp) {
+            <td class="last">{{ cp.montant | currency:'EUR' }}</td>
+          }
+        </tr>
+      </table>
+    </div>
+  } @else {
+    <div style="margin-top: 15px;">
+      <strong>{{ messageErreur() }}</strong>
+    </div>
+  }
 }
