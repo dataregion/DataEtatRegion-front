@@ -192,7 +192,7 @@ export class LignesFinancieresService extends BaseService implements LignesFinan
     }
 
     /**
-     * Enregistre une tâche d\&#39;export des lignes financières
+     * Télécharge un export existant selon son id
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.

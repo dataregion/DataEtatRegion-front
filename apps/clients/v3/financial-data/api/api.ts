@@ -1,10 +1,16 @@
+export * from './dtailsPaiement.service';
+import { DtailsPaiementService } from './dtailsPaiement.service';
+export * from './dtailsPaiement.serviceInterface';
 export * from './healthcheck.service';
 import { HealthcheckService } from './healthcheck.service';
 export * from './healthcheck.serviceInterface';
+export * from './importChorus.service';
+import { ImportChorusService } from './importChorus.service';
+export * from './importChorus.serviceInterface';
 export * from './lignesFinancieres.service';
 import { LignesFinancieresService } from './lignesFinancieres.service';
 export * from './lignesFinancieres.serviceInterface';
 export * from './listeDesColonnes.service';
 import { ListeDesColonnesService } from './listeDesColonnes.service';
 export * from './listeDesColonnes.serviceInterface';
-export const APIS = [HealthcheckService, LignesFinancieresService, ListeDesColonnesService];
+export const APIS = [DtailsPaiementService, HealthcheckService, ImportChorusService, LignesFinancieresService, ListeDesColonnesService];

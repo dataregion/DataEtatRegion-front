@@ -130,7 +130,7 @@ export interface LignesFinancieresServiceInterface {
     doExportLignesExportPost(requestParameters: DoExportLignesExportPostRequestParams, extraHttpRequestParams?: any): Observable<DoExportResponse>;
 
     /**
-     * Enregistre une tâche d\&#39;export des lignes financières
+     * Télécharge un export existant selon son id
      * 
 * @param requestParameters
      */
