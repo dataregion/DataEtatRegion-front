@@ -19,7 +19,8 @@ export const resolveInfosSupplementaires: ResolveFn<BudgetFinancialDataModel | E
     _budgetService.getById(id, source),
   ]).pipe(
     map(([fetchedLigne]) => {
-      return _searchDataMapper.mapToBudget(fetchedLigne.data as EnrichedFlattenFinancialLines2);
+      const financial_line = _searchDataMapper.mapToBudget(fetchedLigne.data as EnrichedFlattenFinancialLines2);
+      return financial_line;
     }),
     catchError((_error) => {
       return of({

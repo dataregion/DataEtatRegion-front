@@ -60,7 +60,6 @@ export class SearchDataMapper {
       date_cp: object.dateDeDernierPaiement,
       date_replication: object.dateDeCreation,
       tags: this._mapTags(object),
-      financial_cp: null,
       exportAsJson(): JSONObject {
         return {
           [that._colonnesMapperService.getColonneByKey("SOURCE").label]: this.source,
