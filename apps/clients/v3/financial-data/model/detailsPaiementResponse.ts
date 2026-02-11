@@ -7,11 +7,16 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { DetailsPaiement } from './detailsPaiement';
+import { PaginationMeta } from './paginationMeta';
+import { InnerDetailsPaiementResponse } from './innerDetailsPaiementResponse';
 
 
 export interface DetailsPaiementResponse { 
-    ligne_financiere_id: number;
-    dps: Array<DetailsPaiement>;
+    code: number;
+    success?: boolean | null;
+    timestamp?: string;
+    message?: string | null;
+    data?: InnerDetailsPaiementResponse | null;
+    pagination: PaginationMeta | null;
 }
 

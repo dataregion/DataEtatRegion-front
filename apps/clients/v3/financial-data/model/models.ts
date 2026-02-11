@@ -14,6 +14,7 @@ export * from './exportsResponse';
 export * from './groupedData';
 export * from './groupings';
 export * from './hTTPValidationError';
+export * from './innerDetailsPaiementResponse';
 export * from './label';
 export * from './ligneResponse';
 export * from './lignesFinancieres';
