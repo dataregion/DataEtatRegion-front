@@ -20,6 +20,14 @@ test.describe('Vue détail ligne - non reg', () => {
     await page.getByRole('cell', { name: 'Bénéficiaire A' }).click();
 
     await expect(page.locator('.wrapper-table-detail-cp')).toBeVisible();
+    
+    await expect(page.locator('.wrapper-table-detail-cp')).toContainText('N° DP');
+    await expect(page.locator('.wrapper-table-detail-cp')).toContainText('100000000');
+    await expect(page.locator('.wrapper-table-detail-cp')).toContainText('01/06/2022');
+    await expect(page.locator('.wrapper-table-detail-cp')).toContainText('Date base de demande de paiement');
+    await expect(page.locator('.wrapper-table-detail-cp')).toContainText('01/06/2022');
+    await expect(page.locator('.wrapper-table-detail-cp')).toContainText('Montant payé');
+    await expect(page.locator('.wrapper-table-detail-cp')).toContainText('10,00 €');
   });
 
   test('Affiche les détails d’une ligne sans détails de paiment', async ({ page, baseURL }) => {

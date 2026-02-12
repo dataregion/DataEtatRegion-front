@@ -5,6 +5,7 @@ import { BudgetFinancialDataModel } from '@models/financial/financial-data.model
 import { DetailsPaiement, DtailsPaiementService } from 'apps/clients/v3/financial-data';
 import { tap } from 'rxjs/operators';
 import { ChargementOuErreurComponent } from '../chargement-ou-erreur/chargement-ou-erreur.component';
+import { LoggerService } from 'apps/common-lib/src/lib/services/logger.service';
 
 @Component({
   selector: 'budget-informations-supplementaires-detail-cp',
@@ -31,6 +32,7 @@ export class DetailCpComponent {
 
   private _detailsPaiementApi: DtailsPaiementService = inject(DtailsPaiementService);
   private _destroyRef = inject(DestroyRef);
+  private _logger = inject(LoggerService);
 
   public constructor() {
 
@@ -52,7 +54,7 @@ export class DetailCpComponent {
               }
             )
             .subscribe((cps) => {
-              console.log('Détails paiement récupérés :', cps);
+              this._logger.debug('Détails paiement récupérés :', cps);
               this.cps.set(cps.data?.dps ?? []);
               this.isLoading = false;
             });
@@ -73,7 +75,7 @@ export class DetailCpComponent {
    * Calcule le message d'erreur approprié selon la source des données financières
    * @returns Le message d'erreur formaté
    */
-  messageErreur(): string {
+  messagePourCasSpecial(): string {
     const financialData = this.financial();
     const source = financialData.source as keyof typeof this._messagesErreurs;
 
@@ -88,6 +90,6 @@ export class DetailCpComponent {
    * @returns La date formatée
    */
   formatDate(date: string): string {
-    return new Date(date).toLocaleString([], { year: 'numeric', month: 'numeric', day: 'numeric' });
+    return new Date(date).toLocaleString('fr-FR', { year: 'numeric', month: '2-digit', day: '2-digit' });
   }
 }
