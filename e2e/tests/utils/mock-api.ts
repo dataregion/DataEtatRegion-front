@@ -21,7 +21,7 @@ function is_url_budget_themes(url: URL) {
   return url.pathname == '/budget/api/v1/themes';
 }
 
-function is_url_lignes_budgetaires(url: URL) {
+function is_url_lignes_budgetaires_v2(url: URL) {
   return url.pathname == '/financial-data/api/v2/budget';
 }
 
@@ -57,7 +57,7 @@ async function mockRefApi(page: Page) {
     await route.fulfill({ json });
   });
 
-  await page.route(is_url_lignes_budgetaires, async (route: Route) => {
+  await page.route(is_url_lignes_budgetaires_v2, async (route: Route) => {
     const json = financial;
     await route.fulfill({ json });
   });

@@ -1,0 +1,11 @@
+{
+    "code": 200,
+    "success": true,
+    "timestamp": "1770888332",
+    "message": "Détails de paiement pour la ligne financière 67990",
+    "data": {
+        "ligne_financiere_id": 67621,
+        "dps": [] 
+    },
+    "pagination": null
+}
