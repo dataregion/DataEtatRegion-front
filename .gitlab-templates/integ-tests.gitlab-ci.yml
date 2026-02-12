@@ -13,7 +13,7 @@
 
 run-tests-e2e:
   stage: 🧪 post-deploy tests
-  image: mcr.microsoft.com/playwright:v1.57.0-noble@sha256:3bed4b1a12f2338642f3d8cba28e291deef3c66bd4a964bbeb3e57bbff511dbd
+  image: mcr.microsoft.com/playwright:v1.58.2
   script:
     - cd e2e/
     - npm ci
