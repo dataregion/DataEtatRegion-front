@@ -21,30 +21,37 @@
                                 </select>
                             </div>
                         </div>
+                        @if (showUploadComponents()) {
                         <div class="fr-fieldset__element">
-                            <div class="fr-upload-group">
-                                <label class="fr-label" for="fileUploadAe">
-                                    Fichier Engagements (AE)
-                                </label>
-                                <input #fileUploadAe id="fileUploadAe" (change)="onFileAeChange($event)" [accept]="requiredFileType"
-                                    class="fr-upload" type="file" />
-                                <div class="fr-messages-group"></div>
-                            </div>
-
+                            <dsfr-ext-upload-dnd
+                                #uploadAe
+                                [multiple]="true"
+                                [accept]="requiredFileType"
+                                [inline]="true"
+                                label="Fichiers Engagements (AE)"
+                                buttonLabel="Sélectionner des fichiers"
+                                formatAsked="Format CSV uniquement"
+                                (selectionChange)="onFilesAeChange($event)"
+                            />
                         </div>
 
 
                         <div class="fr-fieldset__element">
-                            <div class="fr-upload-group">
-                                <label class="fr-label" for="fileUploadCp">Fichier Montants payés (CP)</label>
-                                <input #fileUploadCp id="fileUploadCp" (change)="onFileCpChange($event)" [accept]="requiredFileType"
-                                    class="fr-upload" type="file" />
-                                <div class="fr-messages-group"></div>
-                            </div>
+                            <dsfr-ext-upload-dnd
+                                #uploadCp
+                                [multiple]="true"
+                                [accept]="requiredFileType"
+                                [inline]="true"
+                                label="Fichiers Montants payés (CP)"
+                                buttonLabel="Sélectionner des fichiers"
+                                formatAsked="Format CSV uniquement"
+                                (selectionChange)="onFilesCpChange($event)"
+                            />
                         </div>
+                        }
                     </fieldset>
                     <button data-fr-opened="false" aria-controls="confirmUploadModal" type="button"
-                        [disabled]="!form.valid || !fileFinancialAe || !fileFinancialCp || uploadInProgress()"
+                        [disabled]="!form.valid || !filesAe().length || !filesCp().length || uploadInProgress()"
                         aria-label="Charger les données financières nationales" class="fr-btn">
                         @if (uploadInProgress()) {
                             <span class="fr-spinner fr-spinner--sm" aria-label="Chargement…" role="status"></span>

@@ -1,24 +1,22 @@
-import { Component, ViewChild, ElementRef, signal, inject } from '@angular/core';
+import { Component, signal, inject } from '@angular/core';
 import { v4 as uuidv4 } from 'uuid';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormGroup, FormControl } from '@angular/forms';
 import { AlertService } from 'apps/common-lib/src/public-api';
-import { UploadTusService, UploadType } from '../../../services/upload-tus.service';
+import { UploadTusService } from '../../../services/upload-tus.service';
 import { LoggerService } from 'apps/common-lib/src/lib/services/logger.service';
+import { DsfrUploadDndComponent } from '@edugouvfr/ngx-dsfr-ext';
 
 
 
 @Component({
   selector: 'budget-upload-financial-national',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, DsfrUploadDndComponent],
   templateUrl: './budget-financial-national.component.html',
   styleUrls: ['./budget-financial-national.component.scss']
 })
 export class BudgetFinancialNationalComponent {
-  @ViewChild('fileUploadAe') fileUploadAe!: ElementRef<HTMLInputElement>;
-  @ViewChild('fileUploadCp') fileUploadCp!: ElementRef<HTMLInputElement>;
-  
   private _alertService = inject(AlertService);
   private _uploadTusService = inject(UploadTusService);  
   private _logger = inject(LoggerService);
@@ -26,10 +24,13 @@ export class BudgetFinancialNationalComponent {
   public years: number[] = [];
   public yearSelected: number = new Date().getFullYear();
 
-  public fileFinancialAe: File | null = null;
-  public fileFinancialCp: File | null = null;
+  public filesAe = signal<File[]>([]);
+  public filesCp = signal<File[]>([]);
 
   public uploadInProgress = signal(false);
+  
+  /** Signal pour forcer la reconstruction des composants upload après un upload réussi */
+  public showUploadComponents = signal(true);
 
   public form: FormGroup;
 
@@ -44,46 +45,51 @@ export class BudgetFinancialNationalComponent {
     });
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  public onFileAeChange(event: any) {
-    const f: File = event.target.files[0];
-    this.fileFinancialAe = f ?? null;
+  /**
+   * Handler pour la sélection de fichiers AE
+   * @param files Tableau de fichiers sélectionnés
+   */
+  public onFilesAeChange(files: File[]): void {
+    this.filesAe.set(files);
+    this._logger.debug('Fichiers AE sélectionnés:', files.length);
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  public onFileCpChange(event: any) {
-    const f: File = event.target.files[0];
-    this.fileFinancialCp = f ?? null;
+  /**
+   * Handler pour la sélection de fichiers CP
+   * @param files Tableau de fichiers sélectionnés
+   */
+  public onFilesCpChange(files: File[]): void {
+    this.filesCp.set(files);
+    this._logger.debug('Fichiers CP sélectionnés:', files.length);
   }
 
 
 
   public uploadFiles() {
     const { year } = this.form.value;
-    this._logger.debug('Uploading files:', year, this.fileFinancialAe, this.fileFinancialCp);
-    if (this.fileFinancialAe !== null && this.fileFinancialCp !== null && year) {
-      
+    const aeFiles = this.filesAe();
+    const cpFiles = this.filesCp();
+    
+    this._logger.debug('Uploading files:', year, 'AE:', aeFiles.length, 'CP:', cpFiles.length);
+    
+    if (aeFiles.length > 0 && cpFiles.length > 0 && year) {
       this.uploadInProgress.set(true);
       const sessionToken = uuidv4();
       
-      const filesToUpload = [
-        { file: this.fileFinancialAe, uploadType: UploadType.FINANCIAL_AE },
-        { file: this.fileFinancialCp, uploadType: UploadType.FINANCIAL_CP }
-      ];
-      
-      this._uploadTusService.uploadFiles(filesToUpload, year, sessionToken)
+      this._uploadTusService.uploadFiles(aeFiles, cpFiles, year, sessionToken)
         .then(() => {
           this._logger.info('Upload terminé avec succès');
-          this.fileFinancialAe = null;
-          this.fileFinancialCp = null;
           
-          // Réinitialiser visuellement les inputs de fichier
-          if (this.fileUploadAe?.nativeElement) {
-            this.fileUploadAe.nativeElement.value = '';
-          }
-          if (this.fileUploadCp?.nativeElement) {
-            this.fileUploadCp.nativeElement.value = '';
-          }
+          // Réinitialiser les fichiers
+          this.filesAe.set([]);
+          this.filesCp.set([]);
+          
+          // Forcer la reconstruction des composants upload
+          // en les masquant puis les réaffichant
+          this.showUploadComponents.set(false);
+          setTimeout(() => {
+            this.showUploadComponents.set(true);
+          }, 0);
 
           this._alertService.openAlertSuccess('Les fichiers ont bien été récupérés. Les données seront disponibles dans l\'outil à partir de demain.');
         })
