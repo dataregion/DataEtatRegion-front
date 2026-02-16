@@ -6,7 +6,6 @@
     key:
       files:
         - package-lock.json
-        - package.json
     paths:
       - node_modules/
     policy: pull-push
@@ -16,6 +15,7 @@
       set -x
       if [ ! -d "./node_modules" ]; then
         echo >&2 'node_modules cache not available. run ci.'
+        rm -rf node_modules
         npm ci --prefer-offline --quiet
       fi
 
