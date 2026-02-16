@@ -239,7 +239,9 @@ export class MapComponent implements OnInit, AfterViewInit {
     // Fit map view to contours
     if (featuresContours.length) {
       const extent = contourSource!.getExtent();
-      this.map.getView().fit(extent, { padding: [50, 50, 50, 50], duration: 500, maxZoom: 13 });
+      if (extent) {
+        this.map.getView().fit(extent, { padding: [50, 50, 50, 50], duration: 500, maxZoom: 13 });
+      }
     }
   }
 

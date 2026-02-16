@@ -37,7 +37,7 @@
     "@edugouvfr/ngx-dsfr-ext": "^1.6.2",
     "@gouvfr/dsfr": "^1.14.0",
     "chart.js": "4.5.1",
-    "geoportal-extensions-openlayers": "^3.4.4",
+    "geoportal-extensions-openlayers": "^3.4.6",
     "keycloak-angular": "^21.0.0",
     "keycloak-js": "^25.0.6",
     "ngx-matomo-client": "~9.0.1",
@@ -70,7 +70,6 @@
     "@types/arcgis-rest-api": "^10.4.8",
     "@types/jasmine": "~5.1.0",
     "@types/topojson-specification": "^1.0.5",
-    "@types/tus-js-client": "^2.1.0",
     "@typescript-eslint/eslint-plugin": "^8.19.1",
     "@typescript-eslint/parser": "^8.19.1",
     "eslint": "^9.17.0",
@@ -83,6 +82,9 @@
     "typescript-eslint": "^8.28.0"
   },
   "overrides": {
-    "browser-sync": "^3.0.2"
+    "browser-sync": "^3.0.2",
+    "inflight": "npm:@npmcli/fs@^3.1.0",
+    "rimraf": "^6.0.1",
+    "glob": "^13.0.3"
   }
 }
