@@ -6,12 +6,18 @@
     key:
       files:
         - package-lock.json
+        - package.json
     paths:
-      - .npm/
+      - node_modules/
     policy: pull-push
 
   before_script:
-    - npm ci --cache .npm --prefer-offline --quiet
+    - |
+      set -x
+      if [ ! -d "./node_modules" ]; then
+        echo >&2 'node_modules cache not available. run ci.'
+        npm ci --prefer-offline --quiet
+      fi
 
   script:
     - |
