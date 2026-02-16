@@ -43,8 +43,7 @@ export class UploadTusService {
   ): Promise<void> {
     return new Promise((resolve, reject) => {
       const upload = new Upload(file, {
-        endpoint: 'http://localhost:8050/financial-data/api/v3/import', // URL de l'endpoint TUS (doit être configuré côté backend)
-        // endpoint: `${this._settingsService.apiFinancialDataV3}/import`,
+        endpoint: `${this._settingsService.apiFinancialDataV3}/import`,
         headers: {
           'Authorization': `Bearer ${this._keycloak.token}`
         },
