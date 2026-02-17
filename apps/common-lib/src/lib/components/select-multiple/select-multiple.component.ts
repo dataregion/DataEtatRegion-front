@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, ValidationErrors } from '@angular/forms';
 import { MatTooltipModule } from '@angular/material/tooltip';
@@ -53,9 +53,8 @@ export class SelectMultipleComponent<T> implements OnChanges, AfterViewInit {
   @Input() icon: string = '';
   
   @ViewChild('champRecherche') 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  rechercheComponent: any;
-  
+  rechercheComponent!: ElementRef<HTMLInputElement>;
+
   public ngAfterViewInit() {
     if (this.rechercheComponent)
       this.rechercheComponent.nativeElement.focus();
@@ -64,8 +63,11 @@ export class SelectMultipleComponent<T> implements OnChanges, AfterViewInit {
   onOpened($event: boolean) {
     if (!$event)
       return
-    if (this.rechercheComponent && this.canFilter)
-      this.rechercheComponent.nativeElement.focus();
+    if (!this.rechercheComponent || !this.canFilter)
+      return;
+    setTimeout(() => {
+      this.rechercheComponent?.nativeElement.focus();
+    });
   }
 
   // Options sélectionnées
