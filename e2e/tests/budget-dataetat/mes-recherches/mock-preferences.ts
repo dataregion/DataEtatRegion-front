@@ -4,14 +4,14 @@ import { default as preferencesdetails } from './mock-preferences-details.data.j
 import { Page, Route } from '@playwright/test';
 
 function is_url_user_preferences(url: URL) {
-  const match = url.pathname == '/administration/api/v1/users/preferences';
-  return match;
+  const match_v3 = url.pathname == '/administration/api/v3/users/preferences';
+  return match_v3;
 }
 
 function is_url_user_preferences_detail(url: URL) {
-  const match =
-    url.pathname == '/administration/api/v1/users/preferences/7dd35a3d-c43c-4fea-b329-2a1ba58d5941';
-  return match;
+  const match_v3 =
+    url.pathname == '/administration/api/v3/users/preferences/193591ae-deb3-49f2-bdd5-1842d93dd2b5';
+  return match_v3;
 }
 
 async function mockPreferencesApi(page: Page) {

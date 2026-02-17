@@ -104,4 +104,5 @@ Le dossier [apps/clients](./apps/clients/) contient des clients d'api, ces derni
 DO_USE_SINGLE_REQUEST_PARAMETER=true ./generate_openapi_client.sh -p referentielsV3 -s "https://api.databretagne.fr/referentiels/api/v3/admin/openapi.json" -t $(pwd)/apps/clients/v3/ -n referentiels
 DO_USE_SINGLE_REQUEST_PARAMETER=true ./generate_openapi_client.sh -p financialDataV3 -s "https://api.databretagne.fr/financial-data/api/v3/admin/openapi.json" -t $(pwd)/apps/clients/v3/ -n financial-data
 DO_USE_SINGLE_REQUEST_PARAMETER=true ./generate_openapi_client.sh -p dataQpvV3 -s "https://api.databretagne.fr/data-qpv/api/v3/admin/openapi.json" -t $(pwd)/apps/clients/v3/ -n data-qpv
+DO_USE_SINGLE_REQUEST_PARAMETER=true ./generate_openapi_client.sh -p administrationV3 -s "https://api.databretagne.fr/administration/api/v3/admin/openapi.json" -t $(pwd)/apps/clients/v3/ -n administration
 ```

@@ -13,6 +13,7 @@ import { API_GEO_PATH, API_REF_PATH } from 'apps/common-lib/src/public-api';
 
 import { BASE_PATH as FINANCIAL_DATA_V3_BASE_PATH } from 'apps/clients/v3/financial-data';
 import { BASE_PATH as REFERENTIELS_V3_BASE_PATH } from 'apps/clients/v3/referentiels';
+import { BASE_PATH as ADMINISTRATION_V3_BASE_PATH } from 'apps/clients/v3/administration';
 import { aeConfiguration, aeConfigurationParameters } from 'apps/clients/apis-externes';
 import { aev3Configuration, aev3ConfigurationParameters } from 'apps/clients/apis-externes-v3';
 
@@ -63,6 +64,9 @@ export function providerBugdetConfiguration(settingsService: SettingsBudgetServi
     }, {
       provide: REFERENTIELS_V3_BASE_PATH,
       useValue: settingsService.apiReferentielsV3
+    },{
+      provide: ADMINISTRATION_V3_BASE_PATH,
+      useValue: settingsService.apiAdministrationV3
     }, {
       provide: API_PREFERENCE_PATH,
       useValue: settingsService.apiAdministration

@@ -5,6 +5,7 @@ import {IApi, Keycloak, Matomo, Ressources, Settings, Superset} from 'apps/commo
 class Api implements IApi {
   franceRelance = '';
   administration = '';
+  administration_v3 = '';
   geo = '';
   referentiel = '';
   laureats_data = '';
@@ -57,6 +58,10 @@ export class SettingsService implements ISettingsService {
 
   public get apiAdministration(): string {
     return (this.settings.apis as Api).administration;
+  }
+
+  public get apiAdministrationV3(): string {
+    return (this.settings.apis as Api).administration_v3;
   }
 
   public get apiLaureatsData(): string {

@@ -1,27 +1,69 @@
 {
-  "shares": [],
-  "uuid": "7dd35a3d-c43c-4fea-b329-2a1ba58d5943",
-  "username": "csm@sib.fr",
-  "name": "grouping-vides",
-  "application_host": "https://budget-bretagne.nocode.csm.ovh",
-  "filters": {
-    "year": [],
-    "beneficiaires": [
-      {
-        "siret": "30613890001294",
-        "categorie_juridique": "Entreprise",
-        "denomination": "DECATHLON",
-        "adresse": "4 BOULEVARD DE MONS BP 299 59665 VILLENEUVE D ASCQ CEDEX FRANCE",
-        "item": "DECATHLON (30613890001294)"
-      },
-      {
-        "siret": "30613890003688",
-        "categorie_juridique": "Entreprise",
-        "denomination": "DECATHLON",
-        "adresse": "170 AVENUE MONT BLANC LEMAN  74190 PASSY FRANCE",
-        "item": "DECATHLON (30613890003688)"
-      }
-    ]
-  },
-  "options": { }
+    "code": 200,
+    "success": true,
+    "timestamp": "1771493600",
+    "message": "Préférence récupérée avec succès",
+    "data": {
+        "uuid": "690cbc4b-7153-480f-81b7-409bf8b6db40",
+        "username": "csm@sib.fr",
+        "name": "grouping-vides",
+        "filters": {
+            "beneficiaires": [
+                {
+                    "siret": "30613890001294",
+                    "categorie_juridique": "Entreprise",
+                    "denomination": "DECATHLON",
+                    "adresse": "4 BOULEVARD DE MONS  59650 VILLENEUVE-D'ASCQ FRANCE",
+                    "item": "DECATHLON (30613890001294)"
+                },
+                {
+                    "siret": "30613890003688",
+                    "categorie_juridique": "Entreprise",
+                    "denomination": "DECATHLON",
+                    "adresse": "170 AVENUE MONT BLANC LEMAN  74480 PASSY FRANCE",
+                    "item": "DECATHLON (30613890003688)"
+                }
+            ]
+        },
+        "options": {
+            "displayOrder": [
+                {
+                    "columnLabel": "Bénéficiaire"
+                },
+                {
+                    "columnLabel": "Montant engagé"
+                },
+                {
+                    "columnLabel": "Montant payé"
+                },
+                {
+                    "columnLabel": "Année Exercice comptable"
+                },
+                {
+                    "columnLabel": "Domaine fonctionnel"
+                },
+                {
+                    "columnLabel": "Commune du SIRET"
+                },
+                {
+                    "columnLabel": "Localisation interministérielle"
+                },
+                {
+                    "columnLabel": "N° EJ"
+                },
+                {
+                    "columnLabel": "Tags"
+                },
+                {
+                    "columnLabel": "Ref Programmation"
+                }
+            ]
+        },
+        "shares": [],
+        "nombre_utilisation": 1,
+        "dernier_acces": "2026-02-19T09:33:20.088881",
+        "application_clientid": "bretagne.budget",
+        "date_creation": "2026-02-19T09:30:32.579629"
+    },
+    "pagination": null
 }

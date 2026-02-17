@@ -17,6 +17,7 @@ class Api implements IApi {
   financial_data_v3 = '';
   referentiels_v3 = '';
   administration = '';
+  administration_v3 = '';
   geo = '';
   referentiel = '';
   apis_externes = '';
@@ -105,6 +106,10 @@ export class SettingsBudgetService implements ISettingsService {
 
   public get apiReferentielsV3(): string {
     return (this.settings.apis as Api).referentiels_v3;
+  }
+
+  public get apiAdministrationV3(): string {
+    return (this.settings.apis as Api).administration_v3;
   }
 
   public get apiAdministration(): string {

@@ -13,6 +13,7 @@
   "apis": {
     "franceRelance": "<url api franceRelance>",
     "administration": "",
+    "administration_v3": "",
     "referentiel": "url api referentiel",
     "geo": "url api geo",
     "laureats_data": "<url api laureats>"
