@@ -1,5 +1,5 @@
 import { AsyncPipe } from '@angular/common';
-import { Component, DestroyRef, inject, input, output, ViewEncapsulation } from '@angular/core';
+import { Component, DestroyRef, inject, model, ViewEncapsulation } from '@angular/core';
 
 import { AlertService } from "apps/common-lib/src/public-api";
 import { debounceTime, distinctUntilChanged, finalize, map, Observable, of, Subject, switchMap } from 'rxjs';
@@ -48,16 +48,15 @@ export class ModalSauvegardeComponent {
   public search: string = '';
   public filterUser: string[] = [];
   public separatorKeysCodes: number[] = [ENTER, COMMA];
-
-  public preference = input<Preference>();
-
-  public preferenceSave = output<Preference>();
+  
+  public preference = model<Preference>()
 
   public searchUserChanged = new Subject<string>();
 
   public suggestions$: Observable<string[]> = of([]);
   public loading: boolean = false;
   public delay: number = 500
+  
 
   constructor() {
     // Recherche des suggestions d'users
@@ -114,12 +113,9 @@ export class ModalSauvegardeComponent {
       filters: {},
       shares: shared ? users.map(u => ({ shared_username_email: u })) : []
     } as Preference;
-
-    if (this.preference()) {
-      preference.uuid = this.preference()?.uuid;
-      preference.options = this.preference()?.options;
-      preference.filters = this.preference()?.filters ?? {};
-    } else {
+    
+    if (!this.preference()) {
+      // Initialisation des preferences par défaut
       // Options de colonnes et grouping
       const options: JSONObject = {} as JSONObject
       if (this._colonnesService.selectedColonnesTable().length) {
@@ -147,12 +143,39 @@ export class ModalSauvegardeComponent {
       });
       preference.options = options;
     }
+
+    preference.uuid = this.preference()?.uuid;
+    preference.options = this.preference()?.options;
+    preference.filters = this.preference()?.filters ?? {};
+
+    this.preference.set(preference);
+
     this._preferenceHttpService
       .savePreference(preference)
       .pipe(takeUntilDestroyed(this._destroyRef))
       .subscribe((_response) => {
-        this.preferenceSave.emit(preference);
-        this._alertService.openAlertSuccess('Filtre enregistré avec succès');
+        // Comptage du nombre de nouveaux partages
+        let nbNouveauxPartages = 0;
+        const shares = _response.data?.shares
+        for (const share of shares ?? []) {
+          if (!share.email_send)
+            nbNouveauxPartages++;
+        } 
+
+        // Mise à jour de l'UUID de la préférence
+        this.preference.update(pref => {
+          return {
+            ...pref,
+            uuid: _response.data?.uuid
+          } as Preference
+        });
+        
+        let txt = 'Filtre enregistré avec succès';
+        if (nbNouveauxPartages > 0) {
+          txt += `, et envoyé à ${nbNouveauxPartages} nouvel utilisateur(s).`;
+        }
+        
+        this._alertService.openAlertSuccess(txt);
       });
   }
 

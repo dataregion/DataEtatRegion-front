@@ -175,7 +175,7 @@
       }
 
       <budget-modal-confirm [confirmAction]="confirmDelete" [preference]="selectedPreference()"/>
-      <budget-modal-sauvegarde [preference]="selectedPreference()" (preferenceSave)="onPreferenceSave($event)"/>
+      <budget-modal-sauvegarde [preference]="selectedPreference()" (preferenceChange)="onPreferenceChanged($event)"/>
 
     </div>
   </div>

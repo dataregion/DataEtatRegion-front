@@ -57,20 +57,24 @@ export class PreferenceUsersHttpService {
   }
 
 
-  public savePreference(preference: Preference): Observable<unknown> {
-    const req = this.mapToReqV3(preference);
+  public savePreference(preference: Preference) {
+    const payload = this.mapToReqV3(preference);
+
+    let call = null;
     if (preference.uuid) {
       // update
-      return this._preferenceApiV3.updatePreferenceUsersPreferencesUuidPost({
+      call = this._preferenceApiV3.updatePreferenceUsersPreferencesUuidPost({
         uuid: preference.uuid,
-        preferenceUpdateRequest: req
+        preferenceUpdateRequest: payload
       });
     } else {
       // create
-      return this._preferenceApiV3.createPreferenceUsersPreferencesPost({
-        preferenceCreateRequest: req
+      call = this._preferenceApiV3.createPreferenceUsersPreferencesPost({
+        preferenceCreateRequest: payload
       });
     }
+    
+    return call;
   }
 
   public deletePreference(uuid: string): Observable<void> {

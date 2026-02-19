@@ -141,7 +141,10 @@ export class PreferencesComponent implements OnInit {
    * @param preference 
    * @returns 
    */
-  onPreferenceSave(preference: Preference) {
+  public onPreferenceChanged(preference?: Preference) {
+    if (!preference)
+      return;
+
     if (!preference.uuid)
       return
     const uuid: string = preference.uuid;
