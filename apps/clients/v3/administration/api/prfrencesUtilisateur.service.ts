@@ -362,9 +362,9 @@ export class PrfrencesUtilisateurService extends BaseService implements Prfrence
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public updatePreferenceUsersPreferencesUuidPost(requestParameters: UpdatePreferenceUsersPreferencesUuidPostRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<APISuccessStr>;
-    public updatePreferenceUsersPreferencesUuidPost(requestParameters: UpdatePreferenceUsersPreferencesUuidPostRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<APISuccessStr>>;
-    public updatePreferenceUsersPreferencesUuidPost(requestParameters: UpdatePreferenceUsersPreferencesUuidPostRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<APISuccessStr>>;
+    public updatePreferenceUsersPreferencesUuidPost(requestParameters: UpdatePreferenceUsersPreferencesUuidPostRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<APISuccessPreferenceResponse>;
+    public updatePreferenceUsersPreferencesUuidPost(requestParameters: UpdatePreferenceUsersPreferencesUuidPostRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<APISuccessPreferenceResponse>>;
+    public updatePreferenceUsersPreferencesUuidPost(requestParameters: UpdatePreferenceUsersPreferencesUuidPostRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<APISuccessPreferenceResponse>>;
     public updatePreferenceUsersPreferencesUuidPost(requestParameters: UpdatePreferenceUsersPreferencesUuidPostRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
         const uuid = requestParameters?.uuid;
         if (uuid === null || uuid === undefined) {
@@ -413,7 +413,7 @@ export class PrfrencesUtilisateurService extends BaseService implements Prfrence
         }
 
         let localVarPath = `/users/preferences/${this.configuration.encodeParam({name: "uuid", value: uuid, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`;
-        return this.httpClient.request<APISuccessStr>('post', `${this.configuration.basePath}${localVarPath}`,
+        return this.httpClient.request<APISuccessPreferenceResponse>('post', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
                 body: preferenceUpdateRequest,

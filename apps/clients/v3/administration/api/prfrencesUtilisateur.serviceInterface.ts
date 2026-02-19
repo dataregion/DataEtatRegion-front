@@ -88,6 +88,6 @@ export interface PrfrencesUtilisateurServiceInterface {
      * Met à jour une préférence existante (nom, filtres, options, partages)
 * @param requestParameters
      */
-    updatePreferenceUsersPreferencesUuidPost(requestParameters: UpdatePreferenceUsersPreferencesUuidPostRequestParams, extraHttpRequestParams?: any): Observable<APISuccessStr>;
+    updatePreferenceUsersPreferencesUuidPost(requestParameters: UpdatePreferenceUsersPreferencesUuidPostRequestParams, extraHttpRequestParams?: any): Observable<APISuccessPreferenceResponse>;
 
 }
