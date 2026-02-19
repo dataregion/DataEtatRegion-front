@@ -88,9 +88,11 @@ export class MapComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    // --- Determine region config (default: Bretagne)
-    const regionCode = this._sessionService.regionCode()?.substring(1) ?? '53';
-    const region = REGION_GEO_CONFIGS[regionCode] ?? REGION_GEO_CONFIGS['53'];
+    const regionSession = this._sessionService.regionCode()
+    if (!regionSession)
+      return
+    const regionCode = regionSession.substring(1);
+    const region = REGION_GEO_CONFIGS[regionCode];
 
     // --- Convert extent & center to Web Mercator
     const extent3857 = transformExtent(region.extent4326, 'EPSG:4326', 'EPSG:3857');
@@ -125,56 +127,98 @@ export class MapComponent implements OnInit, AfterViewInit {
     this.tryRenderQpvData();
   }
 
-   // =====================================================
-  // 🧱  ADMIN EXPRESS VECTOR TILE LAYER
+  // =====================================================
+  // ADMIN EXPRESS (VECTOR TILE + EXTENT REGION)
   // =====================================================
   private buildAdminBoundariesLayer(regionCode: string): VectorTileLayer {
     const url = 'https://data.geopf.fr/tms/1.0.0/ADMIN_EXPRESS/{z}/{x}/{y}.pbf';
 
-    /** Dynamic style function */
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const styleFunction = (feature: any): Style | undefined => {
-      const zoom = this.map?.getView()?.getZoom() ?? 0;
-      const props = feature.getProperties();
-      const inseeReg = props?.insee_reg;
-
-      // --- Filter: show only features in current region
-      if (inseeReg && inseeReg !== regionCode) return undefined;
-
-      let strokeColor = '#000000';
-      let visible = false;
-
-      if (zoom < this.zoomByLevel['departement']) {
-        // Région boundaries
-        strokeColor = '#000091';
-        visible = true;
-      } else if (zoom < this.zoomByLevel['epci']) {
-        // Départements
-        strokeColor = '#3558C9';
-        visible = true;
-      } else if (zoom < this.zoomByLevel['commune']) {
-        // EPCI
-        strokeColor = '#597DF2';
-        visible = true;
-      } else {
-        // Communes
-        strokeColor = '#8FA5F9';
-        visible = true;
-      }
-
-      if (!visible) return undefined;
-
-      return new Style({
-        stroke: new Stroke({ color: strokeColor, width: 1 }),
-      });
-    };
+    const region = REGION_GEO_CONFIGS[regionCode];
+    const departementsRegion = region.departements; 
+    const styleCache: Record<string, Style> = {};
 
     return new VectorTileLayer({
       source: new VectorTileSource({
         format: new MVT(),
         url,
       }),
-      style: styleFunction,
+      style: (feature, resolution) => {
+
+        if (!this.map) return;
+
+        const zoom = this.map.getView().getZoomForResolution(resolution);
+        if (!zoom) return;
+        
+        const layerName = feature.get('layer');
+        
+        // =====================================================
+        // FILTRAGE STRICT À LA RÉGION
+        // =====================================================
+        if (layerName === 'region') {
+          const codeReg = feature.get('code_reg')
+          if (codeReg !== regionCode) {
+            return undefined;
+          }
+        }
+        else if (layerName === 'epci') {
+          const departements = feature.get('codes_insee_des_departements_membres').split('/')
+          if (!departements.some((r: string) => departementsRegion.includes(r))) {
+            return undefined;
+          }
+        }
+        else if (layerName === 'departement' || layerName === 'commune') {
+          const codeInsee = feature.get('code_insee')
+          const dep = codeInsee.substring(0, 2);
+          if (!departementsRegion.includes(dep)) {
+            return undefined;
+          }
+        }
+        else {
+          return undefined;
+        }
+
+        // =====================================================
+        // FILTRAGE PAR NIVEAU SELON ZOOM
+        // =====================================================
+        let expectedLayer: string | null = null;
+
+        // Affichage des EPCI à partir du zoom 11, en dessous pas transmis par l'API
+        if (zoom < 11) {
+          expectedLayer = 'departement';
+        }
+        else if (zoom < 12) {
+          expectedLayer = 'epci';
+        }
+        else {
+          expectedLayer = 'commune';
+        }
+
+        if (layerName !== expectedLayer) {
+          return undefined;
+        }
+
+        // =====================================================
+        // 🎨 STYLE CACHE
+        // =====================================================
+
+        if (!styleCache[layerName]) {
+
+          const color =
+            layerName === 'departement' ? '#000091'
+            : layerName === 'epci' ? '#3558C9'
+            : '#597DF2';
+
+          styleCache[layerName] = new Style({
+            stroke: new Stroke({
+              color,
+              width: 1.5,
+            }),
+          });
+        }
+
+        return styleCache[layerName];
+      },
+
       zIndex: 2,
     });
   }
@@ -293,7 +337,7 @@ export class MapComponent implements OnInit, AfterViewInit {
         text: name,
         backgroundStroke: new Stroke({ color: `rgba(255, 255, 255, 1)`, width: 16, lineCap: 'round', lineJoin: 'round' }),
         backgroundFill: new Fill({ color: `rgba(255, 255, 255, 1)` }),
-        fill: new Fill({ color: `rgba(0,0,145,1), 1)` }),
+        fill: new Fill({ color: `rgba(0,0,145,1)` }),
         font: 'bold 16px Marianne, Calibri, sans-serif',
         offsetY: (zoom && zoom > this.clusterZoomThreshold) ? 75 : 35,
         textAlign: 'center',

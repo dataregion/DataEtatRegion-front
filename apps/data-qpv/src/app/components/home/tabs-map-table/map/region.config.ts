@@ -7,6 +7,7 @@ export interface RegionGeoConfig {
   defaultZoom: number;
   minZoom: number;
   maxZoom: number;
+  departements: string[];
 }
 
 export const REGION_GEO_CONFIGS: Record<string, RegionGeoConfig> = {
@@ -18,6 +19,7 @@ export const REGION_GEO_CONFIGS: Record<string, RegionGeoConfig> = {
     defaultZoom: 1,
     minZoom: 1,
     maxZoom: 16,
+    departements: ['22','29','35','56'],
   },
   52: {
     code: '52',
@@ -27,5 +29,6 @@ export const REGION_GEO_CONFIGS: Record<string, RegionGeoConfig> = {
     defaultZoom: 7,
     minZoom: 7,
     maxZoom: 16,
+    departements: ['44','49','53','72','85'],
   },
 }
