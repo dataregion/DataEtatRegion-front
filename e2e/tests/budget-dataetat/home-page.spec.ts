@@ -17,8 +17,7 @@ test.describe("Page d'accueil", () => {
     await page.getByRole('button', { name: "Information de l'utilisateur" }).isVisible();
 
     const closeSelect = async () => {
-      // Close opened select with Escape key (more reliable than clicking body)
-      await page.keyboard.press('Escape');
+      await page.locator('.cdk-overlay-backdrop').click();
     };
 
     // vérification du formulaire
