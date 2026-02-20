@@ -43,3 +43,29 @@ tr.clickable:hover > td {
   cursor: pointer;
   background-color: #eee;
 }
+
+/* ===== HEADER DU TABLEAU ET BOUTONS DE TRI ===== */
+
+.th-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+.th-content > .fr-cell__title {
+  margin-right: 10px;
+}
+.th-content button[id^="btn-sort"] {
+  padding: 0.5rem;
+}
+.th-content button[id^="btn-sort"]::before {
+  margin-left: .25rem;
+  margin-right: .25rem;
+}
+.th-content button[id^="btn-sort"]::after {
+  display: none;
+}
+.th-content .sorted-button button[id^="btn-sort"] {
+  background-color: var(--background-action-high-blue-france);
+  color: white;
+}

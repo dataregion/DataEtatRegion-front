@@ -9,8 +9,20 @@
                 <tr>
                   <th class="fr-cell--fixed" role="columnheader"></th>
                   @for (col of currentColonnes(); track col.colonne; let isFirst = $first) {
-                  <th [class.fr-cell--fixed]="isFirst" class="not-index" role="columnheader" [ngStyle]="col.style">
-                    <div class="fr-cell__title">{{col.label}}</div>
+                  <th [class.fr-cell--fixed]="isFirst" class="not-index sortable-header" role="columnheader" [ngStyle]="col.style">
+                    <div class="th-content">
+                      <div class="fr-cell__title">{{ col.label }}</div>
+                      @if (col.sortable) {
+                        <dsfr-ext-dropdownmenu
+                          [menuId]="'btn-sort-' + col.colonne"
+                          [menus]="sortConfigs"
+                          [iconMenu]="getSortIcon(col)"
+                          (buttonSelect)="sortColonne($event, col)"
+                          [closeOnAction]="true"
+                          [zIndex]="1000"
+                          [ngClass]="{ 'sorted-button': isSorted(col) }" />
+                      }
+                    </div>
                   </th>
                   }
                 </tr>

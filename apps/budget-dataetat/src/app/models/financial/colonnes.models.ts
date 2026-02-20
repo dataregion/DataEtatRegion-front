@@ -7,3 +7,14 @@ export interface ColonnesResolved {
 }
 
 export type ColonnesResolvedModel = TOrError<ColonnesResolved>;
+
+export enum SortDirection {
+  ASC = 'asc',
+  DESC = 'desc'
+}
+
+export interface SortConfig {
+  direction: SortDirection;
+  label: string;
+  icon: string;
+}

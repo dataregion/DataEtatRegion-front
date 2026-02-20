@@ -8,6 +8,7 @@ import { SearchParameters } from '@services/search-params.service';
 import { BudgetFinancialDataModel } from '@models/financial/financial-data.models';
 import { Colonne, EnrichedFlattenFinancialLines2, GroupedData, LignesFinancieresService, LignesResponse, PaginationMeta, Total } from 'apps/clients/v3/financial-data';
 import { ColonnesService } from '@services/colonnes.service';
+import { SortDirection } from '@models/financial/colonnes.models';
 import { SearchParamsService } from './search-params.service';
 import { LoggerService } from 'apps/common-lib/src/lib/services/logger.service';
 import { Optional } from 'apps/common-lib/src/lib/utilities/optional.type';
@@ -316,6 +317,26 @@ export class SearchDataService {
    */
   public unflatten(object: EnrichedFlattenFinancialLines2): BudgetFinancialDataModel {
     return this._mapper.mapToBudget(object);
+  }
+
+  /**
+   * Lance la recherche avec un tri de colonne.
+   * @param colonne Colonne utilisée pour le tri
+   * @param direction Sens du tri, asc ou desc
+   * @returns 
+   */
+  public searchWithSort(colonne: ColonneTableau<BudgetFinancialDataModel>, direction: SortDirection): Observable<LignesResponse> {
+    this._logger.debug('==> Début de la méthode searchWithSort', { colonne, direction });
+
+    const currentParams = {
+      ...this.searchParams()
+    } as SearchParameters;
+
+    currentParams.page = 1; // on reset la pagination
+    currentParams.sort_by = colonne.sortable?.code ?? "";
+    currentParams.sort_order = direction;
+
+    return this._doSearch(currentParams!);
   }
 
   // --- Méthodes privées ---
