@@ -9,6 +9,7 @@ import { SelectedData } from 'apps/common-lib/src/lib/components/advanced-chips-
 import { ReferentielProgrammation } from 'apps/common-lib/src/lib/models/refs/referentiel_programmation.model';
 import { Tag } from '@models/refs/tag.model';
 import { SearchTypeCategorieJuridique } from 'apps/common-lib/src/lib/models/refs/common.models';
+import { SortDirection } from '@models/financial/colonnes.models';
 
 export type TagFieldData = SelectedData & Tag;
 
@@ -29,4 +30,7 @@ export interface PreFilters {
 
   domaines_fonctionnels?: string[];
   sources_region?: string[];
+
+  sort_by?: string;
+  sort_order?: SortDirection;
 }

@@ -15,6 +15,7 @@ import { Tag } from '@models/refs/tag.model';
 import { BopModel } from 'apps/common-lib/src/lib/models/refs/bop.models';
 import { SearchTypeCategorieJuridique } from 'apps/common-lib/src/lib/models/refs/common.models';
 import { AutocompleteBeneficiaireService, BeneficiaireFieldData } from 'apps/appcommon/src/lib/autocomplete/autocomplete-beneficiaire.service';
+import { SortDirection } from '@models/financial/colonnes.models';
 
 @Injectable({
   providedIn: 'root'
@@ -97,6 +98,8 @@ export class PrefilterMapperService {
     newSearchParam.tags = this._mapTags(prefilter)?.map(t => t.value ? t.type + ':' + t.value : t.type)
     newSearchParam.domaines_fonctionnels = this._mapDomainesFonctionnels(prefilter)
     newSearchParam.source_region = this._mapSourcesRegion(prefilter)
+    newSearchParam.sort_by = this._mapSortBy(prefilter)
+    newSearchParam.sort_order = this._mapSortOrder(prefilter)
 
     this.logger.debug("==> MAP : PreFilters => SearchParameters", prefilter, searchParams);
 
@@ -202,6 +205,18 @@ export class PrefilterMapperService {
     if (!pf.sources_region)
       return undefined
     return pf.sources_region
+  }
+
+  private _mapSortBy(pf: PreFilters): string | undefined {
+    if (!pf.sort_by)
+      return undefined
+    return pf.sort_by
+  }
+
+  private _mapSortOrder(pf: PreFilters): SortDirection | undefined {
+    if (!pf.sort_order)
+      return undefined
+    return pf.sort_order
   }
 
 }

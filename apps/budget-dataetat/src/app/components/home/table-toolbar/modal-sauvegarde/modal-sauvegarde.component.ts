@@ -142,11 +142,11 @@ export class ModalSauvegardeComponent {
         }
       });
       preference.options = options;
+    } else {
+      preference.uuid = this.preference()?.uuid;
+      preference.options = this.preference()?.options;
+      preference.filters = this.preference()?.filters ?? {};
     }
-
-    preference.uuid = this.preference()?.uuid;
-    preference.options = this.preference()?.options;
-    preference.filters = this.preference()?.filters ?? {};
 
     this.preference.set(preference);
 
