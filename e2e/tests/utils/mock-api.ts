@@ -42,27 +42,29 @@ function is_url_data_demarche_reconciliation(url: URL) {
 }
 
 async function mockRefApi(page: Page) {
-  await page.route(is_url_budget_themes, async (route: Route) => {
+  // Configurer toutes les routes en parallèle (pas de await)
+  // pour éviter les problèmes de timing avec Firefox
+  page.route(is_url_budget_themes, async (route: Route) => {
     const json = themes;
     await route.fulfill({ json });
   });
 
-  await page.route(is_url_budget_programmes, async (route: Route) => {
+  page.route(is_url_budget_programmes, async (route: Route) => {
     const json = programmes;
     await route.fulfill({ json });
   });
 
-  await page.route(is_url_ae_annees, async (route: Route) => {
+  page.route(is_url_ae_annees, async (route: Route) => {
     const json = [2019,2022,2021,2022,2023,2024,2025,2026,2027];
     await route.fulfill({ json });
   });
 
-  await page.route(is_url_lignes_budgetaires_v2, async (route: Route) => {
+  page.route(is_url_lignes_budgetaires_v2, async (route: Route) => {
     const json = financial;
     await route.fulfill({ json });
   });
 
-  await page.route(
+  page.route(
     /.*\/badministration\/api\/v1\/audit\/FINANCIAL_DATA_AE\/.*/,
     async (route: Route) => {
       const json = {
@@ -72,22 +74,22 @@ async function mockRefApi(page: Page) {
     }
   );
 
-  await page.route(is_url_graphql_demarche, async (route: Route) => {
+  page.route(is_url_graphql_demarche, async (route: Route) => {
     const json = demarcheDS;
     await route.fulfill({ json });
   });
 
-  await page.route(is_url_data_demarche, async (route: Route) => {
+  page.route(is_url_data_demarche, async (route: Route) => {
     const json = demarcheDB;
     await route.fulfill({ json });
   });
 
-  await page.route(is_url_data_demarche_donnees, async (route: Route) => {
+  page.route(is_url_data_demarche_donnees, async (route: Route) => {
     const json = donnees;
     await route.fulfill({ json });
   });
 
-  await page.route(is_url_data_demarche_reconciliation, async (route: Route) => {
+  page.route(is_url_data_demarche_reconciliation, async (route: Route) => {
     const json = demarche_reconciliee;
     await route.fulfill({ json });
   });

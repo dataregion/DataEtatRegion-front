@@ -62,10 +62,18 @@ async function waitForSelectColumnsModal(page: Page, colonne: string): Promise<v
 }
 
 async function unfoldFirstNode(page: Page): Promise<void> {
+    // Cliquer sur la flèche pour déplier
     await page.locator(".accordion-header.clickable td.td-group span.collapse-arrow").first().click();
-    // affichage d'un champ de recherche temporaire
-    await expect(page.getByRole('status', { name: 'Chargement…' })).toBeVisible();
-    await page.getByRole('status', { name: 'Chargement…' }).waitFor({ state: 'hidden', timeout: 10000 });
+    
+    // Attendre que les données soient chargées en surveillant la réponse API
+    // C'est plus fiable que d'attendre un spinner qui peut apparaître/disparaître trop vite
+    await page.waitForResponse(
+        response => response.url().includes('/financial-data/api/v3/lignes') && response.status() === 200,
+        { timeout: 10000 }
+    );
+    
+    // Petit délai pour s'assurer que le DOM est mis à jour
+    await page.waitForTimeout(100);
 }
 
 
