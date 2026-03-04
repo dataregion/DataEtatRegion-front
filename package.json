@@ -68,7 +68,7 @@
     "@storybook/angular": "^10.1.11",
     "@storybook/test-runner": "^0.24.0",
     "@types/arcgis-rest-api": "^10.4.8",
-    "@types/jasmine": "~5.1.0",
+    "@types/jasmine": "~6.0.0",
     "@types/topojson-specification": "^1.0.5",
     "@typescript-eslint/eslint-plugin": "^8.19.1",
     "@typescript-eslint/parser": "^8.19.1",
