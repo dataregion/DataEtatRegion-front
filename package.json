@@ -83,7 +83,7 @@
   },
   "overrides": {
     "browser-sync": "^3.0.2",
-    "inflight": "npm:@npmcli/fs@^3.1.0",
+    "inflight": "npm:@npmcli/fs@^5.0.0",
     "rimraf": "^6.0.1",
     "glob": "^13.0.3"
   }
