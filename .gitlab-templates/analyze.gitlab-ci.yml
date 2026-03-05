@@ -1,0 +1,9 @@
+"Analyse semgrep":
+  stage: ☢️ analyze
+  image: semgrep/semgrep
+  script: semgrep ci
+  rules:
+    - if: '$DO_ANALYZE == "✅"'
+    - if: '$DO_ANALYZE == "⚙️"'
+      when: manual
+    - when: never

@@ -2,6 +2,7 @@ include:
   - project: SIBSGAR/DataRegateNum/common-gitlab-templates
     ref: main
     file: project-skeleton.gitlab-ci.yml
+  - .gitlab-templates/analyze.gitlab-ci.yml
   - .gitlab-templates/build.gitlab-ci.yml
   - .gitlab-templates/dockerize.gitlab-ci.yml
   - .gitlab-templates/deploy.gitlab-ci.yml
@@ -15,7 +16,7 @@ variables:
   _SNAP_VER: ${CI_COMMIT_SHORT_SHA}-snapshot
   DO_DEPLOY_tags: "fronts"
   # XXX shadowing template variables as it is unused as user input in pipeline
-  DO_ANALYZE: "❌"
+  DO_ANALYZE: "✅"
   DO_BUILD: "✅"
   DO_TEST: "❌" # XXX: pas utilisé directement mais passé aux sous taches
   DO_DEPLOY: "❌" 
