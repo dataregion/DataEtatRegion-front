@@ -94,7 +94,12 @@ export class BudgetFinancialNationalComponent {
           this._alertService.openAlertSuccess('Les fichiers ont bien été récupérés. Les données seront disponibles dans l\'outil à partir de demain.');
         })
         .catch((error) => {
-          this._alertService.openAlertError('Une erreur est survenue lors de l\'upload des fichiers.');
+          let message = 'Une erreur est survenue lors de l\'upload des fichiers.';
+          if (error.getUnderlyingObject().response) {
+            message = 'Une erreur est survenue lors de l\'upload des fichiers: ' + JSON.parse(error.getUnderlyingObject().response).message 
+              || message;
+          }
+          this._alertService.openAlertError(message);
           this._logger.error('Erreur lors de l\'upload TUS:', error);
         })
         .finally(() => {
