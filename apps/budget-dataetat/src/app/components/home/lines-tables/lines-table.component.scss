@@ -34,9 +34,11 @@ td.fr-cell--fixed.not-index {
   box-shadow: 3px 0 5px rgba(0,0,0,0.3);
   min-width: 600px;
   max-width: 600px;
-  overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+}
+td.fr-cell--fixed.not-index {
+  overflow: hidden;
 }
 tr.clickable:hover,
 tr.clickable:hover > td {

@@ -7,7 +7,7 @@ import { PreferenceUsersHttpService } from 'apps/preference-users/src/lib/servic
 import { Preference } from 'apps/preference-users/src/lib/models/preference.models';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { DsfrAutocompleteComponent, DsfrCompleteEvent } from '@edugouvfr/ngx-dsfr-ext'
-import { ReactiveFormsModule, FormGroup, FormBuilder, FormControl } from '@angular/forms';
+import { ReactiveFormsModule, FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
 
 import { ColonnesService } from '@services/colonnes.service';
 import { SearchDataService } from '@services/search-data.service';
@@ -39,7 +39,7 @@ export class ModalSauvegardeComponent {
   private _destroyRef = inject(DestroyRef);
 
   public formPreference: FormGroup<FormPreference> = new FormGroup({
-    name: new FormControl<string>("", { nonNullable: true }),
+    name: new FormControl<string>("", { nonNullable: true, validators: [Validators.required] }),
     shared: new FormControl<boolean>(false, { nonNullable: true }),
     users: new FormControl<string[]>([], { nonNullable: true }),
   });
@@ -90,7 +90,7 @@ export class ModalSauvegardeComponent {
           return;
         }
         this.formPreference = this._formBuilder.group<FormPreference>({
-          name: this._formBuilder.control<string>(preference.name ?? "", { nonNullable: true }),
+          name: this._formBuilder.control<string>(preference.name ?? "", { nonNullable: true, validators: [Validators.required] }),
           shared: this._formBuilder.control<boolean>(preference.shares?.length !== 0, { nonNullable: true }),
           users: this._formBuilder.control<string[]>((preference.shares ?? []).map(s =>
             s.shared_username_email), { nonNullable: true }
@@ -99,12 +99,25 @@ export class ModalSauvegardeComponent {
       });
   }
 
+  public isNameRequiredInvalid(): boolean {
+    const nameControl = this.formPreference.controls.name;
+    return (nameControl.value ?? '').trim().length === 0 && (nameControl.dirty || nameControl.touched);
+  }
+
+  public isSubmitDisabled(): boolean {
+    return (this.formPreference.controls.name.value ?? '').trim().length === 0;
+  }
+
   onSearchAsync(event: DsfrCompleteEvent) {
     const value = event?.query?.toLowerCase() ?? '';
     this.searchUserChanged.next(value);
   }
 
   public validate(): void {
+    if (this.isSubmitDisabled()) {
+      this.formPreference.controls.name.markAsTouched();
+      return;
+    }
 
     // Récupération du formulaire de préférence
     const { name, shared, users } = this.formPreference.getRawValue();
