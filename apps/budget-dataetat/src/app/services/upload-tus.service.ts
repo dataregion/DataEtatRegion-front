@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { Upload } from 'tus-js-client';
+import { DetailedError, Upload } from 'tus-js-client';
 import { SettingsBudgetService } from '../environments/settings-budget.service';
 import { LoggerService } from 'apps/common-lib/src/lib/services/logger.service';
 import Keycloak from 'keycloak-js';
@@ -57,8 +57,9 @@ export class UploadTusService {
           total_cp_files: sessionContext.totalCpFiles.toString(),
         },
         onError: (error) => {
+          const errorDetail = error as DetailedError;
           this._logger.error('Erreur TUS:', error);
-          reject(error);
+          reject(errorDetail.originalResponse || error);
         },
         onSuccess: () => {
           this._logger.info('Upload TUS terminé avec succès');
