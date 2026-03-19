@@ -17,6 +17,10 @@ import { HTTPValidationError } from '../model/models';
 import { financialDataV3Configuration }                                     from '../configuration';
 
 
+export interface CheckSessionImportSessionSessionTokenGetRequestParams {
+    sessionToken: string;
+}
+
 export interface CoreHeadRouteImportUuidHeadRequestParams {
     uuid: string;
     tusResumable?: string;
@@ -61,6 +65,13 @@ export interface ExtensionTerminationRouteImportUuidDeleteRequestParams {
 export interface ImportChorusServiceInterface {
     defaultHeaders: HttpHeaders;
     configuration: financialDataV3Configuration;
+
+    /**
+     * Vérifie si une session d\&#39;import a été enregistrée en base
+     * 
+* @param requestParameters
+     */
+    checkSessionImportSessionSessionTokenGet(requestParameters: CheckSessionImportSessionSessionTokenGetRequestParams, extraHttpRequestParams?: any): Observable<any>;
 
     /**
      * Core Head Route

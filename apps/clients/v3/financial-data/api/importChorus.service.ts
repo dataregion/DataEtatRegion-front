@@ -25,6 +25,7 @@ import { financialDataV3Configuration }                                     from
 import { BaseService } from '../api.base.service';
 import {
     ImportChorusServiceInterface,
+    CheckSessionImportSessionSessionTokenGetRequestParams,
     CoreHeadRouteImportUuidHeadRequestParams,
     CoreOptionsRouteImportOptionsRequestParams,
     CorePatchRouteImportUuidPatchRequestParams,
@@ -42,6 +43,63 @@ export class ImportChorusService extends BaseService implements ImportChorusServ
 
     constructor(protected httpClient: HttpClient, @Optional() @Inject(BASE_PATH) basePath: string|string[], @Optional() configuration?: financialDataV3Configuration) {
         super(basePath, configuration);
+    }
+
+    /**
+     * Vérifie si une session d\&#39;import a été enregistrée en base
+     * @param requestParameters
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public checkSessionImportSessionSessionTokenGet(requestParameters: CheckSessionImportSessionSessionTokenGetRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any>;
+    public checkSessionImportSessionSessionTokenGet(requestParameters: CheckSessionImportSessionSessionTokenGetRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<any>>;
+    public checkSessionImportSessionSessionTokenGet(requestParameters: CheckSessionImportSessionSessionTokenGetRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<any>>;
+    public checkSessionImportSessionSessionTokenGet(requestParameters: CheckSessionImportSessionSessionTokenGetRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+        const sessionToken = requestParameters?.sessionToken;
+        if (sessionToken === null || sessionToken === undefined) {
+            throw new Error('Required parameter sessionToken was null or undefined when calling checkSessionImportSessionSessionTokenGet.');
+        }
+
+        let localVarHeaders = this.defaultHeaders;
+
+        // authentication (OAuth2PasswordBearer) required
+        localVarHeaders = this.configuration.addCredentialToHeaders('OAuth2PasswordBearer', 'Authorization', localVarHeaders, 'Bearer ');
+
+        const localVarHttpHeaderAcceptSelected: string | undefined = options?.httpHeaderAccept ?? this.configuration.selectHeaderAccept([
+            'application/json'
+        ]);
+        if (localVarHttpHeaderAcceptSelected !== undefined) {
+            localVarHeaders = localVarHeaders.set('Accept', localVarHttpHeaderAcceptSelected);
+        }
+
+        const localVarHttpContext: HttpContext = options?.context ?? new HttpContext();
+
+        const localVarTransferCache: boolean = options?.transferCache ?? true;
+
+
+        let responseType_: 'text' | 'json' | 'blob' = 'json';
+        if (localVarHttpHeaderAcceptSelected) {
+            if (localVarHttpHeaderAcceptSelected.startsWith('text')) {
+                responseType_ = 'text';
+            } else if (this.configuration.isJsonMime(localVarHttpHeaderAcceptSelected)) {
+                responseType_ = 'json';
+            } else {
+                responseType_ = 'blob';
+            }
+        }
+
+        let localVarPath = `/import/session/${this.configuration.encodeParam({name: "sessionToken", value: sessionToken, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`;
+        return this.httpClient.request<any>('get', `${this.configuration.basePath}${localVarPath}`,
+            {
+                context: localVarHttpContext,
+                responseType: <any>responseType_,
+                withCredentials: this.configuration.withCredentials,
+                headers: localVarHeaders,
+                observe: observe,
+                transferCache: localVarTransferCache,
+                reportProgress: reportProgress
+            }
+        );
     }
 
     /**
