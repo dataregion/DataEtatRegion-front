@@ -520,7 +520,7 @@ export class ImportChorusService extends BaseService implements ImportChorusServ
     }
 
     /**
-     * Initialise et persiste l\&#39;état d\&#39;une session d\&#39;upload avant l\&#39;envoi des fichiers.
+     * Initialise une session d\&#39;upload avant l\&#39;envoi des fichiers.
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.

@@ -121,7 +121,7 @@ export interface ImportChorusServiceInterface {
     extensionTerminationRouteImportUuidDelete(requestParameters: ExtensionTerminationRouteImportUuidDeleteRequestParams, extraHttpRequestParams?: any): Observable<{}>;
 
     /**
-     * Initialise et persiste l\&#39;état d\&#39;une session d\&#39;upload avant l\&#39;envoi des fichiers.
+     * Initialise une session d\&#39;upload avant l\&#39;envoi des fichiers.
      * 
 * @param requestParameters
      */
