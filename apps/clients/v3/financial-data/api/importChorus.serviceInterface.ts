@@ -12,6 +12,7 @@ import { HttpHeaders }                                       from '@angular/comm
 import { Observable }                                        from 'rxjs';
 
 import { HTTPValidationError } from '../model/models';
+import { InitializeSessionRequest } from '../model/models';
 
 
 import { financialDataV3Configuration }                                     from '../configuration';
@@ -61,13 +62,17 @@ export interface ExtensionTerminationRouteImportUuidDeleteRequestParams {
     tusResumable?: string;
 }
 
+export interface InitializeSessionImportSessionInitializePostRequestParams {
+    initializeSessionRequest: InitializeSessionRequest;
+}
+
 
 export interface ImportChorusServiceInterface {
     defaultHeaders: HttpHeaders;
     configuration: financialDataV3Configuration;
 
     /**
-     * Vérifie si une session d\&#39;import a été enregistrée en base
+     * Vérifie si une requête d\&#39;import a été enregistrée dans le système.
      * 
 * @param requestParameters
      */
@@ -114,5 +119,12 @@ export interface ImportChorusServiceInterface {
 * @param requestParameters
      */
     extensionTerminationRouteImportUuidDelete(requestParameters: ExtensionTerminationRouteImportUuidDeleteRequestParams, extraHttpRequestParams?: any): Observable<{}>;
+
+    /**
+     * Initialise et persiste l\&#39;état d\&#39;une session d\&#39;upload avant l\&#39;envoi des fichiers.
+     * 
+* @param requestParameters
+     */
+    initializeSessionImportSessionInitializePost(requestParameters: InitializeSessionImportSessionInitializePostRequestParams, extraHttpRequestParams?: any): Observable<{ [key: string]: string | null; }>;
 
 }
