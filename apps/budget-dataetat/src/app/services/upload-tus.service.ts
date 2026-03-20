@@ -9,14 +9,6 @@ export enum UploadType {
   FINANCIAL_CP = 'financial-cp'
 }
 
-/**
- * Contexte de session pour la corrélation des fichiers côté backend
- */
-export interface SessionContext {
-  totalAeFiles: number;
-  totalCpFiles: number;
-}
-
 @Injectable({
   providedIn: 'root'
 })
@@ -28,18 +20,16 @@ export class UploadTusService {
   /**
    * Upload d'un fichier via protocole TUS
    * @param file Le fichier à uploader
-   * @param year L'année associée
    * @param sessionToken Le token de session
    * @param uploadType Le type d'upload
-   * @param sessionContext Contexte de session avec le nombre total de fichiers AE et CP
+   * @param indice L'indice du fichier dans sa catégorie (AE ou CP)
    * @returns Promise résolue quand l'upload est terminé
    */
   public uploadFile(
     file: File,
-    year: number,
     sessionToken: string,
     uploadType: UploadType,
-    sessionContext: SessionContext
+    indice: number
   ): Promise<void> {
     return new Promise((resolve, reject) => {
       const upload = new Upload(file, {
@@ -51,10 +41,8 @@ export class UploadTusService {
           filename: file.name,
           filetype: file.type,
           session_token: sessionToken,
-          year: year.toString(),
           uploadType: uploadType,
-          total_ae_files: sessionContext.totalAeFiles.toString(),
-          total_cp_files: sessionContext.totalCpFiles.toString(),
+          indice: indice.toString(),
         },
         onError: (error) => {
           const errorDetail = error as DetailedError;
@@ -85,19 +73,13 @@ export class UploadTusService {
   public uploadFiles(
     aeFiles: File[],
     cpFiles: File[],
-    year: number,
     sessionToken: string
   ): Promise<void[]> {
-    const sessionContext: SessionContext = {
-      totalAeFiles: aeFiles.length,
-      totalCpFiles: cpFiles.length,
-    };
-
-    const aePromises = aeFiles.map((file) =>
-      this.uploadFile(file, year, sessionToken, UploadType.FINANCIAL_AE, sessionContext)
+    const aePromises = aeFiles.map((file, indice) =>
+      this.uploadFile(file, sessionToken, UploadType.FINANCIAL_AE, indice)
     );
-    const cpPromises = cpFiles.map((file) =>
-      this.uploadFile(file, year, sessionToken, UploadType.FINANCIAL_CP, sessionContext)
+    const cpPromises = cpFiles.map((file, indice) =>
+      this.uploadFile(file, sessionToken, UploadType.FINANCIAL_CP, indice)
     );
 
     return Promise.all([...aePromises, ...cpPromises]);

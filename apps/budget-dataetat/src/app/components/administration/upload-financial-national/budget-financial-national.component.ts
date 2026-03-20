@@ -88,7 +88,7 @@ export class BudgetFinancialNationalComponent {
             throw new Error("Le backend n'a pas renvoyé de session_token");
           }
 
-          return this._uploadTusService.uploadFiles(aeFiles, cpFiles, year, sessionToken);
+          return this._uploadTusService.uploadFiles(aeFiles, cpFiles, sessionToken);
         })
         .then(() => {
           return firstValueFrom(
