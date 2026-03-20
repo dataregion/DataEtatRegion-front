@@ -6,6 +6,8 @@ import { AlertService } from 'apps/common-lib/src/public-api';
 import { UploadTusService } from '../../../services/upload-tus.service';
 import { LoggerService } from 'apps/common-lib/src/lib/services/logger.service';
 import { DsfrUploadDndComponent } from '@edugouvfr/ngx-dsfr-ext';
+import { ImportChorusService } from 'apps/clients/v3/financial-data';
+import { firstValueFrom } from 'rxjs';
 
 
 
@@ -20,6 +22,7 @@ export class BudgetFinancialNationalComponent {
   private _alertService = inject(AlertService);
   private _uploadTusService = inject(UploadTusService);  
   private _logger = inject(LoggerService);
+  private _importChorusService = inject(ImportChorusService);
   public readonly requiredFileType: string = '.csv';
   public years: number[] = [];
   public yearSelected: number = new Date().getFullYear();
@@ -75,8 +78,9 @@ export class BudgetFinancialNationalComponent {
     if (aeFiles.length > 0 && cpFiles.length > 0 && year) {
       this.uploadInProgress.set(true);
       const sessionToken = uuidv4();
-      
+
       this._uploadTusService.uploadFiles(aeFiles, cpFiles, year, sessionToken)
+        .then(() => firstValueFrom(this._importChorusService.checkSessionImportSessionSessionTokenGet({ sessionToken })))
         .then(() => {
           this._logger.info('Upload terminé avec succès');
           
@@ -95,9 +99,11 @@ export class BudgetFinancialNationalComponent {
         })
         .catch((error) => {
           let message = 'Une erreur est survenue lors de l\'upload des fichiers.';
-          if (error.getUnderlyingObject().response) {
-            message = 'Une erreur est survenue lors de l\'upload des fichiers: ' + JSON.parse(error.getUnderlyingObject().response).message 
+          if (typeof error?.getUnderlyingObject === 'function' && error.getUnderlyingObject()?.response) {
+            message = 'Une erreur est survenue lors de l\'upload des fichiers: ' + JSON.parse(error.getUnderlyingObject().response).message
               || message;
+          } else if (error?.error?.message) {
+            message = 'Une erreur est survenue lors de l\'upload des fichiers: ' + error.error.message;
           }
           this._alertService.openAlertError(message);
           this._logger.error('Erreur lors de l\'upload TUS:', error);
