@@ -1,4 +1,4 @@
-import { Component, signal, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormGroup, FormControl } from '@angular/forms';
 import { AlertService } from 'apps/common-lib/src/public-api';
@@ -28,8 +28,6 @@ export class BudgetFinancialNationalComponent {
   public filesCp = signal<File[]>([]);
 
   public uploadInProgress = signal(false);
-
-  /** Signal pour forcer la reconstruction des composants upload après un upload réussi */
   public showUploadComponents = signal(true);
 
   public form: FormGroup;
@@ -61,6 +59,16 @@ export class BudgetFinancialNationalComponent {
   public onFilesCpChange(files: File[]): void {
     this.filesCp.set(files);
     this._logger.debug('Fichiers CP sélectionnés:', files.length);
+  }
+
+  public resetUploadState(): void {
+    this.filesAe.set([]);
+    this.filesCp.set([]);
+    this.showUploadComponents.set(false);
+    setTimeout(() => {
+      this.showUploadComponents.set(true);
+    });
+    this._logger.debug('Widgets d\'upload réinitialisés');
   }
 
   public uploadFiles() {
@@ -98,16 +106,7 @@ export class BudgetFinancialNationalComponent {
         .then(() => {
           this._logger.info('Upload terminé avec succès');
 
-          // Réinitialiser les fichiers
-          this.filesAe.set([]);
-          this.filesCp.set([]);
-
-          // Forcer la reconstruction des composants upload
-          // en les masquant puis les réaffichant
-          this.showUploadComponents.set(false);
-          setTimeout(() => {
-            this.showUploadComponents.set(true);
-          }, 0);
+          this.resetUploadState();
 
           this._alertService.openAlertSuccess(
             "Les fichiers ont bien été récupérés. Les données seront disponibles dans l'outil à partir de demain."
