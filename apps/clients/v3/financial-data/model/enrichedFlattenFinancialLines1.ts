@@ -74,6 +74,7 @@ export interface EnrichedFlattenFinancialLines1 {
     centreCouts_code?: string | null;
     centreCouts_label?: string | null;
     centreCouts_description?: string | null;
+    centreCouts_codeDepartement?: string | null;
     data_source?: string | null;
     lieu_action_code_qpv?: string | null;
     lieu_action_label_qpv?: string | null;
