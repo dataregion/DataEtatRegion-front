@@ -72,7 +72,7 @@ export class EqualizeAllTabsDirective implements AfterViewInit, OnDestroy {
       ?.getAttribute('content')
       ?.trim();
 
-    if (nonce) {
+    if (nonce && nonce !== '__CSP_NONCE__') {
       styleElement.setAttribute('nonce', nonce);
     }
 

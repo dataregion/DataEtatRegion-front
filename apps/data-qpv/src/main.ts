@@ -18,7 +18,7 @@ function getCspNonce(): string | undefined {
     ?.getAttribute('content')
     ?.trim();
 
-  return nonce ? nonce : undefined;
+  return nonce && nonce !== '__CSP_NONCE__' ? nonce : undefined;
 }
 
 async function loadApp(): Promise<{ settings: SettingsDataQPVService, logger: LoggerService }> {
