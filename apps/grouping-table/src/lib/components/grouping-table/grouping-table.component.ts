@@ -14,7 +14,8 @@ import {
   QueryList,
   SimpleChanges,
   ViewChild,
-  ViewEncapsulation
+  ViewEncapsulation,
+  CSP_NONCE
 } from '@angular/core';
 import { ColumnsMetaData, GroupingColumn, RootGroup, TableData, VirtualGroup } from './group-utils';
 import { GroupingTableContextService } from './grouping-table-context.service';
@@ -51,12 +52,15 @@ export class GroupingTableComponent implements OnChanges, AfterViewInit {
 
   context = inject(GroupingTableContextService);
   cdRef = inject(ChangeDetectorRef);
+  cspNonce = inject(CSP_NONCE, { optional: true });
 
   groupLevel = 0;
+  scopeId = `grouping-table-${Math.random().toString(36).slice(2, 9)}`;
   private scrollLeft?: number;
+  private scrollCssValue = '0px';
 
-  @ViewChild('outerHtmlElement')
-  public columnCssStyle: ElementRef | undefined;
+  @ViewChild('columnCssStyleElement')
+  public columnCssStyle: ElementRef<HTMLStyleElement> | undefined;
 
   constructor() {
     this._outputEvents = {
@@ -95,17 +99,13 @@ export class GroupingTableComponent implements OnChanges, AfterViewInit {
         else this.context.unfold(group);
       }
 
-      if (this.columnCssStyle) {
-        this.columnCssStyle.nativeElement.innerHTML = this.context.columnCssStyle;
-      }
+      this.updateScopedStyles();
       this.groupLevel = this.groupingColumns.length + offset_group_level;
     }
   }
 
   ngAfterViewInit(): void {
-    if (this.columnCssStyle) {
-      this.columnCssStyle.nativeElement.innerHTML = this.context.columnCssStyle;
-    }
+    this.updateScopedStyles();
 
     setTimeout(() => {
       // XXX: pour éviter ExpressionChangedAfterItHasBeenChecked
@@ -123,7 +123,20 @@ export class GroupingTableComponent implements OnChanges, AfterViewInit {
     // Pour ce faire on garde la position sur un attribut de la classe.
     if (this.scrollLeft !== scrollLeft) {
       this.scrollLeft = scrollLeft;
-      target.style.setProperty('--scroll-length', `${scrollLeft}px`);
+      this.scrollCssValue = `${scrollLeft}px`;
+      this.updateScopedStyles();
     }
+  }
+
+  private updateScopedStyles(): void {
+    if (!this.columnCssStyle) {
+      return;
+    }
+
+    const columnCss = this.context.columnCssStyle ?? '';
+    this.columnCssStyle.nativeElement.textContent = `${columnCss}
+[data-grouping-table-id="${this.scopeId}"] {
+  --scroll-length: ${this.scrollCssValue};
+}`;
   }
 }

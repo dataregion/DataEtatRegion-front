@@ -3,7 +3,7 @@
   <div class="fr-container" data-test-id="application-error-message">
     <div class="fr-grid-row">
       <div class="fr-col-12">
-        <div class="fr-alert fr-alert--error" style="margin-top:50px;">
+        <div class="fr-alert fr-alert--error error-alert-spacing">
           <h3 class="fr-alert__title">Erreur</h3>
           <p>{{error.message}}</p>
         </div>
@@ -15,7 +15,7 @@
     <div class="fr-grid-row">
       <div class="fr-col-12">
 
-      <div class="title-wrapper" [style.display]="grid_fullscreen() ? 'none' : ''">
+      <div class="title-wrapper" [class.is-hidden]="grid_fullscreen()">
         <h6>Rechercher des données financières</h6>
         <!-- TODO Bug ExpressionChangedAfterItHasBeenCheckedError => passer en signals-->
         @if(lastImportDate) {
@@ -28,7 +28,7 @@
         }
       </div>
         
-        <budget-search-data [style.display]="showSearchForm() ? '' : 'none'" />
+        <budget-search-data [class.is-hidden]="!showSearchForm()" />
           
         <div class="main-content overlay-container" [class.no-content]="!shouldShowContent()">
             @if (searchInProgress()) {

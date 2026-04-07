@@ -20,14 +20,14 @@
               </button>
             </div>
 
-            <p style="margin-top: 15px; font-weight: bold;">Sélectionner et ordonner les colonnes :</p>
+            <p class="margin-label">Sélectionner et ordonner les colonnes :</p>
             <div>
               <div formArrayName="colonnes" cdkDropList class="column-list" [cdkDropListData]="formColonnes.controls.colonnes.controls" (cdkDropListDropped)="moveGroup($event)">
                 @for (group of formColonnes.controls.colonnes.controls; let i = $index; track group.controls.name.value) {
                   <div [formGroupName]="i" cdkDrag class="column-box">
                     <span class="fr-icon-drag-move-2-line" aria-hidden="true"></span>
                     <div>{{ group.controls.label.value }}</div>
-                    <div class="fr-checkbox-group" style="margin-top: -25px;">
+                    <div class="fr-checkbox-group column-checkbox-group">
                       <input type="checkbox" formControlName="selected" id="colonne-{{i}}" [attr.data-test-id]="group.controls.label.value" [attr.aria-describedby]="'colonne-' + i + '-messages'">
                       <label [attr.for]="'colonne-' + i"></label>
                       <div class="fr-messages-group" id="colonne-{{i}}-messages" aria-live="polite">

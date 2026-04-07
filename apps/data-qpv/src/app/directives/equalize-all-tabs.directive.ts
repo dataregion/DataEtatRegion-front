@@ -17,9 +17,12 @@ export class EqualizeAllTabsDirective implements AfterViewInit, OnDestroy {
 
   private resizeObservers: ResizeObserver[] = [];
   private mutationObserver?: MutationObserver;
+  private styleElement?: HTMLStyleElement;
   private destroyed = false;
+  private scopeId = `equalize-tabs-${Math.random().toString(36).slice(2, 9)}`;
 
   ngAfterViewInit() {
+    this.host.nativeElement.dataset['equalizeTabsId'] = this.scopeId;
     this.zone.runOutsideAngular(() => {
       // Just wait a bit for dsfr-tabs to render
       // #TODO Voir si meilleur moyen
@@ -46,6 +49,8 @@ export class EqualizeAllTabsDirective implements AfterViewInit, OnDestroy {
     this.destroyed = true;
     this.resizeObservers.forEach(o => o.disconnect());
     this.mutationObserver?.disconnect();
+    this.styleElement?.remove();
+    delete this.host.nativeElement.dataset['equalizeTabsId'];
     window.removeEventListener('resize', this.equalize);
   }
 
@@ -56,12 +61,42 @@ export class EqualizeAllTabsDirective implements AfterViewInit, OnDestroy {
     ) as HTMLElement[];
   }
 
+  private ensureStyleElement(): HTMLStyleElement {
+    if (this.styleElement) {
+      return this.styleElement;
+    }
+
+    const styleElement = document.createElement('style');
+    const nonce = document
+      .querySelector('meta[property="csp-nonce"], meta[name="csp-nonce"]')
+      ?.getAttribute('content')
+      ?.trim();
+
+    if (nonce) {
+      styleElement.setAttribute('nonce', nonce);
+    }
+
+    document.head.appendChild(styleElement);
+    this.styleElement = styleElement;
+    return styleElement;
+  }
+
+  private updatePanelHeights(height: number | null): void {
+    const styleElement = this.ensureStyleElement();
+    const cssHeight = height && height > 0 ? `${height}px` : 'auto';
+
+    styleElement.textContent = `
+      [data-equalize-tabs-id="${this.scopeId}"] dsfr-tab {
+        height: ${cssHeight};
+      }
+    `;
+  }
+
   private equalize = () => {
     const panels = this.getAllPanels();
     if (!panels.length) return;
 
-    // Reset any previous heights
-    panels.forEach(p => (p.style.height = 'auto'));
+    this.updatePanelHeights(null);
 
     // Only consider visible tabs (Angular hides others)
     const visible = panels.filter(p => {
@@ -80,7 +115,7 @@ export class EqualizeAllTabsDirective implements AfterViewInit, OnDestroy {
     const maxHeight = Math.max(...visible.map(p => p.offsetHeight));
 
     if (maxHeight > 0) {
-      panels.forEach(p => (p.style.height = `${maxHeight}px`));
+      this.updatePanelHeights(maxHeight);
     }
 
     // Observe resizes to re-equalize dynamically

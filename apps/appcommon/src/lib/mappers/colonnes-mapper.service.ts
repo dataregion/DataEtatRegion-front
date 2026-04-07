@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BudgetFinancialDataModel } from '@models/financial/financial-data.models';
 import { Colonne, EnrichedFlattenFinancialLines } from 'apps/clients/v3/financial-data';
-import { JSONObject } from 'apps/common-lib/src/lib/models/jsonobject';
 import { LocalisationInterministerielle } from 'apps/common-lib/src/lib/models/refs/common.models';
 import { Optional } from 'apps/common-lib/src/lib/utilities/optional.type';
 
@@ -19,7 +18,7 @@ export interface ColonneTableau<T> {
   back: Colonne[];
   sortable: Colonne | null;
   grouping?: Colonne;
-  style?: JSONObject;
+  cssClass?: string;
   render: (row: T) => string;
 }
 
@@ -138,7 +137,7 @@ export class ColonnesMapperService {
         sortable: colonnesTable.filter(c => c.code == this.colNameOfEnriched('montant_ae'))[0],
         grouping: colonnesGrouping.filter(c => c.code == this.colNameOfEnriched('montant_ae'))[0],
         render: (row: BudgetFinancialDataModel) => row.montant_ae ? '<div class="fr-mr-2v fr-badge fr-badge--success badge-no-icon">' + this._moneyFormat.format(row.montant_ae) + "</div>" : "",
-        style: { 'text-align': 'center' }
+        cssClass: 'col-style-center'
       },
       {
         colonne: this._colonnesTableau.MONTANT_CP.code,
@@ -147,7 +146,7 @@ export class ColonnesMapperService {
         sortable: colonnesTable.filter(c => c.code == this.colNameOfEnriched('montant_cp'))[0],
         grouping: colonnesGrouping.filter(c => c.code == this.colNameOfEnriched('montant_cp'))[0],
         render: (row: BudgetFinancialDataModel) => row.montant_cp ? '<div class="fr-mr-2v fr-badge fr-badge--success badge-no-icon">' + this._moneyFormat.format(row.montant_cp) + "</div>" : "",
-        style: { 'text-align': 'center' }
+        cssClass: 'col-style-center'
       },
       {
         colonne: this._colonnesTableau.ANNEE_ENGAGEMENT.code,
@@ -156,7 +155,7 @@ export class ColonnesMapperService {
         sortable: colonnesTable.filter(c => c.code == this.colNameOfEnriched('annee'))[0],
         grouping: colonnesGrouping.filter(c => c.code == this.colNameOfEnriched('annee'))[0],
         render: (row: BudgetFinancialDataModel) => '<div class="fr-mr-2v fr-badge fr-badge--info badge-no-icon">' + row.annee + "</div>",
-        style: { 'min-width': '22ex', 'flex-grow': '0' }
+        cssClass: 'col-style-year'
       },
       {
         colonne: this._colonnesTableau.DOMAINE.code,
@@ -265,7 +264,7 @@ export class ColonnesMapperService {
           for (const tag of row.tags || []) {
             if (tag) {
               html += '<li>';
-                html += `<p class="fr-tag" style="margin-right: 0.5rem;" title="${tag.description}">${tag.display_name}`;
+                html += `<p class="fr-tag tag-inline-spacing" title="${tag.description}">${tag.display_name}`;
                 html += `</p> `;
               html += '</li>';
             }
@@ -321,7 +320,7 @@ export class ColonnesMapperService {
         back: [colonnesTable.filter(c => c.code == this.colNameOfEnriched('beneficiaire_code'))[0]],
         sortable: colonnesTable.filter(c => c.code == this.colNameOfEnriched('beneficiaire_code'))[0],
         render: (row: BudgetFinancialDataModel) => row.siret?.code ?? this.NON_RENSEIGNE,
-        style: { 'min-width': '16ex', 'flex-grow': '0' },
+        cssClass: 'col-style-siret',
       },
       {
         colonne: this._colonnesTableau.QPV.code,

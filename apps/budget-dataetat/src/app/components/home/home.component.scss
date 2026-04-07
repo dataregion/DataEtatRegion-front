@@ -79,6 +79,15 @@ form .mat-fab {
   display: flex;
   align-items: center;
 }
+
+.is-hidden {
+  display: none !important;
+}
+
+.error-alert-spacing {
+  margin-top: 50px;
+}
+
 .title-wrapper > h6 {
   margin: 20px 0px;
 }

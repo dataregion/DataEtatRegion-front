@@ -87,6 +87,10 @@
     }
   }
 
+  .export-status-placeholder {
+    min-height: 300px;
+  }
+
   // Styles pour les éléments désactivés en mode loading
   &.loading-mode {
     .fr-modal__header .fr-btn--close,

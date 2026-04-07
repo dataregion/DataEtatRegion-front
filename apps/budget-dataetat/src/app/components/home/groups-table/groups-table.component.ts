@@ -218,6 +218,15 @@ export class GroupsTableComponent implements OnDestroy {
     return this._groups()[code]?.label ?? code;
   }
 
+  groupIndentClass(level: number): string {
+    return `groups-table-indent-${Math.min(level, 4)}`;
+  }
+
+  spinnerPaddingClass(padding: number): string {
+    const safePadding = [30, 80, 130, 180, 230].includes(padding) ? padding : 230;
+    return `groups-table-pad-${safePadding}`;
+  }
+
   /**
    * Faire une recherche à partir de ce groupe
    */

@@ -9,7 +9,7 @@
                 <tr>
                   <th class="fr-cell--fixed" role="columnheader"></th>
                   @for (col of currentColonnes(); track col.colonne; let isFirst = $first) {
-                  <th [class.fr-cell--fixed]="isFirst" class="not-index sortable-header" role="columnheader" [ngStyle]="col.style">
+                  <th [class.fr-cell--fixed]="isFirst" class="not-index sortable-header" role="columnheader" [ngClass]="col.cssClass || null">
                     <div class="th-content">
                       <div class="fr-cell__title">{{ col.label }}</div>
                       @if (col.sortable) {
@@ -32,21 +32,20 @@
                   <th class="fr-cell--fixed" scope="row"></th>
                   @for (col of currentColonnes(); track col.colonne; let isFirst = $first) {
                   @if (isFirst) {
-                  <td class="fr-cell--fixed not-index" role="columnheader" style="text-align:right;"
-                    [ngStyle]="col.style">
-                    <b style="font-size: 16px;">TOTAL</b>
-                    <span class="fr-badge fr-badge--info badge-no-icon"
-                      style="margin-left: 30px;">{{searchDataService.total()?.total | numberFormat}} lignes</span>
+                  <td class="fr-cell--fixed not-index budget-table-total-cell" role="columnheader"
+                    [ngClass]="col.cssClass || null">
+                    <b class="budget-table-total-label">TOTAL</b>
+                    <span class="fr-badge fr-badge--info badge-no-icon budget-table-total-badge">{{searchDataService.total()?.total | numberFormat}} lignes</span>
                   </td>
                   }
                   @else if (col.colonne === "montant_ae") {
-                  <td style="text-align: center;">
+                  <td class="budget-table-cell--center">
                     <p class="fr-mr-2v fr-badge fr-badge--success badge-no-icon">
                       {{searchDataService.total()?.total_montant_engage | currency:'EUR':'symbol':'1.0-2'}}</p>
                   </td>
                   }
                   @else if (col.colonne === "montant_cp") {
-                  <td style="text-align: center;">
+                  <td class="budget-table-cell--center">
                     <p class="fr-mr-2v fr-badge fr-badge--success badge-no-icon">
                       {{searchDataService.total()?.total_montant_paye | currency:'EUR':'symbol':'1.0-2'}}</p>
                   </td>
@@ -61,7 +60,7 @@
                   [attr.data-row-key]="line.id" scope="row">
                   <th class="fr-cell--fixed" scope="row">{{i + 1}}</th>
                   @for (col of currentColonnes(); track col.colonne; let isFirst = $first) {
-                  <td [class.fr-cell--fixed]="isFirst" class="not-index" [ngStyle]="col.style"
+                  <td [class.fr-cell--fixed]="isFirst" class="not-index" [ngClass]="col.cssClass || null"
                     [innerHTML]="col.render(line)"></td>
                   }
                 </tr>
@@ -69,7 +68,7 @@
               </tbody>
             </table>
             @if (searchDataService.pagination()?.has_next) {
-            <div #spinner class="spinner-wrapper fr-spinner--lg" style="text-align: center; margin: 30px 0px;">
+            <div #spinner class="spinner-wrapper fr-spinner--lg table-spinner">
               <span class="fr-spinner" aria-label="Chargement…" role="status"></span>
               <span class="fr-spinner-message">Chargement en cours ...</span>
             </div>

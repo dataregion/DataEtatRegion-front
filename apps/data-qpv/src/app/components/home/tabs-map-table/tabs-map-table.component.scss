@@ -69,3 +69,16 @@ data-qpv-map .ol-viewport {
   height: 100%;
   width: 100%;
 }
+
+.table-without-top-margin {
+  margin-top: 0;
+}
+
+.table-cell--center {
+  text-align: center;
+}
+
+.table-spinner {
+  margin: 30px 0;
+  text-align: center;
+}

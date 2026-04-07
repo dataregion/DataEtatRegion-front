@@ -33,6 +33,35 @@
   align-items: stretch; /* ensure columns stretch equally */
 }
 
+.is-hidden {
+  display: none !important;
+}
+
+.page-surface {
+  background-color: #fff;
+}
+
+.page-header {
+  padding-bottom: 50px;
+}
+
+.page-title {
+  margin-top: 50px;
+  margin-bottom: 10px;
+}
+
+.section-top-spacing {
+  margin-top: 50px;
+}
+
+.section-bottom-spacing {
+  margin-bottom: 50px;
+}
+
+.error-alert-spacing {
+  margin-top: 50px;
+}
+
 .fr-col-6 {
   display: flex;
   flex-direction: column;

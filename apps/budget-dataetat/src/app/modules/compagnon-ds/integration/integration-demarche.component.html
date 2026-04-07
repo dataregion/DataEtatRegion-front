@@ -1,8 +1,7 @@
 <div class="fr-container">
   <div class="fr-grid-row">
 
-    <budget-nav-compagnon-ds [title]="'Intégrer ma démarche'" [currentStep]="1" [totalStep]="3" class="fr-col-6"
-      style="margin-top:30px;" />
+    <budget-nav-compagnon-ds [title]="'Intégrer ma démarche'" [currentStep]="1" [totalStep]="3" class="fr-col-6 companion-step-nav" />
 
     <form [formGroup]="integrationForm" (submit)="saveDemarche()" class="fr-col-12">
       <div class="fr-grid-row">
@@ -34,7 +33,7 @@
           }
 
         </div>
-        <div class="fr-col-4" style="display:flex; align-items: flex-end; justify-content: flex-end;">
+        <div class="fr-col-4 companion-actions-end">
           <button data-test-id="searchDemarcheBtn" class="fr-btn fr-btn--secondary" type="button"
             (click)="searchDemarche()">Vérifier la démarche
           </button>
@@ -44,7 +43,7 @@
 
 
       <ng-container>
-        <hr style="margin-top:30px;">
+        <hr class="companion-divider-spacing">
         <div class="fr-grid-row">
           <div class="fr-col-8">
             <h6 data-test-id="nomDemarche">{{ nomDemarche }}</h6>
@@ -73,15 +72,15 @@
             }
 
           </div>
-          <div class="fr-col-4" style="display:flex; align-items: flex-end; justify-content: flex-end;">
+          <div class="fr-col-4 companion-actions-end">
             <button class="fr-btn fr-btn--primary" type="submit" [disabled]="somethingIsLoading">Intégrer ma démarche
             </button>
           </div>
         </div>
       </ng-container>
       }
-      <hr style="margin-top:30px;">
-      <div style="display: flex; justify-content: right;">
+      <hr class="companion-divider-spacing">
+      <div class="companion-next-step">
         <button data-test-id="btnSubmit" [disabled]="nomDemarche === '' || (!integree && !dejaIntegree)"
           class="fr-btn fr-btn--primary fr-btn--icon-right fr-icon-arrow-right-line"
           [routerLink]="['/demarches/reconciliation']"

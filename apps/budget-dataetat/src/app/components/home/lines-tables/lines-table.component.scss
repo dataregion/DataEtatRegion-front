@@ -20,6 +20,42 @@
   border-collapse: separate; /* not collapse */
 }
 
+.col-style-center,
+.budget-table-cell--center {
+  text-align: center;
+}
+
+.col-style-year {
+  min-width: 22ex;
+  flex-grow: 0;
+}
+
+.col-style-siret {
+  min-width: 16ex;
+  flex-grow: 0;
+}
+
+.budget-table-total-cell {
+  text-align: right;
+}
+
+.budget-table-total-label {
+  font-size: 16px;
+}
+
+.budget-table-total-badge {
+  margin-left: 30px;
+}
+
+.table-spinner {
+  text-align: center;
+  margin: 30px 0;
+}
+
+.tag-inline-spacing {
+  margin-right: 0.5rem;
+}
+
 /* ===== THEAD FIXE LORS DU SCROLL VERTICAL ===== */
 
 /* Figer le thead directement sur la table */

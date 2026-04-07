@@ -34,3 +34,76 @@ tr.opened td {
 td:first-child {
   margin-left: 30px;
 }
+
+.groups-table-title {
+  width: 40%;
+}
+
+.groups-table-reset-button {
+  margin-left: 30px;
+}
+
+.groups-table-total-cell {
+  text-align: right;
+}
+
+.groups-table-cell--center {
+  text-align: center;
+}
+
+.groups-table-load-more-root {
+  margin-left: 50px;
+}
+
+.groups-table-row-content {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  flex: 1;
+}
+
+.groups-table-row-actions {
+  display: flex;
+  justify-content: right;
+  flex: 1;
+}
+
+.groups-table-indent-0 {
+  padding-left: 0;
+}
+
+.groups-table-indent-1 {
+  padding-left: 50px;
+}
+
+.groups-table-indent-2 {
+  padding-left: 100px;
+}
+
+.groups-table-indent-3 {
+  padding-left: 150px;
+}
+
+.groups-table-indent-4 {
+  padding-left: 200px;
+}
+
+.groups-table-pad-30 {
+  padding-left: 30px;
+}
+
+.groups-table-pad-80 {
+  padding-left: 80px;
+}
+
+.groups-table-pad-130 {
+  padding-left: 130px;
+}
+
+.groups-table-pad-180 {
+  padding-left: 180px;
+}
+
+.groups-table-pad-230 {
+  padding-left: 230px;
+}

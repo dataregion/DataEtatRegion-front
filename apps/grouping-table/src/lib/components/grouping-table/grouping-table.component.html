@@ -1,7 +1,9 @@
-<div #outerHtmlElement hidden></div>
+<style #columnCssStyleElement [attr.nonce]="cspNonce"></style>
 
-
-<div [class.has-group]="rootGroup && rootGroup.groups.length > 0" class="grouping-table level-{{groupLevel}}">
+<div
+  [class.has-group]="rootGroup && rootGroup.groups.length > 0"
+  [attr.data-grouping-table-id]="scopeId"
+  class="grouping-table level-{{groupLevel}}">
   <lib-grouping-table-header />
 
   <lib-table-body *ngIf="rootGroup" [groupLevel]="groupLevel" [group]="rootGroup" />

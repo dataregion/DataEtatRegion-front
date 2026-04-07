@@ -58,6 +58,18 @@ $table-cell-min-width-default: 15rem;
   padding-left: 2em;
 }
 
+.grouping-table-cell--right {
+  justify-content: right;
+}
+
+.grouping-table-cell--virtual {
+  color: #00008b;
+}
+
+.grouping-table-sub-label {
+  font-size: 0.8rem;
+}
+
 .grouping-table-container {
   display: block;
   box-sizing: border-box;

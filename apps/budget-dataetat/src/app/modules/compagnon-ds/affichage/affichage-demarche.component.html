@@ -1,12 +1,11 @@
 <div class="fr-container">
   <div class="fr-grid-row">
 
-    <budget-nav-compagnon-ds [currentStep]="3" [title]="'Afficher ma démarche'" [totalStep]="3" class="fr-col-8"
-      style="margin-top:30px;" />
+    <budget-nav-compagnon-ds [currentStep]="3" [title]="'Afficher ma démarche'" [totalStep]="3" class="fr-col-8 companion-step-nav" />
 
     <div class="fr-col-12">
       @if(requestsDone) {
-      <div class="fr-alert fr-alert--info" style="margin-bottom:30px;">
+      <div class="fr-alert fr-alert--info companion-section-spacing">
         <h3 class="fr-alert__title">Cadre défini</h3>
         <p>Pour {{ nbDossiers }} dossiers acceptés, {{ matchingLines }} lignes financières Chorus ont pu être cadrées
           (démarche {{ demarche?.number }})</p>
@@ -17,7 +16,7 @@
 
     <form (submit)="saveAffichage()" [formGroup]="affichageForm" class="fr-col-12">
       <div class="fr-grid-row">
-        <div class="fr-col-6" style="margin-bottom:30px; padding-right:30px;">
+        <div class="fr-col-6 companion-column-right">
           <div class="fr-select-group">
             <label class="fr-label" for="nomProjet">Nom du projet</label>
             <select class="fr-select" formControlName="nomProjet" id="nomProjet">
@@ -56,7 +55,7 @@
             </select>
           </div>
         </div>
-        <div class="fr-col-6" style="margin-bottom:30px; padding-left:30px;">
+        <div class="fr-col-6 companion-column-left">
           <div class="fr-select-group">
             <label class="fr-label" for="montantDemande">Montant demandé</label>
             <select class="fr-select" formControlName="montantDemande" id="montantDemande">
@@ -97,7 +96,7 @@
         <div class="fr-col-12">
           <hr>
         </div>
-        <div class="fr-col-12" style="display: flex; justify-content: space-between; margin-bottom:30px;">
+        <div class="fr-col-12 companion-actions-row">
           <button [queryParams]="{ 'number': demarche?.number}" routerLink="reconciliation"
             class="fr-btn fr-btn--primary fr-btn--icon-left fr-icon-arrow-left-line">Etape précédente
           </button>

@@ -184,7 +184,7 @@ export class LinesTableComponent implements OnDestroy {
   sortColonne(event: DsfrButton, col: ColonneTableau<BudgetFinancialDataModel>) {
     const sort = this.sortConfigs.find(c => c.label === event.label);
     if (!sort) {
-      console.warn('Option de tri inconnue', event);
+      this._logger.warn('Option de tri inconnue', { event });
       return;
     }
     this.searchDataService.searchWithSort(col, sort.direction).subscribe()

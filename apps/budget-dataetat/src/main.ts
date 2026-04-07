@@ -1,12 +1,21 @@
 import { bootstrapApplication } from '@angular/platform-browser';
 import { App } from './app/app';
 import { SettingsBudgetService } from './app/environments/settings-budget.service';
-import { ApplicationConfig } from '@angular/core';
+import { ApplicationConfig, CSP_NONCE } from '@angular/core';
 import { provideKeycloakAngularDynamic } from './app/keycloak.config';
 import { configApp, providerBugdetConfiguration } from './app/app.config';
 import { LoggerService, LogLevel } from 'apps/common-lib/src/lib/services/logger.service';
 import { providerMatomoDynamic } from './app/matomo.config';
 import { configureColonnesInitialization } from './app/colonnes.config';
+
+function getCspNonce(): string | undefined {
+  const nonce = document
+    .querySelector('meta[property="csp-nonce"], meta[name="csp-nonce"]')
+    ?.getAttribute('content')
+    ?.trim();
+
+  return nonce ? nonce : undefined;
+}
 
 async function loadApp(): Promise<{ settings: SettingsBudgetService, logger: LoggerService }> {
   const response = await fetch('/config/settings.json');
@@ -29,11 +38,13 @@ async function loadApp(): Promise<{ settings: SettingsBudgetService, logger: Log
 loadApp().then(async (services) => {
 
   const providerMatomo = providerMatomoDynamic(services.settings, services.logger);
+  const cspNonce = getCspNonce();
   const appConfig: ApplicationConfig = {
     providers: [
       // Injecte les services
       { provide: SettingsBudgetService, useValue: services.settings },
       { provide: LoggerService, useValue: services.logger },
+      ...(cspNonce ? [{ provide: CSP_NONCE, useValue: cspNonce }] : []),
 
       // la conf des uri API
       ...providerBugdetConfiguration(services.settings),

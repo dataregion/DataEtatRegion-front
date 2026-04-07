@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import {
   ColumnMetaDataDef,
   ColumnsMetaData,
@@ -10,7 +10,6 @@ import {
   TableData,
   VirtualGroup
 } from './group-utils';
-import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { OutputEvents } from './output-events';
 import { ProjectCellDirective } from './project-cell.directive';
 import { ProjectGroupingDirective } from './project-grouping.directive';
@@ -18,14 +17,13 @@ import { Optional } from 'apps/common-lib/src/lib/utilities/optional.type';
 
 @Injectable()
 export class GroupingTableContextService {
-  private domSanitizer = inject(DomSanitizer);
 
   data!: TableData;
   columnsMetaData!: ColumnsMetaData;
   groupingColumns!: GroupingColumn[];
   rootGroup!: RootGroup;
   displayedColumns!: ColumnMetaDataDef[];
-  columnCssStyle: SafeHtml | null = null;
+  columnCssStyle: string | null = null;
 
   /**
    * Initialisation du contexte.
@@ -86,22 +84,19 @@ export class GroupingTableContextService {
   /**
    * Retourne les définitions de règles CSS pour chacune des colonnes.
    */
-  private calculateColumnStyle(): SafeHtml | null {
-    // eslint-disable-next-line  @typescript-eslint/no-explicit-any
-    const colStyles: any[] = [];
+  private calculateColumnStyle(): string | null {
+    const colStyles: string[] = [];
     this.displayedColumns.forEach((col, i) => {
       if (!col.columnStyle) {
         return;
       }
-      colStyles.push('.col-', i, ' {\n');
+      colStyles.push(`.col-${i} {\n`);
       for (const [k, v] of Object.entries(col.columnStyle)) {
-        colStyles.push(k, ':', v, ';\n');
+        colStyles.push(`${k}:${v};\n`);
       }
       colStyles.push('}\n');
     });
-    return colStyles.length
-      ? this.domSanitizer.bypassSecurityTrustHtml(`<style>${colStyles.join('')}</style>`)
-      : null;
+    return colStyles.length ? colStyles.join('') : null;
   }
 
   isFolded(group: Group): boolean {

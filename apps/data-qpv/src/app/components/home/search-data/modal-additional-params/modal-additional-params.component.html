@@ -13,7 +13,7 @@
     (ngModelChange)="filter($event)" />
 
   @if (!isEmpty) {
-    <fieldset class="fr-fieldset" style="margin-top:20px;">
+    <fieldset class="fr-fieldset modal-fieldset-top">
       @for (item of filteredCheckboxes; track item; let index = $index) {
         <div class="fr-fieldset__element">
           <div class="fr-checkbox-group">
@@ -33,11 +33,11 @@
   }
   @else {
     <div class="fr-grid-row">
-      <div class="fr-col-8 fr-col-offset-2" style="margin-top: 30px;">
+      <div class="fr-col-8 fr-col-offset-2 modal-empty-state">
         @switch (mode) {
           @case ('remote') {
             @if (loading)  {
-              <div #spinner class="spinner-wrapper fr-spinner--md" style="text-align: center; margin: 30px 0px;">
+              <div #spinner class="spinner-wrapper fr-spinner--md modal-spinner">
                 <span class="fr-spinner" aria-label="Chargement…" role="status"></span>
                 <span class="fr-spinner-message">Chargement en cours ...</span>
               </div>

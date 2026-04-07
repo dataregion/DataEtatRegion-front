@@ -4,7 +4,7 @@
   </mat-card-header>
 
   <mat-card-content class="content-column">
-    <table mat-table [dataSource]="tokens" class="mat-elevation-z1" style="margin-bottom: 10px">
+    <table mat-table [dataSource]="tokens" class="mat-elevation-z1 token-table">
 
       <ng-container matColumnDef="nom">
         <th mat-header-cell *matHeaderCellDef>Nom</th>
@@ -23,8 +23,8 @@
                   (click)="openEditTokenDialog('UPDATE', token)">
             <mat-icon>edit</mat-icon>
           </button>
-          <button aria-label="Delete" class="centered-item" color="warn" mat-mini-fab matTooltip="Supprimer le token"
-                  style="margin-left: 5px" (click)="deleteToken(token)">
+          <button aria-label="Delete" class="centered-item token-delete-button" color="warn" mat-mini-fab matTooltip="Supprimer le token"
+                  (click)="deleteToken(token)">
             <mat-icon>delete</mat-icon>
           </button>
         </td>

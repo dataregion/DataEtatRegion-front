@@ -42,9 +42,6 @@ export class PieChartComponent implements AfterViewInit, OnChanges {
     this.destroyChart();
 
     const canvas = this.el.nativeElement.querySelector('canvas') as HTMLCanvasElement;
-    canvas.style.width = '100%';
-    canvas.style.height = '100%';
-
     const ctx = canvas?.getContext('2d');
     if (!ctx) return;
 
@@ -99,22 +96,11 @@ private renderCustomLegend(): void {
   if (!data?.labels?.length) return;
 
   const html = data.labels
-    .map((label, i) => {
-      const color = (data.datasets[0].backgroundColor as string[])[i];
-      return `
+    .map((label, i) => `
         <li>
-          <span style="
-            display:inline-block;
-            width:14px;
-            height:14px;
-            border:1px solid #888;
-            background-color:${color};
-            margin-right:8px;
-            flex-shrink:0;
-          "></span>
+          <span class="chart-legend-color chart-legend-color-${i % 8}"></span>
           <span>${label}</span>
-        </li>`;
-    })
+        </li>`)
     .join('');
 
   legendContainer.innerHTML = `<ul>${html}</ul>`;

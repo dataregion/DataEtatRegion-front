@@ -16,10 +16,10 @@
         } @else {
           <div class="fr-grid-row fr-grid-row--gutters test">
             <div class="fr-col-12">
-              <div class="fr-table fr-table--bordered fr-table--lg" style="margin-top:0px;">
+              <div class="fr-table fr-table--bordered fr-table--lg table-without-top-margin">
                 <div class="fr-table__wrapper">
                   <div class="fr-table__container">
-                    <div class="fr-table__content" >
+                    <div class="fr-table__content">
                       <table id="table-10">
                         <thead>
                           <tr>
@@ -44,10 +44,10 @@
                                   N/A
                                 }
                               </td>
-                              <td style="text-align: center;">
+                              <td class="table-cell--center">
                                 <p class="fr-mr-2v fr-badge fr-badge--success badge-no-icon">{{ row.montant_ae | currency:'EUR':'symbol':'1.0-2'}}</p>
                               </td>
-                              <td style="text-align: center;">
+                              <td class="table-cell--center">
                                 <p class="fr-mr-2v fr-badge fr-badge--info badge-no-icon">{{ row.annee }}</p>
                               </td>
                               <td>{{ row.centre_couts?.label ?? 'N/A' }}</td>
@@ -63,7 +63,7 @@
                         </tbody>
                       </table>
                       @if (currentPagination()?.has_next) {
-                        <div #spinner class="spinner-wrapper fr-spinner--md" style="text-align: center; margin: 30px 0px;">
+                        <div #spinner class="spinner-wrapper fr-spinner--md table-spinner">
                           <span class="fr-spinner" aria-label="Chargement…" role="status"></span>
                           <span class="fr-spinner-message">Chargement en cours ...</span>
                         </div>

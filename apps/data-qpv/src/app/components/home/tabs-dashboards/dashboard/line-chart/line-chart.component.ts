@@ -37,7 +37,10 @@ export class LineChartComponent implements AfterViewInit, OnChanges {
     this.destroyChart();
 
     const canvas = this.el.nativeElement.querySelector('canvas') as HTMLCanvasElement;
-    canvas.style.height = this.height;
+    const parsedHeight = Number.parseInt(this.height, 10);
+    if (!Number.isNaN(parsedHeight)) {
+      canvas.height = parsedHeight;
+    }
     const ctx = canvas?.getContext('2d');
     if (!ctx) return;
 

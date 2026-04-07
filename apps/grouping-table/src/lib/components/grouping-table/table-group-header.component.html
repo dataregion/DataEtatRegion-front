@@ -2,10 +2,11 @@
   *ngFor="let col of context.displayedColumns; index as i; first as isFirst"
 >
   <ng-container [ngSwitch]="isFirst">
-    <div 
-      *ngSwitchCase="true" 
+    <div
+      *ngSwitchCase="true"
       class="grouping-table-cell"
-      [ngStyle]="groupingTableCellStyles(isFirst)" >
+      [class.grouping-table-cell--right]="group.isVirtual && isFirst"
+      [class.grouping-table-cell--virtual]="group.isVirtual">
 
       <div *ngIf="!group.isVirtual">
         <div class="{{folded ? 'arrow-right' : 'arrow-down'}}"></div>
@@ -28,7 +29,11 @@
       </div>
     </div>
 
-    <div *ngSwitchDefault class="grouping-table-cell col-{{i}}" [ngStyle]="groupingTableCellStyles(isFirst)">
+    <div
+      *ngSwitchDefault
+      class="grouping-table-cell col-{{i}}"
+      [class.grouping-table-cell--right]="group.isVirtual && isFirst"
+      [class.grouping-table-cell--virtual]="group.isVirtual">
       {{ group | financialGroupAggregate: col }}
     </div>
   </ng-container>

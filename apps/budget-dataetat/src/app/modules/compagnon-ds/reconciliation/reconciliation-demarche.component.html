@@ -1,8 +1,7 @@
 <div class="fr-container">
   <div class="fr-grid-row">
 
-    <budget-nav-compagnon-ds [title]="'Réconcilier ma démarche'" [currentStep]="2" [totalStep]="3" class="fr-col-6"
-      style="margin-top:30px;" />
+    <budget-nav-compagnon-ds [title]="'Réconcilier ma démarche'" [currentStep]="2" [totalStep]="3" class="fr-col-6 companion-step-nav" />
 
     <div class="fr-col-12">
       <fieldset class="fr-fieldset" id="reconciliation" aria-labelledby="radio-hint-legend radio-hint-messages">
@@ -49,7 +48,7 @@
       <div class="fr-grid-row">
         @if(isInputChecked('reconciliation-ej')) {
         <ng-container>
-          <div class="fr-col-lg-6 fr-col-12" style="margin-bottom:30px; padding:0 30px;">
+          <div class="fr-col-lg-6 fr-col-12 companion-column-padded">
             <div class="fr-select-group">
               <label class="fr-label" for="champ-ej">Numéro EJ *</label>
               <select class="fr-select" id="champ-ej" formControlName="champEJ">
@@ -66,7 +65,7 @@
 
         @if(isInputChecked('reconciliation-ds')) {
         <ng-container>
-          <div class="fr-col-lg-6 fr-col-12" style="margin-bottom:30px; padding:0 30px;">
+          <div class="fr-col-lg-6 fr-col-12 companion-column-padded">
             <div class="fr-select-group">
               <label class="fr-label" for="champ-ds">Numéro de dossier DS *</label>
               <select class="fr-select" id="champ-ds" formControlName="champDS">
@@ -84,14 +83,14 @@
         <ng-container>
           <div class="fr-col-12">
           </div>
-          <div class="fr-col-lg-6 fr-col-12" style="margin-bottom:30px; padding:0 30px;">
+          <div class="fr-col-lg-6 fr-col-12 companion-column-padded">
             <div class="fr-select-group">
               <label class="fr-label" for="champ-siret">SIRET issu de Chorus *</label>
               <input class="fr-input" type="text" id="champ-siret" value="SIRET du demandeur associé au dossier"
                 readonly required>
             </div>
           </div>
-          <div class="fr-col-lg-6 fr-col-12" style="margin-bottom:30px; padding:0 30px;">
+          <div class="fr-col-lg-6 fr-col-12 companion-column-padded">
             <div class="fr-select-group">
               <label class="fr-label" for="champ-montant">Montant AE *</label>
               <select class="fr-select" id="champ-montant" formControlName="champMontant" required>
@@ -102,8 +101,8 @@
               </select>
             </div>
           </div>
-          <div class="fr-col-12" style="margin-bottom: 30px">
-            <p style="margin-bottom: 10px"><b>Si le montant et le SIRET ne suffisent pas à réconcilier les lignes Chorus
+          <div class="fr-col-12 companion-section-spacing">
+            <p class="companion-note"><b>Si le montant et le SIRET ne suffisent pas à réconcilier les lignes Chorus
                 (plusieurs lignes pour les mêmes Montant/SIRET), il est également possible de rajouter un ou plusieurs
                 critères ci-dessous
                 pour affiner la réconciliation.</b></p>
@@ -113,7 +112,7 @@
                 réconciliation ne sera pas faite pour le dossier en question.</p>
             </div>
           </div>
-          <div class="fr-col-lg-6 fr-col-12" style="padding:0 30px">
+          <div class="fr-col-lg-6 fr-col-12 companion-column-padded-only">
             <div class="fr-input-group">
               <label class="fr-label" for="centre-couts">Centre de coûts</label>
               <lib-select-simple id="centre-couts" [canFilter]="true" [getFilteredOptions]="getCentreCouts"
@@ -135,7 +134,7 @@
               <lib-select-simple [(selected)]="annee" [canFilter]="false" [options]="annees" id="annee" />
             </div>
           </div>
-          <div class="fr-col-lg-6 fr-col-12" style="padding:0 30px;">
+          <div class="fr-col-lg-6 fr-col-12 companion-column-padded-only">
             <div class="fr-input-group">
               <label class="fr-label" for="commune">Code commune</label>
               <lib-select-simple id="commune" [canFilter]="true" [getFilteredOptions]="getCommunes"
@@ -162,7 +161,7 @@
         <div class="fr-col-12">
           <hr>
         </div>
-        <div class="fr-col-12" style="display: flex; justify-content: space-between; margin-bottom:30px;">
+        <div class="fr-col-12 companion-actions-row">
           <button class="fr-btn fr-btn--primary fr-btn--icon-left fr-icon-arrow-left-line" routerLink="demarches"
             [queryParams]="{ 'number': demarche?.number}">Etape précédente
           </button>

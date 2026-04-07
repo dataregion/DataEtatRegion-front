@@ -2,38 +2,38 @@
 
 <div class="fr-grid-row fr-grid-row--gutters">
     <div class="fr-col-4">
-        <div style="background-color: #FFF3FE; padding: 15px;">
-            <p style="color: #A558A0; font-weight: bold;">Total des financements</p>
+        <div class="dashboard-card">
+            <p class="dashboard-card-title">Total des financements</p>
             @if (currentDashboardData()) {
-                <h3 style="margin-bottom: 0px; text-align: center;">{{currentDashboardData()?.total_financements | currency: 'EUR':'symbol':'1.2-2':'fr-FR'}}</h3>
+                <h3 class="dashboard-card-value">{{currentDashboardData()?.total_financements | currency: 'EUR':'symbol':'1.2-2':'fr-FR'}}</h3>
             } @else {
                 <lib-spinner />
             }
         </div>
     </div>
     <div class="fr-col-4">
-        <div style="background-color: #FFF3FE; padding: 15px;">
-            <p style="color: #A558A0; font-weight: bold;">Nombre d'actions subventionnées</p>
+        <div class="dashboard-card">
+            <p class="dashboard-card-title">Nombre d'actions subventionnées</p>
             @if (currentDashboardData()) {
-                <h3 style="margin-bottom: 0px; text-align: center;">{{currentDashboardData()?.total_actions}}</h3>
+                <h3 class="dashboard-card-value">{{currentDashboardData()?.total_actions}}</h3>
             } @else {
                 <lib-spinner />
             }
         </div>
     </div>
     <div class="fr-col-4">
-        <div style="background-color: #FFF3FE; padding: 15px;">
-            <p style="color: #A558A0; font-weight: bold;">Nombre de porteur de projet</p>
+        <div class="dashboard-card">
+            <p class="dashboard-card-title">Nombre de porteur de projet</p>
             @if (currentDashboardData()) {
-                <h3 style="margin-bottom: 0px; text-align: center;">{{currentDashboardData()?.total_porteurs}}</h3>
+                <h3 class="dashboard-card-value">{{currentDashboardData()?.total_porteurs}}</h3>
             } @else {
                 <lib-spinner />
             }
         </div>
     </div>
     <div class="fr-col-12">
-        <div style="background-color: #FFF3FE; padding: 15px;">
-            <p style="color: #A558A0; font-weight: bold;">Répartition des financements par thématique</p>
+        <div class="dashboard-card">
+            <p class="dashboard-card-title">Répartition des financements par thématique</p>
             <div class="fr-griw-row">
                 @if (currentDashboardData()) {
                     @if (isArrayFilled(currentDashboardData()?.pie_chart_themes)) {
@@ -60,8 +60,8 @@
     </div>
     <div class="fr-col-12">
         @if (selectedTab() === "0") {
-            <div style="background-color: #FFF3FE; padding: 15px;">
-                <p style="color: #A558A0; font-weight: bold;">Répartition des financements par type de porteur de projet</p>
+            <div class="dashboard-card">
+                <p class="dashboard-card-title">Répartition des financements par type de porteur de projet</p>
                 <div class="fr-griw-row">
                     @if (currentDashboardData()) {
                         @if (isArrayFilled(currentDashboardData()?.pie_chart_types_porteurs)) {
@@ -86,8 +86,8 @@
                 </div>
             </div>
         } @else {
-            <div style="background-color: #FFF3FE; padding: 15px;">
-                <p style="color: #A558A0; font-weight: bold;">Représentation par financeur</p>
+            <div class="dashboard-card">
+                <p class="dashboard-card-title">Représentation par financeur</p>
                 <div class="fr-griw-row">
                     @if (currentDashboardData()) {
                         @if (isArrayFilled(currentDashboardData()?.bar_chart_financeurs)) {
@@ -114,8 +114,8 @@
         }
     </div>
     <div class="fr-col-12">
-        <div style="background-color: #FFF3FE; padding: 15px;">
-            <p style="color: #A558A0; font-weight: bold;">Evolution des financements par année</p>
+        <div class="dashboard-card">
+            <p class="dashboard-card-title">Evolution des financements par année</p>
             <div class="fr-griw-row">
                 @if (currentDashboardData()) {
                     @if (isArrayFilled(currentDashboardData()?.line_chart_annees) && isArrayFilled(currentDashboardData()?.line_chart_annees)) {

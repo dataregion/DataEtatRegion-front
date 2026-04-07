@@ -17,11 +17,11 @@
             </p>
 
             @if (formGrouping.controls.colonnes.length === 0) {
-            <label style="font-weight: bold;">Groupement désactivé, sélectionner des colonnes ci-dessous pour l'activer.</label>
+            <label class="modal-grouping-emphasis">Groupement désactivé, sélectionner des colonnes ci-dessous pour l'activer.</label>
             } @else {
             <div>
-              <p style="font-weight: bold;">Cliquer-glisser pour réordonner les groupes :</p>
-              <div  data-test-id="group-modal_selected">
+              <p class="modal-grouping-emphasis">Cliquer-glisser pour réordonner les groupes :</p>
+              <div data-test-id="group-modal_selected">
                 <div formArrayName="colonnes" cdkDropList class="column-list" [cdkDropListData]="formGrouping.controls.colonnes.controls" (cdkDropListDropped)="moveGroup($event)">
                   @for (group of formGrouping.controls.colonnes.controls; let i = $index; track $index) {
                     <div [formGroupName]="i" cdkDrag class="column-box">
@@ -35,11 +35,11 @@
             </div>
             }
             @if ((formGrouping.controls.colonnes.length + 1) < colonnes.length) {
-              <div class="fr-select-group" style="margin-top: 30px;">
+              <div class="fr-select-group grouping-select-spacing">
                 @if (formGrouping.controls.colonnes.length < 4) {
-                  <label class="fr-label" style="font-weight: bold;" for="selectColonne">Ajouter un groupement supplémentaire</label>
+                  <label class="fr-label modal-grouping-emphasis" for="selectColonne">Ajouter un groupement supplémentaire</label>
                 } @else {
-                  <label class="fr-label" style="font-weight: bold;" for="selectColonne">Vous ne pouvez pas sélectionner plus de 4 groupements simultanés</label>
+                  <label class="fr-label modal-grouping-emphasis" for="selectColonne">Vous ne pouvez pas sélectionner plus de 4 groupements simultanés</label>
                 }
                 <select class="fr-select" aria-describedby="selectColonne-messages" id="selectColonne"
                   name="selectColonne" (change)="addGroup($event)" [disabled]="formGrouping.controls.colonnes.length >= 4">
