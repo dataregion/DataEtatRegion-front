@@ -16,7 +16,8 @@
     "build:all": "ng build --project=france-relance && ng build --project=data-qpv",
     "storybook:common-lib": "ng run common-lib:storybook",
     "test-storybook": "test-storybook --config-dir=apps/common-lib/.storybook",
-    "lint": "eslint --max-warnings 55"
+    "lint": "eslint --max-warnings 55",
+    "knip": "knip"
   },
   "env": {
     "browser": true,
@@ -79,7 +80,8 @@
     "storybook": "^10.0.0",
     "tus-js-client": "^4.3.1",
     "typescript": "^5.8.3",
-    "typescript-eslint": "^8.28.0"
+    "typescript-eslint": "^8.28.0",
+    "knip": "^6.11.0"
   },
   "overrides": {
     "browser-sync": "^3.0.2",

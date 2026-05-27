@@ -55,3 +55,11 @@ apps/budget-dataetat/src/config/settings.json*
 apps/data-qpv/public/config/settings.json*
 
 .envrc
+
+# Claude Code — skills installés via `npx skills add`
+# Tout est ignoré PAR DÉFAUT (installs symlinks/cache via npx skills update)
+# SAUF dsfr-skill, vendoré (--copy) pour garantir reproductibilité équipe.
+/.claude/skills/*
+!/.claude/skills/dsfr-skill/
+
+/.agents

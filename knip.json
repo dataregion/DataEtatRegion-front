@@ -1,0 +1,45 @@
+{
+  "$schema": "https://unpkg.com/knip@latest/schema.json",
+  "workspaces": {
+    "apps/budget-dataetat": {
+      "entry": ["src/main.ts", "src/polyfills.ts"],
+      "project": ["src/**/*.ts"]
+    },
+    "apps/data-qpv": {
+      "entry": ["src/main.ts"],
+      "project": ["src/**/*.ts"]
+    },
+    "apps/france-relance": {
+      "entry": ["src/main.ts"],
+      "project": ["src/**/*.ts"]
+    },
+    "apps/common-lib": {
+      "entry": ["src/public-api.ts", "src/**/*.stories.ts"],
+      "project": ["src/**/*.ts"]
+    },
+    "apps/appcommon": {
+      "entry": ["src/public-api.ts"],
+      "project": ["src/**/*.ts"]
+    },
+    "apps/preference-users": {
+      "entry": ["src/public-api.ts"],
+      "project": ["src/**/*.ts"]
+    },
+    "apps/grouping-table": {
+      "entry": ["src/public-api.ts"],
+      "project": ["src/**/*.ts"]
+    },
+    "apps/shared-assets": {
+      "entry": ["src/public-api.ts"],
+      "project": ["src/**/*.ts"]
+    }
+  },
+  "ignore": [
+    "apps/clients/**",
+    "e2e/**"
+  ],
+  "ignoreExportsUsedInFile": {
+    "interface": true,
+    "type": true
+  }
+}
