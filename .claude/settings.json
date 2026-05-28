@@ -8,6 +8,10 @@
           {
             "type": "command",
             "command": "command -v npx >/dev/null 2>&1 && [ ! -d .claude/skills/angular-developer ] && npx -y skills add angular/skills -a claude-code -s '*' -y >/dev/null 2>&1 || true"
+          },
+          {
+            "type": "command",
+            "command": "command -v npx >/dev/null 2>&1 && [ ! -d .claude/skills/grill-me ] && npx -y skills add mattpocock/skills -a claude-code -s 'grill-me' -y >/dev/null 2>&1 || true"
           }
         ]
       }
