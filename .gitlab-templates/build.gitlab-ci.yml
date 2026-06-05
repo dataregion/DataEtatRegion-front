@@ -1,5 +1,5 @@
 "🔨 build angular apps":
-  image: node:24.14.1@sha256:80fc934952c8f1b2b4d39907af7211f8a9fff1a4c2cf673fb49099292c251cec
+  image: node:24.16.0@sha256:8530f76a96d88820d288761f022e318970dda93d01536919fbc16076b7983e63
   stage: 🔨 build
 
   cache:
