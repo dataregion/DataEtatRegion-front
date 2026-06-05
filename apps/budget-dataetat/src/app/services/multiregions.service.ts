@@ -11,6 +11,7 @@ export enum Region {
   OCCITANIE = 'Occitanie',
   CENTRE_VALDELOIRE = 'Centre-Val de loire',
   GRAND_EST = 'Grand-Est',
+  AUVERGNE_RHONE_ALPES = 'Auvergne Rhone Alpes',
   NATIONAL = 'National'
 }
 
@@ -48,6 +49,9 @@ export class MultiregionsService {
     ],
     [Region.GRAND_EST]: [
       "044",
+    ],
+    [Region.AUVERGNE_RHONE_ALPES]: [
+      "084",
     ],
     [Region.NATIONAL]: [
       "NAT",
