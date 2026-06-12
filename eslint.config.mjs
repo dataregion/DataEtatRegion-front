@@ -18,7 +18,7 @@ const compat = new FlatCompat({
 
 export default [
     {
-        ignores: [ "dist/**","nginx/**/*", '**/eslint.config.mjs', "apps/common-lib/.storybook/main.ts", "apps/clients/*", ".angular/*", "**/playwright-report/**"],
+        ignores: [ "dist/**","nginx/**/*", '**/eslint.config.mjs', "apps/clients/*", ".angular/*", "**/playwright-report/**"],
     },
     ...tseslint.configs.recommended,
     {
@@ -37,17 +37,6 @@ export default [
             },
         },
     },
-    ...compat.extends("plugin:storybook/recommended").map(config => ({
-        ...config,
-        languageOptions: {
-            globals: {
-                ...globals.browser,
-                ...globals.node,
-                document: true,
-                window: true,
-            },
-        },
-    })),
     ...compat.extends(
         "eslint:recommended",
         "plugin:@typescript-eslint/recommended",

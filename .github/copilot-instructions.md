@@ -12,8 +12,6 @@
 - **Lint** :  
   - `npm run lint` (max 55 warnings)
   - ⚠️ **OBLIGATOIRE : Toujours exécuter `npm run lint` après toute modification de code pour vérifier la conformité aux règles de style et détecter les erreurs potentielles.**
-- **Storybook** :  
-  - `npm run storybook:common-lib`
 - **Génération clients API** :  
   - `./generate_openapi_client.sh -p [prefix] -s [swagger-url] -t [target-dir] -n [name]` Data État en Bretagne (Frontend)
 
@@ -43,8 +41,6 @@
   - `npx playwright test` (config dans `e2e/`)
 - **Lint** :  
   - `npm run lint` (max 170 warnings)
-- **Storybook** :  
-  - `npm run storybook:common-lib`
 - **Génération clients API** :  
   - `./generate_openapi_client.sh -p [prefix] -s [swagger-url] -t [target-dir] -n [name]`
 

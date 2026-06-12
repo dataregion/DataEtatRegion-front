@@ -35,7 +35,7 @@ npm run start:budget-dev    # → http://localhost:4200
 
 ## 📚 Libs partagées (`apps/`)
 
-- `common-lib` — composants de base, `LoggerService`, Storybook (port 6006)
+- `common-lib` — composants de base, `LoggerService`
 - `appcommon` — utilitaires app
 - `preference-users` — préférences utilisateur centralisées
 - `grouping-table` — composant table avec groupement
@@ -62,7 +62,6 @@ npm run lint                      # ESLint (max 55 warnings, CI bloque sinon)
 npm run knip                      # détection code mort / deps inutilisées
 ng test <project>                 # tests unitaires Karma+Jasmine
 npx playwright test               # E2E (cf. section dédiée)
-npm run storybook:common-lib      # Storybook common-lib (port 6006)
 ```
 
 ## 🤖 IA / Claude Code
@@ -108,11 +107,10 @@ npx playwright test --ui     # mode debug UI
 ## 🔄 Mise à jour des dépendances
 
 ```bash
-npx storybook@latest upgrade --config-dir=apps/common-lib/.storybook
 npx ng update
 ```
 
-> Pour les majeures Angular : suivre https://angular.dev/update-guide. Vérifier que Storybook supporte la version cible (souvent en retard).
+> Pour les majeures Angular : suivre https://angular.dev/update-guide.
 
 ## 🤝 Clients API générés (OpenAPI)
 

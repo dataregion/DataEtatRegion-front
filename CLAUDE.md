@@ -14,7 +14,7 @@
 - `clients/*` — généré OpenAPI, ne pas modifier
 
 ## Libs partagées (sous `apps/`)
-`common-lib` (LoggerService, Storybook :6006), `appcommon`, `preference-users`, `grouping-table`, `shared-assets`
+`common-lib` (LoggerService), `appcommon`, `preference-users`, `grouping-table`, `shared-assets`
 
 ## Commandes
 ```bash
@@ -25,7 +25,6 @@ npm run build:all                 # france-relance + data-qpv
 npm run lint                      # max 55 warnings (CI bloque sinon)
 ng test <project>
 npx playwright test               # .env requis : TEST_USERNAME/PASSWORD
-npm run storybook:common-lib      # :6006
 npm run knip                      # dead code
 /front-check                      # miroir CI local complet
 ```
