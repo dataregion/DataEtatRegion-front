@@ -2,8 +2,8 @@
   "name": "grouping-table",
   "version": "0.0.1",
   "peerDependencies": {
-    "@angular/common": "^21.0.0",
-    "@angular/core": "^21.2.4"
+    "@angular/common": "^21.2.19",
+    "@angular/core": "^21.2.19"
   },
   "dependencies": {
     "tslib": "^2.3.0"
