@@ -1,8 +1,7 @@
 import { Component, AfterViewInit, ViewEncapsulation, inject, signal, OnInit } from '@angular/core';
 import Map from 'ol/Map';
 import View from 'ol/View';
-import TileLayer from 'ol/layer/Tile';
-import XYZ from 'ol/source/XYZ';
+import { applyStyle } from 'ol-mapbox-style';
 import { fromLonLat, transformExtent } from 'ol/proj';
 import { FullScreen, defaults as defaultControls } from 'ol/control';
 import { SessionService } from 'apps/common-lib/src/public-api';
@@ -21,6 +20,7 @@ import { ActivatedRoute } from '@angular/router';
 import { FinancialDataResolverModel } from 'apps/data-qpv/src/app/models/financial/financial-data-resolvers.models';
 import { RefQpvWithCommune } from 'apps/data-qpv/src/app/models/refs/qpv.model';
 import { FeatureLike } from 'ol/Feature';
+import { LoggerService } from 'apps/common-lib/src/lib/services/logger.service';
 
 @Component({
   selector: 'data-qpv-map',
@@ -33,6 +33,7 @@ export class MapComponent implements OnInit, AfterViewInit {
   private _route = inject(ActivatedRoute);
   private _sessionService = inject(SessionService);
   private _searchDataService = inject(SearchDataService);
+  private _logger = inject(LoggerService);
   public map?: Map;
 
   /** Zoom thresholds per administrative level */
@@ -98,13 +99,8 @@ export class MapComponent implements OnInit, AfterViewInit {
     const extent3857 = transformExtent(region.extent4326, 'EPSG:4326', 'EPSG:3857');
     const center = fromLonLat(region.center4326);
 
-    // --- Base tile layer (Carto light)
-    const baseLayer = new TileLayer({
-      source: new XYZ({
-        url: 'https://{a-c}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png',
-      }),
-      zIndex: 0,
-    });
+    // --- Base layer (Plan IGN gris, Géoplateforme)
+    const baseLayer = this.buildBaseLayer();
 
     // --- Administrative boundaries (Vector Tiles)
     const adminLayer = this.buildAdminBoundariesLayer(regionCode);
@@ -128,6 +124,28 @@ export class MapComponent implements OnInit, AfterViewInit {
   }
 
   // =====================================================
+  // FOND DE CARTE PLAN IGN (VECTOR TILE, SANS CLÉ API)
+  // =====================================================
+  private buildBaseLayer(): VectorTileLayer {
+    const styleUrl = 'https://data.geopf.fr/annexes/ressources/vectorTiles/styles/PLAN.IGN/gris.json';
+
+    const layer = new VectorTileLayer({
+      source: new VectorTileSource({
+        format: new MVT(),
+        attributions: '© <a href="https://www.ign.fr/" target="_blank" rel="noopener">IGN</a> – Géoplateforme',
+      }),
+      declutter: true,
+      zIndex: 0,
+    });
+
+    applyStyle(layer, styleUrl).catch((err) =>
+      this._logger.error('Impossible de charger le style du fond de carte Plan IGN', err)
+    );
+
+    return layer;
+  }
+
+  // =====================================================
   // ADMIN EXPRESS (VECTOR TILE + EXTENT REGION)
   // =====================================================
   private buildAdminBoundariesLayer(regionCode: string): VectorTileLayer {
@@ -135,7 +153,7 @@ export class MapComponent implements OnInit, AfterViewInit {
 
     const region = REGION_GEO_CONFIGS[regionCode];
     const departementsRegion = region.departements; 
-    const styleCache: Record<string, Style> = {};
+    const styleCache: Record<string, Style[]> = {};
 
     return new VectorTileLayer({
       source: new VectorTileSource({
@@ -201,19 +219,23 @@ export class MapComponent implements OnInit, AfterViewInit {
         // 🎨 STYLE CACHE
         // =====================================================
 
+        // Bleu France unique, hiérarchie portée par l'épaisseur et le tiret (convention IGN).
+        // Le halo blanc détache le trait des bandeaux gris du Plan IGN.
         if (!styleCache[layerName]) {
 
-          const color =
-            layerName === 'departement' ? '#000091'
-            : layerName === 'epci' ? '#3558C9'
-            : '#597DF2';
+          const { width, lineDash } =
+            layerName === 'departement' ? { width: 2.5, lineDash: undefined }
+            : layerName === 'epci' ? { width: 2, lineDash: [8, 4] }
+            : { width: 1.5, lineDash: [4, 3] };
 
-          styleCache[layerName] = new Style({
-            stroke: new Stroke({
-              color,
-              width: 1.5,
+          styleCache[layerName] = [
+            new Style({
+              stroke: new Stroke({ color: 'rgba(255, 255, 255, 0.9)', width: width + 2 }),
             }),
-          });
+            new Style({
+              stroke: new Stroke({ color: '#000091', width, lineDash }),
+            }),
+          ];
         }
 
         return styleCache[layerName];
